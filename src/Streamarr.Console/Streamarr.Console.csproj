@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+
+    <ApplicationIcon>..\Streamarr.Host\Streamarr.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="!$(RuntimeIdentifier.StartsWith('win'))">
+    <AssemblyName>Streamarr</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Streamarr.Host\Streamarr.Host.csproj" />
+    <ProjectReference Include="..\Streamarr.RuntimePatches\Streamarr.RuntimePatches.csproj" />
+  </ItemGroup>
+</Project>

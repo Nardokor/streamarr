@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net10.0</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>Streamarr.Api.V5</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="FluentValidation" Version="9.5.4" />
+		<PackageReference Include="Ical.Net" Version="4.3.1" />
+		<PackageReference Include="NLog" Version="5.5.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Streamarr.Core\Streamarr.Core.csproj" />
+		<ProjectReference Include="..\Streamarr.Http\Streamarr.Http.csproj" />
+	</ItemGroup>
+</Project>

@@ -1,31 +1,32 @@
 <Project>
-  <!-- Common to all Sonarr Projects -->
+  <!-- Common to all Streamarr Projects -->
   <PropertyGroup>
     <AnalysisLevel>6.0-all</AnalysisLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+    <AllowMissingPrunePackageData>true</AllowMissingPrunePackageData>
 
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RuntimeIdentifiers>win-x64;win-x86;osx-x64;osx-arm64;linux-x64;linux-musl-x64;linux-arm;linux-arm64;linux-musl-arm64</RuntimeIdentifiers>
 
-    <SonarrRootDir>$(MSBuildThisFileDirectory)..\</SonarrRootDir>
+    <StreamarrRootDir>$(MSBuildThisFileDirectory)..\</StreamarrRootDir>
 
     <!-- Specifies the type of output -->
-    <SonarrOutputType>Library</SonarrOutputType>
-    <SonarrOutputType Condition="$(MSBuildProjectName.Contains('.Test'))">Test</SonarrOutputType>
-    <SonarrOutputType Condition="'$(MSBuildProjectName)'=='ServiceInstall'">Exe</SonarrOutputType>
-    <SonarrOutputType Condition="'$(MSBuildProjectName)'=='ServiceUninstall'">Exe</SonarrOutputType>
-    <SonarrOutputType Condition="'$(MSBuildProjectName)'=='Sonarr'">Exe</SonarrOutputType>
-    <SonarrOutputType Condition="'$(MSBuildProjectName)'=='Sonarr.Console'">Exe</SonarrOutputType>
-    <SonarrOutputType Condition="'$(MSBuildProjectName)'=='Sonarr.Update'">Update</SonarrOutputType>
+    <StreamarrOutputType>Library</StreamarrOutputType>
+    <StreamarrOutputType Condition="$(MSBuildProjectName.Contains('.Test'))">Test</StreamarrOutputType>
+    <StreamarrOutputType Condition="'$(MSBuildProjectName)'=='ServiceInstall'">Exe</StreamarrOutputType>
+    <StreamarrOutputType Condition="'$(MSBuildProjectName)'=='ServiceUninstall'">Exe</StreamarrOutputType>
+    <StreamarrOutputType Condition="'$(MSBuildProjectName)'=='Streamarr'">Exe</StreamarrOutputType>
+    <StreamarrOutputType Condition="'$(MSBuildProjectName)'=='Streamarr.Console'">Exe</StreamarrOutputType>
+    <StreamarrOutputType Condition="'$(MSBuildProjectName)'=='Streamarr.Update'">Update</StreamarrOutputType>
 
     <!-- Specifies whether it's one of our own libraries -->
-    <SonarrProject>false</SonarrProject>
-    <SonarrProject Condition="$(MSBuildProjectName.StartsWith('Sonarr'))">true</SonarrProject>
-    <SonarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceInstall'))">true</SonarrProject>
-    <SonarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceUninstall'))">true</SonarrProject>
+    <StreamarrProject>false</StreamarrProject>
+    <StreamarrProject Condition="$(MSBuildProjectName.StartsWith('Streamarr'))">true</StreamarrProject>
+    <StreamarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceInstall'))">true</StreamarrProject>
+    <StreamarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceUninstall'))">true</StreamarrProject>
 
     <!-- A test project gets the test sdk packages automatically added -->
     <TestProject>false</TestProject>
@@ -42,14 +43,14 @@
   <PropertyGroup>
     <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
     <!-- Centralize intermediate and default outputs -->
-    <BaseIntermediateOutputPath>$(SonarrRootDir)_temp\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(SonarrRootDir)_temp\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-    <OutputPath>$(SonarrRootDir)_temp\bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+    <BaseIntermediateOutputPath>$(StreamarrRootDir)_temp\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(StreamarrRootDir)_temp\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+    <OutputPath>$(StreamarrRootDir)_temp\bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
 
     <!-- Output to _output and _tests respectively -->
-    <OutputPath Condition="'$(SonarrProject)'=='true'">$(SonarrRootDir)_output\</OutputPath>
-    <OutputPath Condition="'$(SonarrOutputType)'=='Test'">$(SonarrRootDir)_tests\</OutputPath>
-    <OutputPath Condition="'$(SonarrOutputType)'=='Update'">$(SonarrRootDir)_output\Sonarr.Update\</OutputPath>
+    <OutputPath Condition="'$(StreamarrProject)'=='true'">$(StreamarrRootDir)_output\</OutputPath>
+    <OutputPath Condition="'$(StreamarrOutputType)'=='Test'">$(StreamarrRootDir)_tests\</OutputPath>
+    <OutputPath Condition="'$(StreamarrOutputType)'=='Update'">$(StreamarrRootDir)_output\Streamarr.Update\</OutputPath>
 
     <!-- Paths relative to project file for better readability -->
     <EnableBaseIntermediateOutputPathMismatchWarning>false</EnableBaseIntermediateOutputPathMismatchWarning>
@@ -61,17 +62,17 @@
   </PropertyGroup>
   
   <!-- Test projects need bindingRedirects -->
-  <PropertyGroup Condition="'$(SonarrOutputType)'=='Test'">
+  <PropertyGroup Condition="'$(StreamarrOutputType)'=='Test'">
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <!-- Set the Product and Version info for our own projects -->
-  <PropertyGroup Condition="'$(SonarrProject)'=='true'">
-    <Product>Sonarr</Product>
-    <Company>sonarr.tv</Company>
-    <Copyright>Copyright 2014-$([System.DateTime]::Now.ToString('yyyy')) sonarr.tv (GNU General Public v3)</Copyright>
+  <PropertyGroup Condition="'$(StreamarrProject)'=='true'">
+    <Product>Streamarr</Product>
+    <Company>streamarr</Company>
+    <Copyright>Copyright 2025-$([System.DateTime]::Now.ToString('yyyy')) streamarr (GNU General Public v3)</Copyright>
     
     <!-- Should be replaced by CI -->
     <AssemblyVersion>10.0.0.*</AssemblyVersion>
@@ -88,15 +89,15 @@
   </PropertyGroup>
 
   <!-- Set the AssemblyConfiguration attribute for projects -->
-  <ItemGroup Condition="'$(SonarrProject)'=='true'">
+  <ItemGroup Condition="'$(StreamarrProject)'=='true'">
     <AssemblyAttribute Include="System.Reflection.AssemblyConfigurationAttribute">
       <_Parameter1>$(AssemblyConfiguration)</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 
   <PropertyGroup>
-    <!-- For now keep the NzbDrone namespace -->
-    <RootNamespace Condition="'$(SonarrProject)'=='true'">$(MSBuildProjectName.Replace('Sonarr','NzbDrone'))</RootNamespace>
+    <!-- Keep NzbDrone namespace mapping until full namespace rename (streamarr-qu9) -->
+    <RootNamespace Condition="'$(StreamarrProject)'=='true'">$(MSBuildProjectName.Replace('Streamarr','NzbDrone'))</RootNamespace>
   </PropertyGroup>
 
   <!-- Sentry specific configuration: Only in Release mode -->
@@ -127,13 +128,13 @@
     <PackageReference Include="NunitXml.TestLogger" Version="3.1.20" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(SonarrProject)'=='true' and '$(EnableAnalyzers)'=='false'">
+  <PropertyGroup Condition="'$(StreamarrProject)'=='true' and '$(EnableAnalyzers)'=='false'">
     <!-- FXCop Built into Net5 SDK now as NETAnalyzers, Enabled by default on net5 projects -->
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
   </PropertyGroup>
 
   <!-- Set up stylecop -->
-  <ItemGroup Condition="'$(SonarrProject)'=='true' and '$(EnableAnalyzers)'!='false'">
+  <ItemGroup Condition="'$(StreamarrProject)'=='true' and '$(EnableAnalyzers)'!='false'">
     <!-- StyleCop analysis -->
     <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.556">
       <PrivateAssets>all</PrivateAssets>

@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Streamarr.Common.Test\Streamarr.Common.Test.csproj" />
+    <ProjectReference Include="..\Streamarr.Test.Common\Streamarr.Test.Common.csproj" />
+    <ProjectReference Include="..\Streamarr.Windows\Streamarr.Windows.csproj" />
+  </ItemGroup>
+</Project>

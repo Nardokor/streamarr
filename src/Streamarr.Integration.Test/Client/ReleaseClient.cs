@@ -1,5 +1,5 @@
 ﻿using RestSharp;
-using Streamarr.Api.V3.Indexers;
+using Streamarr.Api.V1.Indexers;
 
 namespace Streamarr.Integration.Test.Client
 {

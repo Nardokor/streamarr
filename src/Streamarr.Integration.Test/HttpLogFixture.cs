@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using Streamarr.Api.V3.Series;
+using Streamarr.Api.V1.Series;
 
 namespace Streamarr.Integration.Test
 {
@@ -27,9 +27,9 @@ namespace Streamarr.Integration.Test
             logLines = Logs.GetLogFileLines(logFile).Skip(logLines.Length + 2).ToArray();
             Array.Resize(ref logLines, logLines.Length - 1);
 
-            logLines.Should().Contain(v => v.Contains("|Trace|Http|Req") && v.Contains("/api/v3/series/"));
-            logLines.Should().Contain(v => v.Contains("|Trace|Http|Res") && v.Contains("/api/v3/series/: 400.BadRequest"));
-            logLines.Should().Contain(v => v.Contains("|Debug|Api|") && v.Contains("/api/v3/series/: 400.BadRequest"));
+            logLines.Should().Contain(v => v.Contains("|Trace|Http|Req") && v.Contains("/api/v1/series/"));
+            logLines.Should().Contain(v => v.Contains("|Trace|Http|Res") && v.Contains("/api/v1/series/: 400.BadRequest"));
+            logLines.Should().Contain(v => v.Contains("|Debug|Api|") && v.Contains("/api/v1/series/: 400.BadRequest"));
         }
     }
 }

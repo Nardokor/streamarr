@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
-using Streamarr.Api.V3.Series;
+using Streamarr.Api.V1.Series;
 using Streamarr.Test.Common;
 
 namespace Streamarr.Integration.Test.ApiTests

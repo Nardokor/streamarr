@@ -38,8 +38,8 @@ namespace Streamarr.Host
             "Streamarr.Host",
             "Streamarr.Core",
             "Streamarr.SignalR",
-            "Streamarr.Api.V3",
-            "Streamarr.Api.V5",
+            "Streamarr.Api.V1",
+            "Streamarr.Api.V1",
             "Streamarr.Http"
         };
 

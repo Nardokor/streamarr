@@ -30,7 +30,7 @@ namespace Streamarr.Test.Common
         public StreamarrRunner(Logger logger, PostgresOptions postgresOptions, int port = 8989)
         {
             _processProvider = new ProcessProvider(logger);
-            _restClient = new RestClient($"http://localhost:{port}/api/v3");
+            _restClient = new RestClient($"http://localhost:{port}/api/v1");
 
             PostgresOptions = postgresOptions;
             Port = port;

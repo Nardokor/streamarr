@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using Streamarr.Api.V3.Blocklist;
-using Streamarr.Api.V3.Series;
+using Streamarr.Api.V1.Blocklist;
+using Streamarr.Api.V1.Series;
 
 namespace Streamarr.Integration.Test.ApiTests
 {

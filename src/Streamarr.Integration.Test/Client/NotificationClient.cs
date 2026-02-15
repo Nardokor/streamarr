@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using RestSharp;
-using Streamarr.Api.V3.Notifications;
+using Streamarr.Api.V1.Notifications;
 
 namespace Streamarr.Integration.Test.Client
 {

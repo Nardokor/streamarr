@@ -17,18 +17,10 @@ namespace Streamarr.Http
         public int Version { get; private set; }
     }
 
-    public class V3FeedControllerAttribute : VersionedFeedControllerAttribute
+    public class V1FeedControllerAttribute : VersionedFeedControllerAttribute
     {
-        public V3FeedControllerAttribute(string resource = "[controller]")
-            : base(3, resource)
-        {
-        }
-    }
-
-    public class V5FeedControllerAttribute : VersionedFeedControllerAttribute
-    {
-        public V5FeedControllerAttribute(string resource = "[controller]")
-            : base(5, resource)
+        public V1FeedControllerAttribute(string resource = "[controller]")
+            : base(1, resource)
         {
         }
     }

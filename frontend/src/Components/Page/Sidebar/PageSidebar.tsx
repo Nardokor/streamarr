@@ -231,7 +231,7 @@ function PageSidebar() {
     transform: isSidebarVisible ? 0 : SIDEBAR_WIDTH * -1,
   });
 
-  const urlBase = window.Sonarr.urlBase;
+  const urlBase = window.Streamarr.urlBase;
   const pathname = urlBase
     ? location.pathname.substr(urlBase.length) || '/'
     : location.pathname;
@@ -446,8 +446,8 @@ function PageSidebar() {
             <Link className={styles.logoLink} to="/">
               <img
                 className={styles.logo}
-                src={`${window.Sonarr.urlBase}/Content/Images/logo.svg`}
-                alt="Sonarr Logo"
+                src={`${window.Streamarr.urlBase}/Content/Images/logo.svg`}
+                alt="Streamarr Logo"
               />
             </Link>
           </div>

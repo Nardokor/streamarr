@@ -3,15 +3,15 @@ import 'Styles/globals.css';
 import './index.css';
 
 const initializeUrl = `${
-  window.Sonarr.urlBase
+  window.Streamarr.urlBase
 }/initialize.json?t=${Date.now()}`;
 const response = await fetch(initializeUrl);
 
-window.Sonarr = await response.json();
+window.Streamarr = await response.json();
 
 /* eslint-disable no-undef, @typescript-eslint/ban-ts-comment */
 // @ts-ignore 2304
-__webpack_public_path__ = `${window.Sonarr.urlBase}/`;
+__webpack_public_path__ = `${window.Streamarr.urlBase}/`;
 /* eslint-enable no-undef, @typescript-eslint/ban-ts-comment */
 
 const error = console.error;

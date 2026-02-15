@@ -23,7 +23,7 @@ function SeriesDetailsPage() {
       previousIndex !== -1 &&
       previousIndex !== undefined
     ) {
-      history.push(`${window.Sonarr.urlBase}/`);
+      history.push(`${window.Streamarr.urlBase}/`);
     }
   }, [seriesIndex, previousIndex, history]);
 

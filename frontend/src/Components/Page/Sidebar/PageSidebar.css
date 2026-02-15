@@ -37,7 +37,7 @@
   text-align: center;
 
   &:hover {
-    color: var(--sonarrBlue);
+    color: var(--streamarrBlue);
   }
 }
 

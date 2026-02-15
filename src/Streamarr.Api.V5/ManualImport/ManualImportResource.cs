@@ -1,3 +1,6 @@
+using Streamarr.Api.V5.CustomFormats;
+using Streamarr.Api.V5.Episodes;
+using Streamarr.Api.V5.Series;
 using Streamarr.Common.Crypto;
 using Streamarr.Core.DecisionEngine;
 using Streamarr.Core.Languages;
@@ -5,9 +8,6 @@ using Streamarr.Core.MediaFiles.EpisodeImport;
 using Streamarr.Core.MediaFiles.EpisodeImport.Manual;
 using Streamarr.Core.Parser.Model;
 using Streamarr.Core.Qualities;
-using Streamarr.Api.V5.CustomFormats;
-using Streamarr.Api.V5.Episodes;
-using Streamarr.Api.V5.Series;
 using Streamarr.Http.REST;
 
 namespace Streamarr.Api.V5.ManualImport;

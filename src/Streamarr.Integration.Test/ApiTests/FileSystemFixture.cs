@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
+using RestSharp;
 using Streamarr.Common.Disk;
 using Streamarr.Integration.Test.Client;
-using RestSharp;
 
 namespace Streamarr.Integration.Test.ApiTests
 {

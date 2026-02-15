@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Streamarr.Api.V5.CustomFormats;
+using Streamarr.Api.V5.Episodes;
+using Streamarr.Api.V5.Series;
 using Streamarr.Common.Extensions;
 using Streamarr.Core.CustomFormats;
 using Streamarr.Core.Download.Aggregation;
 using Streamarr.Core.Parser;
-using Streamarr.Api.V5.CustomFormats;
-using Streamarr.Api.V5.Episodes;
-using Streamarr.Api.V5.Series;
 using Streamarr.Http;
 
 namespace Streamarr.Api.V5.Parse;

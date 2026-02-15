@@ -22,7 +22,7 @@ namespace Streamarr.Update.UpdateEngine
         {
             try
             {
-                var targetExecutable = Path.Combine(targetFolder, "Sonarr.dll");
+                var targetExecutable = Path.Combine(targetFolder, "Streamarr.dll");
 
                 if (File.Exists(targetExecutable))
                 {

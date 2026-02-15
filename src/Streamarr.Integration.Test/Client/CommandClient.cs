@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using Streamarr.Core.Messaging.Commands;
 using RestSharp;
+using Streamarr.Core.Messaging.Commands;
 using Streamarr.Http.REST;
 
 namespace Streamarr.Integration.Test.Client

@@ -63,11 +63,11 @@ namespace Streamarr.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon Sonarr
+        internal static System.Drawing.Icon Streamarr
         {
             get
             {
-                object obj = ResourceManager.GetObject("Sonarr", resourceCulture);
+                object obj = ResourceManager.GetObject("Streamarr", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Streamarr.Api.V5.Episodes;
+using Streamarr.Api.V5.Series;
 using Streamarr.Common.Extensions;
 using Streamarr.Core.CustomFormats;
 using Streamarr.Core.Datastore;
@@ -6,8 +8,6 @@ using Streamarr.Core.DecisionEngine.Specifications;
 using Streamarr.Core.Download;
 using Streamarr.Core.History;
 using Streamarr.Core.Tv;
-using Streamarr.Api.V5.Episodes;
-using Streamarr.Api.V5.Series;
 using Streamarr.Http;
 using Streamarr.Http.Extensions;
 

@@ -2,15 +2,15 @@ using Streamarr.Common.Http;
 
 namespace Streamarr.Common.Cloud
 {
-    public interface ISonarrCloudRequestBuilder
+    public interface IStreamarrCloudRequestBuilder
     {
         IHttpRequestBuilderFactory Services { get; }
         IHttpRequestBuilderFactory SkyHookTvdb { get; }
     }
 
-    public class SonarrCloudRequestBuilder : ISonarrCloudRequestBuilder
+    public class StreamarrCloudRequestBuilder : IStreamarrCloudRequestBuilder
     {
-        public SonarrCloudRequestBuilder()
+        public StreamarrCloudRequestBuilder()
         {
             Services = new HttpRequestBuilder("https://services.sonarr.tv/v1/")
                 .CreateFactory();

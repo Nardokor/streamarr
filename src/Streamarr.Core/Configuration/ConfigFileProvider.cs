@@ -451,12 +451,12 @@ namespace Streamarr.Core.Configuration
 
                         if (contents.IsNullOrWhiteSpace())
                         {
-                            throw new InvalidConfigFileException($"{_configFile} is empty. Please delete the config file and Sonarr will recreate it.");
+                            throw new InvalidConfigFileException($"{_configFile} is empty. Please delete the config file and Streamarr will recreate it.");
                         }
 
                         if (contents.All(char.IsControl))
                         {
-                            throw new InvalidConfigFileException($"{_configFile} is corrupt. Please delete the config file and Sonarr will recreate it.");
+                            throw new InvalidConfigFileException($"{_configFile} is corrupt. Please delete the config file and Streamarr will recreate it.");
                         }
 
                         var xDoc = XDocument.Parse(_diskProvider.ReadAllText(_configFile));
@@ -464,7 +464,7 @@ namespace Streamarr.Core.Configuration
 
                         if (config.Count != 1)
                         {
-                            throw new InvalidConfigFileException($"{_configFile} is invalid. Please delete the config file and Sonarr will recreate it.");
+                            throw new InvalidConfigFileException($"{_configFile} is invalid. Please delete the config file and Streamarr will recreate it.");
                         }
 
                         return xDoc;
@@ -478,7 +478,7 @@ namespace Streamarr.Core.Configuration
             }
             catch (XmlException ex)
             {
-                throw new InvalidConfigFileException($"{_configFile} is corrupt is invalid. Please delete the config file and Sonarr will recreate it.", ex);
+                throw new InvalidConfigFileException($"{_configFile} is corrupt is invalid. Please delete the config file and Streamarr will recreate it.", ex);
             }
         }
 

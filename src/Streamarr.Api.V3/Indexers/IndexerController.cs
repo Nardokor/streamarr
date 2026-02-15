@@ -1,8 +1,8 @@
 using FluentValidation;
 using Streamarr.Core.Indexers;
 using Streamarr.Core.Validation;
-using Streamarr.SignalR;
 using Streamarr.Http;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V3.Indexers
 {

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using Streamarr.Integration.Test.Client;
 using Streamarr.Api.V3.Episodes;
+using Streamarr.Integration.Test.Client;
 
 namespace Streamarr.Integration.Test.ApiTests
 {

@@ -13,7 +13,7 @@ namespace Streamarr.Core.Notifications.Gotify
 {
     public class Gotify : NotificationBase<GotifySettings>
     {
-        private const string SonarrImageUrl = "https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/128.png";
+        private const string StreamarrImageUrl = "https://raw.githubusercontent.com/Streamarr/Streamarr/develop/Logo/128.png";
 
         private readonly IGotifyProxy _proxy;
         private readonly ILocalizationService _localizationService;
@@ -89,7 +89,7 @@ namespace Streamarr.Core.Notifications.Gotify
                 const string title = "Test Notification";
 
                 var sb = new StringBuilder();
-                sb.AppendLine("This is a test message from Sonarr");
+                sb.AppendLine("This is a test message from Streamarr");
 
                 var payload = new GotifyMessage
                 {
@@ -101,8 +101,8 @@ namespace Streamarr.Core.Notifications.Gotify
                 {
                     isMarkdown = true;
 
-                    sb.AppendLine($"\r![]({SonarrImageUrl})");
-                    payload.SetImage(SonarrImageUrl);
+                    sb.AppendLine($"\r![]({StreamarrImageUrl})");
+                    payload.SetImage(StreamarrImageUrl);
                 }
 
                 if (Settings.MetadataLinks.Any())

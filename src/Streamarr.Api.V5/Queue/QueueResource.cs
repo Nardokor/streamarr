@@ -1,11 +1,11 @@
+using Streamarr.Api.V5.CustomFormats;
+using Streamarr.Api.V5.Episodes;
+using Streamarr.Api.V5.Series;
 using Streamarr.Core.Download.TrackedDownloads;
 using Streamarr.Core.Indexers;
 using Streamarr.Core.Languages;
 using Streamarr.Core.Qualities;
 using Streamarr.Core.Queue;
-using Streamarr.Api.V5.CustomFormats;
-using Streamarr.Api.V5.Episodes;
-using Streamarr.Api.V5.Series;
 using Streamarr.Http.REST;
 
 namespace Streamarr.Api.V5.Queue

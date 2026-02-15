@@ -19,11 +19,11 @@ namespace Streamarr.Common.Composition
         public static IList<Assembly> Load(IList<string> assemblyNames)
         {
             var toLoad = assemblyNames.ToList();
-            toLoad.Add("Sonarr.Common");
-            toLoad.Add(OsInfo.IsWindows ? "Sonarr.Windows" : "Sonarr.Mono");
+            toLoad.Add("Streamarr.Common");
+            toLoad.Add(OsInfo.IsWindows ? "Streamarr.Windows" : "Streamarr.Mono");
 
             var toRegisterResolver = new List<string> { "System.Data.SQLite" };
-            toRegisterResolver.AddRange(assemblyNames.Intersect(new[] { "Sonarr.Core" }));
+            toRegisterResolver.AddRange(assemblyNames.Intersect(new[] { "Streamarr.Core" }));
             RegisterNativeResolver(toRegisterResolver);
 
             var startupPath = AppDomain.CurrentDomain.BaseDirectory;

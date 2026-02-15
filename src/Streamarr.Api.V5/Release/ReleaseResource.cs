@@ -1,9 +1,9 @@
+using Streamarr.Api.V5.CustomFormats;
+using Streamarr.Api.V5.Series;
 using Streamarr.Core.DecisionEngine;
 using Streamarr.Core.Languages;
 using Streamarr.Core.Profiles.Qualities;
 using Streamarr.Core.Tv;
-using Streamarr.Api.V5.CustomFormats;
-using Streamarr.Api.V5.Series;
 using Streamarr.Http.REST;
 
 namespace Streamarr.Api.V5.Release;

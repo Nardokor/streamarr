@@ -4,8 +4,8 @@ using Moq;
 using NUnit.Framework;
 using Streamarr.Core.Annotations;
 using Streamarr.Core.Localization;
-using Streamarr.Test.Common;
 using Streamarr.Http.ClientSchema;
+using Streamarr.Test.Common;
 
 namespace Streamarr.Api.Test.ClientSchemaTests
 {

@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
-using Streamarr.Core.MediaCover;
-using Streamarr.Core.Tv;
 using Streamarr.Api.V5.EpisodeFiles;
 using Streamarr.Api.V5.Series;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.Tv;
 using Streamarr.Http.REST;
 using Swashbuckle.AspNetCore.Annotations;
 

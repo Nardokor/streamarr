@@ -27,8 +27,8 @@ public class mediainfo_multiple_streamsFixture : MigrationTest<mediainfo_multipl
                 RelativePath = "Season 01/S01E05.mkv",
                 Size = 125.Megabytes(),
                 DateAdded = DateTime.UtcNow,
-                OriginalFilePath = "Series.Title.S01E05.720p.HDTV.x265-Sonarr.mkv",
-                ReleaseGroup = "Sonarr",
+                OriginalFilePath = "Series.Title.S01E05.720p.HDTV.x265-Streamarr.mkv",
+                ReleaseGroup = "Streamarr",
                 Quality = new QualityModel(Quality.HDTV720p).ToJson(),
                 Languages = "[1]",
             });
@@ -52,8 +52,8 @@ public class mediainfo_multiple_streamsFixture : MigrationTest<mediainfo_multipl
                 RelativePath = "Season 01/S01E05.mkv",
                 Size = 125.Megabytes(),
                 DateAdded = DateTime.UtcNow,
-                OriginalFilePath = "Series.Title.S01E05.720p.HDTV.x265-Sonarr.mkv",
-                ReleaseGroup = "Sonarr",
+                OriginalFilePath = "Series.Title.S01E05.720p.HDTV.x265-Streamarr.mkv",
+                ReleaseGroup = "Streamarr",
                 Quality = new QualityModel(Quality.HDTV720p).ToJson(),
                 Languages = "[1]",
                 MediaInfo = new
@@ -109,8 +109,8 @@ public class mediainfo_multiple_streamsFixture : MigrationTest<mediainfo_multipl
                 RelativePath = "Season 01/S01E05.mkv",
                 Size = 125.Megabytes(),
                 DateAdded = DateTime.UtcNow,
-                OriginalFilePath = "Series.Title.S01E05.720p.HDTV.x265-Sonarr.mkv",
-                ReleaseGroup = "Sonarr",
+                OriginalFilePath = "Series.Title.S01E05.720p.HDTV.x265-Streamarr.mkv",
+                ReleaseGroup = "Streamarr",
                 Quality = new QualityModel(Quality.HDTV720p).ToJson(),
                 Languages = "[1]",
                 MediaInfo = new

@@ -8,9 +8,9 @@ using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.ThingiProvider;
 using Streamarr.Core.ThingiProvider.Events;
 using Streamarr.Core.Validation;
-using Streamarr.SignalR;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V5.Provider
 {

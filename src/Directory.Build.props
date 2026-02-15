@@ -95,10 +95,6 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <PropertyGroup>
-    <!-- Keep NzbDrone namespace mapping until full namespace rename (streamarr-qu9) -->
-    <RootNamespace Condition="'$(StreamarrProject)'=='true'">$(MSBuildProjectName.Replace('Streamarr','NzbDrone'))</RootNamespace>
-  </PropertyGroup>
 
   <!-- Sentry specific configuration: Only in Release mode -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

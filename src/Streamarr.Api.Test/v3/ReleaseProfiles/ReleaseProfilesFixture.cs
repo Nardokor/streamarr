@@ -1,7 +1,7 @@
 using FluentAssertions;
 using NUnit.Framework;
-using Streamarr.Common.Serializer;
 using Streamarr.Api.V3.Profiles.Release;
+using Streamarr.Common.Serializer;
 using Streamarr.Http.REST;
 
 namespace Streamarr.Api.Test.v3.ReleaseProfiles

@@ -31,14 +31,14 @@ namespace Streamarr.Update.Test
         [Test]
         public void should_call_update_with_correct_path()
         {
-            var processPath = @"C:\Sonarr\Sonarr.exe".AsOsAgnostic();
+            var processPath = @"C:\Streamarr\Streamarr.exe".AsOsAgnostic();
 
             Mocker.GetMock<IProcessProvider>().Setup(c => c.GetProcessById(12))
                 .Returns(new ProcessInfo() { StartPath = processPath });
 
             Subject.Start(new[] { "12", "", processPath });
 
-            Mocker.GetMock<IInstallUpdateService>().Verify(c => c.Start(@"C:\Sonarr".AsOsAgnostic(), 12), Times.Once());
+            Mocker.GetMock<IInstallUpdateService>().Verify(c => c.Start(@"C:\Streamarr".AsOsAgnostic(), 12), Times.Once());
         }
     }
 }

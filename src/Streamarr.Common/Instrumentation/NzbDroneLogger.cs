@@ -215,7 +215,7 @@ namespace Streamarr.Common.Instrumentation
                 c.ForLogger("Microsoft.*").WriteToNil(LogLevel.Warn);
                 c.ForLogger("Microsoft.Hosting.Lifetime*").WriteToNil(LogLevel.Info);
                 c.ForLogger("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware").WriteToNil(LogLevel.Fatal);
-                c.ForLogger("Sonarr.Http.Authentication.ApiKeyAuthenticationHandler").WriteToNil(LogLevel.Info);
+                c.ForLogger("Streamarr.Http.Authentication.ApiKeyAuthenticationHandler").WriteToNil(LogLevel.Info);
             });
         }
 

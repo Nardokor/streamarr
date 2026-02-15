@@ -127,8 +127,8 @@ namespace Streamarr.Core.Notifications.PushBullet
         {
             try
             {
-                const string title = "Sonarr - Test Notification";
-                const string body = "This is a test message from Sonarr";
+                const string title = "Streamarr - Test Notification";
+                const string body = "This is a test message from Streamarr";
 
                 SendNotification(title, body, settings);
             }

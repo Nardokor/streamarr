@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Streamarr.Api.V3.EpisodeFiles;
+using Streamarr.Api.V3.Series;
 using Streamarr.Core.CustomFormats;
 using Streamarr.Core.Datastore.Events;
 using Streamarr.Core.DecisionEngine.Specifications;
@@ -7,10 +9,8 @@ using Streamarr.Core.Download;
 using Streamarr.Core.MediaFiles.Events;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Tv;
-using Streamarr.SignalR;
-using Streamarr.Api.V3.EpisodeFiles;
-using Streamarr.Api.V3.Series;
 using Streamarr.Http.REST;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V3.Episodes
 {

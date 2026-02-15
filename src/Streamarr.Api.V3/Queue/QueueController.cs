@@ -15,11 +15,11 @@ using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Profiles.Qualities;
 using Streamarr.Core.Qualities;
 using Streamarr.Core.Queue;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.Extensions;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
+using Streamarr.SignalR;
 
 #pragma warning disable CS0612
 namespace Streamarr.Api.V3.Queue

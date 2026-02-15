@@ -18,11 +18,11 @@ using Streamarr.Core.Tv.Commands;
 using Streamarr.Core.Tv.Events;
 using Streamarr.Core.Validation;
 using Streamarr.Core.Validation.Paths;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.Extensions;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V3.Series
 {

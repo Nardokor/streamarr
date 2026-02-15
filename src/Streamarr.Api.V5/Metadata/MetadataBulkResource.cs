@@ -1,5 +1,5 @@
-using Streamarr.Core.Extras.Metadata;
 using Streamarr.Api.V5.Provider;
+using Streamarr.Core.Extras.Metadata;
 
 namespace Streamarr.Api.V5.Metadata;
 

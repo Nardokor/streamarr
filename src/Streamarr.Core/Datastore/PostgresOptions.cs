@@ -20,7 +20,7 @@ namespace Streamarr.Core.Datastore
                 .Build();
 
             var postgresOptions = new PostgresOptions();
-            config.GetSection("Sonarr:Postgres").Bind(postgresOptions);
+            config.GetSection("Streamarr:Postgres").Bind(postgresOptions);
 
             return postgresOptions;
         }

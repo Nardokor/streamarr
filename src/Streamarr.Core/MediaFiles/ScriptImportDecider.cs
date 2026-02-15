@@ -124,42 +124,42 @@ namespace Streamarr.Core.MediaFiles
 
             var environmentVariables = new StringDictionary();
 
-            environmentVariables.Add("Sonarr_SourcePath", sourcePath);
-            environmentVariables.Add("Sonarr_DestinationPath", destinationFilePath);
+            environmentVariables.Add("Streamarr_SourcePath", sourcePath);
+            environmentVariables.Add("Streamarr_DestinationPath", destinationFilePath);
 
-            environmentVariables.Add("Sonarr_InstanceName", _configFileProvider.InstanceName);
-            environmentVariables.Add("Sonarr_ApplicationUrl", _configService.ApplicationUrl);
-            environmentVariables.Add("Sonarr_TransferMode", mode.ToString());
+            environmentVariables.Add("Streamarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Streamarr_ApplicationUrl", _configService.ApplicationUrl);
+            environmentVariables.Add("Streamarr_TransferMode", mode.ToString());
 
-            environmentVariables.Add("Sonarr_Series_Id", series.Id.ToString());
-            environmentVariables.Add("Sonarr_Series_Title", series.Title);
-            environmentVariables.Add("Sonarr_Series_TitleSlug", series.TitleSlug);
-            environmentVariables.Add("Sonarr_Series_Path", series.Path);
-            environmentVariables.Add("Sonarr_Series_TvdbId", series.TvdbId.ToString());
-            environmentVariables.Add("Sonarr_Series_TvMazeId", series.TvMazeId.ToString());
-            environmentVariables.Add("Sonarr_Series_TmdbId", series.TmdbId.ToString());
-            environmentVariables.Add("Sonarr_Series_ImdbId", series.ImdbId ?? string.Empty);
-            environmentVariables.Add("Sonarr_Series_Type", series.SeriesType.ToString());
-            environmentVariables.Add("Sonarr_Series_OriginalLanguage", IsoLanguages.Get(series.OriginalLanguage).ThreeLetterCode);
-            environmentVariables.Add("Sonarr_Series_Genres", string.Join("|", series.Genres));
-            environmentVariables.Add("Sonarr_Series_Tags", string.Join("|", series.Tags.Select(t => _tagRepository.Get(t).Label)));
+            environmentVariables.Add("Streamarr_Series_Id", series.Id.ToString());
+            environmentVariables.Add("Streamarr_Series_Title", series.Title);
+            environmentVariables.Add("Streamarr_Series_TitleSlug", series.TitleSlug);
+            environmentVariables.Add("Streamarr_Series_Path", series.Path);
+            environmentVariables.Add("Streamarr_Series_TvdbId", series.TvdbId.ToString());
+            environmentVariables.Add("Streamarr_Series_TvMazeId", series.TvMazeId.ToString());
+            environmentVariables.Add("Streamarr_Series_TmdbId", series.TmdbId.ToString());
+            environmentVariables.Add("Streamarr_Series_ImdbId", series.ImdbId ?? string.Empty);
+            environmentVariables.Add("Streamarr_Series_Type", series.SeriesType.ToString());
+            environmentVariables.Add("Streamarr_Series_OriginalLanguage", IsoLanguages.Get(series.OriginalLanguage).ThreeLetterCode);
+            environmentVariables.Add("Streamarr_Series_Genres", string.Join("|", series.Genres));
+            environmentVariables.Add("Streamarr_Series_Tags", string.Join("|", series.Tags.Select(t => _tagRepository.Get(t).Label)));
 
-            environmentVariables.Add("Sonarr_EpisodeFile_EpisodeCount", localEpisode.Episodes.Count.ToString());
-            environmentVariables.Add("Sonarr_EpisodeFile_EpisodeIds", string.Join(",", localEpisode.Episodes.Select(e => e.Id)));
-            environmentVariables.Add("Sonarr_EpisodeFile_SeasonNumber", localEpisode.SeasonNumber.ToString());
-            environmentVariables.Add("Sonarr_EpisodeFile_EpisodeNumbers", string.Join(",", localEpisode.Episodes.Select(e => e.EpisodeNumber)));
-            environmentVariables.Add("Sonarr_EpisodeFile_EpisodeAirDates", string.Join(",", localEpisode.Episodes.Select(e => e.AirDate)));
-            environmentVariables.Add("Sonarr_EpisodeFile_EpisodeAirDatesUtc", string.Join(",", localEpisode.Episodes.Select(e => e.AirDateUtc)));
-            environmentVariables.Add("Sonarr_EpisodeFile_EpisodeTitles", string.Join("|", localEpisode.Episodes.Select(e => e.Title)));
-            environmentVariables.Add("Sonarr_EpisodeFile_EpisodeOverviews", string.Join("|", localEpisode.Episodes.Select(e => e.Overview)));
-            environmentVariables.Add("Sonarr_EpisodeFile_Quality", localEpisode.Quality.Quality.Name);
-            environmentVariables.Add("Sonarr_EpisodeFile_QualityVersion", localEpisode.Quality.Revision.Version.ToString());
-            environmentVariables.Add("Sonarr_EpisodeFile_ReleaseGroup", localEpisode.ReleaseGroup ?? string.Empty);
-            environmentVariables.Add("Sonarr_EpisodeFile_SceneName", localEpisode.SceneName ?? string.Empty);
+            environmentVariables.Add("Streamarr_EpisodeFile_EpisodeCount", localEpisode.Episodes.Count.ToString());
+            environmentVariables.Add("Streamarr_EpisodeFile_EpisodeIds", string.Join(",", localEpisode.Episodes.Select(e => e.Id)));
+            environmentVariables.Add("Streamarr_EpisodeFile_SeasonNumber", localEpisode.SeasonNumber.ToString());
+            environmentVariables.Add("Streamarr_EpisodeFile_EpisodeNumbers", string.Join(",", localEpisode.Episodes.Select(e => e.EpisodeNumber)));
+            environmentVariables.Add("Streamarr_EpisodeFile_EpisodeAirDates", string.Join(",", localEpisode.Episodes.Select(e => e.AirDate)));
+            environmentVariables.Add("Streamarr_EpisodeFile_EpisodeAirDatesUtc", string.Join(",", localEpisode.Episodes.Select(e => e.AirDateUtc)));
+            environmentVariables.Add("Streamarr_EpisodeFile_EpisodeTitles", string.Join("|", localEpisode.Episodes.Select(e => e.Title)));
+            environmentVariables.Add("Streamarr_EpisodeFile_EpisodeOverviews", string.Join("|", localEpisode.Episodes.Select(e => e.Overview)));
+            environmentVariables.Add("Streamarr_EpisodeFile_Quality", localEpisode.Quality.Quality.Name);
+            environmentVariables.Add("Streamarr_EpisodeFile_QualityVersion", localEpisode.Quality.Revision.Version.ToString());
+            environmentVariables.Add("Streamarr_EpisodeFile_ReleaseGroup", localEpisode.ReleaseGroup ?? string.Empty);
+            environmentVariables.Add("Streamarr_EpisodeFile_SceneName", localEpisode.SceneName ?? string.Empty);
 
-            environmentVariables.Add("Sonarr_Download_Client", downloadClientInfo?.Name ?? string.Empty);
-            environmentVariables.Add("Sonarr_Download_Client_Type", downloadClientInfo?.Type ?? string.Empty);
-            environmentVariables.Add("Sonarr_Download_Id", downloadId ?? string.Empty);
+            environmentVariables.Add("Streamarr_Download_Client", downloadClientInfo?.Name ?? string.Empty);
+            environmentVariables.Add("Streamarr_Download_Client_Type", downloadClientInfo?.Type ?? string.Empty);
+            environmentVariables.Add("Streamarr_Download_Id", downloadId ?? string.Empty);
 
             if (localEpisode.MediaInfo == null)
             {
@@ -167,34 +167,34 @@ namespace Streamarr.Core.MediaFiles
             }
             else
             {
-                environmentVariables.Add("Sonarr_EpisodeFile_MediaInfo_AudioChannels",
+                environmentVariables.Add("Streamarr_EpisodeFile_MediaInfo_AudioChannels",
                     MediaInfoFormatter.FormatAudioChannels(localEpisode.MediaInfo.PrimaryAudioStream).ToString());
-                environmentVariables.Add("Sonarr_EpisodeFile_MediaInfo_AudioCodec",
+                environmentVariables.Add("Streamarr_EpisodeFile_MediaInfo_AudioCodec",
                     MediaInfoFormatter.FormatAudioCodec(localEpisode.MediaInfo.PrimaryAudioStream, null));
-                environmentVariables.Add("Sonarr_EpisodeFile_MediaInfo_AudioLanguages",
+                environmentVariables.Add("Streamarr_EpisodeFile_MediaInfo_AudioLanguages",
                     localEpisode.MediaInfo.AudioStreams?.Select(l => l.Language).Distinct().ConcatToString(" / "));
-                environmentVariables.Add("Sonarr_EpisodeFile_MediaInfo_Languages",
+                environmentVariables.Add("Streamarr_EpisodeFile_MediaInfo_Languages",
                     localEpisode.MediaInfo.AudioStreams?.Select(l => l.Language).ConcatToString(" / "));
-                environmentVariables.Add("Sonarr_EpisodeFile_MediaInfo_Height",
+                environmentVariables.Add("Streamarr_EpisodeFile_MediaInfo_Height",
                     localEpisode.MediaInfo.Height.ToString());
-                environmentVariables.Add("Sonarr_EpisodeFile_MediaInfo_Width", localEpisode.MediaInfo.Width.ToString());
-                environmentVariables.Add("Sonarr_EpisodeFile_MediaInfo_Subtitles",
+                environmentVariables.Add("Streamarr_EpisodeFile_MediaInfo_Width", localEpisode.MediaInfo.Width.ToString());
+                environmentVariables.Add("Streamarr_EpisodeFile_MediaInfo_Subtitles",
                     localEpisode.MediaInfo.SubtitleStreams?.Select(l => l.Language).ConcatToString(" / "));
-                environmentVariables.Add("Sonarr_EpisodeFile_MediaInfo_VideoCodec",
+                environmentVariables.Add("Streamarr_EpisodeFile_MediaInfo_VideoCodec",
                     MediaInfoFormatter.FormatVideoCodec(localEpisode.MediaInfo, null));
-                environmentVariables.Add("Sonarr_EpisodeFile_MediaInfo_VideoDynamicRangeType",
+                environmentVariables.Add("Streamarr_EpisodeFile_MediaInfo_VideoDynamicRangeType",
                     MediaInfoFormatter.FormatVideoDynamicRangeType(localEpisode.MediaInfo));
             }
 
-            environmentVariables.Add("Sonarr_EpisodeFile_CustomFormat", string.Join("|", localEpisode.CustomFormats));
-            environmentVariables.Add("Sonarr_EpisodeFile_CustomFormatScore", localEpisode.CustomFormatScore.ToString());
+            environmentVariables.Add("Streamarr_EpisodeFile_CustomFormat", string.Join("|", localEpisode.CustomFormats));
+            environmentVariables.Add("Streamarr_EpisodeFile_CustomFormatScore", localEpisode.CustomFormatScore.ToString());
 
             if (oldFiles.Any())
             {
-                environmentVariables.Add("Sonarr_DeletedRelativePaths", string.Join("|", oldFiles.Select(e => e.EpisodeFile.RelativePath)));
-                environmentVariables.Add("Sonarr_DeletedPaths", string.Join("|", oldFiles.Select(e => Path.Combine(series.Path, e.EpisodeFile.RelativePath))));
-                environmentVariables.Add("Sonarr_DeletedDateAdded", string.Join("|", oldFiles.Select(e => e.EpisodeFile.DateAdded)));
-                environmentVariables.Add("Sonarr_DeletedRecycleBinPaths", string.Join("|", oldFiles.Select(e => e.RecycleBinPath ?? string.Empty)));
+                environmentVariables.Add("Streamarr_DeletedRelativePaths", string.Join("|", oldFiles.Select(e => e.EpisodeFile.RelativePath)));
+                environmentVariables.Add("Streamarr_DeletedPaths", string.Join("|", oldFiles.Select(e => Path.Combine(series.Path, e.EpisodeFile.RelativePath))));
+                environmentVariables.Add("Streamarr_DeletedDateAdded", string.Join("|", oldFiles.Select(e => e.EpisodeFile.DateAdded)));
+                environmentVariables.Add("Streamarr_DeletedRecycleBinPaths", string.Join("|", oldFiles.Select(e => e.RecycleBinPath ?? string.Empty)));
             }
 
             _logger.Debug("Executing external script: {0}", _configService.ScriptImportPath);

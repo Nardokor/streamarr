@@ -73,9 +73,9 @@ namespace Streamarr.Core.Notifications.Telegram
         {
             try
             {
-                const string brandedTitle = "Sonarr - Test Notification";
+                const string brandedTitle = "Streamarr - Test Notification";
                 const string title = "Test Notification";
-                const string body = "This is a test message from Sonarr";
+                const string body = "This is a test message from Streamarr";
 
                 var links = new List<NotificationMetadataLink>
                     {

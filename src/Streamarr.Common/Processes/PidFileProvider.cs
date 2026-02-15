@@ -37,7 +37,7 @@ namespace Streamarr.Common.Processes
             catch (Exception ex)
             {
                 _logger.Error(ex, "Unable to write PID file: " + filename);
-                throw new SonarrStartupException(ex, "Unable to write PID file {0}", filename);
+                throw new StreamarrStartupException(ex, "Unable to write PID file {0}", filename);
             }
         }
     }

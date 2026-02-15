@@ -34,10 +34,10 @@ namespace Streamarr.Update
                 var startupArgument = new StartupContext(args);
                 StreamarrLogger.Register(startupArgument, true, true);
 
-                Logger.Info("Starting Sonarr Update Client");
+                Logger.Info("Starting Streamarr Update Client");
 
                 var container = new Container(rules => rules.WithStreamarrRules())
-                    .AutoAddServices(new List<string> { "Sonarr.Update" })
+                    .AutoAddServices(new List<string> { "Streamarr.Update" })
                     .AddStreamarrLogger()
                     .AddStartupContext(startupArgument);
 

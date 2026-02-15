@@ -21,7 +21,7 @@ namespace Streamarr.Common.Test
         {
             var fakeEnvironment = new Mock<IAppFolderInfo>();
 
-            fakeEnvironment.SetupGet(c => c.AppDataFolder).Returns(@"C:\Sonarr\".AsOsAgnostic());
+            fakeEnvironment.SetupGet(c => c.AppDataFolder).Returns(@"C:\Streamarr\".AsOsAgnostic());
 
             fakeEnvironment.SetupGet(c => c.TempFolder).Returns(@"C:\Temp\".AsOsAgnostic());
 
@@ -294,13 +294,13 @@ namespace Streamarr.Common.Test
         [Test]
         public void AppDataDirectory_path_test()
         {
-            GetIAppDirectoryInfo().GetAppDataPath().Should().BeEquivalentTo(@"C:\Sonarr\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetAppDataPath().Should().BeEquivalentTo(@"C:\Streamarr\".AsOsAgnostic());
         }
 
         [Test]
         public void Config_path_test()
         {
-            GetIAppDirectoryInfo().GetConfigPath().Should().BeEquivalentTo(@"C:\Sonarr\Config.xml".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetConfigPath().Should().BeEquivalentTo(@"C:\Streamarr\Config.xml".AsOsAgnostic());
         }
 
         [Test]
@@ -312,25 +312,25 @@ namespace Streamarr.Common.Test
         [Test]
         public void GetUpdatePackageFolder()
         {
-            GetIAppDirectoryInfo().GetUpdatePackageFolder().Should().BeEquivalentTo(@"C:\Temp\sonarr_update\Sonarr\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdatePackageFolder().Should().BeEquivalentTo(@"C:\Temp\sonarr_update\Streamarr\".AsOsAgnostic());
         }
 
         [Test]
         public void GetUpdateClientFolder()
         {
-            GetIAppDirectoryInfo().GetUpdateClientFolder().Should().BeEquivalentTo(@"C:\Temp\sonarr_update\Sonarr\Sonarr.Update\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateClientFolder().Should().BeEquivalentTo(@"C:\Temp\sonarr_update\Streamarr\Streamarr.Update\".AsOsAgnostic());
         }
 
         [Test]
         public void GetUpdateClientExePath()
         {
-            GetIAppDirectoryInfo().GetUpdateClientExePath().Should().BeEquivalentTo(@"C:\Temp\sonarr_update\Sonarr.Update".AsOsAgnostic().ProcessNameToExe());
+            GetIAppDirectoryInfo().GetUpdateClientExePath().Should().BeEquivalentTo(@"C:\Temp\sonarr_update\Streamarr.Update".AsOsAgnostic().ProcessNameToExe());
         }
 
         [Test]
         public void GetUpdateLogFolder()
         {
-            GetIAppDirectoryInfo().GetUpdateLogFolder().Should().BeEquivalentTo(@"C:\Sonarr\UpdateLogs\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateLogFolder().Should().BeEquivalentTo(@"C:\Streamarr\UpdateLogs\".AsOsAgnostic());
         }
 
         [Test]

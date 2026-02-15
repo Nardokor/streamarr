@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using Streamarr.Core.MediaCover;
-using Streamarr.Core.Tv;
 using Streamarr.Api.V3.EpisodeFiles;
 using Streamarr.Api.V3.Series;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.Tv;
 using Streamarr.Http.REST;
 using Swashbuckle.AspNetCore.Annotations;
 

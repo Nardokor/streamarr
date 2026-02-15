@@ -8,9 +8,9 @@ namespace Streamarr.Core.Test.ParserTests
     public class SeasonParserFixture : CoreTest
     {
         [TestCase("30.Series.Season.04.HDTV.XviD-DIMENSION", "30 Series", 4)]
-        [TestCase("Sonarr.and.Series.S02.720p.x264-DIMENSION", "Sonarr and Series", 2)]
+        [TestCase("Streamarr.and.Series.S02.720p.x264-DIMENSION", "Streamarr and Series", 2)]
         [TestCase("The.Series.US.S03.720p.x264-DIMENSION", "The Series US", 3)]
-        [TestCase(@"Series.of.Sonarr.S03.720p.BluRay-CLUE\REWARD", "Series of Sonarr", 3)]
+        [TestCase(@"Series.of.Streamarr.S03.720p.BluRay-CLUE\REWARD", "Series of Streamarr", 3)]
         [TestCase("Series Time S02 720p HDTV x264 CRON", "Series Time", 2)]
         [TestCase("Series.2021.S04.iNTERNAL.DVDRip.XviD-VCDVaULT", "Series 2021", 4)]
         [TestCase("Series Five 0 S01 720p WEB DL DD5 1 H 264 NT", "Series Five 0", 1)]

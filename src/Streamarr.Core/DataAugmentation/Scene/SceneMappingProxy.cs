@@ -14,7 +14,7 @@ namespace Streamarr.Core.DataAugmentation.Scene
         private readonly IHttpClient _httpClient;
         private readonly IHttpRequestBuilderFactory _requestBuilder;
 
-        public SceneMappingProxy(IHttpClient httpClient, ISonarrCloudRequestBuilder requestBuilder)
+        public SceneMappingProxy(IHttpClient httpClient, IStreamarrCloudRequestBuilder requestBuilder)
         {
             _httpClient = httpClient;
             _requestBuilder = requestBuilder.Services;

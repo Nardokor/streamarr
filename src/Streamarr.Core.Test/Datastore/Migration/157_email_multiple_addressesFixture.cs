@@ -24,7 +24,7 @@ namespace Streamarr.Core.Test.Datastore.Migration
                     OnHealthIssue = true,
                     IncludeHealthWarnings = true,
                     OnRename = true,
-                    Name = "Mail Sonarr",
+                    Name = "Mail Streamarr",
                     Implementation = "Email",
                     Tags = "[]",
                     Settings = new EmailSettings173

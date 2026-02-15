@@ -16,6 +16,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 using NLog.Extensions.Logging;
+using StackExchange.Profiling;
+using Streamarr.Api.V3.System;
+using Streamarr.Api.V5.Series;
 using Streamarr.Common.EnvironmentInfo;
 using Streamarr.Common.Instrumentation;
 using Streamarr.Common.Processes;
@@ -26,17 +29,13 @@ using Streamarr.Core.Instrumentation;
 using Streamarr.Core.Lifecycle;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Host.AccessControl;
-using Streamarr.Http.Authentication;
-using Streamarr.SignalR;
-using Streamarr.Api.V3.System;
-using Streamarr.Api.V5.Series;
 using Streamarr.Http;
 using Streamarr.Http.Authentication;
 using Streamarr.Http.ClientSchema;
 using Streamarr.Http.ErrorManagement;
 using Streamarr.Http.Frontend;
 using Streamarr.Http.Middleware;
-using StackExchange.Profiling;
+using Streamarr.SignalR;
 using IPNetwork = System.Net.IPNetwork;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -58,7 +57,7 @@ namespace Streamarr.Host
                 b.ClearProviders();
                 b.SetMinimumLevel(LogLevel.Trace);
                 b.AddFilter("Microsoft.AspNetCore", LogLevel.Warning);
-                b.AddFilter("Sonarr.Http.Authentication.ApiKeyAuthenticationHandler", LogLevel.Information);
+                b.AddFilter("Streamarr.Http.Authentication.ApiKeyAuthenticationHandler", LogLevel.Information);
                 b.AddFilter("Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager", LogLevel.Error);
                 b.AddNLog();
             });
@@ -113,8 +112,8 @@ namespace Streamarr.Host
                 c.SwaggerDoc("v3", new OpenApiInfo
                 {
                     Version = "3.0.0",
-                    Title = "Sonarr",
-                    Description = "Sonarr API docs - The v3 API docs apply to both v3 and v4 versions of Sonarr. Some functionality may only be available in v4 of the Sonarr application.",
+                    Title = "Streamarr",
+                    Description = "Streamarr API docs - The v3 API docs apply to both v3 and v4 versions of Streamarr. Some functionality may only be available in v4 of the Streamarr application.",
                     License = new OpenApiLicense
                     {
                         Name = "GPL-3.0",
@@ -125,8 +124,8 @@ namespace Streamarr.Host
                 c.SwaggerDoc("v5", new OpenApiInfo
                 {
                     Version = "5.0.0",
-                    Title = "Sonarr",
-                    Description = "Sonarr API docs - The v5 API docs apply to Sonarr v5 only.",
+                    Title = "Streamarr",
+                    Description = "Streamarr API docs - The v5 API docs apply to Streamarr v5 only.",
                     License = new OpenApiLicense
                     {
                         Name = "GPL-3.0",
@@ -294,7 +293,7 @@ namespace Streamarr.Host
                               IRuntimeInfo runtimeInfo,
                               IFirewallAdapter firewallAdapter,
                               IEventAggregator eventAggregator,
-                              SonarrErrorPipeline errorHandler)
+                              StreamarrErrorPipeline errorHandler)
         {
             initializeLogger.Initialize();
             appFolderFactory.Register();

@@ -27,7 +27,7 @@ namespace Streamarr.Api.V3.Calendar
             _tagService = tagService;
         }
 
-        [HttpGet("Sonarr.ics")]
+        [HttpGet("Streamarr.ics")]
         public IActionResult GetCalendarFeed(int pastDays = 7, int futureDays = 28, string tags = "", bool unmonitored = false, bool premieresOnly = false, bool asAllDay = false)
         {
             var start = DateTime.Today.AddDays(-pastDays);
@@ -46,7 +46,7 @@ namespace Streamarr.Api.V3.Calendar
                 ProductId = "-//sonarr.tv//Sonarr//EN"
             };
 
-            var calendarName = "Sonarr TV Schedule";
+            var calendarName = "Streamarr TV Schedule";
             calendar.AddProperty(new CalendarProperty("NAME", calendarName));
             calendar.AddProperty(new CalendarProperty("X-WR-CALNAME", calendarName));
 

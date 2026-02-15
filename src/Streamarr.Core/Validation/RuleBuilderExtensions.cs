@@ -68,10 +68,10 @@ namespace Streamarr.Core.Validation
             return ruleBuilder.WithState(v => StreamarrValidationState.Warning);
         }
 
-        public static IRuleBuilderOptions<T, string> StartsOrEndsWithSonarr<T>(this IRuleBuilder<T, string> ruleBuilder)
+        public static IRuleBuilderOptions<T, string> StartsOrEndsWithStreamarr<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             ruleBuilder.SetValidator(new NotEmptyValidator(null));
-            return ruleBuilder.SetValidator(new RegularExpressionValidator("^Sonarr|Sonarr$")).WithMessage("Must start or end with Sonarr");
+            return ruleBuilder.SetValidator(new RegularExpressionValidator("^Streamarr|Streamarr$")).WithMessage("Must start or end with Streamarr");
         }
     }
 }

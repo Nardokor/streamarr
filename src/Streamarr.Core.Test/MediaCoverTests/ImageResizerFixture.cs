@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.IO;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SixLabors.ImageSharp;
 using Streamarr.Common.Disk;
 using Streamarr.Common.EnvironmentInfo;
 using Streamarr.Core.Test.Framework;
-using SixLabors.ImageSharp;
 
 namespace Streamarr.Core.Test.MediaCoverTests
 {

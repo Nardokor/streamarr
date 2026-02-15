@@ -54,8 +54,8 @@ namespace Streamarr.Core.Notifications.Notifiarr
                         throw new NotifiarrException("API key is invalid");
                     case 400:
                         // 400 responses shouldn't be treated as an actual error because it's a misconfiguration
-                        // between Sonarr and Notifiarr for a specific event, but shouldn't stop all events.
-                        _logger.Error("HTTP 400 - Unable to send notification. Ensure Sonarr Integration is enabled & assigned a channel on Notifiarr");
+                        // between Streamarr and Notifiarr for a specific event, but shouldn't stop all events.
+                        _logger.Error("HTTP 400 - Unable to send notification. Ensure Streamarr Integration is enabled & assigned a channel on Notifiarr");
                         break;
                     case 502:
                     case 503:

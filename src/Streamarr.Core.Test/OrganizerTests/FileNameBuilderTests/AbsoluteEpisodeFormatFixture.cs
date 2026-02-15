@@ -36,7 +36,7 @@ namespace Streamarr.Core.Test.OrganizerTests.FileNameBuilderTests
                             .With(e => e.AbsoluteEpisodeNumber = 100)
                             .Build();
 
-            _episodeFile = new EpisodeFile { Id = 5, Quality = new QualityModel(Quality.HDTV720p), ReleaseGroup = "SonarrTest" };
+            _episodeFile = new EpisodeFile { Id = 5, Quality = new QualityModel(Quality.HDTV720p), ReleaseGroup = "StreamarrTest" };
 
             _namingConfig = NamingConfig.Default;
             _namingConfig.RenameEpisodes = true;
@@ -71,7 +71,7 @@ namespace Streamarr.Core.Test.OrganizerTests.FileNameBuilderTests
             _namingConfig.AnimeEpisodeFormat = "{Series Title} {absolute:00} [{ReleaseGroup}]";
 
             Subject.BuildFileName(new List<Episode> { _episode }, _series, _episodeFile)
-                   .Should().Be("Anime Series 100 [SonarrTest]");
+                   .Should().Be("Anime Series 100 [StreamarrTest]");
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace Streamarr.Core.Test.OrganizerTests.FileNameBuilderTests
             _namingConfig.AnimeEpisodeFormat = "{Series Title} S{season:00}E{episode:00} [{ReleaseGroup}]";
 
             Subject.BuildFileName(new List<Episode> { _episode }, _series, _episodeFile)
-                   .Should().Be("Anime Series S15E06 [SonarrTest]");
+                   .Should().Be("Anime Series S15E06 [StreamarrTest]");
         }
 
         [Test]

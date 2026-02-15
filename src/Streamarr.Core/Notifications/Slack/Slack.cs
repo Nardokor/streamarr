@@ -218,7 +218,7 @@ namespace Streamarr.Core.Notifications.Slack
         {
             try
             {
-                var message = $"Test message from Sonarr posted at {DateTime.Now}";
+                var message = $"Test message from Streamarr posted at {DateTime.Now}";
                 var payload = CreatePayload(message);
 
                 _proxy.SendPayload(payload, Settings);

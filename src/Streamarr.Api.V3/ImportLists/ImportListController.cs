@@ -2,8 +2,8 @@ using FluentValidation;
 using Streamarr.Core.ImportLists;
 using Streamarr.Core.Validation;
 using Streamarr.Core.Validation.Paths;
-using Streamarr.SignalR;
 using Streamarr.Http;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V3.ImportLists
 {

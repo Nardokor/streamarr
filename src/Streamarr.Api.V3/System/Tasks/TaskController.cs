@@ -5,9 +5,9 @@ using Streamarr.Common.Extensions;
 using Streamarr.Core.Datastore.Events;
 using Streamarr.Core.Jobs;
 using Streamarr.Core.Messaging.Events;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V3.System.Tasks
 {

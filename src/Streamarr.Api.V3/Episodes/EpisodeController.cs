@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Streamarr.Core.CustomFormats;
 using Streamarr.Core.DecisionEngine.Specifications;
 using Streamarr.Core.Tv;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V3.Episodes
 {

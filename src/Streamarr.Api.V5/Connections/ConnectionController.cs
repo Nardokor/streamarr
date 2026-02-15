@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Streamarr.Core.Notifications;
-using Streamarr.SignalR;
 using Streamarr.Api.V5.Provider;
+using Streamarr.Core.Notifications;
 using Streamarr.Http;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V5.Connections;
 

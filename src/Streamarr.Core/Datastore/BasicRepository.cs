@@ -8,11 +8,11 @@ using System.Reflection;
 using System.Text;
 using Dapper;
 using NLog;
+using Polly;
+using Polly.Retry;
 using Streamarr.Common.Instrumentation;
 using Streamarr.Core.Datastore.Events;
 using Streamarr.Core.Messaging.Events;
-using Polly;
-using Polly.Retry;
 
 namespace Streamarr.Core.Datastore
 {

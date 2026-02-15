@@ -23,15 +23,15 @@ namespace Streamarr.Common.EnvironmentInfo
             IsWindowsService = hostLifetime is WindowsServiceLifetime;
             IsStarting = true;
 
-            // net6.0 will return Sonarr.dll for entry assembly, we need the actual
-            // executable name (Sonarr on linux).  On mono this will return the location of
+            // net6.0 will return Streamarr.dll for entry assembly, we need the actual
+            // executable name (Streamarr on linux).  On mono this will return the location of
             // the mono executable itself, which is not what we want.
             var entry = Process.GetCurrentProcess().MainModule;
 
             if (entry != null)
             {
                 ExecutingApplication = entry.FileName;
-                IsWindowsTray = OsInfo.IsWindows && entry.ModuleName == $"{ProcessProvider.SONARR_PROCESS_NAME}.exe";
+                IsWindowsTray = OsInfo.IsWindows && entry.ModuleName == $"{ProcessProvider.STREAMARR_PROCESS_NAME}.exe";
             }
         }
 
@@ -117,7 +117,7 @@ namespace Streamarr.Common.EnvironmentInfo
             {
                 if (OsInfo.IsWindows)
                 {
-                    return IsUserInteractive && Process.GetCurrentProcess().ProcessName.Equals(ProcessProvider.SONARR_PROCESS_NAME, StringComparison.InvariantCultureIgnoreCase);
+                    return IsUserInteractive && Process.GetCurrentProcess().ProcessName.Equals(ProcessProvider.STREAMARR_PROCESS_NAME, StringComparison.InvariantCultureIgnoreCase);
                 }
 
                 return false;

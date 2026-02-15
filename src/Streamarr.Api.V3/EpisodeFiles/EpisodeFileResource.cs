@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Streamarr.Api.V3.CustomFormats;
 using Streamarr.Core.CustomFormats;
 using Streamarr.Core.DecisionEngine.Specifications;
 using Streamarr.Core.Languages;
 using Streamarr.Core.MediaFiles;
 using Streamarr.Core.Parser.Model;
 using Streamarr.Core.Qualities;
-using Streamarr.Api.V3.CustomFormats;
 using Streamarr.Http.REST;
 
 namespace Streamarr.Api.V3.EpisodeFiles

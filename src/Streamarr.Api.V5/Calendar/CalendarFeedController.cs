@@ -24,7 +24,7 @@ public class CalendarFeedController : Controller
         _tagService = tagService;
     }
 
-    [HttpGet("Sonarr.ics")]
+    [HttpGet("Streamarr.ics")]
     public IActionResult GetCalendarFeed(int pastDays = 7, int futureDays = 28, string tags = "", bool unmonitored = false, bool premieresOnly = false, bool asAllDay = false, bool includeSpecials = true)
     {
         var start = DateTime.Today.AddDays(-pastDays);
@@ -43,7 +43,7 @@ public class CalendarFeedController : Controller
             ProductId = "-//sonarr.tv//Sonarr//EN"
         };
 
-        var calendarName = "Sonarr TV Schedule";
+        var calendarName = "Streamarr TV Schedule";
         calendar.AddProperty(new CalendarProperty("NAME", calendarName));
         calendar.AddProperty(new CalendarProperty("X-WR-CALNAME", calendarName));
 

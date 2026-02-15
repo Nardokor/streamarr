@@ -5,10 +5,10 @@ using Streamarr.Core.AutoTagging;
 using Streamarr.Core.Datastore.Events;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Tags;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V5.Tags;
 

@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
-using Streamarr.Core.Messaging.Commands;
-using Streamarr.Integration.Test.Client;
 using Streamarr.Api.V3.Queue;
+using Streamarr.Core.Messaging.Commands;
 using Streamarr.Http;
+using Streamarr.Integration.Test.Client;
 
 namespace Streamarr.Integration.Test.ApiTests
 {

@@ -1,8 +1,8 @@
-using Streamarr.Core.Languages;
-using Streamarr.Core.Parser.Model;
 using Streamarr.Api.V5.CustomFormats;
 using Streamarr.Api.V5.Episodes;
 using Streamarr.Api.V5.Series;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser.Model;
 using Streamarr.Http.REST;
 
 namespace Streamarr.Api.V5.Parse;

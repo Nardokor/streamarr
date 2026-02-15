@@ -6,10 +6,10 @@ using System.Text;
 #if !WINRT
 using System.Security.Cryptography;
 #else
+using System.Globalization;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
-using System.Globalization;
 #endif
 
 namespace Streamarr.Common.OAuth

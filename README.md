@@ -1,85 +1,51 @@
-# <img width="24px" src="./Logo/256.png" alt="Sonarr"></img> Sonarr
+# Streamarr
 
-[![Translated](https://translate.servarr.com/widget/servarr/sonarr/svg-badge.svg)](https://translate.servarr.com/engage/servarr/)
-[![Backers on Open Collective](https://opencollective.com/Sonarr/backers/badge.svg)](#backers)
-[![Sponsors on Open Collective](https://opencollective.com/Sonarr/sponsors/badge.svg)](#sponsors)
-[![Mega Sponsors on Open Collective](https://opencollective.com/Sonarr/megasponsors/badge.svg)](#mega-sponsors)
+Streamarr is a media manager for YouTube and Twitch creators. It tracks channels, automatically downloads new videos and streams via yt-dlp, organizes them with configurable naming, and integrates with Plex for a seamless library experience.
 
-Sonarr is a PVR for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
+Built as a fork of [Sonarr](https://github.com/Sonarr/Sonarr), Streamarr keeps the proven infrastructure (download clients, notifications, scheduling, API) while replacing the TV domain with a streaming content model.
 
-## Getting Started
+## Status
 
-- [Download/Installation](https://sonarr.tv/#downloads-v3)
-- [FAQ](https://wiki.servarr.com/sonarr/faq)
-- [Wiki](https://wiki.servarr.com/Sonarr)
-- [API Documentation](https://sonarr.tv/docs/api)
-- [Donate](https://sonarr.tv/donate)
+**Early development** - not yet usable. See the roadmap below for progress.
 
-## Support
+## Planned Features
 
-Note: GitHub Issues are for Bugs and Feature Requests Only
+- Track YouTube channels and Twitch streamers
+- Automatic download of new videos and VODs via yt-dlp
+- Configurable file organization and renaming
+- Plex integration with custom metadata (NFO sidecars)
+- Quality profiles and automatic upgrades
+- Notification support (Discord, Telegram, email, webhooks, etc.)
+- REST API and web UI
+- Support for Linux, macOS, and Windows
 
-- [Forums](https://forums.sonarr.tv/)
-- [Discord](https://discord.gg/M6BvZn5)
-- [GitHub - Bugs and Feature Requests Only](https://github.com/Sonarr/Sonarr/issues)
-- [IRC](https://web.libera.chat/?channels=#sonarr)
-- [Reddit](https://www.reddit.com/r/sonarr)
-- [Wiki](https://wiki.servarr.com/sonarr)
+## Roadmap
 
-## Features
+- **Phase 0: Foundation** - Rename and rebrand from Sonarr (in progress)
+- **Phase 1: MVP** - Channel/Content domain models, YouTube metadata, yt-dlp integration, basic UI
+- **Phase 2: Twitch** - Twitch metadata via Helix API, live stream recording
+- **Phase 3: Plex** - Custom metadata agent, NFO sidecar generation
 
-### Current Features
+## Tech Stack
 
-- Support for major platforms: Windows, Linux, macOS, Raspberry Pi, etc.
-- Automatically detects new episodes
-- Can scan your existing library and download any missing episodes
-- Can watch for better quality of the episodes you already have and do an automatic upgrade. _eg. from DVD to Blu-Ray_
-- Automatic failed download handling will try another release if one fails
-- Manual search so you can pick any release or to see why a release was not downloaded automatically
-- Fully configurable episode renaming
-- Full integration with SABnzbd and NZBGet
-- Full integration with Kodi, Plex (notification, library update, metadata)
-- Full support for specials and multi-episode releases
-- And a beautiful UI
+- .NET 10 (C#)
+- React 18 + TypeScript (frontend)
+- SQLite / PostgreSQL (via Dapper)
+- yt-dlp (download engine)
 
-## Contributing
+## Development
 
-### Development
+```bash
+# Build
+dotnet build src/Streamarr.sln
 
-This project exists thanks to all the people who contribute. [Contribute](CONTRIBUTING.md).
+# Run
+dotnet run --project src/Streamarr.Host
+```
 
-<a href="https://github.com/Sonarr/Sonarr/graphs/contributors"><img src="https://opencollective.com/Sonarr/contributors.svg?width=890&button=false" /></a>
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup details.
 
-### Supporters
-
-This project would not be possible without the support of our users and software providers.
-[**Become a sponsor or backer**](https://opencollective.com/sonarr) to help us out!
-
-#### Mega Sponsors
-
-[![Sponsors](https://opencollective.com/sonarr/tiers/mega-sponsor.svg?width=890)](https://opencollective.com/sonarr/contribute/mega-sponsor-21443/checkout)
-
-#### Sponsors
-
-[![Flexible Sponsors](https://opencollective.com/sonarr/sponsors.svg?width=890)](https://opencollective.com/sonarr/contribute/sponsor-21457/checkout)
-
-#### Backers
-
-[![Backers](https://opencollective.com/sonarr/backers.svg?width=890)](https://opencollective.com/sonarr/contribute/backer-21442/checkout)
-
-#### JetBrains
-
-Thank you to [<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" alt="JetBrains" width="96">](http://www.jetbrains.com/) for providing us with free licenses to their great tools
-
-[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/TeamCity.png" alt="TeamCity" width="64">](http://www.jetbrains.com/teamcity/)
-
-[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/ReSharper.png" alt="ReSharper" width="64">](http://www.jetbrains.com/resharper/)
-
-[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/dotTrace.png" alt="dotTrace" width="64">](http://www.jetbrains.com/dottrace/)
-
-[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/Rider.png" alt="Rider" width="64">](http://www.jetbrains.com/rider/)
-
-### Licenses
+## License
 
 - [GNU GPL v3](http://www.gnu.org/licenses/gpl.html)
-- Copyright 2010-2025
+- Based on [Sonarr](https://github.com/Sonarr/Sonarr), Copyright 2010-2025 Sonarr contributors

@@ -2,7 +2,7 @@ using System.Linq;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Streamarr.Api.V3.Indexers;
+using Streamarr.Api.V1.Indexers;
 using Streamarr.Core.ThingiProvider;
 using Streamarr.Http.ClientSchema;
 

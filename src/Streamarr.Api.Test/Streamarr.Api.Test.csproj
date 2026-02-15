@@ -8,7 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Streamarr.Core\Streamarr.Core.csproj" />
     <ProjectReference Include="..\Streamarr.Test.Common\Streamarr.Test.Common.csproj" />
-    <ProjectReference Include="..\Streamarr.Api.V3\Streamarr.Api.V3.csproj" />
+    <ProjectReference Include="..\Streamarr.Api.V1\Streamarr.Api.V1.csproj" />
     <ProjectReference Include="..\Streamarr.Http\Streamarr.Http.csproj" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using Streamarr.Api.V3.RootFolders;
+using Streamarr.Api.V1.RootFolders;
 
 namespace Streamarr.Integration.Test.ApiTests
 {

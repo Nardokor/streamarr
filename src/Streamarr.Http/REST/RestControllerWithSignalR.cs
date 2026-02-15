@@ -76,7 +76,7 @@ namespace Streamarr.Http.REST
 
             var ns = GetType().Namespace;
 
-            if (ns.Contains("V3") || ns.Contains("V5"))
+            if (ns.Contains("V1"))
             {
                 var signalRMessage = new SignalRMessage
                 {
@@ -99,7 +99,7 @@ namespace Streamarr.Http.REST
 
             var ns = GetType().Namespace;
 
-            if (ns.Contains("V3") || ns.Contains("V5"))
+            if (ns.Contains("V1"))
             {
                 var signalRMessage = new SignalRMessage
                 {

@@ -17,8 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 using NLog.Extensions.Logging;
 using StackExchange.Profiling;
-using Streamarr.Api.V3.System;
-using Streamarr.Api.V5.Series;
+using Streamarr.Api.V1.Series;
 using Streamarr.Common.EnvironmentInfo;
 using Streamarr.Common.Instrumentation;
 using Streamarr.Common.Processes;
@@ -98,7 +97,6 @@ namespace Streamarr.Host
             })
 
             // Register all controllers from the API and HTTP projects
-            .AddApplicationPart(typeof(SystemController).Assembly)
             .AddApplicationPart(typeof(SeriesLookupController).Assembly)
             .AddApplicationPart(typeof(StaticResourceController).Assembly)
             .AddJsonOptions(options =>
@@ -109,27 +107,15 @@ namespace Streamarr.Host
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v3", new OpenApiInfo
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Version = "3.0.0",
+                    Version = "1.0.0",
                     Title = "Streamarr",
-                    Description = "Streamarr API docs - The v3 API docs apply to both v3 and v4 versions of Streamarr. Some functionality may only be available in v4 of the Streamarr application.",
+                    Description = "Streamarr API docs",
                     License = new OpenApiLicense
                     {
                         Name = "GPL-3.0",
-                        Url = new Uri("https://github.com/Sonarr/Sonarr/blob/develop/LICENSE")
-                    }
-                });
-
-                c.SwaggerDoc("v5", new OpenApiInfo
-                {
-                    Version = "5.0.0",
-                    Title = "Streamarr",
-                    Description = "Streamarr API docs - The v5 API docs apply to Streamarr v5 only.",
-                    License = new OpenApiLicense
-                    {
-                        Name = "GPL-3.0",
-                        Url = new Uri("https://github.com/Sonarr/Sonarr/blob/develop/LICENSE")
+                        Url = new Uri("https://github.com/Nardokor/streamarr/blob/main/LICENSE")
                     }
                 });
 
@@ -349,7 +335,7 @@ namespace Streamarr.Host
             app.UseMiddleware<StartingUpMiddleware>();
             app.UseMiddleware<CacheHeaderMiddleware>();
             app.UseMiddleware<IfModifiedMiddleware>();
-            app.UseMiddleware<BufferingMiddleware>(new List<string> { "/api/v3/command", "/api/v5/command" });
+            app.UseMiddleware<BufferingMiddleware>(new List<string> { "/api/v1/command" });
 
             app.UseWebSockets();
             app.UseMiniProfiler();

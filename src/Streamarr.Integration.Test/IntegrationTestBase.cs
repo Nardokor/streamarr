@@ -11,17 +11,17 @@ using NLog.Config;
 using NLog.Targets;
 using NUnit.Framework;
 using RestSharp;
-using Streamarr.Api.V3.Blocklist;
-using Streamarr.Api.V3.Config;
-using Streamarr.Api.V3.DownloadClient;
-using Streamarr.Api.V3.EpisodeFiles;
-using Streamarr.Api.V3.Episodes;
-using Streamarr.Api.V3.History;
-using Streamarr.Api.V3.Profiles.Quality;
-using Streamarr.Api.V3.RootFolders;
-using Streamarr.Api.V3.Series;
-using Streamarr.Api.V3.System.Tasks;
-using Streamarr.Api.V3.Tags;
+using Streamarr.Api.V1.Blocklist;
+using Streamarr.Api.V1.Config;
+using Streamarr.Api.V1.DownloadClient;
+using Streamarr.Api.V1.EpisodeFiles;
+using Streamarr.Api.V1.Episodes;
+using Streamarr.Api.V1.History;
+using Streamarr.Api.V1.Profiles.Quality;
+using Streamarr.Api.V1.RootFolders;
+using Streamarr.Api.V1.Series;
+using Streamarr.Api.V1.System.Tasks;
+using Streamarr.Api.V1.Tags;
 using Streamarr.Common.EnvironmentInfo;
 using Streamarr.Common.Processes;
 using Streamarr.Core.Qualities;
@@ -99,7 +99,7 @@ namespace Streamarr.Integration.Test
 
         protected virtual void InitRestClients()
         {
-            RestClient = new RestClient(RootUrl + "api/v3/");
+            RestClient = new RestClient(RootUrl + "api/v1/");
             RestClient.AddDefaultHeader("Authentication", ApiKey);
             RestClient.AddDefaultHeader("X-Api-Key", ApiKey);
 

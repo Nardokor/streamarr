@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using RestSharp;
-using Streamarr.Api.V3.DownloadClient;
+using Streamarr.Api.V1.DownloadClient;
 
 namespace Streamarr.Integration.Test.Client
 {

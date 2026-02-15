@@ -1,7 +1,7 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using Streamarr.Api.V3.DiskSpace;
+using Streamarr.Api.V1.DiskSpace;
 using Streamarr.Integration.Test.Client;
 
 namespace Streamarr.Integration.Test.ApiTests

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using RestSharp;
-using Streamarr.Api.V3.Series;
+using Streamarr.Api.V1.Series;
 
 namespace Streamarr.Integration.Test.Client
 {

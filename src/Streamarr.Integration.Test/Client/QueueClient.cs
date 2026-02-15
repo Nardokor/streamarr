@@ -1,5 +1,5 @@
 ﻿using RestSharp;
-using Streamarr.Api.V3.Queue;
+using Streamarr.Api.V1.Queue;
 
 namespace Streamarr.Integration.Test.Client
 {

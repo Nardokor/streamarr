@@ -5,11 +5,11 @@ using Streamarr.Core.Datastore.Events;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.ProgressMessaging;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
 using Streamarr.Http.Validation;
+using Streamarr.SignalR;
 using Debouncer = Streamarr.Common.TPL.Debouncer;
 
 namespace Streamarr.Api.V5.Commands;

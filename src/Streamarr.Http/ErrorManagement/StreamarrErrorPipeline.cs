@@ -12,11 +12,11 @@ using Streamarr.Http.Exceptions;
 
 namespace Streamarr.Http.ErrorManagement
 {
-    public class SonarrErrorPipeline
+    public class StreamarrErrorPipeline
     {
         private readonly Logger _logger;
 
-        public SonarrErrorPipeline(Logger logger)
+        public StreamarrErrorPipeline(Logger logger)
         {
             _logger = logger;
         }

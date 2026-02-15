@@ -58,7 +58,7 @@ namespace Streamarr.Core.Test.OrganizerTests.FileNameBuilderTests
                             .With(e => e.AbsoluteEpisodeNumber = 102)
                             .Build();
 
-            _episodeFile = new EpisodeFile { Quality = new QualityModel(Quality.HDTV720p), ReleaseGroup = "SonarrTest" };
+            _episodeFile = new EpisodeFile { Quality = new QualityModel(Quality.HDTV720p), ReleaseGroup = "StreamarrTest" };
 
             Mocker.GetMock<IQualityDefinitionService>()
                 .Setup(v => v.Get(Moq.It.IsAny<Quality>()))
@@ -152,7 +152,7 @@ namespace Streamarr.Core.Test.OrganizerTests.FileNameBuilderTests
             _namingConfig.MultiEpisodeStyle = MultiEpisodeStyle.Duplicate;
 
             Subject.BuildFileName(new List<Episode> { _episode1, _episode2 }, _series, _episodeFile)
-                   .Should().Be("South Park - S15E06 - S15E07 - (HDTV-720p, , SonarrTest) - City Sushi");
+                   .Should().Be("South Park - S15E06 - S15E07 - (HDTV-720p, , StreamarrTest) - City Sushi");
         }
 
         [Test]

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Streamarr.Core.Extras.Metadata;
-using Streamarr.SignalR;
 using Streamarr.Api.V5.Provider;
+using Streamarr.Core.Extras.Metadata;
 using Streamarr.Http;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V5.Metadata;
 

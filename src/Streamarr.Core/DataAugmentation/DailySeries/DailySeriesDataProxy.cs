@@ -18,7 +18,7 @@ namespace Streamarr.Core.DataAugmentation.DailySeries
         private readonly IHttpRequestBuilderFactory _requestBuilder;
         private readonly Logger _logger;
 
-        public DailySeriesDataProxy(IHttpClient httpClient, ISonarrCloudRequestBuilder requestBuilder, Logger logger)
+        public DailySeriesDataProxy(IHttpClient httpClient, IStreamarrCloudRequestBuilder requestBuilder, Logger logger)
         {
             _httpClient = httpClient;
             _requestBuilder = requestBuilder.Services;

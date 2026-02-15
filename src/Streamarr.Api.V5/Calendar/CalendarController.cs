@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Streamarr.Api.V5.Episodes;
 using Streamarr.Common.Extensions;
 using Streamarr.Core.CustomFormats;
 using Streamarr.Core.DecisionEngine.Specifications;
 using Streamarr.Core.Tags;
 using Streamarr.Core.Tv;
-using Streamarr.SignalR;
-using Streamarr.Api.V5.Episodes;
 using Streamarr.Http;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V5.Calendar
 {

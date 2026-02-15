@@ -328,7 +328,7 @@ namespace Streamarr.Core.Test.ParserTests
         }
 
         [TestCase("The Shadow Series S01 E01-08 WebRip Dual Audio [Hindi 5.1] 720p x264 AAC ESub")]
-        [TestCase("The Final Sonarr (2020) S04 Complete 720p NF WEBRip [Hindi] Dual audio")]
+        [TestCase("The Final Streamarr (2020) S04 Complete 720p NF WEBRip [Hindi] Dual audio")]
         public void should_parse_language_hindi(string postTitle)
         {
             var result = LanguageParser.ParseLanguages(postTitle);
@@ -420,7 +420,7 @@ namespace Streamarr.Core.Test.ParserTests
         }
 
         [TestCase("The Shadow Series S01 E01-08 WebRip Dual Audio [Hindi 5.1 + English 5.1] 720p x264 AAC ESub")]
-        [TestCase("The Final Sonarr (2020) S04 Complete 720p NF WEBRip [Hindi+English] Dual audio")]
+        [TestCase("The Final Streamarr (2020) S04 Complete 720p NF WEBRip [Hindi+English] Dual audio")]
         public void should_parse_hindi_and_english(string postTitle)
         {
             var result = LanguageParser.ParseLanguages(postTitle);

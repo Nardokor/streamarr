@@ -3,8 +3,8 @@ using System.Linq;
 using System.Net;
 using FluentAssertions;
 using NLog;
-using Streamarr.Common.Serializer;
 using RestSharp;
+using Streamarr.Common.Serializer;
 using Streamarr.Http;
 using Streamarr.Http.REST;
 

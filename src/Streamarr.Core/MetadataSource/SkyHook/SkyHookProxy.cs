@@ -27,7 +27,7 @@ namespace Streamarr.Core.MetadataSource.SkyHook
         private readonly IHttpRequestBuilderFactory _requestBuilder;
 
         public SkyHookProxy(IHttpClient httpClient,
-                            ISonarrCloudRequestBuilder requestBuilder,
+                            IStreamarrCloudRequestBuilder requestBuilder,
                             ISeriesService seriesService,
                             IDailySeriesService dailySeriesService,
                             Logger logger)

@@ -74,7 +74,7 @@ namespace Streamarr.Http.Validation
 
                 // We can safely index into visited because this is a post-order traversal,
                 // all of the children of this node are already in the dictionary.
-                var filteredMatches = node?.Matches?.Where(x => !x.DisplayName.StartsWith("Sonarr.Http.Frontend.StaticResourceController")).ToList();
+                var filteredMatches = node?.Matches?.Where(x => !x.DisplayName.StartsWith("Streamarr.Http.Frontend.StaticResourceController")).ToList();
                 var matchCount = filteredMatches?.Count ?? 0;
                 if (matchCount > 1)
                 {

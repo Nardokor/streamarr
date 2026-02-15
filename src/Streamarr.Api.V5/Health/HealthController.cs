@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Streamarr.Core.Datastore.Events;
 using Streamarr.Core.HealthCheck;
 using Streamarr.Core.Messaging.Events;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V5.Health;
 

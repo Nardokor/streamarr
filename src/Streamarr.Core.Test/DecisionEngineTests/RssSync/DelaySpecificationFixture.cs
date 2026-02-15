@@ -80,7 +80,7 @@ namespace Streamarr.Core.Test.DecisionEngineTests.RssSync
             {
                 Quality = quality,
                 Languages = new List<Language> { language },
-                SceneName = "Series.Title.S01E01.720p.HDTV.x264-Sonarr"
+                SceneName = "Series.Title.S01E01.720p.HDTV.x264-Streamarr"
             };
         }
 

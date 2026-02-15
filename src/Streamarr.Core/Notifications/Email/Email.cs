@@ -182,7 +182,7 @@ namespace Streamarr.Core.Notifications.Email
 
             try
             {
-                SendEmail(settings, "Sonarr - Test Notification", body);
+                SendEmail(settings, "Streamarr - Test Notification", body);
             }
             catch (Exception ex)
             {

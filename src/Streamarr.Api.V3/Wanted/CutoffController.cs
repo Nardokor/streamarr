@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Streamarr.Api.V3.Episodes;
 using Streamarr.Core.CustomFormats;
 using Streamarr.Core.Datastore;
 using Streamarr.Core.DecisionEngine.Specifications;
 using Streamarr.Core.Tv;
-using Streamarr.SignalR;
-using Streamarr.Api.V3.Episodes;
 using Streamarr.Http;
 using Streamarr.Http.Extensions;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V3.Wanted
 {

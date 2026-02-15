@@ -43,7 +43,7 @@ namespace Streamarr.Core.Datastore.Converters
                 reader.Read(); // Move to start of object (stored in this property)
                 ValidateToken(reader, JsonTokenType.StartObject); // Start of formattag
 
-                var type = Type.GetType($"Streamarr.Core.CustomFormats.{typename}, Sonarr.Core", true);
+                var type = Type.GetType($"Streamarr.Core.CustomFormats.{typename}, Streamarr.Core", true);
                 var item = (ICustomFormatSpecification)JsonSerializer.Deserialize(ref reader, type, options);
                 results.Add(item);
 

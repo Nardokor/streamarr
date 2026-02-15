@@ -77,7 +77,7 @@ namespace Streamarr.Core.Test.MediaFiles.EpisodeImport.Aggregation.Aggregators.A
             var mediaInfo = Builder<MediaInfoModel>.CreateNew()
                 .With(m => m.Width = 1920)
                 .With(m => m.Height = 1080)
-                .With(m => m.Title = "Series.Title.S01E05.WEB.x264-Sonarr")
+                .With(m => m.Title = "Series.Title.S01E05.WEB.x264-Streamarr")
                 .Build();
 
             var localEpisode = Builder<LocalEpisode>.CreateNew()
@@ -97,7 +97,7 @@ namespace Streamarr.Core.Test.MediaFiles.EpisodeImport.Aggregation.Aggregators.A
             var mediaInfo = Builder<MediaInfoModel>.CreateNew()
                 .With(m => m.Width = 1920)
                 .With(m => m.Height = 1080)
-                .With(m => m.Title = "Series.Title.S01E05.x264-Sonarr")
+                .With(m => m.Title = "Series.Title.S01E05.x264-Streamarr")
                 .Build();
 
             var localEpisode = Builder<LocalEpisode>.CreateNew()
@@ -117,7 +117,7 @@ namespace Streamarr.Core.Test.MediaFiles.EpisodeImport.Aggregation.Aggregators.A
             var mediaInfo = Builder<MediaInfoModel>.CreateNew()
                 .With(m => m.Width = 1024)
                 .With(m => m.Height = 576)
-                .With(m => m.Title = "Series.Title.S01E05.Bluray.x264-Sonarr")
+                .With(m => m.Title = "Series.Title.S01E05.Bluray.x264-Streamarr")
                 .Build();
 
             var localEpisode = Builder<LocalEpisode>.CreateNew()

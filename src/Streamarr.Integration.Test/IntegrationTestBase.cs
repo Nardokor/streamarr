@@ -10,13 +10,6 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NUnit.Framework;
-using Streamarr.Common.EnvironmentInfo;
-using Streamarr.Common.Processes;
-using Streamarr.Core.Qualities;
-using Streamarr.Core.Tv.Commands;
-using Streamarr.Integration.Test.Client;
-using Streamarr.SignalR;
-using Streamarr.Test.Common.Categories;
 using RestSharp;
 using Streamarr.Api.V3.Blocklist;
 using Streamarr.Api.V3.Config;
@@ -29,6 +22,13 @@ using Streamarr.Api.V3.RootFolders;
 using Streamarr.Api.V3.Series;
 using Streamarr.Api.V3.System.Tasks;
 using Streamarr.Api.V3.Tags;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Processes;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Tv.Commands;
+using Streamarr.Integration.Test.Client;
+using Streamarr.SignalR;
+using Streamarr.Test.Common.Categories;
 
 namespace Streamarr.Integration.Test
 {

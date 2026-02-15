@@ -8,9 +8,9 @@ using System.Threading;
 using NLog;
 using NLog.Common;
 using NLog.Targets;
+using Sentry;
 using Streamarr.Common.EnvironmentInfo;
 using Streamarr.Common.Extensions;
-using Sentry;
 
 namespace Streamarr.Common.Instrumentation.Sentry
 {

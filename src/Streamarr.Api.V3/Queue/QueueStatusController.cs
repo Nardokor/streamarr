@@ -7,9 +7,9 @@ using Streamarr.Core.Download.Pending;
 using Streamarr.Core.Download.TrackedDownloads;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Queue;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V3.Queue
 {

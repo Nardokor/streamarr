@@ -150,18 +150,18 @@ namespace Streamarr.Core.Datastore
                                 continue;
                             }
 
-                            throw new SonarrStartupException(ex, "Error creating main database");
+                            throw new StreamarrStartupException(ex, "Error creating main database");
                         }
                     }
                 }
                 else
                 {
-                    throw new SonarrStartupException(e, "Error creating main database");
+                    throw new StreamarrStartupException(e, "Error creating main database");
                 }
             }
             catch (Exception e)
             {
-                throw new SonarrStartupException(e, "Error creating main database");
+                throw new StreamarrStartupException(e, "Error creating main database");
             }
         }
 
@@ -193,7 +193,7 @@ namespace Streamarr.Core.Datastore
             }
             catch (Exception e)
             {
-                throw new SonarrStartupException(e, "Error creating log database");
+                throw new StreamarrStartupException(e, "Error creating log database");
             }
         }
     }

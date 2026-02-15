@@ -3,7 +3,7 @@ using Streamarr.Common.Exceptions;
 
 namespace Streamarr.Core.Datastore
 {
-    public class CorruptDatabaseException : SonarrStartupException
+    public class CorruptDatabaseException : StreamarrStartupException
     {
         public CorruptDatabaseException(string message, params object[] args)
             : base(message, args)

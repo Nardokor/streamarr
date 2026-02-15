@@ -18,7 +18,7 @@ namespace Streamarr.Core.Test.HealthCheck.Checks
         [SetUp]
         public void Setup()
         {
-            Mocker.SetConstant<ISonarrCloudRequestBuilder>(new SonarrCloudRequestBuilder());
+            Mocker.SetConstant<IStreamarrCloudRequestBuilder>(new StreamarrCloudRequestBuilder());
 
             Mocker.GetMock<ILocalizationService>()
                 .Setup(s => s.GetLocalizedString(It.IsAny<string>()))

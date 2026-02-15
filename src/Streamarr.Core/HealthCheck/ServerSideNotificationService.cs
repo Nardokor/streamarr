@@ -15,11 +15,11 @@ namespace Streamarr.Core.HealthCheck
     public class ServerSideNotificationService : HealthCheckBase
     {
         private readonly IHttpClient _client;
-        private readonly ISonarrCloudRequestBuilder _cloudRequestBuilder;
+        private readonly IStreamarrCloudRequestBuilder _cloudRequestBuilder;
         private readonly IConfigFileProvider _configFileProvider;
         private readonly Logger _logger;
 
-        public ServerSideNotificationService(IHttpClient client, ISonarrCloudRequestBuilder cloudRequestBuilder, IConfigFileProvider configFileProvider, ILocalizationService localizationService, Logger logger)
+        public ServerSideNotificationService(IHttpClient client, IStreamarrCloudRequestBuilder cloudRequestBuilder, IConfigFileProvider configFileProvider, ILocalizationService localizationService, Logger logger)
             : base(localizationService)
         {
             _client = client;

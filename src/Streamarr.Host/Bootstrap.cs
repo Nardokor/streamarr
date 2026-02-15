@@ -25,7 +25,6 @@ using Streamarr.Common.Options;
 using Streamarr.Core.Configuration;
 using Streamarr.Core.Datastore.Extensions;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
-
 using PostgresOptions = Streamarr.Core.Datastore.PostgresOptions;
 
 namespace Streamarr.Host
@@ -36,19 +35,19 @@ namespace Streamarr.Host
 
         public static readonly List<string> ASSEMBLIES = new()
         {
-            "Sonarr.Host",
-            "Sonarr.Core",
-            "Sonarr.SignalR",
-            "Sonarr.Api.V3",
-            "Sonarr.Api.V5",
-            "Sonarr.Http"
+            "Streamarr.Host",
+            "Streamarr.Core",
+            "Streamarr.SignalR",
+            "Streamarr.Api.V3",
+            "Streamarr.Api.V5",
+            "Streamarr.Http"
         };
 
         public static void Start(string[] args, Action<IHostBuilder> trayCallback = null)
         {
             try
             {
-                Logger.Info("Starting Sonarr - {0} - Version {1}",
+                Logger.Info("Starting Streamarr - {0} - Version {1}",
                             Environment.ProcessPath,
                             Assembly.GetExecutingAssembly().GetName().Version);
 
@@ -66,11 +65,11 @@ namespace Streamarr.Host
 
                 RunHostUntilShutdown(args, startupContext, appMode, trayCallback);
 
-                Logger.Info("Sonarr has shut down completely");
+                Logger.Info("Streamarr has shut down completely");
             }
             catch (InvalidConfigFileException ex)
             {
-                throw new SonarrStartupException(ex);
+                throw new StreamarrStartupException(ex);
             }
             catch (TerminateApplicationException e)
             {
@@ -105,12 +104,12 @@ namespace Streamarr.Host
                 })
                 .ConfigureServices(services =>
                 {
-                    services.Configure<PostgresOptions>(config.GetSection("Sonarr:Postgres"));
-                    services.Configure<AppOptions>(config.GetSection("Sonarr:App"));
-                    services.Configure<AuthOptions>(config.GetSection("Sonarr:Auth"));
-                    services.Configure<ServerOptions>(config.GetSection("Sonarr:Server"));
-                    services.Configure<LogOptions>(config.GetSection("Sonarr:Log"));
-                    services.Configure<UpdateOptions>(config.GetSection("Sonarr:Update"));
+                    services.Configure<PostgresOptions>(config.GetSection("Streamarr:Postgres"));
+                    services.Configure<AppOptions>(config.GetSection("Streamarr:App"));
+                    services.Configure<AuthOptions>(config.GetSection("Streamarr:Auth"));
+                    services.Configure<ServerOptions>(config.GetSection("Streamarr:Server"));
+                    services.Configure<LogOptions>(config.GetSection("Streamarr:Log"));
+                    services.Configure<UpdateOptions>(config.GetSection("Streamarr:Update"));
                 })
                 .Build();
         }
@@ -141,14 +140,14 @@ namespace Streamarr.Host
         {
             var config = GetConfiguration(context);
 
-            var bindAddress = config.GetValue<string>($"Sonarr:Server:{nameof(ServerOptions.BindAddress)}") ?? config.GetValue(nameof(ConfigFileProvider.BindAddress), "*");
-            var port = config.GetValue<int?>($"Sonarr:Server:{nameof(ServerOptions.Port)}") ?? config.GetValue(nameof(ConfigFileProvider.Port), 8989);
-            var sslPort = config.GetValue<int?>($"Sonarr:Server:{nameof(ServerOptions.SslPort)}") ?? config.GetValue(nameof(ConfigFileProvider.SslPort), 9898);
-            var enableSsl = config.GetValue<bool?>($"Sonarr:Server:{nameof(ServerOptions.EnableSsl)}") ?? config.GetValue(nameof(ConfigFileProvider.EnableSsl), false);
-            var sslCertPath = config.GetValue<string>($"Sonarr:Server:{nameof(ServerOptions.SslCertPath)}") ?? config.GetValue<string>(nameof(ConfigFileProvider.SslCertPath));
-            var sslKeyPath = config.GetValue<string>($"Sonarr:Server:{nameof(ServerOptions.SslKeyPath)}") ?? config.GetValue<string>(nameof(ConfigFileProvider.SslKeyPath));
-            var sslCertPassword = config.GetValue<string>($"Sonarr:Server:{nameof(ServerOptions.SslCertPassword)}") ?? config.GetValue<string>(nameof(ConfigFileProvider.SslCertPassword));
-            var logDbEnabled = config.GetValue<bool?>($"Sonarr:Log:{nameof(LogOptions.DbEnabled)}") ?? config.GetValue(nameof(ConfigFileProvider.LogDbEnabled), true);
+            var bindAddress = config.GetValue<string>($"Streamarr:Server:{nameof(ServerOptions.BindAddress)}") ?? config.GetValue(nameof(ConfigFileProvider.BindAddress), "*");
+            var port = config.GetValue<int?>($"Streamarr:Server:{nameof(ServerOptions.Port)}") ?? config.GetValue(nameof(ConfigFileProvider.Port), 8989);
+            var sslPort = config.GetValue<int?>($"Streamarr:Server:{nameof(ServerOptions.SslPort)}") ?? config.GetValue(nameof(ConfigFileProvider.SslPort), 9898);
+            var enableSsl = config.GetValue<bool?>($"Streamarr:Server:{nameof(ServerOptions.EnableSsl)}") ?? config.GetValue(nameof(ConfigFileProvider.EnableSsl), false);
+            var sslCertPath = config.GetValue<string>($"Streamarr:Server:{nameof(ServerOptions.SslCertPath)}") ?? config.GetValue<string>(nameof(ConfigFileProvider.SslCertPath));
+            var sslKeyPath = config.GetValue<string>($"Streamarr:Server:{nameof(ServerOptions.SslKeyPath)}") ?? config.GetValue<string>(nameof(ConfigFileProvider.SslKeyPath));
+            var sslCertPassword = config.GetValue<string>($"Streamarr:Server:{nameof(ServerOptions.SslCertPassword)}") ?? config.GetValue<string>(nameof(ConfigFileProvider.SslCertPassword));
+            var logDbEnabled = config.GetValue<bool?>($"Streamarr:Log:{nameof(LogOptions.DbEnabled)}") ?? config.GetValue(nameof(ConfigFileProvider.LogDbEnabled), true);
 
             var urls = new List<string> { BuildUrl("http", bindAddress, port) };
 
@@ -182,12 +181,12 @@ namespace Streamarr.Host
                 })
                 .ConfigureServices(services =>
                 {
-                    services.Configure<PostgresOptions>(config.GetSection("Sonarr:Postgres"));
-                    services.Configure<AppOptions>(config.GetSection("Sonarr:App"));
-                    services.Configure<AuthOptions>(config.GetSection("Sonarr:Auth"));
-                    services.Configure<ServerOptions>(config.GetSection("Sonarr:Server"));
-                    services.Configure<LogOptions>(config.GetSection("Sonarr:Log"));
-                    services.Configure<UpdateOptions>(config.GetSection("Sonarr:Update"));
+                    services.Configure<PostgresOptions>(config.GetSection("Streamarr:Postgres"));
+                    services.Configure<AppOptions>(config.GetSection("Streamarr:App"));
+                    services.Configure<AuthOptions>(config.GetSection("Streamarr:Auth"));
+                    services.Configure<ServerOptions>(config.GetSection("Streamarr:Server"));
+                    services.Configure<LogOptions>(config.GetSection("Streamarr:Log"));
+                    services.Configure<UpdateOptions>(config.GetSection("Streamarr:Update"));
                 })
                 .ConfigureWebHost(builder =>
                 {
@@ -270,7 +269,7 @@ namespace Streamarr.Host
             {
                 Logger.Error(ex, ex.Message);
 
-                throw new InvalidConfigFileException($"{configPath} is corrupt or invalid. Please delete the config file and Sonarr will recreate it.", ex);
+                throw new InvalidConfigFileException($"{configPath} is corrupt or invalid. Please delete the config file and Streamarr will recreate it.", ex);
             }
         }
 
@@ -297,22 +296,22 @@ namespace Streamarr.Host
                 }
                 else
                 {
-                    throw new SonarrStartupException($"Invalid certificate type: {type}");
+                    throw new StreamarrStartupException($"Invalid certificate type: {type}");
                 }
             }
             catch (CryptographicException ex)
             {
                 if (ex.HResult == 0x2 || ex.HResult == 0x2006D080)
                 {
-                    throw new SonarrStartupException(ex,
+                    throw new StreamarrStartupException(ex,
                         $"The SSL certificate file {cert} does not exist");
                 }
 
-                throw new SonarrStartupException(ex);
+                throw new StreamarrStartupException(ex);
             }
             catch (Exception ex)
             {
-                throw new SonarrStartupException(ex);
+                throw new StreamarrStartupException(ex);
             }
 
             return certificate;

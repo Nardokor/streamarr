@@ -4,9 +4,9 @@ using Streamarr.Core.Download.Pending;
 using Streamarr.Core.Download.TrackedDownloads;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Queue;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
+using Streamarr.SignalR;
 using Debouncer = Streamarr.Common.TPL.Debouncer;
 
 namespace Streamarr.Api.V5.Queue

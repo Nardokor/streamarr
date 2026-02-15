@@ -11,11 +11,11 @@ using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Parser;
 using Streamarr.Core.Parser.Model;
 using Streamarr.Core.Tv;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
-using BadRequestException = Sonarr.Http.REST.BadRequestException;
+using Streamarr.SignalR;
+using BadRequestException = Streamarr.Http.REST.BadRequestException;
 
 namespace Streamarr.Api.V5.EpisodeFiles;
 

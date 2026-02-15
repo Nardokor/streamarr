@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Streamarr.Api.V3.CustomFormats;
+using Streamarr.Api.V3.Episodes;
+using Streamarr.Api.V3.Series;
 using Streamarr.Core.CustomFormats;
 using Streamarr.Core.History;
 using Streamarr.Core.Languages;
 using Streamarr.Core.Qualities;
-using Streamarr.Api.V3.CustomFormats;
-using Streamarr.Api.V3.Episodes;
-using Streamarr.Api.V3.Series;
 using Streamarr.Http.REST;
 
 namespace Streamarr.Api.V3.History

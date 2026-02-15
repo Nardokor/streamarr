@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Streamarr.Api.V3.CustomFormats;
+using Streamarr.Api.V3.Episodes;
+using Streamarr.Api.V3.Series;
 using Streamarr.Core.Download.TrackedDownloads;
 using Streamarr.Core.Indexers;
 using Streamarr.Core.Languages;
 using Streamarr.Core.Qualities;
 using Streamarr.Core.Queue;
-using Streamarr.Api.V3.CustomFormats;
-using Streamarr.Api.V3.Episodes;
-using Streamarr.Api.V3.Series;
 using Streamarr.Http.REST;
 
 #pragma warning disable CS0612

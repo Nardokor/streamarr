@@ -1,5 +1,5 @@
-using Streamarr.Core.Notifications;
 using Streamarr.Api.V5.Provider;
+using Streamarr.Core.Notifications;
 
 namespace Streamarr.Api.V5.Connections;
 

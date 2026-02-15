@@ -5,10 +5,10 @@ using Streamarr.Core.Datastore.Events;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Profiles.Qualities;
 using Streamarr.Core.Qualities;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V3.Qualities
 {

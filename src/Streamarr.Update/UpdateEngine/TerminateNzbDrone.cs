@@ -47,15 +47,15 @@ namespace Streamarr.Update.UpdateEngine
 
                 _logger.Info("Killing all running processes");
 
-                _processProvider.KillAll(ProcessProvider.SONARR_CONSOLE_PROCESS_NAME);
-                _processProvider.KillAll(ProcessProvider.SONARR_PROCESS_NAME);
+                _processProvider.KillAll(ProcessProvider.STREAMARR_CONSOLE_PROCESS_NAME);
+                _processProvider.KillAll(ProcessProvider.STREAMARR_PROCESS_NAME);
             }
             else
             {
                 _logger.Info("Killing all running processes");
 
-                _processProvider.KillAll(ProcessProvider.SONARR_CONSOLE_PROCESS_NAME);
-                _processProvider.KillAll(ProcessProvider.SONARR_PROCESS_NAME);
+                _processProvider.KillAll(ProcessProvider.STREAMARR_CONSOLE_PROCESS_NAME);
+                _processProvider.KillAll(ProcessProvider.STREAMARR_PROCESS_NAME);
 
                 _processProvider.Kill(processId);
             }

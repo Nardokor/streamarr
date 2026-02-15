@@ -4,6 +4,8 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
+using Polly;
+using Polly.Retry;
 using Streamarr.Common.Disk;
 using Streamarr.Common.Http;
 using Streamarr.Core.Configuration;
@@ -13,8 +15,6 @@ using Streamarr.Core.Parser.Model;
 using Streamarr.Core.RemotePathMappings;
 using Streamarr.Core.ThingiProvider;
 using Streamarr.Core.Validation;
-using Polly;
-using Polly.Retry;
 
 namespace Streamarr.Core.Download
 {
@@ -170,7 +170,7 @@ namespace Streamarr.Core.Download
             {
                 return new StreamarrValidationFailure(propertyName, "Folder does not exist")
                 {
-                    DetailedDescription = string.Format("The folder you specified does not exist or is inaccessible. Please verify the folder permissions for the user account '{0}', which is used to execute Sonarr.", Environment.UserName)
+                    DetailedDescription = string.Format("The folder you specified does not exist or is inaccessible. Please verify the folder permissions for the user account '{0}', which is used to execute Streamarr.", Environment.UserName)
                 };
             }
 
@@ -179,7 +179,7 @@ namespace Streamarr.Core.Download
                 _logger.Error("Folder '{0}' is not writable.", folder);
                 return new StreamarrValidationFailure(propertyName, "Unable to write to folder")
                 {
-                    DetailedDescription = string.Format("The folder you specified is not writable. Please verify the folder permissions for the user account '{0}', which is used to execute Sonarr.", Environment.UserName)
+                    DetailedDescription = string.Format("The folder you specified is not writable. Please verify the folder permissions for the user account '{0}', which is used to execute Streamarr.", Environment.UserName)
                 };
             }
 

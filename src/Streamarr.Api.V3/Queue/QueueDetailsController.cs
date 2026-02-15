@@ -6,9 +6,9 @@ using Streamarr.Core.Datastore.Events;
 using Streamarr.Core.Download.Pending;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Queue;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
+using Streamarr.SignalR;
 
 #pragma warning disable CS0612
 namespace Streamarr.Api.V3.Queue

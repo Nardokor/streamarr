@@ -11,11 +11,11 @@ using Streamarr.Core.MediaFiles.EpisodeImport.Manual;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.ProgressMessaging;
-using Streamarr.SignalR;
 using Streamarr.Http;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
 using Streamarr.Http.Validation;
+using Streamarr.SignalR;
 
 namespace Streamarr.Api.V3.Commands
 {

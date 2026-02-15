@@ -6,11 +6,11 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using Streamarr.Automation.Test.PageModel;
 using Streamarr.Common.EnvironmentInfo;
 using Streamarr.Test.Common;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 
 namespace Streamarr.Automation.Test
 {
@@ -52,7 +52,7 @@ namespace Streamarr.Automation.Test
             var page = new PageBase(driver);
             page.WaitForNoSpinner();
 
-            driver.ExecuteScript("window.Sonarr.NameViews = true;");
+            driver.ExecuteScript("window.Streamarr.NameViews = true;");
 
             GetPageErrors().Should().BeEmpty();
         }

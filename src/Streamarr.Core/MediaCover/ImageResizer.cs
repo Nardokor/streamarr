@@ -1,9 +1,9 @@
-using Streamarr.Common.Disk;
-using Streamarr.Common.EnvironmentInfo;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.Processing;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
 
 namespace Streamarr.Core.MediaCover
 {

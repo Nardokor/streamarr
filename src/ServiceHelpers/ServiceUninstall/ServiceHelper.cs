@@ -8,7 +8,7 @@ namespace ServiceUninstall
 {
     public static class ServiceHelper
     {
-        private static string SonarrExe => Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "Sonarr.Console.exe");
+        private static string StreamarrExe => Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "Streamarr.Console.exe");
 
         private static bool IsAnAdministrator()
         {
@@ -18,9 +18,9 @@ namespace ServiceUninstall
 
         public static void Run(string arg)
         {
-            if (!File.Exists(SonarrExe))
+            if (!File.Exists(StreamarrExe))
             {
-                Console.WriteLine("Unable to find Sonarr.exe in the current directory.");
+                Console.WriteLine("Unable to find Streamarr.exe in the current directory.");
                 return;
             }
 
@@ -32,7 +32,7 @@ namespace ServiceUninstall
 
             var startInfo = new ProcessStartInfo
                                 {
-                                    FileName = SonarrExe,
+                                    FileName = StreamarrExe,
                                     Arguments = arg,
                                     UseShellExecute = false,
                                     RedirectStandardOutput = true,

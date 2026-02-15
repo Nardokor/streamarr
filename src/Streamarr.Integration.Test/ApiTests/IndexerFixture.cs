@@ -2,8 +2,8 @@ using System.Linq;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Streamarr.Core.ThingiProvider;
 using Streamarr.Api.V3.Indexers;
+using Streamarr.Core.ThingiProvider;
 using Streamarr.Http.ClientSchema;
 
 namespace Streamarr.Integration.Test.ApiTests

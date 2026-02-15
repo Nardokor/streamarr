@@ -1,8 +1,8 @@
 using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
-using Streamarr.Automation.Test.PageModel;
 using OpenQA.Selenium;
+using Streamarr.Automation.Test.PageModel;
 
 namespace Streamarr.Automation.Test
 {

@@ -1,7 +1,7 @@
-﻿using FluentValidation.TestHelper;
+using FluentValidation.TestHelper;
 using NUnit.Framework;
-using Streamarr.Core.Qualities;
 using Streamarr.Api.V3.Qualities;
+using Streamarr.Core.Qualities;
 
 namespace Streamarr.Api.Test.v3.Qualities;
 

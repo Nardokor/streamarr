@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Streamarr.Api.V3.CustomFormats;
+using Streamarr.Api.V3.Episodes;
 using Streamarr.Common.Extensions;
 using Streamarr.Core.Languages;
 using Streamarr.Core.MediaFiles.EpisodeImport.Manual;
 using Streamarr.Core.Qualities;
-using Streamarr.Api.V3.CustomFormats;
-using Streamarr.Api.V3.Episodes;
 using Streamarr.Http;
 using Streamarr.Http.REST;
 

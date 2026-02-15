@@ -9,7 +9,7 @@ namespace Streamarr.Http.Middleware
 {
     public class StartingUpMiddleware
     {
-        private const string MESSAGE = "Sonarr is starting up, please try again later";
+        private const string MESSAGE = "Streamarr is starting up, please try again later";
         private readonly RequestDelegate _next;
         private readonly IRuntimeInfo _runtimeInfo;
 

@@ -11,7 +11,7 @@ namespace Streamarr.Core.Test.ParserTests
         [TestCase("Series", "series")]
         [TestCase("Series (2009)", "series2009")]
         [TestCase("Series.2010", "series2010")]
-        [TestCase("Series_and_Title_Sonarr", "seriestitlesonarr")]
+        [TestCase("Series_and_Title_Streamarr", "seriestitlesonarr")]
         public void should_normalize_series_title(string parsedSeriesName, string seriesName)
         {
             var result = parsedSeriesName.CleanSeriesTitle();
@@ -117,7 +117,7 @@ namespace Streamarr.Core.Test.ParserTests
         }
 
         [TestCase("The Series", "theseries")]
-        [TestCase("The Series Show With Sonarr Dev", "theseriesshowwithsonarrdev")]
+        [TestCase("The Series Show With Streamarr Dev", "theseriesshowwithsonarrdev")]
         [TestCase("The.Series.Show", "theseriesshow")]
         public void should_not_remove_from_the_beginning_of_the_title(string parsedSeriesName, string seriesName)
         {

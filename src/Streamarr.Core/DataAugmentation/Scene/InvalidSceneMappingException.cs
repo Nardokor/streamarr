@@ -13,7 +13,7 @@ namespace Streamarr.Core.DataAugmentation.Scene
 
         private static string FormatMessage(IEnumerable<SceneMapping> mappings, string releaseTitle)
         {
-            return string.Format("Scene Mappings contains a conflict for tvdbids {0}. Please notify Sonarr developers. ({1})", string.Join(",", mappings.Select(v => v.TvdbId.ToString())), releaseTitle);
+            return string.Format("Scene Mappings contains a conflict for tvdbids {0}. Please notify Streamarr developers. ({1})", string.Join(",", mappings.Select(v => v.TvdbId.ToString())), releaseTitle);
         }
     }
 }

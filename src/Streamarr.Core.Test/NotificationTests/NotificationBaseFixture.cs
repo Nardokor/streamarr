@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using FluentAssertions;
 using FluentValidation.Results;
 using NUnit.Framework;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Notifications;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
-using NzbDrone.Test.Common;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Notifications;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.NotificationTests
+namespace Streamarr.Core.Test.NotificationTests
 {
     [TestFixture]
     public class NotificationBaseFixture : TestBase
     {
         private class TestSetting : NotificationSettingsBase<TestSetting>
         {
-            public override NzbDroneValidationResult Validate()
+            public override StreamarrValidationResult Validate()
             {
-                return new NzbDroneValidationResult();
+                return new StreamarrValidationResult();
             }
         }
 
@@ -73,7 +73,7 @@ namespace NzbDrone.Core.Test.NotificationTests
                 TestLogger.Info("Series OnDelete was called");
             }
 
-            public override void OnHealthIssue(NzbDrone.Core.HealthCheck.HealthCheck artist)
+            public override void OnHealthIssue(Streamarr.Core.HealthCheck.HealthCheck artist)
             {
                 TestLogger.Info("OnHealthIssue was called");
             }

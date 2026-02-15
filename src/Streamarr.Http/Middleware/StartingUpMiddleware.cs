@@ -1,11 +1,11 @@
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Serializer;
-using Sonarr.Http.Extensions;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Serializer;
+using Streamarr.Http.Extensions;
 
-namespace Sonarr.Http.Middleware
+namespace Streamarr.Http.Middleware
 {
     public class StartingUpMiddleware
     {

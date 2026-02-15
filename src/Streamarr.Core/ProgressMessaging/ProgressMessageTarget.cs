@@ -1,11 +1,11 @@
 ﻿using NLog;
 using NLog.Config;
 using NLog.Targets;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.ProgressMessaging
+namespace Streamarr.Core.ProgressMessaging
 {
     public class ProgressMessageTarget : Target, IHandle<ApplicationStartedEvent>
     {

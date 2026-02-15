@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
 
-using NzbDrone.Core.Blocklisting;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Indexers.Tribler;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Blocklisting;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Indexers.Tribler;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.Tribler
+namespace Streamarr.Core.Download.Clients.Tribler
 {
     public class TriblerDownloadClient : TorrentClientBase<TriblerDownloadSettings>
     {
@@ -282,7 +282,7 @@ namespace NzbDrone.Core.Download.Clients.Tribler
             {
                 _logger.Error(ex, ex.Message);
 
-                return new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
+                return new StreamarrValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
                 {
                     DetailedDescription = ex.Message
                 };
@@ -291,7 +291,7 @@ namespace NzbDrone.Core.Download.Clients.Tribler
             {
                 _logger.Error(ex, "Failed to test");
 
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationUnknownException", new Dictionary<string, object> { { "exception", ex.Message } }));
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationUnknownException", new Dictionary<string, object> { { "exception", ex.Message } }));
             }
         }
     }

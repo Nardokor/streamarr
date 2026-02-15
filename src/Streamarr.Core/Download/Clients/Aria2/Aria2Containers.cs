@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using NzbDrone.Core.Download.Extensions;
+using Streamarr.Core.Download.Extensions;
 
-namespace NzbDrone.Core.Download.Clients.Aria2
+namespace Streamarr.Core.Download.Clients.Aria2
 {
     public class Aria2Fault
     {

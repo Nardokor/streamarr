@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using NLog;
 
-namespace NzbDrone.Update.UpdateEngine
+namespace Streamarr.Update.UpdateEngine
 {
     public interface IDetectExistingVersion
     {

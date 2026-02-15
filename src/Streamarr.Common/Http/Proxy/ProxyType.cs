@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Common.Http.Proxy
+﻿namespace Streamarr.Common.Http.Proxy
 {
     public enum ProxyType
     {

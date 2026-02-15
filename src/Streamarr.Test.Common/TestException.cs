@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Test.Common
+namespace Streamarr.Test.Common
 {
     public class TestException : Exception
     {

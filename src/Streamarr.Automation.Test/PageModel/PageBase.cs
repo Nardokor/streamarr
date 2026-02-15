@@ -3,7 +3,7 @@ using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace NzbDrone.Automation.Test.PageModel
+namespace Streamarr.Automation.Test.PageModel
 {
     public class PageBase
     {

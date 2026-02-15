@@ -1,14 +1,14 @@
 ﻿using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.DecisionEngine.Specifications.Search;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.DecisionEngine.Specifications.Search;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests.Search
+namespace Streamarr.Core.Test.DecisionEngineTests.Search
 {
     [TestFixture]
     public class SeriesSpecificationFixture : TestBase<SeriesSpecification>

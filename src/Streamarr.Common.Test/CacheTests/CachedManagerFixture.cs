@@ -1,10 +1,10 @@
 using System;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Cache;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Cache;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test.CacheTests
+namespace Streamarr.Common.Test.CacheTests
 {
     [TestFixture]
     public class CachedManagerFixture : TestBase<ICacheManager>

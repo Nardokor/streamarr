@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NzbDrone.Common.Composition
+namespace Streamarr.Common.Composition
 {
     public class KnownTypes
     {

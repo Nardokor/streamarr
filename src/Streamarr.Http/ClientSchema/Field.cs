@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Annotations;
+using Streamarr.Core.Annotations;
 
-namespace Sonarr.Http.ClientSchema
+namespace Streamarr.Http.ClientSchema
 {
     public class Field
     {

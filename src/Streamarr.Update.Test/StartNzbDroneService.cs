@@ -1,18 +1,18 @@
 using System;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Processes;
-using NzbDrone.Test.Common;
-using NzbDrone.Update.UpdateEngine;
-using IServiceProvider = NzbDrone.Common.IServiceProvider;
+using Streamarr.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Processes;
+using Streamarr.Test.Common;
+using Streamarr.Update.UpdateEngine;
+using IServiceProvider = Streamarr.Common.IServiceProvider;
 
-namespace NzbDrone.Update.Test
+namespace Streamarr.Update.Test
 {
     [TestFixture]
-    public class StartNzbDroneServiceFixture : TestBase<StartNzbDrone>
+    public class StartStreamarrServiceFixture : TestBase<StartStreamarr>
     {
         [Test]
         public void should_start_service_if_app_type_was_serivce()

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.HealthCheck;
-using Sonarr.Http.REST;
+using Streamarr.Core.HealthCheck;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Health
+namespace Streamarr.Api.V3.Health
 {
     public class HealthResource : RestResource
     {

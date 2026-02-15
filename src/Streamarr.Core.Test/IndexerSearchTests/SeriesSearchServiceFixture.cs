@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.IndexerSearch;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.Download;
+using Streamarr.Core.IndexerSearch;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.IndexerSearchTests
+namespace Streamarr.Core.Test.IndexerSearchTests
 {
     [TestFixture]
     public class SeriesSearchServiceFixture : CoreTest<SeriesSearchService>

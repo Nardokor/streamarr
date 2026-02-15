@@ -1,13 +1,13 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests
+namespace Streamarr.Core.Test.DecisionEngineTests
 {
     [TestFixture]
 

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider.Events;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.ThingiProvider.Events;
 
-namespace NzbDrone.Core.ImportLists.ImportListItems
+namespace Streamarr.Core.ImportLists.ImportListItems
 {
     public interface IImportListItemService
     {

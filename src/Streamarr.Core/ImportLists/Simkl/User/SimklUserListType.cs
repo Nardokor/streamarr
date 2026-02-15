@@ -1,6 +1,6 @@
-using NzbDrone.Core.Annotations;
+using Streamarr.Core.Annotations;
 
-namespace NzbDrone.Core.ImportLists.Simkl.User
+namespace Streamarr.Core.ImportLists.Simkl.User
 {
     public enum SimklUserListType
     {

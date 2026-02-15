@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NzbDrone.Common.Expansive
+namespace Streamarr.Common.Expansive
 {
     internal class TreeNodeList<T> : List<TreeNode<T>>
     {

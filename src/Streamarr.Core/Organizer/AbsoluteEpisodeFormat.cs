@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Organizer
+﻿namespace Streamarr.Core.Organizer
 {
     public class EpisodeFormat
     {

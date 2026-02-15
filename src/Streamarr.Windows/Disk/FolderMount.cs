@@ -1,7 +1,7 @@
 using System.IO;
-using NzbDrone.Common.Disk;
+using Streamarr.Common.Disk;
 
-namespace NzbDrone.Windows.Disk
+namespace Streamarr.Windows.Disk
 {
     public class FolderMount : IMount
     {

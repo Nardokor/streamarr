@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(179)]
-    public class add_auto_tagging : NzbDroneMigrationBase
+    public class add_auto_tagging : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

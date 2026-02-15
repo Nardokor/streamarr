@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Manual
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Manual
 {
     public class ManualImportCommand : Command
     {

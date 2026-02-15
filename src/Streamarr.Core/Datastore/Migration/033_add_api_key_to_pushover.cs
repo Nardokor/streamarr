@@ -1,12 +1,12 @@
 using System.Data;
 using FluentMigrator;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(33)]
-    public class add_api_key_to_pushover : NzbDroneMigrationBase
+    public class add_api_key_to_pushover : StreamarrMigrationBase
     {
         private const string API_KEY = "yz9b4U215iR4vrKFRfjNXP24NMNPKJ";
 

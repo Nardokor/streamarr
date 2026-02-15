@@ -1,7 +1,7 @@
 using System;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.ThingiProvider.Status
+namespace Streamarr.Core.ThingiProvider.Status
 {
     public abstract class ProviderStatusBase : ModelBase
     {

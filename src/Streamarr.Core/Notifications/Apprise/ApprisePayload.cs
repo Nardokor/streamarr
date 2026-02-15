@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Apprise
+namespace Streamarr.Core.Notifications.Apprise
 {
     public class ApprisePayload
     {

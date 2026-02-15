@@ -1,8 +1,8 @@
 using System;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Download.TrackedDownloads
+namespace Streamarr.Core.Download.TrackedDownloads
 {
     public class TrackedDownload
     {

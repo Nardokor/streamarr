@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.FileList;
-using NzbDrone.Core.Indexers.Newznab;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.FileList;
+using Streamarr.Core.Indexers.Newznab;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.IndexerTests
+namespace Streamarr.Core.Test.IndexerTests
 {
     public class IndexerServiceFixture : DbTest<IndexerFactory, IndexerDefinition>
     {

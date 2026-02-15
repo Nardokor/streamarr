@@ -1,11 +1,11 @@
 ﻿using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Instrumentation.Commands;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Instrumentation.Commands;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Instrumentation
+namespace Streamarr.Core.Instrumentation
 {
     public interface IDeleteLogFilesService
     {

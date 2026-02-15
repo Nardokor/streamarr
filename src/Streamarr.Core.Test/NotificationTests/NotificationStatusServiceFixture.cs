@@ -3,11 +3,11 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Notifications;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Notifications;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.NotificationTests
+namespace Streamarr.Core.Test.NotificationTests
 {
     public class NotificationStatusServiceFixture : CoreTest<NotificationStatusService>
     {

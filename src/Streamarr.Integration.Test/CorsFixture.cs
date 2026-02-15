@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using RestSharp;
-using Sonarr.Http.Extensions;
+using Streamarr.Http.Extensions;
 
-namespace NzbDrone.Integration.Test
+namespace Streamarr.Integration.Test
 {
     [TestFixture]
     public class CorsFixture : IntegrationTest

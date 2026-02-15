@@ -1,14 +1,14 @@
 using System;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Specifications
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Specifications
 {
     public class EpisodeTitleSpecification : IImportDecisionEngineSpecification
     {

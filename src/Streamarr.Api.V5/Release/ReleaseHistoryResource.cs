@@ -1,4 +1,4 @@
-namespace Sonarr.Api.V5.Release;
+namespace Streamarr.Api.V5.Release;
 
 public class ReleaseHistoryResource
 {

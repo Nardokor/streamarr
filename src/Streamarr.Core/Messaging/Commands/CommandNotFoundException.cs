@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace Streamarr.Core.Messaging.Commands
 {
-    public class CommandNotFoundException : NzbDroneException
+    public class CommandNotFoundException : StreamarrException
     {
         public CommandNotFoundException(string contract)
             : base("Couldn't find command " + contract)

@@ -15,24 +15,24 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.WindowsServices;
 using Microsoft.Extensions.Logging;
 using NLog;
-using NzbDrone.Common.Composition.Extensions;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Exceptions;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Common.Options;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Datastore.Extensions;
+using Streamarr.Common.Composition.Extensions;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Exceptions;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Common.Options;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Datastore.Extensions;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-using PostgresOptions = NzbDrone.Core.Datastore.PostgresOptions;
+using PostgresOptions = Streamarr.Core.Datastore.PostgresOptions;
 
-namespace NzbDrone.Host
+namespace Streamarr.Host
 {
     public static class Bootstrap
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(Bootstrap));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(Bootstrap));
 
         public static readonly List<string> ASSEMBLIES = new()
         {
@@ -84,11 +84,11 @@ namespace NzbDrone.Host
             Logger.Debug("Utility mode: {0}", appMode);
 
             new HostBuilder()
-                .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithNzbDroneRules())))
+                .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithStreamarrRules())))
                 .ConfigureContainer<IContainer>(c =>
                 {
                     c.AutoAddServices(ASSEMBLIES)
-                        .AddNzbDroneLogger()
+                        .AddStreamarrLogger()
                         .AddDatabase()
                         .AddStartupContext(startupContext)
                         .Resolve<UtilityModeRouter>()
@@ -130,7 +130,7 @@ namespace NzbDrone.Host
                 if (shouldRestart)
                 {
                     Logger.Info("Application restart requested, reinitializing host");
-                    NzbDroneLogger.ResetAllTargets(startupContext, false, true);
+                    StreamarrLogger.ResetAllTargets(startupContext, false, true);
                     Thread.Sleep(1000);
                 }
             }
@@ -159,7 +159,7 @@ namespace NzbDrone.Host
 
             return new HostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithNzbDroneRules())))
+                .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithStreamarrRules())))
                 .ConfigureLogging(logging =>
                 {
                     logging.AddFilter("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware", LogLevel.None);
@@ -167,7 +167,7 @@ namespace NzbDrone.Host
                 .ConfigureContainer<IContainer>(c =>
                 {
                     c.AutoAddServices(Bootstrap.ASSEMBLIES)
-                        .AddNzbDroneLogger()
+                        .AddStreamarrLogger()
                         .AddDatabase()
                         .AddStartupContext(context);
 

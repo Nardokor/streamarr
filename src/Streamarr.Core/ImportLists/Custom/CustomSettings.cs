@@ -1,9 +1,9 @@
 using FluentValidation;
 
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.Custom
+namespace Streamarr.Core.ImportLists.Custom
 {
     public class CustomSettingsValidator : AbstractValidator<CustomSettings>
     {
@@ -20,9 +20,9 @@ namespace NzbDrone.Core.ImportLists.Custom
         [FieldDefinition(0, Label = "ImportListsCustomListSettingsUrl", HelpText = "ImportListsCustomListSettingsUrlHelpText")]
         public override string BaseUrl { get; set; } = string.Empty;
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

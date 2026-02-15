@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Core.MediaFiles;
+using Streamarr.Core.MediaFiles;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookEpisodeDeletePayload : WebhookPayload
     {

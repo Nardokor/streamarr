@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public enum DeleteMediaFileReason
     {

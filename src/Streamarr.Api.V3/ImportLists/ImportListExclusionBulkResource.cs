@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sonarr.Api.V3.ImportLists
+namespace Streamarr.Api.V3.ImportLists
 {
     public class ImportListExclusionBulkResource
     {

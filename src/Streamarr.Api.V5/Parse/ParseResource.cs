@@ -1,11 +1,11 @@
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
-using Sonarr.Api.V5.CustomFormats;
-using Sonarr.Api.V5.Episodes;
-using Sonarr.Api.V5.Series;
-using Sonarr.Http.REST;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Api.V5.CustomFormats;
+using Streamarr.Api.V5.Episodes;
+using Streamarr.Api.V5.Series;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Parse;
+namespace Streamarr.Api.V5.Parse;
 
 public class ParseResource : RestResource
 {

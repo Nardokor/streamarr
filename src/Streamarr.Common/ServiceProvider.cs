@@ -2,10 +2,10 @@ using System;
 using System.Linq;
 using System.ServiceProcess;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Processes;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Processes;
 
-namespace NzbDrone.Common
+namespace Streamarr.Common
 {
     public interface IServiceProvider
     {

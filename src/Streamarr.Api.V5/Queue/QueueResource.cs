@@ -1,14 +1,14 @@
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Queue;
-using Sonarr.Api.V5.CustomFormats;
-using Sonarr.Api.V5.Episodes;
-using Sonarr.Api.V5.Series;
-using Sonarr.Http.REST;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Queue;
+using Streamarr.Api.V5.CustomFormats;
+using Streamarr.Api.V5.Episodes;
+using Streamarr.Api.V5.Series;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Queue
+namespace Streamarr.Api.V5.Queue
 {
     public class QueueResource : RestResource
     {
@@ -18,7 +18,7 @@ namespace Sonarr.Api.V5.Queue
         public SeriesResource? Series { get; set; }
         public List<EpisodeResource>? Episodes { get; set; }
         public List<Language> Languages { get; set; } = [];
-        public QualityModel Quality { get; set; } = new(NzbDrone.Core.Qualities.Quality.Unknown);
+        public QualityModel Quality { get; set; } = new(Streamarr.Core.Qualities.Quality.Unknown);
         public List<CustomFormatResource> CustomFormats { get; set; } = [];
         public int CustomFormatScore { get; set; }
         public decimal Size { get; set; }
@@ -44,7 +44,7 @@ namespace Sonarr.Api.V5.Queue
 
     public static class QueueResourceMapper
     {
-        public static QueueResource ToResource(this NzbDrone.Core.Queue.Queue model, bool includeSeries, bool includeEpisodes)
+        public static QueueResource ToResource(this Streamarr.Core.Queue.Queue model, bool includeSeries, bool includeEpisodes)
         {
             var customFormats = model.RemoteEpisode?.CustomFormats;
             var customFormatScore = model.Series?.QualityProfile?.Value?.CalculateCustomFormatScore(customFormats) ?? 0;
@@ -83,7 +83,7 @@ namespace Sonarr.Api.V5.Queue
             };
         }
 
-        public static List<QueueResource> ToResource(this IEnumerable<NzbDrone.Core.Queue.Queue> models, bool includeSeries, bool includeEpisode)
+        public static List<QueueResource> ToResource(this IEnumerable<Streamarr.Core.Queue.Queue> models, bool includeSeries, bool includeEpisode)
         {
             return models.Select((m) => ToResource(m, includeSeries, includeEpisode)).ToList();
         }

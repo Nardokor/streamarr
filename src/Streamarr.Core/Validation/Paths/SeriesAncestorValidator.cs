@@ -1,9 +1,9 @@
 using System.Linq;
 using FluentValidation.Validators;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Validation.Paths
+namespace Streamarr.Core.Validation.Paths
 {
     public class SeriesAncestorValidator : PropertyValidator
     {

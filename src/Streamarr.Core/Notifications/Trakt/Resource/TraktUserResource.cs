@@ -1,6 +1,6 @@
-using NzbDrone.Core.Notifications.Trakt.Resource;
+using Streamarr.Core.Notifications.Trakt.Resource;
 
-namespace NzbDrone.Core.Notifications.Trakt
+namespace Streamarr.Core.Notifications.Trakt
 {
     public class TraktUserResource
     {

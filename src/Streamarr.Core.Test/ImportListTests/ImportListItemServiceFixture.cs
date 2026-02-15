@@ -4,11 +4,11 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.ImportLists.ImportListItems;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.ImportLists.ImportListItems;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.ImportListTests
+namespace Streamarr.Core.Test.ImportListTests
 {
     public class ImportListItemServiceFixture : CoreTest<ImportListItemService>
     {

@@ -2,14 +2,14 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.History;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Quality;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.History;
+using Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Quality;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Quality
+namespace Streamarr.Core.Test.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Quality
 {
     [TestFixture]
     public class AugmentQualityFromReleaseNameFixture : CoreTest<AugmentQualityFromReleaseName>

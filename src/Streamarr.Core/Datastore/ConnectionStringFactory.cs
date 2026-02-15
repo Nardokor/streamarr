@@ -1,12 +1,12 @@
 using System;
 using System.Data.SQLite;
 using Npgsql;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Exceptions;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Exceptions;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public interface IConnectionStringFactory
     {

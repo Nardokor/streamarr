@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Notifications.Webhook;
-using NzbDrone.Core.Tags;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Notifications.Webhook;
+using Streamarr.Core.Tags;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Notifiarr
+namespace Streamarr.Core.Notifications.Notifiarr
 {
     public class Notifiarr : WebhookBase<NotifiarrSettings>
     {
@@ -97,7 +97,7 @@ namespace NzbDrone.Core.Notifications.Notifiarr
             }
             catch (NotifiarrException ex)
             {
-                return new NzbDroneValidationFailure("APIKey", _localizationService.GetLocalizedString("NotificationsValidationUnableToSendTestMessage", new Dictionary<string, object> { { "exceptionMessage", ex.Message } }));
+                return new StreamarrValidationFailure("APIKey", _localizationService.GetLocalizedString("NotificationsValidationUnableToSendTestMessage", new Dictionary<string, object> { { "exceptionMessage", ex.Message } }));
             }
 
             return null;

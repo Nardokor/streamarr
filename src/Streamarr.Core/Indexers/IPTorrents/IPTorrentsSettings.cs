@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Equ;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.IPTorrents
+namespace Streamarr.Core.Indexers.IPTorrents
 {
     public class IPTorrentsSettingsValidator : AbstractValidator<IPTorrentsSettings>
     {
@@ -55,9 +55,9 @@ namespace NzbDrone.Core.Indexers.IPTorrents
         [FieldDefinition(5, Type = FieldType.Select, SelectOptions = typeof(FailDownloads), Label = "IndexerSettingsFailDownloads", HelpText = "IndexerSettingsFailDownloadsHelpText", Advanced = true)]
         public IEnumerable<int> FailDownloads { get; set; }
 
-        public NzbDroneValidationResult Validate()
+        public StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

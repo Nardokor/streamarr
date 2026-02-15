@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Nyaa;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Http;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.Nyaa;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerTests.NyaaTests
+namespace Streamarr.Core.Test.IndexerTests.NyaaTests
 {
     [TestFixture]
     public class NyaaFixture : CoreTest<Nyaa>

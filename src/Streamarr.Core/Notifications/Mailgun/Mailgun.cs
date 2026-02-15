@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Core.Localization;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.Notifications.Mailgun
+namespace Streamarr.Core.Notifications.Mailgun
 {
     public class MailGun : NotificationBase<MailgunSettings>
     {

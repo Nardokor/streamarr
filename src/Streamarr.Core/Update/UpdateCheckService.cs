@@ -1,7 +1,7 @@
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
 
-namespace NzbDrone.Core.Update
+namespace Streamarr.Core.Update
 {
     public interface ICheckUpdateService
     {

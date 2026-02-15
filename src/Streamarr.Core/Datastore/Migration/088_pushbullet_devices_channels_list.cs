@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(88)]
-    public class pushbullet_devices_channels_list : NzbDroneMigrationBase
+    public class pushbullet_devices_channels_list : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

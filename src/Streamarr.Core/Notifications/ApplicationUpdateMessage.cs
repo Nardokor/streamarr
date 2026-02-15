@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public class ApplicationUpdateMessage
     {

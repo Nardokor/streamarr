@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Core.Download.Clients.UTorrent
+namespace Streamarr.Core.Download.Clients.UTorrent
 {
     [Flags]
     public enum UTorrentTorrentStatus

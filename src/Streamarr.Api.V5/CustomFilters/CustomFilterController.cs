@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.CustomFilters;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Core.CustomFilters;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V5.CustomFilters;
+namespace Streamarr.Api.V5.CustomFilters;
 
 [V5ApiController]
 public class CustomFilterController : RestController<CustomFilterResource>

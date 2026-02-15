@@ -1,6 +1,6 @@
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.MediaFiles.MediaInfo;
+namespace Streamarr.Core.MediaFiles.MediaInfo;
 
 public class MediaInfoAudioStreamModel : IEmbeddedDocument
 {

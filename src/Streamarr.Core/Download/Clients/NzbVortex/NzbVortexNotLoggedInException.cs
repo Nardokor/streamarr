@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Core.Download.Clients.NzbVortex
+namespace Streamarr.Core.Download.Clients.NzbVortex
 {
     public class NzbVortexNotLoggedInException : DownloadClientException
     {

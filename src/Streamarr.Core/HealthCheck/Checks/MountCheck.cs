@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace Streamarr.Core.HealthCheck.Checks
 {
     public class MountCheck : HealthCheckBase
     {

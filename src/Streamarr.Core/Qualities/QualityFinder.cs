@@ -1,12 +1,12 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Core.Qualities
+namespace Streamarr.Core.Qualities
 {
     public static class QualityFinder
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(QualityFinder));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(QualityFinder));
 
         public static Quality FindBySourceAndResolution(QualitySource source, int resolution)
         {

@@ -1,10 +1,10 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.OrganizerTests
+namespace Streamarr.Core.Test.OrganizerTests
 {
     [TestFixture]
     public class GetSeasonFolderFixture : CoreTest<FileNameBuilder>

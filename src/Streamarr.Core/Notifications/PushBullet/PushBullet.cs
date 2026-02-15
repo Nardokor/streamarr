@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.PushBullet
+namespace Streamarr.Core.Notifications.PushBullet
 {
     public class PushBullet : NotificationBase<PushBulletSettings>
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 
-namespace NzbDrone.RuntimePatches
+namespace Streamarr.RuntimePatches
 {
     public abstract class RuntimePatchBase
     {

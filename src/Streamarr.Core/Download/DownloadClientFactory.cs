@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public interface IDownloadClientFactory : IProviderFactory<IDownloadClient, DownloadClientDefinition>
     {

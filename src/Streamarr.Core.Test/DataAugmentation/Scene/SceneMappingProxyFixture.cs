@@ -1,11 +1,11 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common.Categories;
 
-namespace NzbDrone.Core.Test.DataAugmentation.Scene
+namespace Streamarr.Core.Test.DataAugmentation.Scene
 {
     [TestFixture]
     [IntegrationTest]

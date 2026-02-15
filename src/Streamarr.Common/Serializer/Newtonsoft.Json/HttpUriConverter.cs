@@ -1,8 +1,8 @@
 ﻿using System;
 using Newtonsoft.Json;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Common.Serializer
+namespace Streamarr.Common.Serializer
 {
     public class HttpUriConverter : JsonConverter
     {

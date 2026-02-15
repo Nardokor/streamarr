@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NzbDrone.Core.Download.TrackedDownloads
+namespace Streamarr.Core.Download.TrackedDownloads
 {
     public class TrackedDownloadStatusMessage
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace Streamarr.Core.Messaging.Commands
 {
     public class BackendCommandAttribute : Attribute
     {

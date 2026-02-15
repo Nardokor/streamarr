@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace NzbDrone.Core.Profiles.Releases
+namespace Streamarr.Core.Profiles.Releases
 {
     public static class PerlRegexFactory
     {

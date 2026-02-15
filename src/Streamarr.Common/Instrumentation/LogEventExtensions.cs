@@ -1,7 +1,7 @@
 ﻿using NLog;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Common.Instrumentation
+namespace Streamarr.Common.Instrumentation
 {
     public static class LogEventExtensions
     {

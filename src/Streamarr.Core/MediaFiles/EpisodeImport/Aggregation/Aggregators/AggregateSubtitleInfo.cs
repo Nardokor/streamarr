@@ -2,13 +2,13 @@ using System;
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Extras.Subtitles;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download;
+using Streamarr.Core.Extras.Subtitles;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators
 {
     public class AggregateSubtitleInfo : IAggregateLocalEpisode
     {

@@ -1,6 +1,6 @@
-using NzbDrone.Core.Languages;
+using Streamarr.Core.Languages;
 
-namespace NzbDrone.Core.Parser
+namespace Streamarr.Core.Parser
 {
     public class IsoLanguage
     {

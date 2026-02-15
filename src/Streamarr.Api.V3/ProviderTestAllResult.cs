@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace Sonarr.Api.V3
+namespace Streamarr.Api.V3
 {
     public class ProviderTestAllResult
     {

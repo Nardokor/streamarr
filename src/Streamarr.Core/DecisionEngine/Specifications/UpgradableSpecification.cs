@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Qualities;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public interface IUpgradableSpecification
     {

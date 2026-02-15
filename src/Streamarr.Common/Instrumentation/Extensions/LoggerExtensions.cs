@@ -1,6 +1,6 @@
 using NLog;
 
-namespace NzbDrone.Common.Instrumentation.Extensions
+namespace Streamarr.Common.Instrumentation.Extensions
 {
     public static class LoggerExtensions
     {

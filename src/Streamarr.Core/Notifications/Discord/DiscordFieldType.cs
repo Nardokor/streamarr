@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Discord
+namespace Streamarr.Core.Notifications.Discord
 {
     public enum DiscordGrabFieldType
     {

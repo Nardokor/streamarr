@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(182)]
-    public class add_custom_format_score_bypass_to_delay_profile : NzbDroneMigrationBase
+    public class add_custom_format_score_bypass_to_delay_profile : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

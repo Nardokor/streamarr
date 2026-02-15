@@ -3,19 +3,19 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.Download.Pending.PendingReleaseServiceTests
+namespace Streamarr.Core.Test.Download.Pending.PendingReleaseServiceTests
 {
     [TestFixture]
     public class RemoveGrabbedFixture : CoreTest<PendingReleaseService>

@@ -1,8 +1,8 @@
 using System;
 using Equ;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public class IndexerDefinition : ProviderDefinition, IEquatable<IndexerDefinition>
     {

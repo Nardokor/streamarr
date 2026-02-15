@@ -1,8 +1,8 @@
 using System.Linq;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.ImportLists.Exclusions
+namespace Streamarr.Core.ImportLists.Exclusions
 {
     public interface IImportListExclusionRepository : IBasicRepository<ImportListExclusion>
     {

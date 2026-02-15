@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Core.Extras.Files;
+using Streamarr.Core.Extras.Files;
 
-namespace NzbDrone.Core.Extras
+namespace Streamarr.Core.Extras
 {
     public class ImportExistingExtraFileFilterResult<TExtraFile>
         where TExtraFile : ExtraFile, new()

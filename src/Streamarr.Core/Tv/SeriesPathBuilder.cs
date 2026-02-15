@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.RootFolders;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.RootFolders;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public interface IBuildSeriesPaths
     {

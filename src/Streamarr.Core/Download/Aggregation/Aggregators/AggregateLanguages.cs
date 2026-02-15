@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Download.Aggregation.Aggregators
+namespace Streamarr.Core.Download.Aggregation.Aggregators
 {
     public class AggregateLanguages : IAggregateRemoteEpisode
     {

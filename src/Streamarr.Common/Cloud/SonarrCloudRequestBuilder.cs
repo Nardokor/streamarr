@@ -1,6 +1,6 @@
-using NzbDrone.Common.Http;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Common.Cloud
+namespace Streamarr.Common.Cloud
 {
     public interface ISonarrCloudRequestBuilder
     {

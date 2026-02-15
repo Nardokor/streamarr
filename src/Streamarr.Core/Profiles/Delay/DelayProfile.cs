@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Indexers;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Indexers;
 
-namespace NzbDrone.Core.Profiles.Delay
+namespace Streamarr.Core.Profiles.Delay
 {
     public class DelayProfile : ModelBase
     {

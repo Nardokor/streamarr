@@ -6,9 +6,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.Http.HappyEyeballs;
+namespace Streamarr.Common.Http.HappyEyeballs;
 
 public class HttpHappyEyeballs
 {

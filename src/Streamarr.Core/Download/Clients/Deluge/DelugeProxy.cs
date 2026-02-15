@@ -5,12 +5,12 @@ using System.Linq;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Core.Download.Clients.Deluge
+namespace Streamarr.Core.Download.Clients.Deluge
 {
     public interface IDelugeProxy
     {

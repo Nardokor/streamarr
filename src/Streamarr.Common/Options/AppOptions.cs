@@ -1,4 +1,4 @@
-namespace NzbDrone.Common.Options;
+namespace Streamarr.Common.Options;
 
 public class AppOptions
 {

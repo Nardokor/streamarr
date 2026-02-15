@@ -16,31 +16,31 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 using NLog.Extensions.Logging;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Common.Processes;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Instrumentation;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Host.AccessControl;
-using NzbDrone.Http.Authentication;
-using NzbDrone.SignalR;
-using Sonarr.Api.V3.System;
-using Sonarr.Api.V5.Series;
-using Sonarr.Http;
-using Sonarr.Http.Authentication;
-using Sonarr.Http.ClientSchema;
-using Sonarr.Http.ErrorManagement;
-using Sonarr.Http.Frontend;
-using Sonarr.Http.Middleware;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Common.Processes;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Instrumentation;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Host.AccessControl;
+using Streamarr.Http.Authentication;
+using Streamarr.SignalR;
+using Streamarr.Api.V3.System;
+using Streamarr.Api.V5.Series;
+using Streamarr.Http;
+using Streamarr.Http.Authentication;
+using Streamarr.Http.ClientSchema;
+using Streamarr.Http.ErrorManagement;
+using Streamarr.Http.Frontend;
+using Streamarr.Http.Middleware;
 using StackExchange.Profiling;
 using IPNetwork = System.Net.IPNetwork;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace NzbDrone.Host
+namespace Streamarr.Host
 {
     public class Startup
     {

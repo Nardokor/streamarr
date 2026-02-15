@@ -7,7 +7,7 @@ using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.Zip;
 using NLog;
 
-namespace NzbDrone.Common
+namespace Streamarr.Common
 {
     public interface IArchiveService
     {

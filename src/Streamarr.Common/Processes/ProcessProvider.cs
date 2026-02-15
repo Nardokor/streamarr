@@ -8,10 +8,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Model;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Model;
 
-namespace NzbDrone.Common.Processes
+namespace Streamarr.Common.Processes
 {
     public interface IProcessProvider
     {

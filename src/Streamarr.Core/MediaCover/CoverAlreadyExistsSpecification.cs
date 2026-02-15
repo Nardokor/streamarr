@@ -1,7 +1,7 @@
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.MediaCover
+namespace Streamarr.Core.MediaCover
 {
     public interface ICoverExistsSpecification
     {

@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Indexers.Nyaa;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Indexers.Nyaa;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerTests.NyaaTests
+namespace Streamarr.Core.Test.IndexerTests.NyaaTests
 {
     public class NyaaRequestGeneratorFixture : CoreTest<NyaaRequestGenerator>
     {

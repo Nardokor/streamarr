@@ -1,4 +1,4 @@
-namespace Sonarr.Api.V5.EpisodeFiles
+namespace Streamarr.Api.V5.EpisodeFiles
 {
     public class EpisodeFileListResource
     {

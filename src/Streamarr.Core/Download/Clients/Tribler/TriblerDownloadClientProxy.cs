@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Indexers.Tribler;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Indexers.Tribler;
 
-namespace NzbDrone.Core.Download.Clients.Tribler
+namespace Streamarr.Core.Download.Clients.Tribler
 {
     public interface ITriblerDownloadClientProxy
     {

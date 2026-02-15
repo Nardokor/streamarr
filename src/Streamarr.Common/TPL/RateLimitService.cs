@@ -2,10 +2,10 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.TPL
+namespace Streamarr.Common.TPL
 {
     public interface IRateLimitService
     {

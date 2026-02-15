@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Composition;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Common.TPL;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Manual;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ProgressMessaging;
-using NzbDrone.SignalR;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
-using Sonarr.Http.Validation;
+using Streamarr.Common.Composition;
+using Streamarr.Common.Serializer;
+using Streamarr.Common.TPL;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.MediaFiles.EpisodeImport.Manual;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ProgressMessaging;
+using Streamarr.SignalR;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
+using Streamarr.Http.Validation;
 
-namespace Sonarr.Api.V3.Commands
+namespace Streamarr.Api.V3.Commands
 {
     [V3ApiController]
     public class CommandController : RestControllerWithSignalR<CommandResource, CommandModel>, IHandle<CommandUpdatedEvent>

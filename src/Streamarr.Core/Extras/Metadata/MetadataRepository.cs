@@ -1,8 +1,8 @@
-﻿using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider;
+﻿using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Extras.Metadata
+namespace Streamarr.Core.Extras.Metadata
 {
     public interface IMetadataRepository : IProviderRepository<MetadataDefinition>
     {

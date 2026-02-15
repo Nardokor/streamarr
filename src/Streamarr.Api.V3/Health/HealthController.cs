@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.HealthCheck;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.SignalR;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.HealthCheck;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.SignalR;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Health
+namespace Streamarr.Api.V3.Health
 {
     [V3ApiController]
     public class HealthController : RestControllerWithSignalR<HealthResource, HealthCheck>,

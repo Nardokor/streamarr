@@ -2,7 +2,7 @@
 using System.Data;
 using Dapper;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace Streamarr.Core.Datastore.Converters
 {
     public class SystemVersionConverter : SqlMapper.TypeHandler<Version>
     {

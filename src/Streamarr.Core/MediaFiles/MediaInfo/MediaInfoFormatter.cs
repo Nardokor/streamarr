@@ -2,11 +2,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Common.Instrumentation.Extensions;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Common.Instrumentation.Extensions;
 
-namespace NzbDrone.Core.MediaFiles.MediaInfo
+namespace Streamarr.Core.MediaFiles.MediaInfo
 {
     public static partial class MediaInfoFormatter
     {
@@ -15,7 +15,7 @@ namespace NzbDrone.Core.MediaFiles.MediaInfo
         [GeneratedRegex(@"(?<position>^\d\.\d)", RegexOptions.Compiled)]
         private static partial Regex PositionRegex();
 
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(MediaInfoFormatter));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(MediaInfoFormatter));
 
         public static decimal FormatAudioChannels(MediaInfoAudioStreamModel audioStream)
         {

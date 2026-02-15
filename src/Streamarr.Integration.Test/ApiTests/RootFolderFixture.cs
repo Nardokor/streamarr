@@ -1,9 +1,9 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using Sonarr.Api.V3.RootFolders;
+using Streamarr.Api.V3.RootFolders;
 
-namespace NzbDrone.Integration.Test.ApiTests
+namespace Streamarr.Integration.Test.ApiTests
 {
     [TestFixture]
     public class RootFolderFixture : IntegrationTest

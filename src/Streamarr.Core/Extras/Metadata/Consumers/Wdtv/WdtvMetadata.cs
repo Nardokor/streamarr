@@ -7,14 +7,14 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Extras.Metadata.Files;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Extras.Metadata.Files;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
+namespace Streamarr.Core.Extras.Metadata.Consumers.Wdtv
 {
     public class WdtvMetadata : MetadataBase<WdtvMetadataSettings>
     {

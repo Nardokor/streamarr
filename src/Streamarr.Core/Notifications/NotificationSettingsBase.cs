@@ -1,16 +1,16 @@
 using System;
 using Equ;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public abstract class NotificationSettingsBase<TSettings> : IProviderConfig, IEquatable<TSettings>
         where TSettings : NotificationSettingsBase<TSettings>
     {
         private static readonly MemberwiseEqualityComparer<TSettings> Comparer = MemberwiseEqualityComparer<TSettings>.ByProperties;
 
-        public abstract NzbDroneValidationResult Validate();
+        public abstract StreamarrValidationResult Validate();
 
         public bool Equals(TSettings other)
         {

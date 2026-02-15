@@ -4,15 +4,15 @@ using System.Linq;
 using System.Net.Http;
 using System.Xml.Linq;
 using NLog;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public class XmlRpcRequestBuilder : HttpRequestBuilder
     {
         public static string XmlRpcContentType = "text/xml";
 
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(XmlRpcRequestBuilder));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(XmlRpcRequestBuilder));
 
         public string XmlMethod { get; private set; }
         public List<object> XmlParameters { get; private set; }

@@ -4,22 +4,22 @@ using System.IO;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Model;
-using NzbDrone.Common.Processes;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Update;
-using NzbDrone.Core.Update.Commands;
-using NzbDrone.Test.Common;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Model;
+using Streamarr.Common.Processes;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Update;
+using Streamarr.Core.Update.Commands;
+using Streamarr.Test.Common;
+using Streamarr.Test.Common.Categories;
 
-namespace NzbDrone.Core.Test.UpdateTests
+namespace Streamarr.Core.Test.UpdateTests
 {
     [TestFixture]
     public class UpdateServiceFixture : CoreTest<InstallUpdateService>
@@ -35,8 +35,8 @@ namespace NzbDrone.Core.Test.UpdateTests
             {
                 _updatePackage = new UpdatePackage
                 {
-                    FileName = "NzbDrone.develop.2.0.0.0.tar.gz",
-                    Url = "http://download.sonarr.tv/v2/develop/mono/NzbDrone.develop.tar.gz",
+                    FileName = "Streamarr.develop.2.0.0.0.tar.gz",
+                    Url = "http://download.sonarr.tv/v2/develop/mono/Streamarr.develop.tar.gz",
                     Version = new Version("2.0.0.0")
                 };
             }
@@ -44,8 +44,8 @@ namespace NzbDrone.Core.Test.UpdateTests
             {
                 _updatePackage = new UpdatePackage
                 {
-                    FileName = "NzbDrone.develop.2.0.0.0.zip",
-                    Url = "http://download.sonarr.tv/v2/develop/windows/NzbDrone.develop.zip",
+                    FileName = "Streamarr.develop.2.0.0.0.zip",
+                    Url = "http://download.sonarr.tv/v2/develop/windows/Streamarr.develop.zip",
                     Version = new Version("2.0.0.0")
                 };
             }
@@ -262,7 +262,7 @@ namespace NzbDrone.Core.Test.UpdateTests
             updateSubFolder.Refresh();
 
             updateSubFolder.Exists.Should().BeTrue();
-            updateSubFolder.GetDirectories("NzbDrone").Should().HaveCount(1);
+            updateSubFolder.GetDirectories("Streamarr").Should().HaveCount(1);
             updateSubFolder.GetDirectories().Should().HaveCount(1);
             updateSubFolder.GetFiles().Should().NotBeEmpty();
         }
@@ -270,8 +270,8 @@ namespace NzbDrone.Core.Test.UpdateTests
         [Test]
         public void should_log_error_when_app_data_is_child_of_startup_folder()
         {
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.StartUpFolder).Returns(@"C:\NzbDrone".AsOsAgnostic);
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.AppDataFolder).Returns(@"C:\NzbDrone\AppData".AsOsAgnostic);
+            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.StartUpFolder).Returns(@"C:\Streamarr".AsOsAgnostic);
+            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.AppDataFolder).Returns(@"C:\Streamarr\AppData".AsOsAgnostic);
 
             Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
             ExceptionVerification.ExpectedErrors(1);
@@ -280,8 +280,8 @@ namespace NzbDrone.Core.Test.UpdateTests
         [Test]
         public void should_log_error_when_app_data_is_same_as_startup_folder()
         {
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.StartUpFolder).Returns(@"C:\NzbDrone".AsOsAgnostic);
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.AppDataFolder).Returns(@"C:\NzbDrone".AsOsAgnostic);
+            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.StartUpFolder).Returns(@"C:\Streamarr".AsOsAgnostic);
+            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.AppDataFolder).Returns(@"C:\Streamarr".AsOsAgnostic);
 
             Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
             ExceptionVerification.ExpectedErrors(1);

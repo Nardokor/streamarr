@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Qualities;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public interface IEpisodeCutoffService
     {

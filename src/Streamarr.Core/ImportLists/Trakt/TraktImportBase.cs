@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.Trakt
+namespace Streamarr.Core.ImportLists.Trakt
 {
     public abstract class TraktImportBase<TSettings> : HttpImportListBase<TSettings>
     where TSettings : TraktSettingsBase<TSettings>, new()

@@ -1,7 +1,7 @@
 using System;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.Http.Proxy
+namespace Streamarr.Common.Http.Proxy
 {
     public class HttpProxySettings
     {

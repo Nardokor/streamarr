@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Apprise
+namespace Streamarr.Core.Notifications.Apprise
 {
-    public class AppriseException : NzbDroneException
+    public class AppriseException : StreamarrException
     {
         public AppriseException(string message)
             : base(message)

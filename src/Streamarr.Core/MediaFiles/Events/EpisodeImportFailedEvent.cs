@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Messaging;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Messaging;
+using Streamarr.Core.Download;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.Events
+namespace Streamarr.Core.MediaFiles.Events
 {
     public class EpisodeImportFailedEvent : IEvent
     {

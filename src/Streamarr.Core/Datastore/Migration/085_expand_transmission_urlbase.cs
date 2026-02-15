@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Data;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(85)]
-    public class expand_transmission_urlbase : NzbDroneMigrationBase
+    public class expand_transmission_urlbase : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

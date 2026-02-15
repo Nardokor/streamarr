@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.ThingiProvider;
+﻿using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Extras.Metadata
+namespace Streamarr.Core.Extras.Metadata
 {
     public class MetadataDefinition : ProviderDefinition
     {

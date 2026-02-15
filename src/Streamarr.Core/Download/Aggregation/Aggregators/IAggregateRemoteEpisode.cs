@@ -1,6 +1,6 @@
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Download.Aggregation.Aggregators
+namespace Streamarr.Core.Download.Aggregation.Aggregators
 {
     public interface IAggregateRemoteEpisode
     {

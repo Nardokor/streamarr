@@ -1,6 +1,6 @@
-using NzbDrone.Core.Organizer;
+using Streamarr.Core.Organizer;
 
-namespace Sonarr.Api.V3.Config
+namespace Streamarr.Api.V3.Config
 {
     public class NamingExampleResource
     {

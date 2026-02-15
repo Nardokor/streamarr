@@ -1,6 +1,6 @@
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Organizer
+namespace Streamarr.Core.Organizer
 {
     public class NamingConfig : ModelBase
     {

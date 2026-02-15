@@ -4,18 +4,18 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.IndexerSearch
+namespace Streamarr.Core.IndexerSearch
 {
     public interface ISearchForReleases
     {

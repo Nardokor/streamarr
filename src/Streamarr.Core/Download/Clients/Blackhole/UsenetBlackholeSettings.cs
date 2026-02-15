@@ -1,9 +1,9 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
-using NzbDrone.Core.Validation.Paths;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
+using Streamarr.Core.Validation.Paths;
 
-namespace NzbDrone.Core.Download.Clients.Blackhole
+namespace Streamarr.Core.Download.Clients.Blackhole
 {
     public class UsenetBlackholeSettingsValidator : AbstractValidator<UsenetBlackholeSettings>
     {
@@ -25,9 +25,9 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
         [FieldDefinition(1, Label = "BlackholeWatchFolder", Type = FieldType.Path, HelpText = "BlackholeWatchFolderHelpText")]
         public string WatchFolder { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

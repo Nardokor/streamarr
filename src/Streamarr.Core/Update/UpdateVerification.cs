@@ -1,7 +1,7 @@
 ﻿using System;
-using NzbDrone.Common.Disk;
+using Streamarr.Common.Disk;
 
-namespace NzbDrone.Core.Update
+namespace Streamarr.Core.Update
 {
     public interface IVerifyUpdates
     {

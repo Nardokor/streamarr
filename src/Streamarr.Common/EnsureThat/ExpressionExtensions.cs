@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace NzbDrone.Common.EnsureThat
+namespace Streamarr.Common.EnsureThat
 {
     internal static class ExpressionExtensions
     {

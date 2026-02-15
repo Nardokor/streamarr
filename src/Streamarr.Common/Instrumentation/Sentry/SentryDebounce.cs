@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.Cache;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Common.Instrumentation.Sentry
+namespace Streamarr.Common.Instrumentation.Sentry
 {
     public class SentryDebounce
     {

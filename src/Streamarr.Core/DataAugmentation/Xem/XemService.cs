@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Cache;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.DataAugmentation.Xem
+namespace Streamarr.Core.DataAugmentation.Xem
 {
     public class XemService : ISceneMappingProvider, IHandle<SeriesUpdatedEvent>, IHandle<SeriesRefreshStartingEvent>
     {

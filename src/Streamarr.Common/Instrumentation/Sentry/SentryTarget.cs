@@ -8,11 +8,11 @@ using System.Threading;
 using NLog;
 using NLog.Common;
 using NLog.Targets;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
 using Sentry;
 
-namespace NzbDrone.Common.Instrumentation.Sentry
+namespace Streamarr.Common.Instrumentation.Sentry
 {
     [Target("Sentry")]
     public class SentryTarget : TargetWithLayout

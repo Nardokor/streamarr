@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Tv;
+using Streamarr.Common;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.RootFolders
+namespace Streamarr.Core.RootFolders
 {
     public interface IRootFolderService
     {

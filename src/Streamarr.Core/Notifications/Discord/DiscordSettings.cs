@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Discord
+namespace Streamarr.Core.Notifications.Discord
 {
     public class DiscordSettingsValidator : AbstractValidator<DiscordSettings>
     {
@@ -88,9 +88,9 @@ namespace NzbDrone.Core.Notifications.Discord
         [FieldDefinition(6, Label = "NotificationsDiscordSettingsOnManualInteractionFields", Advanced = true, SelectOptions = typeof(DiscordManualInteractionFieldType), HelpText = "NotificationsDiscordSettingsOnManualInteractionFieldsHelpText", Type = FieldType.Select)]
         public IEnumerable<int> ManualInteractionFields { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

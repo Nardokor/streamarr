@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Configuration.Events
+namespace Streamarr.Core.Configuration.Events
 {
     public class ConfigSavedEvent : IEvent
     {

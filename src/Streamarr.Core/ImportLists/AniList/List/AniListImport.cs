@@ -4,18 +4,18 @@ using System.Linq;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Http.CloudFlare;
-using NzbDrone.Core.ImportLists.Exceptions;
-using NzbDrone.Core.Indexers.Exceptions;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Http.CloudFlare;
+using Streamarr.Core.ImportLists.Exceptions;
+using Streamarr.Core.Indexers.Exceptions;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.AniList.List
+namespace Streamarr.Core.ImportLists.AniList.List
 {
     internal class AniListImport : AniListImportBase<AniListSettings>
     {
@@ -183,7 +183,7 @@ namespace NzbDrone.Core.ImportLists.AniList.List
 
                 if (!hasResults)
                 {
-                    return new NzbDroneValidationFailure(string.Empty,
+                    return new StreamarrValidationFailure(string.Empty,
                             "No results were returned from your import list, please check your settings and the log for details.")
                         { IsWarning = true };
                 }

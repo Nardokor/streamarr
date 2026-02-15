@@ -1,7 +1,7 @@
 ﻿using System;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookEpisode
     {

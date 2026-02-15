@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test
+namespace Streamarr.Common.Test
 {
     public class OsPathFixture : TestBase
     {

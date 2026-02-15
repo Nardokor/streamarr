@@ -2,13 +2,13 @@ using System;
 using System.Data;
 using System.Linq;
 using FluentMigrator;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(162)]
-    public class release_profile_to_array : NzbDroneMigrationBase
+    public class release_profile_to_array : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

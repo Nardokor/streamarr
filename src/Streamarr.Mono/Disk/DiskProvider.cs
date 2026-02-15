@@ -5,12 +5,12 @@ using System.Linq;
 using Mono.Unix;
 using Mono.Unix.Native;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Mono.Disk
+namespace Streamarr.Mono.Disk
 {
     public class DiskProvider : DiskProviderBase
     {

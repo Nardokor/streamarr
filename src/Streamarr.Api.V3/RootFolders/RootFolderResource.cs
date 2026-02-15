@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.RootFolders;
-using Sonarr.Http.REST;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.RootFolders;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.RootFolders
+namespace Streamarr.Api.V3.RootFolders
 {
     public class RootFolderResource : RestResource
     {

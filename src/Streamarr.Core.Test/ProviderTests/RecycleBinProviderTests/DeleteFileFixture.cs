@@ -1,13 +1,13 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.ProviderTests.RecycleBinProviderTests
+namespace Streamarr.Core.Test.ProviderTests.RecycleBinProviderTests
 {
     [TestFixture]
 

@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http.HappyEyeballs;
-using NzbDrone.Common.Http.Proxy;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http.HappyEyeballs;
+using Streamarr.Common.Http.Proxy;
 
-namespace NzbDrone.Common.Http.Dispatchers
+namespace Streamarr.Common.Http.Dispatchers
 {
     public class ManagedHttpDispatcher : IHttpDispatcher
     {

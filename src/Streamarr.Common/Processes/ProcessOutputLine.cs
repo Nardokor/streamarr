@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Common.Processes
+namespace Streamarr.Common.Processes
 {
     public class ProcessOutputLine
     {

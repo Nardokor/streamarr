@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(29)]
-    public class add_formats_to_naming_config : NzbDroneMigrationBase
+    public class add_formats_to_naming_config : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

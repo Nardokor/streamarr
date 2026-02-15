@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NzbDrone.Common.Cache
+namespace Streamarr.Common.Cache
 {
     public interface ICachedDictionary<TValue> : ICached
     {

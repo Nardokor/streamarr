@@ -1,10 +1,10 @@
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using Sonarr.Http;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V5.Logs;
+namespace Streamarr.Api.V5.Logs;
 
 [V5ApiController("log/file")]
 public class LogFileController : LogFileControllerBase

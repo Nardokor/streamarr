@@ -2,11 +2,11 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.MetadataSource;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.MetadataSource;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.MetadataSource
+namespace Streamarr.Core.Test.MetadataSource
 {
     [TestFixture]
     public class SearchSeriesComparerFixture : CoreTest

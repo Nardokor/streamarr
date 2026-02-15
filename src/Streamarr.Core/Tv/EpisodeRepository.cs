@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Dapper;
 using NLog;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public interface IEpisodeRepository : IBasicRepository<Episode>
     {

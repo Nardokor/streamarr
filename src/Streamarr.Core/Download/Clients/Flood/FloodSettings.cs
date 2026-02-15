@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Download.Clients.Flood.Models;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Download.Clients.Flood.Models;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.Flood
+namespace Streamarr.Core.Download.Clients.Flood
 {
     public class FloodSettingsValidator : AbstractValidator<FloodSettings>
     {
@@ -72,9 +72,9 @@ namespace NzbDrone.Core.Download.Clients.Flood
         [FieldDefinition(10, Label = "DownloadClientFloodSettingsStartOnAdd", Type = FieldType.Checkbox)]
         public bool StartOnAdd { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

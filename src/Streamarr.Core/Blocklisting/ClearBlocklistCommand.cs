@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Messaging.Commands;
+﻿using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Blocklisting
+namespace Streamarr.Core.Blocklisting
 {
     public class ClearBlocklistCommand : Command
     {

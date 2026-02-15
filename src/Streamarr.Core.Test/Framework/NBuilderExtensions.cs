@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using FizzWare.NBuilder;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Test.Framework
+namespace Streamarr.Core.Test.Framework
 {
     public static class NBuilderExtensions
     {

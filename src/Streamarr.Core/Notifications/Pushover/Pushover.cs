@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Notifications.Pushover
+namespace Streamarr.Core.Notifications.Pushover
 {
     public class Pushover : NotificationBase<PushoverSettings>
     {

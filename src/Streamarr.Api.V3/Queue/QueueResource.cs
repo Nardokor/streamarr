@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Queue;
-using Sonarr.Api.V3.CustomFormats;
-using Sonarr.Api.V3.Episodes;
-using Sonarr.Api.V3.Series;
-using Sonarr.Http.REST;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Queue;
+using Streamarr.Api.V3.CustomFormats;
+using Streamarr.Api.V3.Episodes;
+using Streamarr.Api.V3.Series;
+using Streamarr.Http.REST;
 
 #pragma warning disable CS0612
-namespace Sonarr.Api.V3.Queue
+namespace Streamarr.Api.V3.Queue
 {
     public class QueueResource : RestResource
     {
@@ -56,7 +56,7 @@ namespace Sonarr.Api.V3.Queue
 
     public static class QueueResourceMapper
     {
-        public static QueueResource ToResource(this NzbDrone.Core.Queue.Queue model, bool includeSeries, bool includeEpisode)
+        public static QueueResource ToResource(this Streamarr.Core.Queue.Queue model, bool includeSeries, bool includeEpisode)
         {
             if (model == null)
             {
@@ -107,7 +107,7 @@ namespace Sonarr.Api.V3.Queue
             };
         }
 
-        public static List<QueueResource> ToResource(this IEnumerable<NzbDrone.Core.Queue.Queue> models, bool includeSeries, bool includeEpisode)
+        public static List<QueueResource> ToResource(this IEnumerable<Streamarr.Core.Queue.Queue> models, bool includeSeries, bool includeEpisode)
         {
             return models.Select((m) => ToResource(m, includeSeries, includeEpisode)).ToList();
         }

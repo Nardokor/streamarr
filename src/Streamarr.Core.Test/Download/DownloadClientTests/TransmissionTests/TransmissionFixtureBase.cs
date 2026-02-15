@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients.Transmission;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients.Transmission;
+using Streamarr.Core.MediaFiles.TorrentInfo;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.TransmissionTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.TransmissionTests
 {
     public abstract class TransmissionFixtureBase<TClient> : DownloadClientFixtureBase<TClient>
         where TClient : class, IDownloadClient

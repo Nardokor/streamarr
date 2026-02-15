@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NzbDrone.Common;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Extras.Files;
-using NzbDrone.Core.Tv;
+using Streamarr.Common;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Extras.Files;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras
+namespace Streamarr.Core.Extras
 {
     public abstract class ImportExistingExtraFilesBase<TExtraFile> : IImportExistingExtraFiles
         where TExtraFile : ExtraFile, new()

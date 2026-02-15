@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Plex.PlexTv
+namespace Streamarr.Core.Notifications.Plex.PlexTv
 {
     public class PlexTvSignInUrlResponse
     {

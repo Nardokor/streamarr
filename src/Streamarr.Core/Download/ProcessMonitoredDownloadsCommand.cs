@@ -1,6 +1,6 @@
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class ProcessMonitoredDownloadsCommand : Command
     {

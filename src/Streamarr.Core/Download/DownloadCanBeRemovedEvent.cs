@@ -1,7 +1,7 @@
-﻿using NzbDrone.Common.Messaging;
-using NzbDrone.Core.Download.TrackedDownloads;
+﻿using Streamarr.Common.Messaging;
+using Streamarr.Core.Download.TrackedDownloads;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class DownloadCanBeRemovedEvent : IEvent
     {

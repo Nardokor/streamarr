@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Discord
+namespace Streamarr.Core.Notifications.Discord
 {
-    public class DiscordException : NzbDroneException
+    public class DiscordException : StreamarrException
     {
         public DiscordException(string message)
             : base(message)

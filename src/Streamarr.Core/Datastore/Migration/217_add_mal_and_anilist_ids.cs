@@ -1,10 +1,10 @@
 ﻿using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(217)]
-    public class add_mal_and_anilist_ids : NzbDroneMigrationBase
+    public class add_mal_and_anilist_ids : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

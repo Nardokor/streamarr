@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(212)]
-    public class add_minium_upgrade_format_score_to_quality_profiles : NzbDroneMigrationBase
+    public class add_minium_upgrade_format_score_to_quality_profiles : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

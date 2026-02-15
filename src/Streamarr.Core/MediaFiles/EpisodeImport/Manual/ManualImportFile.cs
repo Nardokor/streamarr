@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Manual
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Manual
 {
     public class ManualImportFile : IEquatable<ManualImportFile>
     {

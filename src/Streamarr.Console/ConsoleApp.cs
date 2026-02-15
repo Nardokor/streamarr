@@ -3,18 +3,18 @@ using System.IO;
 using System.Net.Sockets;
 using Microsoft.AspNetCore.Connections;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Exceptions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Host;
-using NzbDrone.Host.AccessControl;
-using NzbDrone.RuntimePatches;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Exceptions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Host;
+using Streamarr.Host.AccessControl;
+using Streamarr.RuntimePatches;
 
-namespace NzbDrone.Console
+namespace Streamarr.Console
 {
     public static class ConsoleApp
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(ConsoleApp));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(ConsoleApp));
 
         private enum ExitCodes
         {
@@ -34,7 +34,7 @@ namespace NzbDrone.Console
                 startupArgs = new StartupContext(args);
                 try
                 {
-                    NzbDroneLogger.Register(startupArgs, false, true);
+                    StreamarrLogger.Register(startupArgs, false, true);
                 }
                 catch (Exception ex)
                 {

@@ -1,14 +1,14 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Profiles.Releases;
-using NzbDrone.Core.Tags;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Profiles.Releases;
+using Streamarr.Core.Tags;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V5.Profiles.Release;
+namespace Streamarr.Api.V5.Profiles.Release;
 
 [V5ApiController]
 public class ReleaseProfileController : RestController<ReleaseProfileResource>

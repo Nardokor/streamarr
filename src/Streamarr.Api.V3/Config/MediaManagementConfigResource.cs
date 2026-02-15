@@ -1,10 +1,10 @@
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
-using NzbDrone.Core.Qualities;
-using Sonarr.Http.REST;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.EpisodeImport;
+using Streamarr.Core.Qualities;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Config
+namespace Streamarr.Api.V3.Config
 {
     public class MediaManagementConfigResource : RestResource
     {

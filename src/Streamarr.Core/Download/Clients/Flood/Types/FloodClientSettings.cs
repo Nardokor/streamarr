@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Download.Clients.Flood.Types
+namespace Streamarr.Core.Download.Clients.Flood.Types
 {
     public class FloodClientSettings
     {

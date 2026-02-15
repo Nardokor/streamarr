@@ -1,6 +1,6 @@
 using System;
 
-namespace Sonarr.Http.REST.Attributes
+namespace Streamarr.Http.REST.Attributes
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class SkipValidationAttribute : Attribute

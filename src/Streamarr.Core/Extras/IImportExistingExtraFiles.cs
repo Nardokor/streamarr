@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Core.Extras.Files;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Extras.Files;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras
+namespace Streamarr.Core.Extras
 {
     public interface IImportExistingExtraFiles
     {

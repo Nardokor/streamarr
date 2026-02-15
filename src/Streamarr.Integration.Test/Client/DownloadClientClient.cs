@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using RestSharp;
-using Sonarr.Api.V3.DownloadClient;
+using Streamarr.Api.V3.DownloadClient;
 
-namespace NzbDrone.Integration.Test.Client
+namespace Streamarr.Integration.Test.Client
 {
     public class DownloadClientClient : ClientBase<DownloadClientResource>
     {

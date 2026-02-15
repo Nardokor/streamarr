@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.OAuth
+namespace Streamarr.Common.OAuth
 {
     public class WebParameterCollection : IList<WebParameter>
     {

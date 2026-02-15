@@ -1,6 +1,6 @@
-using NzbDrone.Common.Messaging;
+using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Messaging.Events
+namespace Streamarr.Core.Messaging.Events
 {
     public interface IEventAggregator
     {

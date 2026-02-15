@@ -3,7 +3,7 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Validators;
 
-namespace Sonarr.Api.V3.Profiles.Quality
+namespace Streamarr.Api.V3.Profiles.Quality
 {
     public static class QualityCutoffValidator
     {

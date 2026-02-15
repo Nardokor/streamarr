@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.FreeboxDownload.Responses
+namespace Streamarr.Core.Download.Clients.FreeboxDownload.Responses
 {
     public class FreeboxResponse<T>
     {

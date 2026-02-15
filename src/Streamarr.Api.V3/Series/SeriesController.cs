@@ -2,32 +2,32 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.RootFolders;
-using NzbDrone.Core.SeriesStats;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Commands;
-using NzbDrone.Core.Tv.Events;
-using NzbDrone.Core.Validation;
-using NzbDrone.Core.Validation.Paths;
-using NzbDrone.SignalR;
-using Sonarr.Http;
-using Sonarr.Http.Extensions;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.RootFolders;
+using Streamarr.Core.SeriesStats;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Commands;
+using Streamarr.Core.Tv.Events;
+using Streamarr.Core.Validation;
+using Streamarr.Core.Validation.Paths;
+using Streamarr.SignalR;
+using Streamarr.Http;
+using Streamarr.Http.Extensions;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V3.Series
+namespace Streamarr.Api.V3.Series
 {
     [V3ApiController]
-    public class SeriesController : RestControllerWithSignalR<SeriesResource, NzbDrone.Core.Tv.Series>,
+    public class SeriesController : RestControllerWithSignalR<SeriesResource, Streamarr.Core.Tv.Series>,
                                 IHandle<EpisodeImportedEvent>,
                                 IHandle<EpisodeFileDeletedEvent>,
                                 IHandle<SeriesUpdatedEvent>,
@@ -211,7 +211,7 @@ namespace Sonarr.Api.V3.Series
             _seriesService.DeleteSeries(new List<int> { id }, deleteFiles, addImportListExclusion);
         }
 
-        private SeriesResource GetSeriesResource(NzbDrone.Core.Tv.Series series, bool includeSeasonImages)
+        private SeriesResource GetSeriesResource(Streamarr.Core.Tv.Series series, bool includeSeasonImages)
         {
             if (series == null)
             {

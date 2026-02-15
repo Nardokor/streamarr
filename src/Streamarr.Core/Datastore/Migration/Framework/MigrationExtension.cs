@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace NzbDrone.Core.Datastore.Migration.Framework
+namespace Streamarr.Core.Datastore.Migration.Framework
 {
     public static class MigrationExtension
     {
@@ -38,22 +38,22 @@ namespace NzbDrone.Core.Datastore.Migration.Framework
             command.Parameters.Add(parameter);
         }
 
-        public static IMigrationRunnerBuilder AddNzbDroneSQLite(this IMigrationRunnerBuilder builder, bool binaryGuid = false, bool useStrictTables = false)
+        public static IMigrationRunnerBuilder AddStreamarrSQLite(this IMigrationRunnerBuilder builder, bool binaryGuid = false, bool useStrictTables = false)
         {
             builder.Services
                 .AddTransient<SQLiteBatchParser>()
                 .AddScoped<SQLiteDbFactory>()
-                .AddScoped<NzbDroneSQLiteProcessor>(sp =>
+                .AddScoped<StreamarrSQLiteProcessor>(sp =>
                 {
                     var factory = sp.GetService<SQLiteDbFactory>();
-                    var logger = sp.GetService<ILogger<NzbDroneSQLiteProcessor>>();
+                    var logger = sp.GetService<ILogger<StreamarrSQLiteProcessor>>();
                     var options = sp.GetService<IOptionsSnapshot<ProcessorOptions>>();
                     var connectionStringAccessor = sp.GetService<IConnectionStringAccessor>();
                     var sqliteQuoter = new SQLiteQuoter(false);
-                    return new NzbDroneSQLiteProcessor(factory, sp.GetService<SQLiteGenerator>(), logger, options, connectionStringAccessor, sp, sqliteQuoter);
+                    return new StreamarrSQLiteProcessor(factory, sp.GetService<SQLiteGenerator>(), logger, options, connectionStringAccessor, sp, sqliteQuoter);
                 })
-                .AddScoped<ISQLiteTypeMap>(_ => new NzbDroneSQLiteTypeMap(useStrictTables))
-                .AddScoped<IMigrationProcessor>(sp => sp.GetRequiredService<NzbDroneSQLiteProcessor>())
+                .AddScoped<ISQLiteTypeMap>(_ => new StreamarrSQLiteTypeMap(useStrictTables))
+                .AddScoped<IMigrationProcessor>(sp => sp.GetRequiredService<StreamarrSQLiteProcessor>())
                 .AddScoped(
                     sp =>
                     {

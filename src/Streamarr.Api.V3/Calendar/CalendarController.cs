@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.Tags;
-using NzbDrone.Core.Tv;
-using NzbDrone.SignalR;
-using Sonarr.Api.V3.Episodes;
-using Sonarr.Http;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.Tags;
+using Streamarr.Core.Tv;
+using Streamarr.SignalR;
+using Streamarr.Api.V3.Episodes;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Calendar
+namespace Streamarr.Api.V3.Calendar
 {
     [V3ApiController]
     public class CalendarController : EpisodeControllerWithSignalR

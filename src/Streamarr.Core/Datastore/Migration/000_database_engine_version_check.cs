@@ -2,9 +2,9 @@ using System.Data;
 using System.Text.RegularExpressions;
 using FluentMigrator;
 using NLog;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Maintenance(MigrationStage.BeforeAll, TransactionBehavior.None)]
     public class DatabaseEngineVersionCheck : ForwardOnlyMigration
@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Datastore.Migration
 
         public DatabaseEngineVersionCheck()
         {
-            _logger = NzbDroneLogger.GetLogger(this);
+            _logger = StreamarrLogger.GetLogger(this);
         }
 
         public override void Up()

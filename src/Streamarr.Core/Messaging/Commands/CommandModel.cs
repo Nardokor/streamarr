@@ -1,8 +1,8 @@
 using System;
-using NzbDrone.Common.Messaging;
-using NzbDrone.Core.Datastore;
+using Streamarr.Common.Messaging;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace Streamarr.Core.Messaging.Commands
 {
     public class CommandModel : ModelBase, IMessage
     {

@@ -1,11 +1,11 @@
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
-using NzbDrone.Core.Validation.Paths;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
+using Streamarr.Core.Validation.Paths;
 
-namespace NzbDrone.Core.AutoTagging.Specifications
+namespace Streamarr.Core.AutoTagging.Specifications
 {
     public class RootFolderSpecificationValidator : AbstractValidator<RootFolderSpecification>
     {
@@ -30,9 +30,9 @@ namespace NzbDrone.Core.AutoTagging.Specifications
             return series.RootFolderPath.PathEquals(Value);
         }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

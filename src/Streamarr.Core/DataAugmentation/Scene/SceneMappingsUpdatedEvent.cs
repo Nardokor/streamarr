@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.DataAugmentation.Scene
+namespace Streamarr.Core.DataAugmentation.Scene
 {
     public class SceneMappingsUpdatedEvent : IEvent
     {

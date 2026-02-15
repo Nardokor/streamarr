@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Annotations
+namespace Streamarr.Core.Annotations
 {
     public class SelectOption
     {

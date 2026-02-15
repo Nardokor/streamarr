@@ -1,8 +1,8 @@
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Update
+namespace Streamarr.Core.Update
 {
-    public class UpdateFailedException : NzbDroneException
+    public class UpdateFailedException : StreamarrException
     {
         public UpdateFailedException(string message, params object[] args)
             : base(message, args)

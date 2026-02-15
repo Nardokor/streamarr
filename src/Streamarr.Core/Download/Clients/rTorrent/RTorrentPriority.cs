@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Download.Clients.RTorrent
+namespace Streamarr.Core.Download.Clients.RTorrent
 {
     public enum RTorrentPriority
     {

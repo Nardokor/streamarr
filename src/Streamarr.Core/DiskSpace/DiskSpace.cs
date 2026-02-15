@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.DiskSpace
+﻿namespace Streamarr.Core.DiskSpace
 {
     public class DiskSpace
     {

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.ImportLists.Exceptions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.ImportLists.Exceptions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.AniList.List
+namespace Streamarr.Core.ImportLists.AniList.List
 {
     public class AniListParser : IParseImportListResponse
     {

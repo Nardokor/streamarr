@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(41)]
-    public class fix_xbmc_season_images_metadata : NzbDroneMigrationBase
+    public class fix_xbmc_season_images_metadata : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

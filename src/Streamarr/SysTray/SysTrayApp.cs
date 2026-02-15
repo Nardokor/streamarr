@@ -3,11 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Extensions.Hosting;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Host;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Host;
 
-namespace NzbDrone.SysTray
+namespace Streamarr.SysTray
 {
     public class SystemTrayApp : Form, IHostedService
     {

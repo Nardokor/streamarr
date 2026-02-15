@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Download.Clients.RQBit
+namespace Streamarr.Core.Download.Clients.RQBit
 {
     public class RQBitTorrent
     {

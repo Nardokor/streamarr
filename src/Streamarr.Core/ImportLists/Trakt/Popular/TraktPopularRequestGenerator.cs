@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.ImportLists.Trakt.Popular
+namespace Streamarr.Core.ImportLists.Trakt.Popular
 {
     public class TraktPopularRequestGenerator : IImportListRequestGenerator
     {

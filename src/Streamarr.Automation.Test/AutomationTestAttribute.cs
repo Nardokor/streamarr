@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace NzbDrone.Automation.Test
+namespace Streamarr.Automation.Test
 {
     public class AutomationTestAttribute : CategoryAttribute
     {

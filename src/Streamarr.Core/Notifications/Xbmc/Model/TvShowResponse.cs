@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Notifications.Xbmc.Model
+﻿namespace Streamarr.Core.Notifications.Xbmc.Model
 {
     public class TvShowResponse
     {

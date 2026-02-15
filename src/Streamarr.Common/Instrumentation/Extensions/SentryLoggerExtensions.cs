@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NLog;
 
-namespace NzbDrone.Common.Instrumentation.Extensions
+namespace Streamarr.Common.Instrumentation.Extensions
 {
     public static class SentryLoggerExtensions
     {

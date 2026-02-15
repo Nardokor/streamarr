@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Messaging;
+using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Tv.Events
+namespace Streamarr.Core.Tv.Events
 {
     public class SeriesDeletedEvent : IEvent
     {

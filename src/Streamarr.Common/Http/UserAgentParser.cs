@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public static class UserAgentParser
     {

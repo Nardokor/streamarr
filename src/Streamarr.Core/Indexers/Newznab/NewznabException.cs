@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Indexers.Exceptions;
+﻿using Streamarr.Core.Indexers.Exceptions;
 
-namespace NzbDrone.Core.Indexers.Newznab
+namespace Streamarr.Core.Indexers.Newznab
 {
     public class NewznabException : IndexerException
     {

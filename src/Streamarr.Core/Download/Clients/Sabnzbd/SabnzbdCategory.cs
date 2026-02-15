@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Download.Clients.Sabnzbd.JsonConverters;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Download.Clients.Sabnzbd.JsonConverters;
 
-namespace NzbDrone.Core.Download.Clients.Sabnzbd
+namespace Streamarr.Core.Download.Clients.Sabnzbd
 {
     public class SabnzbdConfig
     {

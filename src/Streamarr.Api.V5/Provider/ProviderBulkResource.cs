@@ -1,6 +1,6 @@
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Core.ThingiProvider;
 
-namespace Sonarr.Api.V5.Provider
+namespace Streamarr.Api.V5.Provider
 {
     public class ProviderBulkResource<T>
     {

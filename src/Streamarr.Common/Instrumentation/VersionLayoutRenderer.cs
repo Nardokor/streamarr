@@ -4,7 +4,7 @@ using NLog;
 using NLog.Config;
 using NLog.LayoutRenderers;
 
-namespace NzbDrone.Common.Instrumentation
+namespace Streamarr.Common.Instrumentation
 {
     [ThreadAgnostic]
     [LayoutRenderer("version")]

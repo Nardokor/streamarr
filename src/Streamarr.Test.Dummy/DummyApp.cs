@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace NzbDrone.Test.Dummy
+namespace Streamarr.Test.Dummy
 {
     public class DummyApp
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace NzbDrone.Common.Disk
+namespace Streamarr.Common.Disk
 {
     public interface IDiskProvider
     {

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NzbDrone.Core.Authentication;
+using Streamarr.Core.Authentication;
 
-namespace Sonarr.Http.Authentication
+namespace Streamarr.Http.Authentication
 {
     public class NoAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.AniList
+namespace Streamarr.Core.ImportLists.AniList
 {
     public abstract class AniListImportBase<TSettings> : HttpImportListBase<TSettings>
     where TSettings : AniListSettingsBase<TSettings>, new()

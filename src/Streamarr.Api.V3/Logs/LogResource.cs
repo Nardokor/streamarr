@@ -1,8 +1,8 @@
 using System;
-using NzbDrone.Core.Instrumentation;
-using Sonarr.Http.REST;
+using Streamarr.Core.Instrumentation;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Logs
+namespace Streamarr.Api.V3.Logs
 {
     public class LogResource : RestResource
     {

@@ -1,12 +1,12 @@
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.MediaFiles.EpisodeImport;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public interface IUpgradeMediaFiles
     {

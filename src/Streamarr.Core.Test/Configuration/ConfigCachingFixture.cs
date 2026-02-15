@@ -2,10 +2,10 @@
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Configuration
+namespace Streamarr.Core.Test.Configuration
 {
     [TestFixture]
     public class ConfigCachingFixture : CoreTest<ConfigService>

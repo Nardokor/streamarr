@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Dapper;
 
-namespace NzbDrone.Core.Datastore;
+namespace Streamarr.Core.Datastore;
 
 public abstract class WhereBuilder : ExpressionVisitor
 {

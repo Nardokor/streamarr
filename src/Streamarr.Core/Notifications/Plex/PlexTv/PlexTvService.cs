@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common.Cache;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
 
-namespace NzbDrone.Core.Notifications.Plex.PlexTv
+namespace Streamarr.Core.Notifications.Plex.PlexTv
 {
     public interface IPlexTvService
     {

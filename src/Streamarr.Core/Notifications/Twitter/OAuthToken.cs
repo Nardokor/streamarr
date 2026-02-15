@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Twitter
+namespace Streamarr.Core.Notifications.Twitter
 {
     public class OAuthToken
     {

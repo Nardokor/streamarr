@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Update.History
+namespace Streamarr.Core.Update.History
 {
     public interface IUpdateHistoryRepository : IBasicRepository<UpdateHistory>
     {

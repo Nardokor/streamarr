@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
-namespace NzbDrone.Core.Notifications.Telegram
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
+namespace Streamarr.Core.Notifications.Telegram
 {
     public class TelegramSettingsValidator : AbstractValidator<TelegramSettings>
     {
@@ -75,9 +75,9 @@ namespace NzbDrone.Core.Notifications.Telegram
         [FieldDefinition(7, Label = "NotificationsTelegramSettingsLinkPreview", Type = FieldType.Select, SelectOptions = typeof(MetadataLinkPreviewType), HelpText = "NotificationsTelegramSettingsLinkPreviewHelpText")]
         public int LinkPreview { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

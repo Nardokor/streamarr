@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Pushover
+namespace Streamarr.Core.Notifications.Pushover
 {
     public class PushoverSettingsValidator : AbstractValidator<PushoverSettings>
     {
@@ -54,9 +54,9 @@ namespace NzbDrone.Core.Notifications.Pushover
 
         public bool IsValid => !string.IsNullOrWhiteSpace(UserKey) && Priority >= -1 && Priority <= 2;
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

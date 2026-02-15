@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.HealthCheck;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Events;
-using NzbDrone.Core.Update.History.Events;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download;
+using Streamarr.Core.HealthCheck;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Events;
+using Streamarr.Core.Update.History.Events;
 
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public class NotificationService
         : IHandle<EpisodeGrabbedEvent>,

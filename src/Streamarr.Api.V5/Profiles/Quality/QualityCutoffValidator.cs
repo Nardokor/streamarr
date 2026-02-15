@@ -1,7 +1,7 @@
 using FluentValidation;
 using FluentValidation.Validators;
 
-namespace Sonarr.Api.V5.Profiles.Quality;
+namespace Streamarr.Api.V5.Profiles.Quality;
 
 public static class QualityCutoffValidator
 {

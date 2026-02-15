@@ -3,13 +3,13 @@ using System.IO;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Mono.Disk;
-using NzbDrone.Mono.EnvironmentInfo.VersionAdapters;
-using NzbDrone.Test.Common;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Common.Disk;
+using Streamarr.Mono.Disk;
+using Streamarr.Mono.EnvironmentInfo.VersionAdapters;
+using Streamarr.Test.Common;
+using Streamarr.Test.Common.Categories;
 
-namespace NzbDrone.Mono.Test.EnvironmentInfo.VersionAdapters
+namespace Streamarr.Mono.Test.EnvironmentInfo.VersionAdapters
 {
     [TestFixture]
     public class ReleaseFileVersionAdapterFixture : TestBase<ReleaseFileVersionAdapter>

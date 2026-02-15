@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Discord.Payloads
+namespace Streamarr.Core.Notifications.Discord.Payloads
 {
     public class DiscordField
     {

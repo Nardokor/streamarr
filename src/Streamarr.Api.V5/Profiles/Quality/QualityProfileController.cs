@@ -1,13 +1,13 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Profiles.Qualities;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V5.Profiles.Quality;
+namespace Streamarr.Api.V5.Profiles.Quality;
 
 [V5ApiController]
 public class QualityProfileController : RestController<QualityProfileResource>

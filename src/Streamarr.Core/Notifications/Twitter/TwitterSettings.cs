@@ -1,9 +1,9 @@
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Twitter
+namespace Streamarr.Core.Notifications.Twitter
 {
     public class TwitterSettingsValidator : AbstractValidator<TwitterSettings>
     {
@@ -58,9 +58,9 @@ namespace NzbDrone.Core.Notifications.Twitter
         [FieldDefinition(6, Label = "NotificationsTwitterSettingsConnectToTwitter", Type = FieldType.OAuth)]
         public string AuthorizeNotification { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

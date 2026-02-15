@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net;
-using NzbDrone.Core.Exceptions;
+using Streamarr.Core.Exceptions;
 
-namespace NzbDrone.Core.MetadataSource.SkyHook
+namespace Streamarr.Core.MetadataSource.SkyHook
 {
-    public class SkyHookException : NzbDroneClientException
+    public class SkyHookException : StreamarrClientException
     {
         public SkyHookException(string message)
             : base(HttpStatusCode.ServiceUnavailable, message)

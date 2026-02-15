@@ -1,9 +1,9 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.AutoTagging.Specifications
+namespace Streamarr.Core.AutoTagging.Specifications
 {
     public class YearSpecificationValidator : AbstractValidator<YearSpecification>
     {
@@ -34,9 +34,9 @@ namespace NzbDrone.Core.AutoTagging.Specifications
             return series.Year >= Min && series.Year <= Max;
         }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

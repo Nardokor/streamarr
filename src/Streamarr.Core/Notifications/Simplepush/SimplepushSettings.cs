@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Simplepush
+namespace Streamarr.Core.Notifications.Simplepush
 {
     public class SimplepushSettingsValidator : AbstractValidator<SimplepushSettings>
     {
@@ -24,9 +24,9 @@ namespace NzbDrone.Core.Notifications.Simplepush
 
         public bool IsValid => !string.IsNullOrWhiteSpace(Key);
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

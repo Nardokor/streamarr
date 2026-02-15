@@ -3,9 +3,9 @@ using System.Data;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Dapper;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace Streamarr.Core.Datastore.Converters
 {
     public class QualityIntConverter : JsonConverter<Quality>
     {

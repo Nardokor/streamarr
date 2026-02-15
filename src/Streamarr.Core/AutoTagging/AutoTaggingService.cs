@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.RootFolders;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.RootFolders;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.AutoTagging
+namespace Streamarr.Core.AutoTagging
 {
     public interface IAutoTaggingService
     {

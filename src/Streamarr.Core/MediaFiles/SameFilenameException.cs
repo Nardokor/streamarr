@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public class SameFilenameException : Exception
     {

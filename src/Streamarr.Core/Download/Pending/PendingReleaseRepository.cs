@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Download.Pending
+namespace Streamarr.Core.Download.Pending
 {
     public interface IPendingReleaseRepository : IBasicRepository<PendingRelease>
     {

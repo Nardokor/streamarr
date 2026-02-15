@@ -1,10 +1,10 @@
 using System.Text.Json.Serialization;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Messaging.Commands;
-using Sonarr.Http.REST;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Commands;
+namespace Streamarr.Api.V5.Commands;
 
 public class CommandResource : RestResource
 {

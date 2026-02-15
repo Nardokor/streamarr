@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Organizer
+namespace Streamarr.Core.Organizer
 {
     public class SampleResult
     {

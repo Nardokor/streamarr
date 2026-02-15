@@ -2,17 +2,17 @@ using System;
 using System.IO;
 using System.Net;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public interface IDeleteMediaFiles
     {
@@ -56,13 +56,13 @@ namespace NzbDrone.Core.MediaFiles
             if (!_diskProvider.FolderExists(rootFolder))
             {
                 _logger.Warn("Series' root folder ({0}) doesn't exist.", rootFolder);
-                throw new NzbDroneClientException(HttpStatusCode.Conflict, "Series' root folder ({0}) doesn't exist.", rootFolder);
+                throw new StreamarrClientException(HttpStatusCode.Conflict, "Series' root folder ({0}) doesn't exist.", rootFolder);
             }
 
             if (_diskProvider.GetDirectories(rootFolder).Empty())
             {
                 _logger.Warn("Series' root folder ({0}) is empty.", rootFolder);
-                throw new NzbDroneClientException(HttpStatusCode.Conflict, "Series' root folder ({0}) is empty.", rootFolder);
+                throw new StreamarrClientException(HttpStatusCode.Conflict, "Series' root folder ({0}) is empty.", rootFolder);
             }
 
             if (_diskProvider.FolderExists(series.Path) && _diskProvider.FileExists(fullPath))
@@ -78,7 +78,7 @@ namespace NzbDrone.Core.MediaFiles
                 catch (Exception e)
                 {
                     _logger.Error(e, "Unable to delete episode file");
-                    throw new NzbDroneClientException(HttpStatusCode.InternalServerError, "Unable to delete episode file");
+                    throw new StreamarrClientException(HttpStatusCode.InternalServerError, "Unable to delete episode file");
                 }
             }
 

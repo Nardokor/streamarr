@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Languages
+namespace Streamarr.Core.Languages
 {
     public class Language : IEmbeddedDocument, IEquatable<Language>
     {

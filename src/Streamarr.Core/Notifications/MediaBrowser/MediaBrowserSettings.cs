@@ -1,10 +1,10 @@
 using FluentValidation;
 using Newtonsoft.Json;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Emby
+namespace Streamarr.Core.Notifications.Emby
 {
     public class MediaBrowserSettingsValidator : AbstractValidator<MediaBrowserSettings>
     {
@@ -65,9 +65,9 @@ namespace NzbDrone.Core.Notifications.Emby
 
         public bool IsValid => !string.IsNullOrWhiteSpace(Host) && Port > 0;
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

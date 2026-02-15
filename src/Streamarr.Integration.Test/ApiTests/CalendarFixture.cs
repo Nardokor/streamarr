@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Integration.Test.Client;
-using Sonarr.Api.V3.Episodes;
+using Streamarr.Integration.Test.Client;
+using Streamarr.Api.V3.Episodes;
 
-namespace NzbDrone.Integration.Test.ApiTests
+namespace Streamarr.Integration.Test.ApiTests
 {
     [TestFixture]
     public class CalendarFixture : IntegrationTest

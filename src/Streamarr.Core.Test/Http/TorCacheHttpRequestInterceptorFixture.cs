@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Http;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Http;
+using Streamarr.Core.Http;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Http
+namespace Streamarr.Core.Test.Http
 {
     [TestFixture]
     public class TorCacheHttpRequestInterceptorFixture : TestBase<TorCacheHttpRequestInterceptor>

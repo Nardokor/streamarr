@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications;
+namespace Streamarr.Core.Notifications;
 
 public static class NotificationMetadataLinkGenerator
 {

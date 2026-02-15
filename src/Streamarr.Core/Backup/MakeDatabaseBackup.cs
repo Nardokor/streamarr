@@ -1,9 +1,9 @@
 ﻿using System.Data.SQLite;
 using System.IO;
 using NLog;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Backup
+namespace Streamarr.Core.Backup
 {
     public interface IMakeDatabaseBackup
     {

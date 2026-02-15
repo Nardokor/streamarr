@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using NzbDrone.Core.Validation.Paths;
+using Streamarr.Core.Validation.Paths;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public interface IAddSeriesValidator
     {

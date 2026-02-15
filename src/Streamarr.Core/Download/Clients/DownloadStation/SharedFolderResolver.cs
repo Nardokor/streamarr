@@ -1,10 +1,10 @@
 using System;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Download.Clients.DownloadStation.Proxies;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Download.Clients.DownloadStation.Proxies;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation
+namespace Streamarr.Core.Download.Clients.DownloadStation
 {
     public interface ISharedFolderResolver
     {

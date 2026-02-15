@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.AutoTagging;
-using NzbDrone.Core.AutoTagging.Specifications;
-using NzbDrone.Core.Housekeeping.Housekeepers;
-using NzbDrone.Core.Profiles.Releases;
-using NzbDrone.Core.Tags;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.AutoTagging;
+using Streamarr.Core.AutoTagging.Specifications;
+using Streamarr.Core.Housekeeping.Housekeepers;
+using Streamarr.Core.Profiles.Releases;
+using Streamarr.Core.Tags;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
+namespace Streamarr.Core.Test.Housekeeping.Housekeepers
 {
     [TestFixture]
     public class CleanupUnusedTagsFixture : DbTest<CleanupUnusedTags, Tag>

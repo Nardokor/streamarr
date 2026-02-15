@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public class HttpResponse
     {

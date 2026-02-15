@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Indexers.Exceptions
+namespace Streamarr.Core.Indexers.Exceptions
 {
-    public class IndexerException : NzbDroneException
+    public class IndexerException : StreamarrException
     {
         private readonly IndexerResponse _indexerResponse;
 

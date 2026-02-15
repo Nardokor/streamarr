@@ -1,8 +1,8 @@
-﻿using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Instrumentation.Commands;
-using NzbDrone.Core.Messaging.Commands;
+﻿using Streamarr.Core.Datastore;
+using Streamarr.Core.Instrumentation.Commands;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Instrumentation
+namespace Streamarr.Core.Instrumentation
 {
     public interface ILogService
     {

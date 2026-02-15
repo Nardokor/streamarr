@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Indexers.Torznab
+namespace Streamarr.Core.Indexers.Torznab
 {
-    public class TorznabException : NzbDroneException
+    public class TorznabException : StreamarrException
     {
         public TorznabException(string message, params object[] args)
             : base(message, args)

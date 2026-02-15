@@ -1,11 +1,11 @@
 ﻿using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Newznab;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.Newznab;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.ThingiProviderTests
+namespace Streamarr.Core.Test.ThingiProviderTests
 {
     public class ProviderRepositoryFixture : DbTest<IndexerRepository, IndexerDefinition>
     {

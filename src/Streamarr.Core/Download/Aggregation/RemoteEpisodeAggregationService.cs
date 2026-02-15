@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Core.Download.Aggregation.Aggregators;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Download.Aggregation.Aggregators;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Download.Aggregation
+namespace Streamarr.Core.Download.Aggregation
 {
     public interface IRemoteEpisodeAggregationService
     {

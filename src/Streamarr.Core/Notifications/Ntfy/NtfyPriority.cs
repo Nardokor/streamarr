@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Ntfy
+namespace Streamarr.Core.Notifications.Ntfy
 {
     public enum NtfyPriority
     {

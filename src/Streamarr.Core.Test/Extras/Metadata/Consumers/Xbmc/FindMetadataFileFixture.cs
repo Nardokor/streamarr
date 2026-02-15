@@ -3,13 +3,13 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Extras.Metadata;
-using NzbDrone.Core.Extras.Metadata.Consumers.Xbmc;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Extras.Metadata;
+using Streamarr.Core.Extras.Metadata.Consumers.Xbmc;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Extras.Metadata.Consumers.Xbmc
+namespace Streamarr.Core.Test.Extras.Metadata.Consumers.Xbmc
 {
     [TestFixture]
     public class FindMetadataFileFixture : CoreTest<XbmcMetadata>

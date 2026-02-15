@@ -1,10 +1,10 @@
 using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Automation.Test.PageModel;
+using Streamarr.Automation.Test.PageModel;
 using OpenQA.Selenium;
 
-namespace NzbDrone.Automation.Test
+namespace Streamarr.Automation.Test
 {
     [TestFixture]
     public class MainPagesTest : AutomationTest

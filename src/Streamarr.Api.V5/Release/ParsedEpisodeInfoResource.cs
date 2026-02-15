@@ -1,7 +1,7 @@
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
 
-namespace Sonarr.Api.V5.Release;
+namespace Streamarr.Api.V5.Release;
 
 public class ParsedEpisodeInfoResource
 {

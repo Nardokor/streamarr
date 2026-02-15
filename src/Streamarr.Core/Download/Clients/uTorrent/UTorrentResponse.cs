@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.UTorrent
+namespace Streamarr.Core.Download.Clients.UTorrent
 {
     public class UTorrentResponse
     {

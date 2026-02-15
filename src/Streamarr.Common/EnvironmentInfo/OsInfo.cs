@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using NLog;
 
-namespace NzbDrone.Common.EnvironmentInfo
+namespace Streamarr.Common.EnvironmentInfo
 {
     public class OsInfo : IOsInfo
     {

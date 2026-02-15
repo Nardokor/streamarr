@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.ImportLists.Exclusions;
-using NzbDrone.Core.ImportLists.ImportListItems;
-using NzbDrone.Core.Jobs;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.MetadataSource;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider.Events;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.ImportLists.Exclusions;
+using Streamarr.Core.ImportLists.ImportListItems;
+using Streamarr.Core.Jobs;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.MetadataSource;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.ThingiProvider.Events;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public class ImportListSyncService : IExecute<ImportListSyncCommand>, IHandleAsync<ProviderDeletedEvent<IImportList>>
     {

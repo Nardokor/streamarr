@@ -1,12 +1,12 @@
 using FluentValidation;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Validation;
-using NzbDrone.Core.Validation.Paths;
-using Sonarr.Http;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Validation;
+using Streamarr.Core.Validation.Paths;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V5.Settings;
+namespace Streamarr.Api.V5.Settings;
 
 [V5ApiController("settings/mediamanagement")]
 public class MediaManagementSettingsController : SettingsController<MediaManagementSettingsResource>

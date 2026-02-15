@@ -3,13 +3,13 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Authentication
+namespace Streamarr.Core.Authentication
 {
     public interface IUserService
     {

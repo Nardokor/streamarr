@@ -1,15 +1,15 @@
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.HealthCheck.Checks;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Update;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.HealthCheck.Checks;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Update;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.HealthCheck.Checks
+namespace Streamarr.Core.Test.HealthCheck.Checks
 {
     [TestFixture]
     public class UpdateCheckFixture : CoreTest<UpdateCheck>
@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         [Test]
         public void should_return_error_when_app_folder_is_write_protected_and_update_automatically_is_enabled()
         {
-            var startupFolder = @"C:\NzbDrone".AsOsAgnostic();
+            var startupFolder = @"C:\Streamarr".AsOsAgnostic();
 
             Mocker.GetMock<IConfigFileProvider>()
                   .Setup(s => s.UpdateAutomatically)
@@ -45,8 +45,8 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         [Test]
         public void should_return_error_when_ui_folder_is_write_protected_and_update_automatically_is_enabled()
         {
-            var startupFolder = @"C:\NzbDrone".AsOsAgnostic();
-            var uiFolder = @"C:\NzbDrone\UI".AsOsAgnostic();
+            var startupFolder = @"C:\Streamarr".AsOsAgnostic();
+            var uiFolder = @"C:\Streamarr\UI".AsOsAgnostic();
 
             Mocker.GetMock<IConfigFileProvider>()
                   .Setup(s => s.UpdateAutomatically)
@@ -70,7 +70,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         [Test]
         public void should_not_return_error_when_app_folder_is_write_protected_and_external_script_enabled()
         {
-            var startupFolder = @"C:\NzbDrone".AsOsAgnostic();
+            var startupFolder = @"C:\Streamarr".AsOsAgnostic();
 
             Mocker.GetMock<IConfigFileProvider>()
                   .Setup(s => s.UpdateAutomatically)

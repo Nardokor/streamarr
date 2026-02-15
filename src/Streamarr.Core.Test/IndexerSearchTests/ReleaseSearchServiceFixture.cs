@@ -7,15 +7,15 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.IndexerSearch;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.IndexerSearch;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.IndexerSearchTests
+namespace Streamarr.Core.Test.IndexerSearchTests
 {
     public class ReleaseSearchServiceFixture : CoreTest<ReleaseSearchService>
     {

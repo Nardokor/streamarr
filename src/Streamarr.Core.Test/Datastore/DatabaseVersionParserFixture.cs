@@ -1,8 +1,8 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Test.Datastore;
+namespace Streamarr.Core.Test.Datastore;
 
 [TestFixture]
 public class DatabaseVersionParserFixture

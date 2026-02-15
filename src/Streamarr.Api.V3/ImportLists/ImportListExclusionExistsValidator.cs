@@ -1,7 +1,7 @@
 using FluentValidation.Validators;
-using NzbDrone.Core.ImportLists.Exclusions;
+using Streamarr.Core.ImportLists.Exclusions;
 
-namespace Sonarr.Api.V3.ImportLists
+namespace Streamarr.Api.V3.ImportLists
 {
     public class ImportListExclusionExistsValidator : PropertyValidator
     {

@@ -3,13 +3,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Configuration;
 
-namespace NzbDrone.Core.Notifications.Plex.Server
+namespace Streamarr.Core.Notifications.Plex.Server
 {
     public interface IPlexServerProxy
     {

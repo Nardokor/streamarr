@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine
+namespace Streamarr.Core.DecisionEngine
 {
     public class DownloadDecision
     {

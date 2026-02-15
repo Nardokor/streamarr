@@ -2,11 +2,11 @@ using System;
 using System.Linq;
 using System.Net;
 using NetTools;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Http.Proxy;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common.Http;
+using Streamarr.Common.Http.Proxy;
+using Streamarr.Core.Configuration;
 
-namespace NzbDrone.Core.Http
+namespace Streamarr.Core.Http
 {
     public class HttpProxySettingsProvider : IHttpProxySettingsProvider
     {

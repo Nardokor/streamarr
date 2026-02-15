@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using NLog;
-using NzbDrone.Common.Cloud;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.Cloud;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.HealthCheck
+namespace Streamarr.Core.HealthCheck
 {
     public class ServerSideNotificationService : HealthCheckBase
     {

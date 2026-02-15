@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public interface IRefreshEpisodeService
     {

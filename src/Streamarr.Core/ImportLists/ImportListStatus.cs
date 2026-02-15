@@ -1,7 +1,7 @@
 using System;
-using NzbDrone.Core.ThingiProvider.Status;
+using Streamarr.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public class ImportListStatus : ProviderStatusBase
     {

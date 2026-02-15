@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.AutoTagging;
-using NzbDrone.Core.AutoTagging.Specifications;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Notifications;
-using NzbDrone.Core.Profiles.Delay;
-using NzbDrone.Core.Profiles.Releases;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.AutoTagging;
+using Streamarr.Core.AutoTagging.Specifications;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Download;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Notifications;
+using Streamarr.Core.Profiles.Delay;
+using Streamarr.Core.Profiles.Releases;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Tags
+namespace Streamarr.Core.Tags
 {
     public interface ITagService
     {

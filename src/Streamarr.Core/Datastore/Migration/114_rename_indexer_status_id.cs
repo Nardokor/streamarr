@@ -1,10 +1,10 @@
 ﻿using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(114)]
-    public class rename_indexer_status_id : NzbDroneMigrationBase
+    public class rename_indexer_status_id : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

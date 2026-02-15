@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using Dapper;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Datastore.Converters;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Datastore.Converters;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.Datastore
+namespace Streamarr.Core.Test.Datastore
 {
     [TestFixture]
     public class TableMapperFixture

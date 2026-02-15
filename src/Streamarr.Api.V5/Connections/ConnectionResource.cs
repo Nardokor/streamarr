@@ -1,7 +1,7 @@
-using NzbDrone.Core.Notifications;
-using Sonarr.Api.V5.Provider;
+using Streamarr.Core.Notifications;
+using Streamarr.Api.V5.Provider;
 
-namespace Sonarr.Api.V5.Connections;
+namespace Streamarr.Api.V5.Connections;
 
 public class ConnectionResource : ProviderResource<ConnectionResource>
 {

@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Download.Clients.NzbVortex
+﻿namespace Streamarr.Core.Download.Clients.NzbVortex
 {
     public class NzbVortexFile
     {

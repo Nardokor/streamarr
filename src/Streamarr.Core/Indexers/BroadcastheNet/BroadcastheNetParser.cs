@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers.Exceptions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Indexers.Exceptions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers.BroadcastheNet
+namespace Streamarr.Core.Indexers.BroadcastheNet
 {
     public class BroadcastheNetParser : IParseIndexerResponse
     {

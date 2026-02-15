@@ -1,18 +1,18 @@
 using System;
 using NUnit.Framework;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Cloud;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Http.Dispatchers;
-using NzbDrone.Common.Http.Proxy;
-using NzbDrone.Common.TPL;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Http;
-using NzbDrone.Core.Security;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Cloud;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Http;
+using Streamarr.Common.Http.Dispatchers;
+using Streamarr.Common.Http.Proxy;
+using Streamarr.Common.TPL;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Http;
+using Streamarr.Core.Security;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Framework
+namespace Streamarr.Core.Test.Framework
 {
     public abstract class CoreTest : TestBase
     {

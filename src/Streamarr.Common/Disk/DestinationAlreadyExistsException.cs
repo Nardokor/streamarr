@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace NzbDrone.Common.Disk
+namespace Streamarr.Common.Disk
 {
     public class DestinationAlreadyExistsException : IOException
     {

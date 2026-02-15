@@ -1,9 +1,9 @@
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.Hadouken
+namespace Streamarr.Core.Download.Clients.Hadouken
 {
     public class HadoukenSettingsValidator : AbstractValidator<HadoukenSettings>
     {
@@ -56,9 +56,9 @@ namespace NzbDrone.Core.Download.Clients.Hadouken
         [FieldDefinition(6, Label = "Category", Type = FieldType.Textbox, HelpText = "DownloadClientSettingsCategoryHelpText")]
         public string Category { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

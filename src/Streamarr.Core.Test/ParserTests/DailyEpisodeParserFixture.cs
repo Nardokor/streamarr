@@ -1,11 +1,11 @@
 using System;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Expansive;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Expansive;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.ParserTests
+namespace Streamarr.Core.Test.ParserTests
 {
     [TestFixture]
     public class DailyEpisodeParserFixture : CoreTest

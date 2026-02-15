@@ -6,13 +6,13 @@ using System.Net;
 using System.Xml;
 using System.Xml.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.ImportLists.Exceptions;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Exceptions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.ImportLists.Exceptions;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.Exceptions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.Rss
+namespace Streamarr.Core.ImportLists.Rss
 {
     public class RssImportBaseParser : IParseImportListResponse
     {

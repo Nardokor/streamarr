@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.NzbVortex.JsonConverters
+namespace Streamarr.Core.Download.Clients.NzbVortex.JsonConverters
 {
     public class NzbVortexLoginResultTypeConverter : JsonConverter
     {

@@ -1,34 +1,34 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Validation
+namespace Streamarr.Core.Validation
 {
-    public class NzbDroneValidationResult : ValidationResult
+    public class StreamarrValidationResult : ValidationResult
     {
-        public NzbDroneValidationResult()
+        public StreamarrValidationResult()
         {
-            Failures = new List<NzbDroneValidationFailure>();
-            Errors = new List<NzbDroneValidationFailure>();
-            Warnings = new List<NzbDroneValidationFailure>();
+            Failures = new List<StreamarrValidationFailure>();
+            Errors = new List<StreamarrValidationFailure>();
+            Warnings = new List<StreamarrValidationFailure>();
         }
 
-        public NzbDroneValidationResult(ValidationResult validationResult)
+        public StreamarrValidationResult(ValidationResult validationResult)
             : this(validationResult.Errors)
         {
         }
 
-        public NzbDroneValidationResult(IEnumerable<ValidationFailure> failures)
+        public StreamarrValidationResult(IEnumerable<ValidationFailure> failures)
         {
-            var errors = new List<NzbDroneValidationFailure>();
-            var warnings = new List<NzbDroneValidationFailure>();
+            var errors = new List<StreamarrValidationFailure>();
+            var warnings = new List<StreamarrValidationFailure>();
 
             foreach (var failureBase in failures)
             {
-                if (failureBase is not NzbDroneValidationFailure failure)
+                if (failureBase is not StreamarrValidationFailure failure)
                 {
-                    failure = new NzbDroneValidationFailure(failureBase);
+                    failure = new StreamarrValidationFailure(failureBase);
                 }
 
                 if (failure.IsWarning)
@@ -47,9 +47,9 @@ namespace NzbDrone.Core.Validation
             Warnings = warnings;
         }
 
-        public IList<NzbDroneValidationFailure> Failures { get; private set; }
-        public new IList<NzbDroneValidationFailure> Errors { get; private set; }
-        public IList<NzbDroneValidationFailure> Warnings { get; private set; }
+        public IList<StreamarrValidationFailure> Failures { get; private set; }
+        public new IList<StreamarrValidationFailure> Errors { get; private set; }
+        public IList<StreamarrValidationFailure> Warnings { get; private set; }
 
         public virtual bool HasWarnings => Warnings.Any();
 

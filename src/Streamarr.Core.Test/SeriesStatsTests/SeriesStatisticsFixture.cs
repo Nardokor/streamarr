@@ -4,15 +4,15 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.SeriesStats;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.SeriesStats;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.SeriesStatsTests
+namespace Streamarr.Core.Test.SeriesStatsTests
 {
     [TestFixture]
     public class SeriesStatisticsFixture : DbTest<SeriesStatisticsRepository, Series>

@@ -1,7 +1,7 @@
-﻿using NzbDrone.Common.Messaging;
-using NzbDrone.Core.Download;
+﻿using Streamarr.Common.Messaging;
+using Streamarr.Core.Download;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public class RssSyncCompleteEvent : IEvent
     {

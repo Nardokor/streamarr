@@ -1,6 +1,6 @@
-using NzbDrone.Core.Localization;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.HealthCheck
+namespace Streamarr.Core.HealthCheck
 {
     public abstract class HealthCheckBase : IProvideHealthCheck
     {

@@ -1,6 +1,6 @@
-using NzbDrone.Core.DecisionEngine;
+using Streamarr.Core.DecisionEngine;
 
-namespace Sonarr.Api.V5.Release;
+namespace Streamarr.Api.V5.Release;
 
 public class ReleaseDecisionResource
 {

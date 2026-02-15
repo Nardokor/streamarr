@@ -1,9 +1,9 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
+namespace Streamarr.Core.DecisionEngine.Specifications.RssSync
 {
     public class PendingSpecification : IDownloadDecisionEngineSpecification
     {

@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Common.OAuth
+﻿namespace Streamarr.Common.OAuth
 {
     /// <summary>
     /// The types of OAuth requests possible in a typical workflow.

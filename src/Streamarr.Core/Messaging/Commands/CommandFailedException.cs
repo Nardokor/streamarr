@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace Streamarr.Core.Messaging.Commands
 {
-    public class CommandFailedException : NzbDroneException
+    public class CommandFailedException : StreamarrException
     {
         public CommandFailedException(string message, params object[] args)
             : base(message, args)

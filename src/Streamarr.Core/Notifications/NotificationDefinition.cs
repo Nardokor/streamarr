@@ -1,8 +1,8 @@
 using System;
 using Equ;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public class NotificationDefinition : ProviderDefinition, IEquatable<NotificationDefinition>
     {

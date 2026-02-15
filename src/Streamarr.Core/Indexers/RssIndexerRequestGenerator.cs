@@ -1,7 +1,7 @@
-using NzbDrone.Common.Http;
-using NzbDrone.Core.IndexerSearch.Definitions;
+using Streamarr.Common.Http;
+using Streamarr.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public class RssIndexerRequestGenerator : IIndexerRequestGenerator
     {

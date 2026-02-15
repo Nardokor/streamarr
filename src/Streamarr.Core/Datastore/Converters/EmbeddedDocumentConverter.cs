@@ -2,9 +2,9 @@ using System.Data;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Dapper;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace Streamarr.Core.Datastore.Converters
 {
     public class EmbeddedDocumentConverter<T> : SqlMapper.TypeHandler<T>
     {

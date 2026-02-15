@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Security
+﻿namespace Streamarr.Core.Security
 {
     public enum CertificateValidationType
     {

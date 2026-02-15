@@ -6,17 +6,17 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Http.CloudFlare;
-using NzbDrone.Core.Indexers.Exceptions;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Http.CloudFlare;
+using Streamarr.Core.Indexers.Exceptions;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public abstract class HttpIndexerBase<TSettings> : IndexerBase<TSettings>
         where TSettings : IIndexerSettings, new()

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.AutoTagging.Specifications;
+using Streamarr.Core.AutoTagging.Specifications;
 
-namespace NzbDrone.Core.AutoTagging
+namespace Streamarr.Core.AutoTagging
 {
     public class SpecificationMatchesGroup
     {

@@ -1,8 +1,8 @@
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.ImportLists.Exceptions
+namespace Streamarr.Core.ImportLists.Exceptions
 {
-    public class ImportListException : NzbDroneException
+    public class ImportListException : StreamarrException
     {
         private readonly ImportListResponse _importListResponse;
 

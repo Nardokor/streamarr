@@ -1,7 +1,7 @@
-﻿using NzbDrone.Core.Qualities;
-using Sonarr.Http.REST;
+﻿using Streamarr.Core.Qualities;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Qualities;
+namespace Streamarr.Api.V5.Qualities;
 
 public class QualityDefinitionResource : RestResource
 {

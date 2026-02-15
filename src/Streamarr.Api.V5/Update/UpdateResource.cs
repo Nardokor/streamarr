@@ -1,7 +1,7 @@
-﻿using NzbDrone.Core.Update;
-using Sonarr.Http.REST;
+﻿using Streamarr.Core.Update;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Update
+namespace Streamarr.Api.V5.Update
 {
     public class UpdateResource : RestResource
     {

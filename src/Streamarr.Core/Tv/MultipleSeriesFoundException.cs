@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
-    public class MultipleSeriesFoundException : NzbDroneException
+    public class MultipleSeriesFoundException : StreamarrException
     {
         public List<Series> Series { get; set; }
 

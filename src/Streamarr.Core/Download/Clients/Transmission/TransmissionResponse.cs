@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NzbDrone.Core.Download.Clients.Transmission
+namespace Streamarr.Core.Download.Clients.Transmission
 {
     public class TransmissionResponse
     {

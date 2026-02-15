@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Core.Backup
+namespace Streamarr.Core.Backup
 {
     public class Backup
     {

@@ -6,9 +6,9 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public static class WebHeaderCollectionExtensions
     {

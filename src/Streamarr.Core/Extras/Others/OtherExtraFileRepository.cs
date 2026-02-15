@@ -1,8 +1,8 @@
-﻿using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Extras.Files;
-using NzbDrone.Core.Messaging.Events;
+﻿using Streamarr.Core.Datastore;
+using Streamarr.Core.Extras.Files;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Extras.Others
+namespace Streamarr.Core.Extras.Others
 {
     public interface IOtherExtraFileRepository : IExtraFileRepository<OtherExtraFile>
     {

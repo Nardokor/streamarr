@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Tv;
-using Sonarr.Http;
+using Streamarr.Core.Tv;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V5.Series
+namespace Streamarr.Api.V5.Series
 {
     [V5ApiController("series/import")]
     public class SeriesImportController : Controller

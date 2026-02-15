@@ -4,11 +4,11 @@ using System.Threading;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Commands;
 using RestSharp;
-using Sonarr.Http.REST;
+using Streamarr.Http.REST;
 
-namespace NzbDrone.Integration.Test.Client
+namespace Streamarr.Integration.Test.Client
 {
     public class SimpleCommandResource : RestResource
     {

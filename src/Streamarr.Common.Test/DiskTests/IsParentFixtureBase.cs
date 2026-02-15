@@ -1,6 +1,6 @@
-﻿using NzbDrone.Test.Common;
+﻿using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test.DiskTests
+namespace Streamarr.Common.Test.DiskTests
 {
     public class IsParentPathFixture : TestBase
     {

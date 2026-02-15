@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Xbmc
+namespace Streamarr.Core.Notifications.Xbmc
 {
     public interface IXbmcService
     {

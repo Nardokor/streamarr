@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.RQBit
+namespace Streamarr.Core.Download.Clients.RQBit
 {
     public class RQbitSettings : DownloadClientSettingsBase<RQbitSettings>
     {
@@ -29,9 +29,9 @@ namespace NzbDrone.Core.Download.Clients.RQBit
         [FieldToken(TokenField.HelpText, "DownloadClientRQbitSettingsUrlBaseHelpText")]
         public string UrlBase { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 

@@ -2,11 +2,11 @@ using System.Linq;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Datastore.Migration
+namespace Streamarr.Core.Test.Datastore.Migration
 {
     [TestFixture]
     public class add_download_client_priorityFixture : MigrationTest<add_download_client_priority>

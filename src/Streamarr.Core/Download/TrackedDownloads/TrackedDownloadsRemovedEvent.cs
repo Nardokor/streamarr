@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Common.Messaging;
+using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Download.TrackedDownloads
+namespace Streamarr.Core.Download.TrackedDownloads
 {
     public class TrackedDownloadsRemovedEvent : IEvent
     {

@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients.UTorrent;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients.UTorrent;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.UTorrentTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.UTorrentTests
 {
     [TestFixture]
     public class UTorrentFixture : DownloadClientFixtureBase<UTorrent>

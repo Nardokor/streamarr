@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Metadata.Files
+namespace Streamarr.Core.Extras.Metadata.Files
 {
     public interface ICleanMetadataService
     {

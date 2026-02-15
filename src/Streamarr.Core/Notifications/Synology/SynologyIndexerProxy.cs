@@ -1,8 +1,8 @@
 ﻿using System;
 using NLog;
-using NzbDrone.Common.Processes;
+using Streamarr.Common.Processes;
 
-namespace NzbDrone.Core.Notifications.Synology
+namespace Streamarr.Core.Notifications.Synology
 {
     public interface ISynologyIndexerProxy
     {

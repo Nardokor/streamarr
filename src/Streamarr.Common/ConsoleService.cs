@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Common
+namespace Streamarr.Common
 {
     public interface IConsoleService
     {

@@ -5,12 +5,12 @@ using System.Text.Json.Nodes;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Common.Disk;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common.Categories;
 
-namespace NzbDrone.Core.Test.MediaFiles.MediaInfo
+namespace Streamarr.Core.Test.MediaFiles.MediaInfo
 {
     [TestFixture]
     [DiskAccessTest]

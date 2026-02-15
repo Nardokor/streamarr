@@ -3,7 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using RestSharp;
 
-namespace NzbDrone.Integration.Test
+namespace Streamarr.Integration.Test
 {
     [TestFixture]
     public class GenericApiFixture : IntegrationTest

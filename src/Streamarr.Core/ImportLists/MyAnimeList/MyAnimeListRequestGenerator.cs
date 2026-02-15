@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.ImportLists.MyAnimeList
+namespace Streamarr.Core.ImportLists.MyAnimeList
 {
     public class MyAnimeListRequestGenerator : IImportListRequestGenerator
     {

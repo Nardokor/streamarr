@@ -4,14 +4,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using DryIoc;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Reflection;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Reflection;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Localization;
 
-namespace Sonarr.Http.ClientSchema
+namespace Streamarr.Http.ClientSchema
 {
     public static class SchemaBuilder
     {

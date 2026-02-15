@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Indexers.TorrentRss
+﻿namespace Streamarr.Core.Indexers.TorrentRss
 {
     public class TorrentRssIndexerParserSettings
     {

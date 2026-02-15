@@ -1,8 +1,8 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.ParserTests
+namespace Streamarr.Core.Test.ParserTests
 {
     [TestFixture]
     public class AnimeMetadataParserFixture : CoreTest

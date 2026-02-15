@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Test.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Mono.Test.EnvironmentInfo
+namespace Streamarr.Mono.Test.EnvironmentInfo
 {
     [TestFixture]
     [Platform("Mono")]

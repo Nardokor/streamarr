@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using FluentMigrator;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Languages;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Languages;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(155)]
-    public class add_arabic_and_hindi_languages : NzbDroneMigrationBase
+    public class add_arabic_and_hindi_languages : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

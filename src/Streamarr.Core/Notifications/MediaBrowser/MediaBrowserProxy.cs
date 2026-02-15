@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Emby
+namespace Streamarr.Core.Notifications.Emby
 {
     public class MediaBrowserProxy
     {

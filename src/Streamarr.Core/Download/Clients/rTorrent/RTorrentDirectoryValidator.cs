@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download.Clients.RTorrent;
-using NzbDrone.Core.Validation.Paths;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download.Clients.RTorrent;
+using Streamarr.Core.Validation.Paths;
 
-namespace NzbDrone.Core.Download.Clients.rTorrent
+namespace Streamarr.Core.Download.Clients.rTorrent
 {
     public interface IRTorrentDirectoryValidator
     {

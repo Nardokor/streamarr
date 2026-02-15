@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.ImportLists.Custom
+namespace Streamarr.Core.ImportLists.Custom
 {
     public class CustomSeries
     {

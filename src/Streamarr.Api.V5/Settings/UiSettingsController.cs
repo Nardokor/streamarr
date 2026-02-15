@@ -1,12 +1,12 @@
 using System.Reflection;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Languages;
-using Sonarr.Http;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Languages;
+using Streamarr.Http;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V5.Settings;
+namespace Streamarr.Api.V5.Settings;
 
 [V5ApiController("settings/ui")]
 public class UiSettingsController : SettingsController<UiSettingsResource>

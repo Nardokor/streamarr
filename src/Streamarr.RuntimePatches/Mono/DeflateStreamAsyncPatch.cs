@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 
-namespace NzbDrone.RuntimePatches.Mono
+namespace Streamarr.RuntimePatches.Mono
 {
     // Mono 6.0 - 6.x bug 16122
     // Unimplemented method used in GzipStream initiated via the http stack, the method existed as far back as 5.10

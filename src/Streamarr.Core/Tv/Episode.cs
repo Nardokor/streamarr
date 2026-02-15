@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.MediaFiles;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.MediaFiles;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public class Episode : ModelBase, IComparable
     {

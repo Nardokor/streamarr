@@ -1,12 +1,12 @@
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.HealthCheck.Checks;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.HealthCheck.Checks;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.HealthCheck.Checks
+namespace Streamarr.Core.Test.HealthCheck.Checks
 {
     [TestFixture]
     public class AppDataLocationFixture : CoreTest<AppDataLocationCheck>
@@ -24,11 +24,11 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         {
             Mocker.GetMock<IAppFolderInfo>()
                   .Setup(s => s.StartUpFolder)
-                  .Returns(@"C:\NzbDrone".AsOsAgnostic());
+                  .Returns(@"C:\Streamarr".AsOsAgnostic());
 
             Mocker.GetMock<IAppFolderInfo>()
                   .Setup(s => s.AppDataFolder)
-                  .Returns(@"C:\NzbDrone\AppData".AsOsAgnostic());
+                  .Returns(@"C:\Streamarr\AppData".AsOsAgnostic());
 
             Subject.Check().ShouldBeWarning();
         }
@@ -38,11 +38,11 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         {
             Mocker.GetMock<IAppFolderInfo>()
                   .Setup(s => s.StartUpFolder)
-                  .Returns(@"C:\NzbDrone".AsOsAgnostic());
+                  .Returns(@"C:\Streamarr".AsOsAgnostic());
 
             Mocker.GetMock<IAppFolderInfo>()
                   .Setup(s => s.AppDataFolder)
-                  .Returns(@"C:\NzbDrone".AsOsAgnostic());
+                  .Returns(@"C:\Streamarr".AsOsAgnostic());
 
             Subject.Check().ShouldBeWarning();
         }
@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         {
             Mocker.GetMock<IAppFolderInfo>()
                   .Setup(s => s.StartUpFolder)
-                  .Returns(@"C:\NzbDrone".AsOsAgnostic());
+                  .Returns(@"C:\Streamarr".AsOsAgnostic());
 
             Mocker.GetMock<IAppFolderInfo>()
                   .Setup(s => s.AppDataFolder)

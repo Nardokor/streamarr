@@ -4,13 +4,13 @@ using System.Linq;
 using Dapper;
 using FluentMigrator;
 using Newtonsoft.Json.Linq;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(218)]
-    public class telegram_link_preview : NzbDroneMigrationBase
+    public class telegram_link_preview : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

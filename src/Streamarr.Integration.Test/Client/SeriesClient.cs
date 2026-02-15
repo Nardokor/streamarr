@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using RestSharp;
-using Sonarr.Api.V3.Series;
+using Streamarr.Api.V3.Series;
 
-namespace NzbDrone.Integration.Test.Client
+namespace Streamarr.Integration.Test.Client
 {
     public class SeriesClient : ClientBase<SeriesResource>
     {

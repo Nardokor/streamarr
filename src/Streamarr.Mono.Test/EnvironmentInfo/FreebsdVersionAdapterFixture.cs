@@ -1,11 +1,11 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Processes;
-using NzbDrone.Mono.EnvironmentInfo.VersionAdapters;
-using NzbDrone.Test.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Processes;
+using Streamarr.Mono.EnvironmentInfo.VersionAdapters;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Mono.Test.EnvironmentInfo
+namespace Streamarr.Mono.Test.EnvironmentInfo
 {
     [TestFixture]
     [Platform("Linux")]

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download;
 
-namespace NzbDrone.Core.RemotePathMappings
+namespace Streamarr.Core.RemotePathMappings
 {
     public interface IRemotePathMappingService
     {

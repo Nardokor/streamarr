@@ -1,9 +1,9 @@
 ﻿using System.Net;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Exceptions
+namespace Streamarr.Core.Exceptions
 {
-    public class DownstreamException : NzbDroneException
+    public class DownstreamException : StreamarrException
     {
         public HttpStatusCode StatusCode { get; private set; }
 

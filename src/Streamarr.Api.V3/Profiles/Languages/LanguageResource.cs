@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using Sonarr.Http.REST;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Profiles.Languages
+namespace Streamarr.Api.V3.Profiles.Languages
 {
     public class LanguageResource : RestResource
     {

@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Common.OAuth
+﻿namespace Streamarr.Common.OAuth
 {
     public class WebParameter
     {

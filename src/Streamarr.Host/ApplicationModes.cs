@@ -1,4 +1,4 @@
-namespace NzbDrone.Host
+namespace Streamarr.Host
 {
     public enum ApplicationModes
     {

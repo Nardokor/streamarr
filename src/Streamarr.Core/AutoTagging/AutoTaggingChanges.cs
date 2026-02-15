@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.AutoTagging
+namespace Streamarr.Core.AutoTagging
 {
     public class AutoTaggingChanges
     {

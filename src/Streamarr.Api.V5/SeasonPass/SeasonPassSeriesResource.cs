@@ -1,6 +1,6 @@
-﻿using Sonarr.Api.V5.Series;
+﻿using Streamarr.Api.V5.Series;
 
-namespace Sonarr.Api.V5.SeasonPass;
+namespace Streamarr.Api.V5.SeasonPass;
 
 public class SeasonPassSeriesResource
 {

@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.SendGrid
+namespace Streamarr.Core.Notifications.SendGrid
 {
-    public class SendGridException : NzbDroneException
+    public class SendGridException : StreamarrException
     {
         public SendGridException(string message)
             : base(message)

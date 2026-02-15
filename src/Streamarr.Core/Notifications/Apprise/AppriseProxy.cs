@@ -4,12 +4,12 @@ using System.Linq;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.Notifications.Apprise
+namespace Streamarr.Core.Notifications.Apprise
 {
     public interface IAppriseProxy
     {

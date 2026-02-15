@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Internal;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Lifecycle;
-using Sonarr.Http;
-using Sonarr.Http.Validation;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Http;
+using Streamarr.Http.Validation;
 
-namespace Sonarr.Api.V5.System;
+namespace Streamarr.Api.V5.System;
 
 [V5ApiController]
 public class SystemController : Controller

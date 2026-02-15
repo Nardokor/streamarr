@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Crypto;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Backup;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Common.Crypto;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Backup;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V5.System.Backup;
+namespace Streamarr.Api.V5.System.Backup;
 
 [V5ApiController("system/backup")]
 public class BackupController : Controller
@@ -116,17 +116,17 @@ public class BackupController : Controller
         return new { RestartRequired = true };
     }
 
-    private string GetBackupPath(NzbDrone.Core.Backup.Backup backup)
+    private string GetBackupPath(Streamarr.Core.Backup.Backup backup)
     {
         return Path.Combine(_backupService.GetBackupFolder(backup.Type), backup.Name);
     }
 
-    private static int GetBackupId(NzbDrone.Core.Backup.Backup backup)
+    private static int GetBackupId(Streamarr.Core.Backup.Backup backup)
     {
         return HashConverter.GetHashInt31($"backup-{backup.Type}-{backup.Name}");
     }
 
-    private NzbDrone.Core.Backup.Backup? GetBackupById(int id)
+    private Streamarr.Core.Backup.Backup? GetBackupById(int id)
     {
         return _backupService.GetBackups().SingleOrDefault(b => GetBackupId(b) == id);
     }

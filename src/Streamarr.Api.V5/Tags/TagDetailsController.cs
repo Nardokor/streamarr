@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Tags;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Core.Tags;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Tags;
+namespace Streamarr.Api.V5.Tags;
 
 [V5ApiController("tag/detail")]
 public class TagDetailsController : RestController<TagDetailsResource>

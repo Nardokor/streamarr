@@ -3,10 +3,10 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Profiles.Delay;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Profiles.Delay;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Profiles.Delay
+namespace Streamarr.Core.Test.Profiles.Delay
 {
     [TestFixture]
     public class DelayProfileServiceFixture : CoreTest<DelayProfileService>

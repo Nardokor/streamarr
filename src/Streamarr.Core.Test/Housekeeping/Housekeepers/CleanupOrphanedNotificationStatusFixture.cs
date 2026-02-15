@@ -1,12 +1,12 @@
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Housekeeping.Housekeepers;
-using NzbDrone.Core.Notifications;
-using NzbDrone.Core.Notifications.Join;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Housekeeping.Housekeepers;
+using Streamarr.Core.Notifications;
+using Streamarr.Core.Notifications.Join;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
+namespace Streamarr.Core.Test.Housekeeping.Housekeepers
 {
     [TestFixture]
     public class CleanupOrphanedNotificationStatusFixture : DbTest<CleanupOrphanedNotificationStatus, NotificationStatus>

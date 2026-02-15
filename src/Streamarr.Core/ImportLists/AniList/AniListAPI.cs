@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Core.ImportLists.AniList
+namespace Streamarr.Core.ImportLists.AniList
 {
     public enum AniListQuery
     {

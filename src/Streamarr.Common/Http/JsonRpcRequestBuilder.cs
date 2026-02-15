@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public class JsonRpcRequestBuilder : HttpRequestBuilder
     {

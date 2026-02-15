@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Datastore;
+﻿using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.RemotePathMappings
+namespace Streamarr.Core.RemotePathMappings
 {
     public class RemotePathMapping : ModelBase
     {

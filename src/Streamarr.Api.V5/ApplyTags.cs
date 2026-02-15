@@ -1,4 +1,4 @@
-namespace Sonarr.Api.V5;
+namespace Streamarr.Api.V5;
 
 public enum ApplyTags
 {

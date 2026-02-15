@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using FluentMigrator;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(139)]
-    public class add_download_history : NzbDroneMigrationBase
+    public class add_download_history : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

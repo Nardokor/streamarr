@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.Trakt.User
+namespace Streamarr.Core.ImportLists.Trakt.User
 {
     public class TraktUserParser : TraktParser
     {

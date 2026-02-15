@@ -4,10 +4,10 @@ using System.IO;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.Notifications.Twitter
+namespace Streamarr.Core.Notifications.Twitter
 {
     public interface ITwitterService
     {

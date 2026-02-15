@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Sonarr.Http.REST
+namespace Streamarr.Http.REST
 {
     public abstract class RestResource
     {

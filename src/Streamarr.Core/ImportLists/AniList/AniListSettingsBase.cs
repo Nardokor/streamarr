@@ -1,10 +1,10 @@
 using System;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.AniList
+namespace Streamarr.Core.ImportLists.AniList
 {
     public class AniListSettingsBaseValidator<TSettings> : AbstractValidator<TSettings>
     where TSettings : AniListSettingsBase<TSettings>
@@ -53,9 +53,9 @@ namespace NzbDrone.Core.ImportLists.AniList
         [FieldDefinition(99, Label = "ImportListsAniListSettingsAuthenticateWithAniList", Type = FieldType.OAuth)]
         public string SignIn { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate((TSettings)this));
+            return new StreamarrValidationResult(Validator.Validate((TSettings)this));
         }
     }
 }

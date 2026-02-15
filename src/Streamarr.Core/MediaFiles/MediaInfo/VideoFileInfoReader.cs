@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using FFMpegCore;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.MediaFiles.MediaInfo
+namespace Streamarr.Core.MediaFiles.MediaInfo
 {
     public interface IVideoFileInfoReader
     {

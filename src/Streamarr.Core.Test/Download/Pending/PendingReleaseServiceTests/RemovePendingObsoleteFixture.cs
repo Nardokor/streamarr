@@ -3,15 +3,15 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Crypto;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Crypto;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.Download.Pending.PendingReleaseServiceTests
+namespace Streamarr.Core.Test.Download.Pending.PendingReleaseServiceTests
 {
     [TestFixture]
     public class RemovePendingObsoleteFixture : CoreTest<PendingReleaseService>

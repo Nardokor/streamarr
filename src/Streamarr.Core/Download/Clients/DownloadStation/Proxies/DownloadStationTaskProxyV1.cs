@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download.Clients.DownloadStation.Responses;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download.Clients.DownloadStation.Responses;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation.Proxies
+namespace Streamarr.Core.Download.Clients.DownloadStation.Proxies
 {
     public class DownloadStationTaskProxyV1 : DiskStationProxyBase, IDownloadStationTaskProxy
     {

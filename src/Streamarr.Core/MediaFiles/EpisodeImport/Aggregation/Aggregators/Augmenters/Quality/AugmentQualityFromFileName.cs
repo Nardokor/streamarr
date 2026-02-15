@@ -1,8 +1,8 @@
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Download;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Quality
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Quality
 {
     public class AugmentQualityFromFileName : IAugmentQuality
     {

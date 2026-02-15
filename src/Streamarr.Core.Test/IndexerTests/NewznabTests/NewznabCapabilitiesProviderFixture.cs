@@ -3,12 +3,12 @@ using System.Xml;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers.Newznab;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Http;
+using Streamarr.Core.Indexers.Newznab;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
+namespace Streamarr.Core.Test.IndexerTests.NewznabTests
 {
     [TestFixture]
     public class NewznabCapabilitiesProviderFixture : CoreTest<NewznabCapabilitiesProvider>

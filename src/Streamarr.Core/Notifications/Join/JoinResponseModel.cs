@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Notifications.Join
+﻿namespace Streamarr.Core.Notifications.Join
 {
     public class JoinResponseModel
     {

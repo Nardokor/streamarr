@@ -4,11 +4,11 @@ using System.Linq;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.Notifications.Ntfy
+namespace Streamarr.Core.Notifications.Ntfy
 {
     public interface INtfyProxy
     {

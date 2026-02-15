@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Update
+namespace Streamarr.Core.Update
 {
     public interface IUpdaterConfigProvider
     {

@@ -4,19 +4,19 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using NLog;
-using NzbDrone.Common.Cloud;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.DataAugmentation.DailySeries;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.MetadataSource.SkyHook.Resource;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Cloud;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.DataAugmentation.DailySeries;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.MetadataSource.SkyHook.Resource;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MetadataSource.SkyHook
+namespace Streamarr.Core.MetadataSource.SkyHook
 {
     public class SkyHookProxy : IProvideSeriesInfo, ISearchForNewSeries
     {

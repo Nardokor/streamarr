@@ -1,9 +1,9 @@
 using System.IO;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Test.Common.Datastore;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Test.Common.Datastore;
 
-namespace NzbDrone.Core.Test
+namespace Streamarr.Core.Test
 {
     [SetUpFixture]
     public class RemoveCachedDatabase

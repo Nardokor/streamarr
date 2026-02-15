@@ -1,7 +1,7 @@
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Instrumentation;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Instrumentation;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class TrimLogDatabase : IHousekeepingTask
     {

@@ -1,11 +1,11 @@
 using System;
 using NLog;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
 
-namespace NzbDrone.Core.ImportLists.Rss.Plex
+namespace Streamarr.Core.ImportLists.Rss.Plex
 {
     public class PlexRssImport : RssImportBase<PlexRssImportSettings>
     {

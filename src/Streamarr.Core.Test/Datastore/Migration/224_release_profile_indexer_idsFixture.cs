@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore.Migration;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Datastore.Migration;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Datastore.Migration;
+namespace Streamarr.Core.Test.Datastore.Migration;
 
 [TestFixture]
 public class release_profile_indexer_idsFixture : MigrationTest<release_profile_indexer_ids>

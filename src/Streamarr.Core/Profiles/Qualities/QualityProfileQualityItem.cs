@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Qualities;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Profiles.Qualities
+namespace Streamarr.Core.Profiles.Qualities
 {
     public class QualityProfileQualityItem : IEmbeddedDocument
     {

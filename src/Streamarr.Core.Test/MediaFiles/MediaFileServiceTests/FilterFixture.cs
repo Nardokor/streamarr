@@ -4,12 +4,12 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles.MediaFileServiceTests
+namespace Streamarr.Core.Test.MediaFiles.MediaFileServiceTests
 {
     [TestFixture]
     public class FilterFixture : CoreTest<MediaFileService>

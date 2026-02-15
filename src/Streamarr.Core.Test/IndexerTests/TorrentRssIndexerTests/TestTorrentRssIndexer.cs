@@ -3,14 +3,14 @@ using FluentValidation.Results;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.TorrentRss;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.TorrentRss;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
 
-namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
+namespace Streamarr.Core.Test.IndexerTests.TorrentRssIndexerTests
 {
     public class TestTorrentRssIndexer : TorrentRssIndexer
     {

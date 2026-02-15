@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public static class XElementExtensions
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(XmlExtensions));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(XmlExtensions));
 
         public static readonly Regex RemoveTimeZoneRegex = new Regex(@"\s[A-Z]{2,4}$", RegexOptions.Compiled);
 

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Datastore.Events
+namespace Streamarr.Core.Datastore.Events
 {
     public class ModelEvent<TModel> : IEvent
         where TModel : ModelBase

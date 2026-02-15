@@ -5,14 +5,14 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.DataAugmentation.Xem;
-using NzbDrone.Core.DataAugmentation.Xem.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Events;
-using NzbDrone.Test.Common;
+using Streamarr.Core.DataAugmentation.Xem;
+using Streamarr.Core.DataAugmentation.Xem.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Events;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.DataAugmentation.SceneNumbering
+namespace Streamarr.Core.Test.DataAugmentation.SceneNumbering
 {
     [TestFixture]
     public class XemServiceFixture : CoreTest<XemService>

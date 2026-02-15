@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Download.Clients.RQBit.ResponseModels;
+namespace Streamarr.Core.Download.Clients.RQBit.ResponseModels;
 
 public class RootResponse
 {

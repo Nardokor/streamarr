@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv.Commands;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv.Commands;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public class SeriesEditedService : IHandle<SeriesEditedEvent>
     {

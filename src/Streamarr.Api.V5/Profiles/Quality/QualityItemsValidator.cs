@@ -1,8 +1,8 @@
 using FluentValidation;
 using FluentValidation.Validators;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace Sonarr.Api.V5.Profiles.Quality;
+namespace Streamarr.Api.V5.Profiles.Quality;
 
 public static class QualityItemsValidator
 {
@@ -180,7 +180,7 @@ public class AllQualitiesValidator<T> : PropertyValidator
             }
         }
 
-        var allQualityIds = NzbDrone.Core.Qualities.Quality.All;
+        var allQualityIds = Streamarr.Core.Qualities.Quality.All;
 
         foreach (var quality in allQualityIds)
         {

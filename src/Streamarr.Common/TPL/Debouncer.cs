@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Common.TPL
+namespace Streamarr.Common.TPL
 {
     public class Debouncer
     {

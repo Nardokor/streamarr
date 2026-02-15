@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Download.History
+namespace Streamarr.Core.Download.History
 {
     public class DownloadHistory : ModelBase
     {

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Notifications.Xbmc.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Notifications.Xbmc.Model;
 
-namespace NzbDrone.Core.Notifications.Xbmc
+namespace Streamarr.Core.Notifications.Xbmc
 {
     public interface IXbmcJsonApiProxy
     {

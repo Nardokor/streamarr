@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public interface IParseImportListResponse
     {

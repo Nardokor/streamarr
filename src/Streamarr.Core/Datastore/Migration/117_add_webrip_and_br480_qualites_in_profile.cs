@@ -4,13 +4,13 @@ using System.Linq;
 using Dapper;
 using FluentMigrator;
 using Newtonsoft.Json;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(117)]
-    public class add_webrip_and_br480_qualites_in_profile : NzbDroneMigrationBase
+    public class add_webrip_and_br480_qualites_in_profile : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Common.TPL;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Common.TPL;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public interface IDownloadService
     {

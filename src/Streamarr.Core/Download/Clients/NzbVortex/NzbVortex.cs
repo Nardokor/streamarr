@@ -4,16 +4,16 @@ using System.IO;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.NzbVortex
+namespace Streamarr.Core.Download.Clients.NzbVortex
 {
     public class NzbVortex : UsenetClientBase<NzbVortexSettings>
     {
@@ -164,7 +164,7 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
             {
                 _logger.Error(ex, "Unable to connect to NZBVortex");
 
-                return new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
+                return new StreamarrValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
                        {
                            DetailedDescription = ex.Message
                        };
@@ -191,7 +191,7 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
             catch (Exception ex)
             {
                 _logger.Error(ex, "Unable to connect to NZBVortex");
-                return new NzbDroneValidationFailure("Host",  _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }));
+                return new StreamarrValidationFailure("Host",  _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }));
             }
 
             return null;
@@ -219,7 +219,7 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
             {
                 if (Settings.TvCategory.IsNotNullOrWhiteSpace())
                 {
-                    return new NzbDroneValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientValidationGroupMissing"))
+                    return new StreamarrValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientValidationGroupMissing"))
                     {
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientValidationGroupMissingDetail", new Dictionary<string, object> { { "clientName", Name } })
                     };

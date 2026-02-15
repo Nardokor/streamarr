@@ -3,12 +3,12 @@ using System.Linq;
 using System.Net.Sockets;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Xbmc
+namespace Streamarr.Core.Notifications.Xbmc
 {
     public class Xbmc : NotificationBase<XbmcSettings>
     {

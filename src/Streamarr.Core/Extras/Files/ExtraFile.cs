@@ -1,7 +1,7 @@
 using System;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Extras.Files
+namespace Streamarr.Core.Extras.Files
 {
     public abstract class ExtraFile : ModelBase
     {

@@ -1,10 +1,10 @@
 using FluentValidation;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Validation;
-using NzbDrone.SignalR;
-using Sonarr.Http;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Validation;
+using Streamarr.SignalR;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Indexers
+namespace Streamarr.Api.V3.Indexers
 {
     [V3ApiController]
     public class IndexerController : ProviderControllerBase<IndexerResource, IndexerBulkResource, IIndexer, IndexerDefinition>

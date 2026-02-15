@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Validators;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Profiles.Delay
+namespace Streamarr.Core.Profiles.Delay
 {
     public class DelayProfileTagInUseValidator : PropertyValidator
     {

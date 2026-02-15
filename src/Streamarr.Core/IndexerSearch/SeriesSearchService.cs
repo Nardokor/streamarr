@@ -1,13 +1,13 @@
 using System;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Core.Download;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.IndexerSearch
+namespace Streamarr.Core.IndexerSearch
 {
     public class SeriesSearchService : IExecute<SeriesSearchCommand>
     {

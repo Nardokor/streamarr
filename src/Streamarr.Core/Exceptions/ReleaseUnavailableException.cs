@@ -1,7 +1,7 @@
 ﻿using System;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Exceptions
+namespace Streamarr.Core.Exceptions
 {
     public class ReleaseUnavailableException : ReleaseDownloadException
     {

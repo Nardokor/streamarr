@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Languages;
+using Streamarr.Core.Languages;
 
-namespace NzbDrone.Core.Parser.Model
+namespace Streamarr.Core.Parser.Model
 {
     public class SubtitleTitleInfo
     {

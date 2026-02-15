@@ -2,9 +2,9 @@
 using System.Net;
 using FluentAssertions;
 using NUnit.Framework;
-using Sonarr.Api.V3.Indexers;
+using Streamarr.Api.V3.Indexers;
 
-namespace NzbDrone.Integration.Test.ApiTests
+namespace Streamarr.Integration.Test.ApiTests
 {
     [TestFixture]
     [Ignore("Need mock Newznab to test")]

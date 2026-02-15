@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Messaging.Commands;
+﻿using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Configuration
+namespace Streamarr.Core.Configuration
 {
     public class ResetApiKeyCommand : Command
     {

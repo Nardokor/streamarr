@@ -1,9 +1,9 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Integration.Test.ApiTests.WantedTests
+namespace Streamarr.Integration.Test.ApiTests.WantedTests
 {
     [TestFixture]
     public class CutoffUnmetFixture : IntegrationTest

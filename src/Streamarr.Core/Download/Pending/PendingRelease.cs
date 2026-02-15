@@ -1,8 +1,8 @@
 using System;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Download.Pending
+namespace Streamarr.Core.Download.Pending
 {
     public class PendingRelease : ModelBase
     {

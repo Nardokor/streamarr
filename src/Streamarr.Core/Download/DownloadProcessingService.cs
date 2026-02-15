@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using NLog;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class DownloadProcessingService : IExecute<ProcessMonitoredDownloadsCommand>
     {

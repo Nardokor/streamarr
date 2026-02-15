@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Profiles;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Profiles;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.CustomFormats
+namespace Streamarr.Core.Test.CustomFormats
 {
     public class CustomFormatsTestHelpers : CoreTest
     {

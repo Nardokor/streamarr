@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.HealthCheck.Checks;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Torznab;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.HealthCheck.Checks;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.Torznab;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.HealthCheck.Checks
+namespace Streamarr.Core.Test.HealthCheck.Checks
 {
     [TestFixture]
     public class IndexerJackettAllCheckFixture : CoreTest<IndexerJackettAllCheck>

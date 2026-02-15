@@ -2,10 +2,10 @@
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.TvTests.EpisodeRepositoryTests
+namespace Streamarr.Core.Test.TvTests.EpisodeRepositoryTests
 {
     [TestFixture]
     public class FindEpisodeFixture : DbTest<EpisodeRepository, Episode>

@@ -1,10 +1,10 @@
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
-using NzbDrone.Core.Validation.Paths;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
+using Streamarr.Core.Validation.Paths;
 
-namespace NzbDrone.Core.Notifications.CustomScript
+namespace Streamarr.Core.Notifications.CustomScript
 {
     public class CustomScriptSettingsValidator : AbstractValidator<CustomScriptSettings>
     {
@@ -33,9 +33,9 @@ namespace NzbDrone.Core.Notifications.CustomScript
         [FieldDefinition(1, Label = "NotificationsCustomScriptSettingsArguments", HelpText = "NotificationsCustomScriptSettingsArgumentsHelpText", Hidden = HiddenType.HiddenIfNotSet)]
         public string Arguments { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

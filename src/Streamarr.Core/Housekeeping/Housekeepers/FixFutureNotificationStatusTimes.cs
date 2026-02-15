@@ -1,6 +1,6 @@
-using NzbDrone.Core.Notifications;
+using Streamarr.Core.Notifications;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class FixFutureNotificationStatusTimes : FixFutureProviderStatusTimes<NotificationStatus>, IHousekeepingTask
     {

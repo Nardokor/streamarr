@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace NzbDrone.Core
+namespace Streamarr.Core
 {
     public static class Hashing
     {

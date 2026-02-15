@@ -2,13 +2,13 @@ using System;
 using System.Threading;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Test.Common;
+using Streamarr.Common;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Messaging.Commands
+namespace Streamarr.Core.Test.Messaging.Commands
 {
     [TestFixture]
     public class CommandExecutorFixture : TestBase<CommandExecutor>

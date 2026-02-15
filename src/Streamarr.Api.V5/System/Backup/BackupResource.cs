@@ -1,7 +1,7 @@
-using NzbDrone.Core.Backup;
-using Sonarr.Http.REST;
+using Streamarr.Core.Backup;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.System.Backup;
+namespace Streamarr.Api.V5.System.Backup;
 
 public class BackupResource : RestResource
 {

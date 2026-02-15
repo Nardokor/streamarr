@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Core.Download.Clients.FreeboxDownload.Responses
+namespace Streamarr.Core.Download.Clients.FreeboxDownload.Responses
 {
     public enum FreeboxDownloadTaskType
     {

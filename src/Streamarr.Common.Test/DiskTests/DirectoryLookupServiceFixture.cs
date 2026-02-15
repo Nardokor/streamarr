@@ -4,10 +4,10 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test.DiskTests
+namespace Streamarr.Common.Test.DiskTests
 {
     [TestFixture]
     public class DirectoryLookupServiceFixture : TestBase<FileSystemLookupService>

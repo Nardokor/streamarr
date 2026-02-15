@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.ImportLists.Sonarr
+namespace Streamarr.Core.ImportLists.Sonarr
 {
     public class SonarrSeries
     {

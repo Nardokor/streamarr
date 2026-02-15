@@ -1,7 +1,7 @@
 ﻿using System;
-using NzbDrone.Common.Disk;
+using Streamarr.Common.Disk;
 
-namespace NzbDrone.Core.Download.Clients.Blackhole
+namespace Streamarr.Core.Download.Clients.Blackhole
 {
     public class WatchFolderItem
     {

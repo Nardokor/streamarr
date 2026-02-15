@@ -2,13 +2,13 @@
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Extras.Metadata;
-using NzbDrone.Core.Extras.Metadata.Consumers.Roksbox;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Extras.Metadata;
+using Streamarr.Core.Extras.Metadata.Consumers.Roksbox;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Extras.Metadata.Consumers.Roksbox
+namespace Streamarr.Core.Test.Extras.Metadata.Consumers.Roksbox
 {
     [TestFixture]
     public class FindMetadataFileFixture : CoreTest<RoksboxMetadata>

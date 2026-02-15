@@ -1,9 +1,9 @@
 using System;
 using Equ;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class DownloadClientDefinition : ProviderDefinition, IEquatable<DownloadClientDefinition>
     {

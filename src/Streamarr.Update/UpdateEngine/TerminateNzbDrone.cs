@@ -1,24 +1,24 @@
 using System;
 using NLog;
-using NzbDrone.Common;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Processes;
-using IServiceProvider = NzbDrone.Common.IServiceProvider;
+using Streamarr.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Processes;
+using IServiceProvider = Streamarr.Common.IServiceProvider;
 
-namespace NzbDrone.Update.UpdateEngine
+namespace Streamarr.Update.UpdateEngine
 {
-    public interface ITerminateNzbDrone
+    public interface ITerminateStreamarr
     {
         void Terminate(int processId);
     }
 
-    public class TerminateNzbDrone : ITerminateNzbDrone
+    public class TerminateStreamarr : ITerminateStreamarr
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IProcessProvider _processProvider;
         private readonly Logger _logger;
 
-        public TerminateNzbDrone(IServiceProvider serviceProvider, IProcessProvider processProvider, Logger logger)
+        public TerminateStreamarr(IServiceProvider serviceProvider, IProcessProvider processProvider, Logger logger)
         {
             _serviceProvider = serviceProvider;
             _processProvider = processProvider;
@@ -36,7 +36,7 @@ namespace NzbDrone.Update.UpdateEngine
                 {
                     try
                     {
-                        _logger.Info("NzbDrone Service is installed and running");
+                        _logger.Info("Streamarr Service is installed and running");
                         _serviceProvider.Stop(ServiceProvider.SERVICE_NAME);
                     }
                     catch (Exception e)

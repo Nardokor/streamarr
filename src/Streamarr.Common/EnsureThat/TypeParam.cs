@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Common.EnsureThat
+namespace Streamarr.Common.EnsureThat
 {
     public class TypeParam : Param
     {

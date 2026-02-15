@@ -1,10 +1,10 @@
 ﻿using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(47)]
-    public class add_temporary_blacklist_columns : NzbDroneMigrationBase
+    public class add_temporary_blacklist_columns : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

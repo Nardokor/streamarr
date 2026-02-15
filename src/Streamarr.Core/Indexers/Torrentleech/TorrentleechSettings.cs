@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using Equ;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.Torrentleech
+namespace Streamarr.Core.Indexers.Torrentleech
 {
     public class TorrentleechSettingsValidator : AbstractValidator<TorrentleechSettings>
     {
@@ -52,9 +52,9 @@ namespace NzbDrone.Core.Indexers.Torrentleech
         [FieldDefinition(6, Type = FieldType.Select, SelectOptions = typeof(FailDownloads), Label = "IndexerSettingsFailDownloads", HelpText = "IndexerSettingsFailDownloadsHelpText", Advanced = true)]
         public IEnumerable<int> FailDownloads { get; set; }
 
-        public NzbDroneValidationResult Validate()
+        public StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

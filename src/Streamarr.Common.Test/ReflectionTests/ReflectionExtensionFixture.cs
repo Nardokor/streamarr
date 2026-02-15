@@ -1,11 +1,11 @@
 using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Reflection;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Reflection;
+using Streamarr.Core.Datastore;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test.ReflectionTests
+namespace Streamarr.Common.Test.ReflectionTests
 {
     public class ReflectionExtensionFixture : TestBase
     {

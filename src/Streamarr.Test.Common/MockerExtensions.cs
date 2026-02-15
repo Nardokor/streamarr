@@ -1,6 +1,6 @@
-﻿using NzbDrone.Test.Common.AutoMoq;
+﻿using Streamarr.Test.Common.AutoMoq;
 
-namespace NzbDrone.Test.Common
+namespace Streamarr.Test.Common
 {
     public static class MockerExtensions
     {

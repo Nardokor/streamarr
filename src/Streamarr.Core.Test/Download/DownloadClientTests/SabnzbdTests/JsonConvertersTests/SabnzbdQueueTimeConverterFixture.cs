@@ -2,9 +2,9 @@
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using NzbDrone.Core.Download.Clients.Sabnzbd;
+using Streamarr.Core.Download.Clients.Sabnzbd;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests.JsonConvertersTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.SabnzbdTests.JsonConvertersTests
 {
     [TestFixture]
     public class SabnzbdQueueTimeConverterFixture

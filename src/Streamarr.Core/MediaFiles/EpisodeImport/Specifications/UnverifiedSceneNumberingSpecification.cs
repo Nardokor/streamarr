@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using NLog;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Parser.Model;
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Specifications
+using Streamarr.Core.Download;
+using Streamarr.Core.Parser.Model;
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Specifications
 {
     public class UnverifiedSceneNumberingSpecification : IImportDecisionEngineSpecification
     {

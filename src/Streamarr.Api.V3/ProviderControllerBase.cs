@@ -3,18 +3,18 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.ThingiProvider.Events;
-using NzbDrone.Core.Validation;
-using NzbDrone.SignalR;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.ThingiProvider.Events;
+using Streamarr.Core.Validation;
+using Streamarr.SignalR;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V3
+namespace Streamarr.Api.V3
 {
     public abstract class ProviderControllerBase<TProviderResource, TBulkProviderResource, TProvider, TProviderDefinition> : RestControllerWithSignalR<TProviderResource, TProviderDefinition>,
         IHandle<ProviderAddedEvent<TProvider>>,
@@ -306,7 +306,7 @@ namespace Sonarr.Api.V3
 
         protected void VerifyValidationResult(ValidationResult validationResult, bool includeWarnings)
         {
-            var result = validationResult as NzbDroneValidationResult ?? new NzbDroneValidationResult(validationResult.Errors);
+            var result = validationResult as StreamarrValidationResult ?? new StreamarrValidationResult(validationResult.Errors);
 
             if (includeWarnings && (!result.IsValid || result.HasWarnings))
             {

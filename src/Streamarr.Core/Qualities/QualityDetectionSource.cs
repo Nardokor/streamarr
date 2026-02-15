@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Qualities
+﻿namespace Streamarr.Core.Qualities
 {
     public enum QualityDetectionSource
     {

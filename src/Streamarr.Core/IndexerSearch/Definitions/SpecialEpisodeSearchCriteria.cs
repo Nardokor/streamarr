@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace NzbDrone.Core.IndexerSearch.Definitions
+namespace Streamarr.Core.IndexerSearch.Definitions
 {
     public class SpecialEpisodeSearchCriteria : SearchCriteriaBase
     {

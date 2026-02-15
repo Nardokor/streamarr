@@ -1,10 +1,10 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport.Aggregation.Aggregators
+namespace Streamarr.Core.Test.MediaFiles.EpisodeImport.Aggregation.Aggregators
 {
     [TestFixture]
     public class AggregateSubtitleInfoFixture : CoreTest<AggregateSubtitleInfo>

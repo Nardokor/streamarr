@@ -1,11 +1,11 @@
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
 
-namespace Sonarr.Http.Frontend.Mappers
+namespace Streamarr.Http.Frontend.Mappers
 {
     public abstract class UrlBaseReplacementResourceMapperBase : StaticResourceMapperBase
     {

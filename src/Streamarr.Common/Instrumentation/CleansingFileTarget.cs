@@ -2,7 +2,7 @@ using System.Text;
 using NLog;
 using NLog.Targets;
 
-namespace NzbDrone.Common.Instrumentation
+namespace Streamarr.Common.Instrumentation
 {
     public class CleansingFileTarget : FileTarget
     {

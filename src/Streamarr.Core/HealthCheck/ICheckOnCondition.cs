@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.HealthCheck
+﻿namespace Streamarr.Core.HealthCheck
 {
     public interface ICheckOnCondition<TEvent>
     {

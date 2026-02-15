@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Slack
+namespace Streamarr.Core.Notifications.Slack
 {
-    public class SlackExeption : NzbDroneException
+    public class SlackExeption : StreamarrException
     {
         public SlackExeption(string message)
             : base(message)

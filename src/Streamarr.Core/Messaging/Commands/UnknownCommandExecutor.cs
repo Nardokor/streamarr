@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace Streamarr.Core.Messaging.Commands
 {
     public class UnknownCommandExecutor : IExecute<UnknownCommand>
     {

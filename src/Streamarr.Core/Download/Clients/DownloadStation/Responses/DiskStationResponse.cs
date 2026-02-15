@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Download.Clients.DownloadStation.Responses
+﻿namespace Streamarr.Core.Download.Clients.DownloadStation.Responses
 {
     public class DiskStationResponse<T>
         where T : new()

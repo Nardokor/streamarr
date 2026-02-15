@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tags;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tags;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public abstract class WebhookBase<TSettings> : NotificationBase<TSettings>
         where TSettings : NotificationSettingsBase<TSettings>, new()

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Qualities
+namespace Streamarr.Core.Test.Qualities
 {
     [TestFixture]
     public class QualityDefinitionServiceFixture : CoreTest<QualityDefinitionService>

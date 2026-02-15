@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Specifications
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Specifications
 {
     public class MatchesGrabSpecification : IImportDecisionEngineSpecification
     {

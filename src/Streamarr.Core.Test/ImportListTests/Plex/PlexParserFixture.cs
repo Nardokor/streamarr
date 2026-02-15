@@ -2,12 +2,12 @@ using System.Linq;
 using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.ImportLists.Plex;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Http;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.ImportLists.Plex;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.ImportList.Plex
+namespace Streamarr.Core.Test.ImportList.Plex
 {
     public class PlexTest : CoreTest<PlexParser>
     {

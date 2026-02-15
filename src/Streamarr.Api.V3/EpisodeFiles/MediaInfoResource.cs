@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using Sonarr.Http.REST;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.EpisodeFiles
+namespace Streamarr.Api.V3.EpisodeFiles
 {
     public class MediaInfoResource : RestResource
     {

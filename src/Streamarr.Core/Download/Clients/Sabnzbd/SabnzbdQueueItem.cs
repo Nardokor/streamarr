@@ -1,8 +1,8 @@
 ﻿using System;
 using Newtonsoft.Json;
-using NzbDrone.Core.Download.Clients.Sabnzbd.JsonConverters;
+using Streamarr.Core.Download.Clients.Sabnzbd.JsonConverters;
 
-namespace NzbDrone.Core.Download.Clients.Sabnzbd
+namespace Streamarr.Core.Download.Clients.Sabnzbd
 {
     public class SabnzbdQueueItem
     {

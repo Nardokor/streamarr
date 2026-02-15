@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Indexers.Fanzub;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Indexers.Fanzub;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerTests.FanzubTests
+namespace Streamarr.Core.Test.IndexerTests.FanzubTests
 {
     public class FanzubRequestGeneratorFixture : CoreTest<FanzubRequestGenerator>
     {

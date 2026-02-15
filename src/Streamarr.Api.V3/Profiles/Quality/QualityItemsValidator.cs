@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using FluentValidation.Validators;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace Sonarr.Api.V3.Profiles.Quality
+namespace Streamarr.Api.V3.Profiles.Quality
 {
     public static class QualityItemsValidator
     {
@@ -182,7 +182,7 @@ namespace Sonarr.Api.V3.Profiles.Quality
                 }
             }
 
-            var allQualityIds = NzbDrone.Core.Qualities.Quality.All;
+            var allQualityIds = Streamarr.Core.Qualities.Quality.All;
 
             foreach (var quality in allQualityIds)
             {

@@ -1,6 +1,6 @@
-using NzbDrone.Core.ImportLists;
+using Streamarr.Core.ImportLists;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class FixFutureImportListStatusTimes : FixFutureProviderStatusTimes<ImportListStatus>, IHousekeepingTask
     {

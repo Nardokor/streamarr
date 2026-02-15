@@ -5,12 +5,12 @@ using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using NLog;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Exceptions;
-using Sonarr.Http.Exceptions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Exceptions;
+using Streamarr.Http.Exceptions;
 
-namespace Sonarr.Http.ErrorManagement
+namespace Streamarr.Http.ErrorManagement
 {
     public class SonarrErrorPipeline
     {
@@ -52,7 +52,7 @@ namespace Sonarr.Http.ErrorManagement
                 await response.WriteAsync(STJson.ToJson(validationException.Errors));
                 return;
             }
-            else if (exception is NzbDroneClientException clientException)
+            else if (exception is StreamarrClientException clientException)
             {
                 statusCode = clientException.StatusCode;
             }

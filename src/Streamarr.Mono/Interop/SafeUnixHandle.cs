@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using Mono.Unix.Native;
 
-namespace NzbDrone.Mono.Interop
+namespace Streamarr.Mono.Interop
 {
     internal sealed class SafeUnixHandle : SafeHandle
     {

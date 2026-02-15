@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public static class SeriesTitleNormalizer
     {

@@ -1,6 +1,6 @@
-﻿using Sonarr.Http.REST;
+﻿using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Episodes;
+namespace Streamarr.Api.V5.Episodes;
 
 public class RenameEpisodeResource : RestResource
 {
@@ -14,7 +14,7 @@ public class RenameEpisodeResource : RestResource
 
 public static class RenameEpisodeResourceMapper
 {
-    public static RenameEpisodeResource ToResource(this NzbDrone.Core.MediaFiles.RenameEpisodeFilePreview model)
+    public static RenameEpisodeResource ToResource(this Streamarr.Core.MediaFiles.RenameEpisodeFilePreview model)
     {
         return new RenameEpisodeResource
         {
@@ -28,7 +28,7 @@ public static class RenameEpisodeResourceMapper
         };
     }
 
-    public static List<RenameEpisodeResource> ToResource(this IEnumerable<NzbDrone.Core.MediaFiles.RenameEpisodeFilePreview> models)
+    public static List<RenameEpisodeResource> ToResource(this IEnumerable<Streamarr.Core.MediaFiles.RenameEpisodeFilePreview> models)
     {
         return models.Select(ToResource).ToList();
     }

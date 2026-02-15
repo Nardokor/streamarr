@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Configuration
+namespace Streamarr.Core.Configuration
 {
-    public class InvalidConfigFileException : NzbDroneException
+    public class InvalidConfigFileException : StreamarrException
     {
         public InvalidConfigFileException(string message)
             : base(message)

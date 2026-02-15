@@ -1,7 +1,7 @@
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace NzbDrone.Core.Download.Extensions
+namespace Streamarr.Core.Download.Extensions
 {
     internal static class XmlExtensions
     {

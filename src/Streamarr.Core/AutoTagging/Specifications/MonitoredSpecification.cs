@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.AutoTagging.Specifications
+namespace Streamarr.Core.AutoTagging.Specifications
 {
     public class MonitoredSpecificationValidator : AbstractValidator<MonitoredSpecification>
     {
@@ -20,9 +20,9 @@ namespace NzbDrone.Core.AutoTagging.Specifications
             return series.Monitored;
         }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

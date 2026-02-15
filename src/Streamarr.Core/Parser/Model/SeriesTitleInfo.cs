@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Parser.Model
+﻿namespace Streamarr.Core.Parser.Model
 {
     public class SeriesTitleInfo
     {

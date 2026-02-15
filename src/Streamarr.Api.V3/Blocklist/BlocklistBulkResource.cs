@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sonarr.Api.V3.Blocklist
+namespace Streamarr.Api.V3.Blocklist
 {
     public class BlocklistBulkResource
     {

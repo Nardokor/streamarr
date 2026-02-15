@@ -10,27 +10,27 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Processes;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv.Commands;
-using NzbDrone.Integration.Test.Client;
-using NzbDrone.SignalR;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Processes;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Tv.Commands;
+using Streamarr.Integration.Test.Client;
+using Streamarr.SignalR;
+using Streamarr.Test.Common.Categories;
 using RestSharp;
-using Sonarr.Api.V3.Blocklist;
-using Sonarr.Api.V3.Config;
-using Sonarr.Api.V3.DownloadClient;
-using Sonarr.Api.V3.EpisodeFiles;
-using Sonarr.Api.V3.Episodes;
-using Sonarr.Api.V3.History;
-using Sonarr.Api.V3.Profiles.Quality;
-using Sonarr.Api.V3.RootFolders;
-using Sonarr.Api.V3.Series;
-using Sonarr.Api.V3.System.Tasks;
-using Sonarr.Api.V3.Tags;
+using Streamarr.Api.V3.Blocklist;
+using Streamarr.Api.V3.Config;
+using Streamarr.Api.V3.DownloadClient;
+using Streamarr.Api.V3.EpisodeFiles;
+using Streamarr.Api.V3.Episodes;
+using Streamarr.Api.V3.History;
+using Streamarr.Api.V3.Profiles.Quality;
+using Streamarr.Api.V3.RootFolders;
+using Streamarr.Api.V3.Series;
+using Streamarr.Api.V3.System.Tasks;
+using Streamarr.Api.V3.Tags;
 
-namespace NzbDrone.Integration.Test
+namespace Streamarr.Integration.Test
 {
     [IntegrationTest]
     public abstract class IntegrationTestBase

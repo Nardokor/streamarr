@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using Sonarr.Http;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Logs
+namespace Streamarr.Api.V3.Logs
 {
     [V3ApiController("log/file/update")]
     public class UpdateLogFileController : LogFileControllerBase

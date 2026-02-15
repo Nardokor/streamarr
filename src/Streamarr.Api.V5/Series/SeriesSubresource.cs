@@ -1,4 +1,4 @@
-namespace Sonarr.Api.V5.Series;
+namespace Streamarr.Api.V5.Series;
 
 public enum SeriesSubresource
 {

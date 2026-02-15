@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.SeriesStats
+namespace Streamarr.Core.SeriesStats
 {
     public class SeasonStatistics : ResultSet
     {

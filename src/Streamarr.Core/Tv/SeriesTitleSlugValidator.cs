@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using FluentValidation.Validators;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public class SeriesTitleSlugValidator : PropertyValidator
     {

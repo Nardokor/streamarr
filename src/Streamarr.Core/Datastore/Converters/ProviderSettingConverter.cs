@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using System.Text.Json;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace Streamarr.Core.Datastore.Converters
 {
     public class ProviderSettingConverter : EmbeddedDocumentConverter<IProviderConfig>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Core.Notifications.Telegram
+namespace Streamarr.Core.Notifications.Telegram
 {
     public class InvalidResponseException : Exception
     {

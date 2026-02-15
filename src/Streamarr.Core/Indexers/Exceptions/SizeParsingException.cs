@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Indexers.Exceptions
+namespace Streamarr.Core.Indexers.Exceptions
 {
-    public class SizeParsingException : NzbDroneException
+    public class SizeParsingException : StreamarrException
     {
         public SizeParsingException(string message, params object[] args)
             : base(message, args)

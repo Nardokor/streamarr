@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Validators;
-using NzbDrone.Core.Profiles.Qualities;
+using Streamarr.Core.Profiles.Qualities;
 
-namespace NzbDrone.Core.Validation
+namespace Streamarr.Core.Validation
 {
     public class QualityProfileExistsValidator : PropertyValidator
     {

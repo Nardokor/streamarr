@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Tv;
 
-namespace Sonarr.Api.V3.SeasonPass
+namespace Streamarr.Api.V3.SeasonPass
 {
     public class SeasonPassResource
     {

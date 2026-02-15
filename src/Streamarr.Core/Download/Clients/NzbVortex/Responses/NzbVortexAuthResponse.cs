@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using NzbDrone.Core.Download.Clients.NzbVortex.JsonConverters;
+using Streamarr.Core.Download.Clients.NzbVortex.JsonConverters;
 
-namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses
+namespace Streamarr.Core.Download.Clients.NzbVortex.Responses
 {
     public class NzbVortexAuthResponse : NzbVortexResponseBase
     {

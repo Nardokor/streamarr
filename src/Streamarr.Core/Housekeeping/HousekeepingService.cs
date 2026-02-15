@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Housekeeping
+namespace Streamarr.Core.Housekeeping
 {
     public class HousekeepingService : IExecute<HousekeepingCommand>
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public interface ICheckIfSeriesShouldBeRefreshed
     {

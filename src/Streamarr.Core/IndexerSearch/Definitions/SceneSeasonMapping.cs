@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.IndexerSearch.Definitions
+namespace Streamarr.Core.IndexerSearch.Definitions
 {
     public class SceneSeasonMapping
     {

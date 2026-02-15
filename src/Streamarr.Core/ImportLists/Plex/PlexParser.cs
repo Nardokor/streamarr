@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.ImportLists.Exceptions;
-using NzbDrone.Core.Notifications.Plex.PlexTv;
-using NzbDrone.Core.Notifications.Plex.Server;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.ImportLists.Exceptions;
+using Streamarr.Core.Notifications.Plex.PlexTv;
+using Streamarr.Core.Notifications.Plex.Server;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.Plex
+namespace Streamarr.Core.ImportLists.Plex
 {
     public class PlexParser : IParseImportListResponse
     {

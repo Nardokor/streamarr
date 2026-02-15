@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Tags;
-using Sonarr.Http.REST;
+using Streamarr.Core.Tags;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Tags
+namespace Streamarr.Api.V3.Tags
 {
     public class TagDetailsResource : RestResource
     {

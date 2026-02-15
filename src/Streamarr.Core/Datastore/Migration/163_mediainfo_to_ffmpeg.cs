@@ -8,17 +8,17 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.MediaInfo;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.MediaInfo;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(163)]
-    public class mediainfo_to_ffmpeg : NzbDroneMigrationBase
+    public class mediainfo_to_ffmpeg : StreamarrMigrationBase
     {
         private readonly JsonSerializerOptions _serializerSettings;
 

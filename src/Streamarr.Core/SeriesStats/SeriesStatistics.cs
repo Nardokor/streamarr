@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.SeriesStats
+namespace Streamarr.Core.SeriesStats
 {
     public class SeriesStatistics : ResultSet
     {

@@ -1,7 +1,7 @@
 using NLog;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications.Search
+namespace Streamarr.Core.DecisionEngine.Specifications.Search
 {
     public class SeriesSpecification : IDownloadDecisionEngineSpecification
     {

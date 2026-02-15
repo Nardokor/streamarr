@@ -1,15 +1,15 @@
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Blocklisting;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download.Clients.Transmission;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Core.RemotePathMappings;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Http;
+using Streamarr.Core.Blocklisting;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download.Clients.Transmission;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Core.RemotePathMappings;
 
-namespace NzbDrone.Core.Download.Clients.Vuze
+namespace Streamarr.Core.Download.Clients.Vuze
 {
     public class Vuze : TransmissionBase
     {

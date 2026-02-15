@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Messaging.Commands;
+﻿using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Housekeeping
+namespace Streamarr.Core.Housekeeping
 {
     public class HousekeepingCommand : Command
     {

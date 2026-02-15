@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace NzbDrone.Test.Common.Categories
+namespace Streamarr.Test.Common.Categories
 {
     public class IntegrationTestAttribute : CategoryAttribute
     {

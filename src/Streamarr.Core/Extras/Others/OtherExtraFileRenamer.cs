@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Others
+namespace Streamarr.Core.Extras.Others
 {
     public interface IOtherExtraFileRenamer
     {

@@ -5,11 +5,11 @@ using System.Net;
 using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Integration.Test.Client;
+using Streamarr.Common.Disk;
+using Streamarr.Integration.Test.Client;
 using RestSharp;
 
-namespace NzbDrone.Integration.Test.ApiTests
+namespace Streamarr.Integration.Test.ApiTests
 {
     [TestFixture]
     public class FileSystemFixture : IntegrationTest

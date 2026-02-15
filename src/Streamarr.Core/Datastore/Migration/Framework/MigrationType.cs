@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Datastore.Migration.Framework
+﻿namespace Streamarr.Core.Datastore.Migration.Framework
 {
     public enum MigrationType
     {

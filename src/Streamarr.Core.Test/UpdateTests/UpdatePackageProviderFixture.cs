@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Update;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Update;
 
-namespace NzbDrone.Core.Test.UpdateTests
+namespace Streamarr.Core.Test.UpdateTests
 {
     public class UpdatePackageProviderFixture : CoreTest<UpdatePackageProvider>
     {

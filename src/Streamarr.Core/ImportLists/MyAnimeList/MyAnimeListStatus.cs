@@ -1,6 +1,6 @@
-using NzbDrone.Core.Annotations;
+using Streamarr.Core.Annotations;
 
-namespace NzbDrone.Core.ImportLists.MyAnimeList
+namespace Streamarr.Core.ImportLists.MyAnimeList
 {
     public enum MyAnimeListStatus
     {

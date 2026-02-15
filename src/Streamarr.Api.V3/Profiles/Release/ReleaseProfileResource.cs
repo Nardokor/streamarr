@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using NzbDrone.Core.Profiles.Releases;
-using Sonarr.Http.REST;
+using Streamarr.Core.Profiles.Releases;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Profiles.Release
+namespace Streamarr.Api.V3.Profiles.Release
 {
     public class ReleaseProfileResource : RestResource
     {

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers.Exceptions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Indexers.Exceptions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers.TorrentRss
+namespace Streamarr.Core.Indexers.TorrentRss
 {
     public interface ITorrentRssSettingsDetector
     {

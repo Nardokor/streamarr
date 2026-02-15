@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Notifications.Discord.Payloads
+namespace Streamarr.Core.Notifications.Discord.Payloads
 {
     public class DiscordPayload
     {

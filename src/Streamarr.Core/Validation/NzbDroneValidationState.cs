@@ -1,8 +1,8 @@
-namespace NzbDrone.Core.Validation
+namespace Streamarr.Core.Validation
 {
-    public class NzbDroneValidationState
+    public class StreamarrValidationState
     {
-        public static NzbDroneValidationState Warning = new NzbDroneValidationState { IsWarning = true };
+        public static StreamarrValidationState Warning = new StreamarrValidationState { IsWarning = true };
 
         public bool IsWarning { get; set; }
     }

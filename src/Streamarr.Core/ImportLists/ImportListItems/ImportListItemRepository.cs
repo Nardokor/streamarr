@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.ImportListItems
+namespace Streamarr.Core.ImportLists.ImportListItems
 {
     public interface IImportListItemRepository : IBasicRepository<ImportListItemInfo>
     {

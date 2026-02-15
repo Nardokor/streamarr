@@ -1,7 +1,7 @@
 using Dapper;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class CleanupDuplicateMetadataFiles : IHousekeepingTask
     {

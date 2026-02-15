@@ -1,7 +1,7 @@
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Download;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Language
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Language
 {
     public interface IAugmentLanguage
     {

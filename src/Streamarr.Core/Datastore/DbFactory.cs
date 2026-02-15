@@ -5,13 +5,13 @@ using System.Net.Sockets;
 using System.Threading;
 using NLog;
 using Npgsql;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Exceptions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Exceptions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public interface IDbFactory
     {
@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Datastore
 
     public class DbFactory : IDbFactory
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(DbFactory));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(DbFactory));
         private readonly IMigrationController _migrationController;
         private readonly IConnectionStringFactory _connectionStringFactory;
         private readonly IDiskProvider _diskProvider;

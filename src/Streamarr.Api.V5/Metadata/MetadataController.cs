@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Extras.Metadata;
-using NzbDrone.SignalR;
-using Sonarr.Api.V5.Provider;
-using Sonarr.Http;
+using Streamarr.Core.Extras.Metadata;
+using Streamarr.SignalR;
+using Streamarr.Api.V5.Provider;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V5.Metadata;
+namespace Streamarr.Api.V5.Metadata;
 
 [V5ApiController]
 public class MetadataController : ProviderControllerBase<MetadataResource, MetadataBulkResource, IMetadata, MetadataDefinition>

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.SendGrid
+namespace Streamarr.Core.Notifications.SendGrid
 {
     public class SendGridSettingsValidator : AbstractValidator<SendGridSettings>
     {
@@ -38,9 +38,9 @@ namespace NzbDrone.Core.Notifications.SendGrid
         [FieldDefinition(3, Label = "NotificationsEmailSettingsRecipientAddress", Type = FieldType.Tag)]
         public IEnumerable<string> Recipients { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

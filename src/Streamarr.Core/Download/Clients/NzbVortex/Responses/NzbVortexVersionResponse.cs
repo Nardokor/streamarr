@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses
+﻿namespace Streamarr.Core.Download.Clients.NzbVortex.Responses
 {
     public class NzbVortexVersionResponse : NzbVortexResponseBase
     {

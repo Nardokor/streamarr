@@ -1,10 +1,10 @@
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Lifecycle.Commands;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Lifecycle.Commands;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Lifecycle
+namespace Streamarr.Core.Lifecycle
 {
     public interface ILifecycleService
     {

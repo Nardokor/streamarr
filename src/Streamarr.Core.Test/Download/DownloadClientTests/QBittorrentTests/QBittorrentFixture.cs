@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Download.Clients.QBittorrent;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Download.Clients.QBittorrent;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.QBittorrentTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.QBittorrentTests
 {
     [TestFixture]
     public class QBittorrentFixture : DownloadClientFixtureBase<QBittorrent>

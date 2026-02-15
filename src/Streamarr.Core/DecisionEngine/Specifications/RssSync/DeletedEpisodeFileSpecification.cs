@@ -1,13 +1,13 @@
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
+namespace Streamarr.Core.DecisionEngine.Specifications.RssSync
 {
     public class DeletedEpisodeFileSpecification : IDownloadDecisionEngineSpecification
     {

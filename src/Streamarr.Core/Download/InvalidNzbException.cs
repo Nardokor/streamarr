@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
-    public class InvalidNzbException : NzbDroneException
+    public class InvalidNzbException : StreamarrException
     {
         public InvalidNzbException(string message, params object[] args)
             : base(message, args)

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Tags
+namespace Streamarr.Core.Tags
 {
     public class TagsUpdatedEvent : IEvent
     {

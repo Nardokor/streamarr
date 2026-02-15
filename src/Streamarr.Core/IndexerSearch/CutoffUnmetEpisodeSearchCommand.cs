@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Messaging.Commands;
+﻿using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.IndexerSearch
+namespace Streamarr.Core.IndexerSearch
 {
     public class CutoffUnmetEpisodeSearchCommand : Command
     {

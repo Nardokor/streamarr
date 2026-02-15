@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.ProgressMessaging
+namespace Streamarr.Core.ProgressMessaging
 {
     public static class ProgressMessageContext
     {

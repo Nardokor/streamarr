@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public enum DownloadClientType
     {

@@ -1,8 +1,8 @@
 using System.Linq;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.ThingiProvider.Status
+namespace Streamarr.Core.ThingiProvider.Status
 {
     public interface IProviderStatusRepository<TModel> : IBasicRepository<TModel>
         where TModel : ProviderStatusBase, new()

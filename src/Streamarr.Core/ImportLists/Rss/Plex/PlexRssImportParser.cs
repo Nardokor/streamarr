@@ -1,11 +1,11 @@
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.Rss.Plex
+namespace Streamarr.Core.ImportLists.Rss.Plex
 {
     public class PlexRssImportParser : RssImportBaseParser
     {

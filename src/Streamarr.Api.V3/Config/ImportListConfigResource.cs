@@ -1,8 +1,8 @@
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.ImportLists;
-using Sonarr.Http.REST;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.ImportLists;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Config
+namespace Streamarr.Api.V3.Config
 {
     public class ImportListConfigResource : RestResource
     {

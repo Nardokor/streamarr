@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Extras.Metadata.Files;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Extras.Metadata.Files;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Metadata.Consumers.Plex
+namespace Streamarr.Core.Extras.Metadata.Consumers.Plex
 {
     public class PlexMetadata : MetadataBase<PlexMetadataSettings>
     {

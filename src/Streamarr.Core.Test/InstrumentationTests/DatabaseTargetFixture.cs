@@ -3,14 +3,14 @@ using System.Threading;
 using FluentAssertions;
 using NLog;
 using NUnit.Framework;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Instrumentation;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Instrumentation;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.InstrumentationTests
+namespace Streamarr.Core.Test.InstrumentationTests
 {
     [TestFixture]
     public class DatabaseTargetFixture : DbTest<DatabaseTarget, Log>
@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Test.InstrumentationTests
 
             LogManager.ReconfigExistingLoggers();
 
-            _logger = NzbDroneLogger.GetLogger(this);
+            _logger = StreamarrLogger.GetLogger(this);
 
             _uniqueMessage = "Unique message: " + Guid.NewGuid();
         }

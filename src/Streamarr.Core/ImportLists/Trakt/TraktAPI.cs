@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.ImportLists.Trakt
+namespace Streamarr.Core.ImportLists.Trakt
 {
     public class TraktSeriesIdsResource
     {

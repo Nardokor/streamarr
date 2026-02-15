@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Core.Localization;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.Notifications.SendGrid
+namespace Streamarr.Core.Notifications.SendGrid
 {
     public class SendGrid : NotificationBase<SendGridSettings>
     {

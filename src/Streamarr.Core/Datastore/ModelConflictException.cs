@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
-    public class ModelConflictException : NzbDroneException
+    public class ModelConflictException : StreamarrException
     {
         public ModelConflictException(Type modelType, int modelId)
             : base("{0} with ID {1} cannot be modified", modelType.Name, modelId)

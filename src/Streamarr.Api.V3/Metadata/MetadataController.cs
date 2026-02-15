@@ -1,10 +1,10 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Extras.Metadata;
-using NzbDrone.SignalR;
-using Sonarr.Http;
+using Streamarr.Core.Extras.Metadata;
+using Streamarr.SignalR;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Metadata
+namespace Streamarr.Api.V3.Metadata
 {
     [V3ApiController]
     public class MetadataController : ProviderControllerBase<MetadataResource, MetadataBulkResource, IMetadata, MetadataDefinition>

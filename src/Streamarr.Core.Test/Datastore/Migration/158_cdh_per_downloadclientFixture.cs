@@ -2,12 +2,12 @@ using System.Linq;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration;
-using NzbDrone.Core.Download.Clients.RTorrent;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration;
+using Streamarr.Core.Download.Clients.RTorrent;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Datastore.Migration
+namespace Streamarr.Core.Test.Datastore.Migration
 {
     [TestFixture]
     public class cdh_per_downloadclientFixture : MigrationTest<cdh_per_downloadclient>

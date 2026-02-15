@@ -1,9 +1,9 @@
 using System.Net;
-using NzbDrone.Core.Exceptions;
+using Streamarr.Core.Exceptions;
 
-namespace NzbDrone.Core.Download;
+namespace Streamarr.Core.Download;
 
-public class ResolveDownloadClientException : NzbDroneClientException
+public class ResolveDownloadClientException : StreamarrClientException
 {
     public ResolveDownloadClientException(string message, params object[] args)
         : base(HttpStatusCode.BadRequest, message, args)

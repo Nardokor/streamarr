@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentValidation.Validators;
-using NzbDrone.Common.Disk;
+using Streamarr.Common.Disk;
 
-namespace NzbDrone.Core.Validation.Paths
+namespace Streamarr.Core.Validation.Paths
 {
     public class FolderWritableValidator : PropertyValidator
     {

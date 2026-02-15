@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients.RTorrent;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients.RTorrent;
+using Streamarr.Core.MediaFiles.TorrentInfo;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.RTorrentTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.RTorrentTests
 {
     [TestFixture]
     public class RTorrentFixture : DownloadClientFixtureBase<RTorrent>

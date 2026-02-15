@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Organizer;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Organizer;
 
-namespace NzbDrone.Core.Parser
+namespace Streamarr.Core.Parser
 {
     public static class IsoLanguages
     {

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Extras.Files;
+﻿using Streamarr.Core.Extras.Files;
 
-namespace NzbDrone.Core.Extras.Metadata.Files
+namespace Streamarr.Core.Extras.Metadata.Files
 {
     public class MetadataFile : ExtraFile
     {

@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(127)]
-    public class rename_restrictions_to_release_profiles : NzbDroneMigrationBase
+    public class rename_restrictions_to_release_profiles : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

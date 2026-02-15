@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Apprise
+namespace Streamarr.Core.Notifications.Apprise
 {
     public class AppriseSettingsValidator : AbstractValidator<AppriseSettings>
     {
@@ -68,9 +68,9 @@ namespace NzbDrone.Core.Notifications.Apprise
         [FieldDefinition(8, Label = "Password", Type = FieldType.Password, HelpText = "NotificationsAppriseSettingsPasswordHelpText", Privacy = PrivacyLevel.Password)]
         public string AuthPassword { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

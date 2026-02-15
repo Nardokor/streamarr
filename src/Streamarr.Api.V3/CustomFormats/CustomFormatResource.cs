@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using NzbDrone.Core.CustomFormats;
-using Sonarr.Http.ClientSchema;
-using Sonarr.Http.REST;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Http.ClientSchema;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.CustomFormats
+namespace Streamarr.Api.V3.CustomFormats
 {
     public class CustomFormatResource : RestResource
     {

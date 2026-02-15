@@ -1,12 +1,12 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Delay;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Profiles.Delay;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
+namespace Streamarr.Core.DecisionEngine.Specifications.RssSync
 {
     public class DelaySpecification : IDownloadDecisionEngineSpecification
     {

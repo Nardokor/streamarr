@@ -1,10 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Test.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Libraries.Test
+namespace Streamarr.Libraries.Test
 {
     [TestFixture]
     public class RuntimeInformationFixture : TestBase

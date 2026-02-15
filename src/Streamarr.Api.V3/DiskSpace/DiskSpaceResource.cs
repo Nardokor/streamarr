@@ -1,6 +1,6 @@
-﻿using Sonarr.Http.REST;
+﻿using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.DiskSpace
+namespace Streamarr.Api.V3.DiskSpace
 {
     public class DiskSpaceResource : RestResource
     {
@@ -12,7 +12,7 @@ namespace Sonarr.Api.V3.DiskSpace
 
     public static class DiskSpaceResourceMapper
     {
-        public static DiskSpaceResource MapToResource(this NzbDrone.Core.DiskSpace.DiskSpace model)
+        public static DiskSpaceResource MapToResource(this Streamarr.Core.DiskSpace.DiskSpace model)
         {
             if (model == null)
             {

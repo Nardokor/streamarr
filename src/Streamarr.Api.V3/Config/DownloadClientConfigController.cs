@@ -1,7 +1,7 @@
-using NzbDrone.Core.Configuration;
-using Sonarr.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Config
+namespace Streamarr.Api.V3.Config
 {
     [V3ApiController("config/downloadclient")]
     public class DownloadClientConfigController : ConfigController<DownloadClientConfigResource>

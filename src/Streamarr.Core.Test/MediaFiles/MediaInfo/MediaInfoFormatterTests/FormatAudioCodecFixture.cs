@@ -1,10 +1,10 @@
 using System;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Test.Common;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles.MediaInfo.MediaInfoFormatterTests
+namespace Streamarr.Core.Test.MediaFiles.MediaInfo.MediaInfoFormatterTests
 {
     [TestFixture]
     public class FormatAudioCodecFixture : TestBase

@@ -1,10 +1,10 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.ParserTests
+namespace Streamarr.Core.Test.ParserTests
 {
     [TestFixture]
     public class IsoLanguagesFixture : CoreTest

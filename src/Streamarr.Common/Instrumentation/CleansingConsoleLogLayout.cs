@@ -1,9 +1,9 @@
 using System.Text;
 using NLog;
 using NLog.Layouts;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Common.Instrumentation;
+namespace Streamarr.Common.Instrumentation;
 
 public class CleansingConsoleLogLayout(string format)
     : SimpleLayout(format)

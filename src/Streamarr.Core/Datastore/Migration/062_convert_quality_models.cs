@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Data;
 using FluentMigrator;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Qualities;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(62)]
-    public class convert_quality_models : NzbDroneMigrationBase
+    public class convert_quality_models : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

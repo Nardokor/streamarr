@@ -6,11 +6,11 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http.Dispatchers;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http.Dispatchers;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.Notifications.Email
+namespace Streamarr.Core.Notifications.Email
 {
     public class Email : NotificationBase<EmailSettings>
     {

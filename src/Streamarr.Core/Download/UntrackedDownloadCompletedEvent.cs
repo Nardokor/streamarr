@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Messaging;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Messaging;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class UntrackedDownloadCompletedEvent : IEvent
     {

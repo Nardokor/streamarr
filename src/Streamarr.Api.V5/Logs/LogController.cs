@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Instrumentation;
-using Sonarr.Http;
-using Sonarr.Http.Extensions;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Instrumentation;
+using Streamarr.Http;
+using Streamarr.Http.Extensions;
 
-namespace Sonarr.Api.V5.Logs
+namespace Streamarr.Api.V5.Logs
 {
     [V5ApiController]
     public class LogController : Controller

@@ -1,8 +1,8 @@
 using FluentValidation.Validators;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Validation
+namespace Streamarr.Core.Validation
 {
     public class FolderValidator : PropertyValidator
     {

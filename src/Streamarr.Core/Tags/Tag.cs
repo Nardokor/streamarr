@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Datastore;
+﻿using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Tags
+namespace Streamarr.Core.Tags
 {
     public class Tag : ModelBase
     {

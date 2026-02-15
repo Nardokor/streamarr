@@ -1,8 +1,8 @@
 using System;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Parser;
+namespace Streamarr.Core.Parser;
 
 public static class ReleaseComparer
 {

@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerSearchTests
+namespace Streamarr.Core.Test.IndexerSearchTests
 {
     public class SearchDefinitionFixture : CoreTest<SingleEpisodeSearchCriteria>
     {

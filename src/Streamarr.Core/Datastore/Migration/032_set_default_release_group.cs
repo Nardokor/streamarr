@@ -1,11 +1,11 @@
 using System;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(32)]
-    public class set_default_release_group : NzbDroneMigrationBase
+    public class set_default_release_group : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

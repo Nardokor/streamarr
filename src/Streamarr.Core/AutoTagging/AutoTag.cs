@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NzbDrone.Core.AutoTagging.Specifications;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.AutoTagging.Specifications;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.AutoTagging
+namespace Streamarr.Core.AutoTagging
 {
     public class AutoTag : ModelBase
     {

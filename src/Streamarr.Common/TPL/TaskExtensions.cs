@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Common.TPL
+namespace Streamarr.Common.TPL
 {
     public static class TaskExtensions
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(TaskExtensions));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(TaskExtensions));
 
         public static Task LogExceptions(this Task task)
         {

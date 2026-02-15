@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Download.TrackedDownloads;
+﻿using Streamarr.Core.Download.TrackedDownloads;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Manual
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Manual
 {
     public class ManuallyImportedFile
     {

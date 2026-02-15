@@ -6,19 +6,19 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NUnit.Framework;
-using NzbDrone.Automation.Test.PageModel;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Test.Common;
+using Streamarr.Automation.Test.PageModel;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Test.Common;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace NzbDrone.Automation.Test
+namespace Streamarr.Automation.Test
 {
     [TestFixture]
     [AutomationTest]
     public abstract class AutomationTest
     {
-        private NzbDroneRunner _runner;
+        private StreamarrRunner _runner;
         protected ChromeDriver driver;
 
         public AutomationTest()
@@ -43,7 +43,7 @@ namespace NzbDrone.Automation.Test
 
             driver.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
 
-            _runner = new NzbDroneRunner(LogManager.GetCurrentClassLogger(), null);
+            _runner = new StreamarrRunner(LogManager.GetCurrentClassLogger(), null);
             _runner.KillAll();
             _runner.Start(true);
 

@@ -1,12 +1,12 @@
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Analytics;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Analytics;
+using Streamarr.Core.Configuration;
 
-namespace Sonarr.Http.Frontend
+namespace Streamarr.Http.Frontend
 {
     [Authorize(Policy = "UI")]
     [ApiController]

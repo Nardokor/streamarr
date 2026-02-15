@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace NzbDrone.Common.Exceptions
+namespace Streamarr.Common.Exceptions
 {
-    public class SonarrStartupException : NzbDroneException
+    public class SonarrStartupException : StreamarrException
     {
         public SonarrStartupException(string message, params object[] args)
             : base("Sonarr failed to start: " + string.Format(message, args))

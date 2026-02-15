@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace NzbDrone.Common.Extensions
+namespace Streamarr.Common.Extensions
 {
     public static class DnsEndPointExtensions
     {

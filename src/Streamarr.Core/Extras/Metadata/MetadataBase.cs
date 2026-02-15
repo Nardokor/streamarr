@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FluentValidation.Results;
-using NzbDrone.Core.Extras.Metadata.Files;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Extras.Metadata.Files;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Metadata
+namespace Streamarr.Core.Extras.Metadata
 {
     public abstract class MetadataBase<TSettings> : IMetadata
         where TSettings : IProviderConfig, new()

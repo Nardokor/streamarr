@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Http;
+﻿using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public class IndexerRequest
     {

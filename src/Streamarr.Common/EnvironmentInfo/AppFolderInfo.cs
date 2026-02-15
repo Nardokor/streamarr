@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Reflection;
 using NLog;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Common.EnvironmentInfo
+namespace Streamarr.Common.EnvironmentInfo
 {
     public interface IAppFolderInfo
     {
@@ -18,7 +18,7 @@ namespace NzbDrone.Common.EnvironmentInfo
     {
         private readonly Environment.SpecialFolder _dataSpecialFolder = Environment.SpecialFolder.CommonApplicationData;
 
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(AppFolderInfo));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(AppFolderInfo));
 
         public AppFolderInfo(IStartupContext startupContext)
         {
@@ -36,8 +36,8 @@ namespace NzbDrone.Common.EnvironmentInfo
             {
                 AppDataFolder = Path.Combine(Environment.GetFolderPath(_dataSpecialFolder, Environment.SpecialFolderOption.DoNotVerify), "Sonarr");
                 LegacyAppDataFolder = OsInfo.IsOsx
-                    ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.DoNotVerify), ".config", "NzbDrone")
-                    : Path.Combine(Environment.GetFolderPath(_dataSpecialFolder, Environment.SpecialFolderOption.DoNotVerify), "NzbDrone");
+                    ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.DoNotVerify), ".config", "Streamarr")
+                    : Path.Combine(Environment.GetFolderPath(_dataSpecialFolder, Environment.SpecialFolderOption.DoNotVerify), "Streamarr");
             }
 
             StartUpFolder = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName;

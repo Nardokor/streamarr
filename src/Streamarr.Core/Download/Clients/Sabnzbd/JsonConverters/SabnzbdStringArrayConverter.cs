@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace NzbDrone.Core.Download.Clients.Sabnzbd.JsonConverters
+namespace Streamarr.Core.Download.Clients.Sabnzbd.JsonConverters
 {
     /// <summary>
     /// On some properties sab serializes array of single item as plain string.

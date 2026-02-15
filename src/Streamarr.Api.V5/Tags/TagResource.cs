@@ -1,7 +1,7 @@
-﻿using NzbDrone.Core.Tags;
-using Sonarr.Http.REST;
+﻿using Streamarr.Core.Tags;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Tags;
+namespace Streamarr.Api.V5.Tags;
 
 public class TagResource : RestResource
 {

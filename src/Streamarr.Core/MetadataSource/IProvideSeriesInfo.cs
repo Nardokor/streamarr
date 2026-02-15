@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MetadataSource
+namespace Streamarr.Core.MetadataSource
 {
     public interface IProvideSeriesInfo
     {

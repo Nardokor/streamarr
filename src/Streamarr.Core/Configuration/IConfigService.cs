@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Http.Proxy;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Security;
+using Streamarr.Common.Http.Proxy;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.EpisodeImport;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Security;
 
-namespace NzbDrone.Core.Configuration
+namespace Streamarr.Core.Configuration
 {
     public interface IConfigService
     {

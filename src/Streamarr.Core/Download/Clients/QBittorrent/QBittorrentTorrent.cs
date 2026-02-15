@@ -1,7 +1,7 @@
 using System.Numerics;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.QBittorrent
+namespace Streamarr.Core.Download.Clients.QBittorrent
 {
     // torrent properties from the list returned by /query/torrents
     public class QBittorrentTorrent

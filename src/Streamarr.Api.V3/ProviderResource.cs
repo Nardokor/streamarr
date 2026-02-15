@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Reflection;
-using NzbDrone.Core.ThingiProvider;
-using Sonarr.Http.ClientSchema;
-using Sonarr.Http.REST;
+using Streamarr.Common.Reflection;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Http.ClientSchema;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3
+namespace Streamarr.Api.V3
 {
     public class ProviderResource<T> : RestResource
     {

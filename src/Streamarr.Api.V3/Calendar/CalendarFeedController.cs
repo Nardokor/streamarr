@@ -6,12 +6,12 @@ using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
 using Ical.Net.Serialization;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Tags;
-using NzbDrone.Core.Tv;
-using Sonarr.Http;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Tags;
+using Streamarr.Core.Tv;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Calendar
+namespace Streamarr.Api.V3.Calendar
 {
     [V3FeedController("calendar")]
     public class CalendarFeedController : Controller
@@ -70,7 +70,7 @@ namespace Sonarr.Api.V3.Calendar
                 }
 
                 var occurrence = calendar.Create<CalendarEvent>();
-                occurrence.Uid = "NzbDrone_episode_" + episode.Id;
+                occurrence.Uid = "Streamarr_episode_" + episode.Id;
                 occurrence.Status = episode.HasFile ? EventStatus.Confirmed : EventStatus.Tentative;
                 occurrence.Description = episode.Overview;
                 occurrence.Categories = new List<string>() { series.Network };

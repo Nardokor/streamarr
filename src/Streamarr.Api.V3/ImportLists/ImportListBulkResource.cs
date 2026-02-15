@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.ImportLists;
+using Streamarr.Core.ImportLists;
 
-namespace Sonarr.Api.V3.ImportLists
+namespace Streamarr.Api.V3.ImportLists
 {
     public class ImportListBulkResource : ProviderBulkResource<ImportListBulkResource>
     {

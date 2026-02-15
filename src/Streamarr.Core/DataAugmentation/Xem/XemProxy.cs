@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using NLog;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.DataAugmentation.Xem.Model;
+using Streamarr.Common.Http;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.DataAugmentation.Xem.Model;
 
-namespace NzbDrone.Core.DataAugmentation.Xem
+namespace Streamarr.Core.DataAugmentation.Xem
 {
     public interface IXemProxy
     {

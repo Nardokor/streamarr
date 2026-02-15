@@ -1,4 +1,4 @@
-namespace NzbDrone.Test.Common
+namespace Streamarr.Test.Common
 {
     public enum TestLogOutput
     {

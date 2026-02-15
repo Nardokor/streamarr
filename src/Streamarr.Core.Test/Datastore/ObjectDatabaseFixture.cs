@@ -4,11 +4,11 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Jobs;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Jobs;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Datastore
+namespace Streamarr.Core.Test.Datastore
 {
     [TestFixture]
     public class ObjectDatabaseFixture : DbTest<BasicRepository<ScheduledTask>, ScheduledTask>

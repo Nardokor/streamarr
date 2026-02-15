@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
 using FluentValidation.Results;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Synology
+namespace Streamarr.Core.Notifications.Synology
 {
     public class SynologyIndexer : NotificationBase<SynologyIndexerSettings>
     {

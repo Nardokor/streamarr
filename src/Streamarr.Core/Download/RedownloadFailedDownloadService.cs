@@ -1,14 +1,14 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.IndexerSearch;
-using NzbDrone.Core.Messaging;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.IndexerSearch;
+using Streamarr.Core.Messaging;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class RedownloadFailedDownloadService : IHandle<DownloadFailedEvent>
     {

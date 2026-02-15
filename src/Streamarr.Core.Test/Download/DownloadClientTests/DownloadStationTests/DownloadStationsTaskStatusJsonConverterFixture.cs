@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using NzbDrone.Core.Download.Clients.DownloadStation;
+using Streamarr.Core.Download.Clients.DownloadStation;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.DownloadStationTests
 {
     [TestFixture]
     public class DownloadStationsTaskStatusJsonConverterFixture

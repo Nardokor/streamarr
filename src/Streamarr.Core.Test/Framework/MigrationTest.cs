@@ -4,14 +4,14 @@ using FluentMigrator;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Test.Framework
+namespace Streamarr.Core.Test.Framework
 {
     [Category("DbMigrationTest")]
     [Category("DbTest")]
     public abstract class MigrationTest<TMigration> : DbTest
-        where TMigration : NzbDroneMigrationBase
+        where TMigration : StreamarrMigrationBase
     {
         protected long MigrationVersion => ((MigrationAttribute)Attribute.GetCustomAttribute(typeof(TMigration), typeof(MigrationAttribute))).Version;
 

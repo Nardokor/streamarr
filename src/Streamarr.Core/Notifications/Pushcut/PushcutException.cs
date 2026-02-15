@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Pushcut
+namespace Streamarr.Core.Notifications.Pushcut
 {
-    public class PushcutException : NzbDroneException
+    public class PushcutException : StreamarrException
     {
         public PushcutException(string message, params object[] args)
             : base(message, args)

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace NzbDrone.Core.Annotations
+namespace Streamarr.Core.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class FieldDefinitionAttribute : Attribute

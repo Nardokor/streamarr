@@ -1,7 +1,7 @@
 using System.Linq;
-using NzbDrone.Core.Indexers.Exceptions;
+using Streamarr.Core.Indexers.Exceptions;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public class EzrssTorrentRssParser : TorrentRssParser
     {

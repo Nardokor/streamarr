@@ -5,15 +5,15 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.ParserTests.ParsingServiceTests
+namespace Streamarr.Core.Test.ParserTests.ParsingServiceTests
 {
     [TestFixture]
     public class MapFixture : TestBase<ParsingService>

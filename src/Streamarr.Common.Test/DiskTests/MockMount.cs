@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using NzbDrone.Common.Disk;
+using Streamarr.Common.Disk;
 
-namespace NzbDrone.Common.Test.DiskTests
+namespace Streamarr.Common.Test.DiskTests
 {
     public class MockMount : IMount
     {

@@ -1,9 +1,9 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
-using NzbDrone.Core.Validation.Paths;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
+using Streamarr.Core.Validation.Paths;
 
-namespace NzbDrone.Core.Download.Clients.Pneumatic
+namespace Streamarr.Core.Download.Clients.Pneumatic
 {
     public class PneumaticSettingsValidator : AbstractValidator<PneumaticSettings>
     {
@@ -24,9 +24,9 @@ namespace NzbDrone.Core.Download.Clients.Pneumatic
         [FieldDefinition(1, Label = "DownloadClientPneumaticSettingsStrmFolder", Type = FieldType.Path, HelpText = "DownloadClientPneumaticSettingsStrmFolderHelpText")]
         public string StrmFolder { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

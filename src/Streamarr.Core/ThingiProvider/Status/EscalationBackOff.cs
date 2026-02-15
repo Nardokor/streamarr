@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.ThingiProvider.Status
+namespace Streamarr.Core.ThingiProvider.Status
 {
     public static class EscalationBackOff
     {

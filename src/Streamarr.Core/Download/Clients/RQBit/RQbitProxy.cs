@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download.Clients.RQBit.ResponseModels;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download.Clients.RQBit.ResponseModels;
 
-namespace NzbDrone.Core.Download.Clients.RQBit
+namespace Streamarr.Core.Download.Clients.RQBit
 {
     public interface IRQbitProxy
     {

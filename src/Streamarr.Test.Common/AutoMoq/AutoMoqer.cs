@@ -6,10 +6,10 @@ using System.Linq;
 using System.Reflection;
 using DryIoc;
 using Moq;
-using NzbDrone.Common.Composition;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.Composition;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Test.Common.AutoMoq
+namespace Streamarr.Test.Common.AutoMoq
 {
     [DebuggerStepThrough]
     public class AutoMoqer

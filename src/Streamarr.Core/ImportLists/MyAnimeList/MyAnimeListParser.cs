@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.MyAnimeList
+namespace Streamarr.Core.ImportLists.MyAnimeList
 {
     public class MyAnimeListParser(MyAnimeListSettings settings) : IParseImportListResponse
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(MyAnimeListParser));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(MyAnimeListParser));
         private readonly MyAnimeListSettings _settings = settings;
 
         public IList<ImportListItemInfo> ParseResponse(ImportListResponse importListResponse)

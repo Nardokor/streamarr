@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http.HappyEyeballs;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Http.HappyEyeballs;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test.Http
+namespace Streamarr.Common.Test.Http
 {
     [TestFixture]
     public class HappyEyeballsFixture : TestBase

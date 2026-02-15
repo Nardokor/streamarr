@@ -1,7 +1,7 @@
 ﻿using RestSharp;
-using Sonarr.Api.V3.Indexers;
+using Streamarr.Api.V3.Indexers;
 
-namespace NzbDrone.Integration.Test.Client
+namespace Streamarr.Integration.Test.Client
 {
     public class ReleaseClient : ClientBase<ReleaseResource>
     {

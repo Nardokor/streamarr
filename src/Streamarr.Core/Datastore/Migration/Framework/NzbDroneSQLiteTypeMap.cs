@@ -2,14 +2,14 @@ using System.Data;
 using FluentMigrator.Runner.Generators.Base;
 using FluentMigrator.Runner.Generators.SQLite;
 
-namespace NzbDrone.Core.Datastore.Migration.Framework;
+namespace Streamarr.Core.Datastore.Migration.Framework;
 
 // Based on https://github.com/fluentmigrator/fluentmigrator/blob/v6.2.0/src/FluentMigrator.Runner.SQLite/Generators/SQLite/SQLiteTypeMap.cs
-public sealed class NzbDroneSQLiteTypeMap : TypeMapBase, ISQLiteTypeMap
+public sealed class StreamarrSQLiteTypeMap : TypeMapBase, ISQLiteTypeMap
 {
     public bool UseStrictTables { get; }
 
-    public NzbDroneSQLiteTypeMap(bool useStrictTables = false)
+    public StreamarrSQLiteTypeMap(bool useStrictTables = false)
     {
         UseStrictTables = useStrictTables;
 

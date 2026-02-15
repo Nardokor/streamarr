@@ -1,13 +1,13 @@
 using System;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Download.History;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Download.History;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public interface IDownloadSeedConfigProvider
     {

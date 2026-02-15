@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Composition;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ProgressMessaging;
-using NzbDrone.SignalR;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
-using Sonarr.Http.Validation;
-using Debouncer = NzbDrone.Common.TPL.Debouncer;
+using Streamarr.Common.Composition;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ProgressMessaging;
+using Streamarr.SignalR;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
+using Streamarr.Http.Validation;
+using Debouncer = Streamarr.Common.TPL.Debouncer;
 
-namespace Sonarr.Api.V5.Commands;
+namespace Streamarr.Api.V5.Commands;
 
 [V5ApiController]
 public class CommandController : RestControllerWithSignalR<CommandResource, CommandModel>, IHandle<CommandUpdatedEvent>

@@ -1,6 +1,6 @@
-using Sonarr.Http.REST;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.System.Tasks;
+namespace Streamarr.Api.V5.System.Tasks;
 
 public class TaskResource : RestResource
 {

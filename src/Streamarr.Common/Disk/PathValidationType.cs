@@ -1,4 +1,4 @@
-namespace NzbDrone.Common.Disk
+namespace Streamarr.Common.Disk
 {
     public enum PathValidationType
     {

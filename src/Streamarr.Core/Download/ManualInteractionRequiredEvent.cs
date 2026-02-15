@@ -1,8 +1,8 @@
-using NzbDrone.Common.Messaging;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Messaging;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class ManualInteractionRequiredEvent : IEvent
     {

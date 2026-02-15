@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     [DebuggerDisplay("{GetType()} ID = {Id}")]
     public abstract class ModelBase

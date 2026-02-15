@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Mono.Disk
+namespace Streamarr.Mono.Disk
 {
     public static class FindDriveType
     {

@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Update;
-using NzbDrone.Core.Update.History;
-using Sonarr.Http;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Update;
+using Streamarr.Core.Update.History;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V5.Update
+namespace Streamarr.Api.V5.Update
 {
     [V5ApiController]
     public class UpdateController : Controller

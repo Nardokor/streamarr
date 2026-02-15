@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Text.RegularExpressions;
-using NzbDrone.Core.MediaFiles;
+using Streamarr.Core.MediaFiles;
 
-namespace NzbDrone.Core.Parser;
+namespace Streamarr.Core.Parser;
 
 public static class ReleaseGroupParser
 {

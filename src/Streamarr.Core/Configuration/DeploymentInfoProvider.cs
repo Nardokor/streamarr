@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Update;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Update;
 
-namespace NzbDrone.Core.Configuration
+namespace Streamarr.Core.Configuration
 {
     public interface IDeploymentInfoProvider
     {

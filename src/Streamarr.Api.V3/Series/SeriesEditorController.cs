@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Commands;
-using Sonarr.Http;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Commands;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Series
+namespace Streamarr.Api.V3.Series
 {
     [V3ApiController("series/editor")]
     public class SeriesEditorController : Controller

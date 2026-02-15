@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace NzbDrone.Common.Extensions
+namespace Streamarr.Common.Extensions
 {
     public static class RegexExtensions
     {

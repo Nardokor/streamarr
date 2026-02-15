@@ -1,13 +1,13 @@
 using System.Reflection;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Update;
-using NzbDrone.Core.Validation.Paths;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Update;
+using Streamarr.Core.Validation.Paths;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Settings;
+namespace Streamarr.Api.V5.Settings;
 
 [V5ApiController("settings/update")]
 public class UpdateSettingsController : RestController<UpdateSettingsResource>

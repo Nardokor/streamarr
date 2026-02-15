@@ -1,9 +1,9 @@
 ﻿using NLog;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public class TorrentSeedingSpecification : IDownloadDecisionEngineSpecification
     {

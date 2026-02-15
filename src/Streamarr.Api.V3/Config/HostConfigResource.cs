@@ -1,11 +1,11 @@
-using NzbDrone.Common.Http.Proxy;
-using NzbDrone.Core.Authentication;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Security;
-using NzbDrone.Core.Update;
-using Sonarr.Http.REST;
+using Streamarr.Common.Http.Proxy;
+using Streamarr.Core.Authentication;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Security;
+using Streamarr.Core.Update;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Config
+namespace Streamarr.Api.V3.Config
 {
     public class HostConfigResource : RestResource
     {

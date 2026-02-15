@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Test.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Windows.Test.EnvironmentInfo
+namespace Streamarr.Windows.Test.EnvironmentInfo
 {
     [TestFixture]
     [Platform("Net")]

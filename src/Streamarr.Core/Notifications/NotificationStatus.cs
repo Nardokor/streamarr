@@ -1,6 +1,6 @@
-using NzbDrone.Core.ThingiProvider.Status;
+using Streamarr.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public class NotificationStatus : ProviderStatusBase
     {

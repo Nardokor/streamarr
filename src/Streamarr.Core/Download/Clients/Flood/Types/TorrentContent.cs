@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.Flood.Types
+namespace Streamarr.Core.Download.Clients.Flood.Types
 {
     public sealed class TorrentContent
     {

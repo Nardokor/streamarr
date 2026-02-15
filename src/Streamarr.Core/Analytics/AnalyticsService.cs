@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.History;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.History;
 
-namespace NzbDrone.Core.Analytics
+namespace Streamarr.Core.Analytics
 {
     public interface IAnalyticsService
     {

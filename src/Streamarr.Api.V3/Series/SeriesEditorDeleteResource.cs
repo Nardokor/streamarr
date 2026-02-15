@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sonarr.Api.V3.Series
+namespace Streamarr.Api.V3.Series
 {
     public class SeriesEditorDeleteResource
     {

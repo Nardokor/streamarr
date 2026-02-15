@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Mono.EnvironmentInfo.VersionAdapters
+namespace Streamarr.Mono.EnvironmentInfo.VersionAdapters
 {
     public class SynologyVersionAdapter : IOsVersionAdapter
     {

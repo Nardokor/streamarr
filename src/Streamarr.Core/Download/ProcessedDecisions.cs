@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Core.DecisionEngine;
+using Streamarr.Core.DecisionEngine;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class ProcessedDecisions
     {

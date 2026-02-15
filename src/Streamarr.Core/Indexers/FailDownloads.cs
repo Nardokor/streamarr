@@ -1,6 +1,6 @@
-using NzbDrone.Core.Annotations;
+using Streamarr.Core.Annotations;
 
-namespace NzbDrone.Core.Indexers;
+namespace Streamarr.Core.Indexers;
 
 public enum FailDownloads
 {

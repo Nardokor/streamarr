@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Notifications.Plex.PlexTv
+namespace Streamarr.Core.Notifications.Plex.PlexTv
 {
     public class PlexSectionItemGuid
     {

@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Notifications.Prowl
+﻿namespace Streamarr.Core.Notifications.Prowl
 {
     public enum ProwlPriority
     {

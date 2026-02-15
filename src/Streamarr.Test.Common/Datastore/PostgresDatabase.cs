@@ -1,9 +1,9 @@
 using System;
 using Npgsql;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Test.Common.Datastore
+namespace Streamarr.Test.Common.Datastore
 {
     public static class PostgresDatabase
     {

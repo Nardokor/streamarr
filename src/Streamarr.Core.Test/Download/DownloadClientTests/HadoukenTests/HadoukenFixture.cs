@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients.Hadouken;
-using NzbDrone.Core.Download.Clients.Hadouken.Models;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients.Hadouken;
+using Streamarr.Core.Download.Clients.Hadouken.Models;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.HadoukenTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.HadoukenTests
 {
     [TestFixture]
     public class HadoukenFixture : DownloadClientFixtureBase<Hadouken>

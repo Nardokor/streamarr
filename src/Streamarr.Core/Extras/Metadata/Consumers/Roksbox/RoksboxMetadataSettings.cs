@@ -1,9 +1,9 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
+namespace Streamarr.Core.Extras.Metadata.Consumers.Roksbox
 {
     public class RoksboxSettingsValidator : AbstractValidator<RoksboxMetadataSettings>
     {
@@ -35,9 +35,9 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
 
         public bool IsValid => true;
 
-        public NzbDroneValidationResult Validate()
+        public StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

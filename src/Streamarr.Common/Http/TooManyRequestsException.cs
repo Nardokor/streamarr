@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public class TooManyRequestsException : HttpException
     {

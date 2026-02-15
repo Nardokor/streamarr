@@ -1,7 +1,7 @@
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Profiles
+namespace Streamarr.Core.Profiles
 {
     public class ProfileFormatItem : IEmbeddedDocument
     {

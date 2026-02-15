@@ -1,8 +1,8 @@
 using System;
 using Equ;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public abstract class ImportListSettingsBase<TSettings> : IImportListSettings, IEquatable<TSettings>
         where TSettings : ImportListSettingsBase<TSettings>
@@ -11,7 +11,7 @@ namespace NzbDrone.Core.ImportLists
 
         public abstract string BaseUrl { get; set; }
 
-        public abstract NzbDroneValidationResult Validate();
+        public abstract StreamarrValidationResult Validate();
 
         public bool Equals(TSettings other)
         {

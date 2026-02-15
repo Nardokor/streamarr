@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Common.EnvironmentInfo
+namespace Streamarr.Common.EnvironmentInfo
 {
     public interface IStartupContext
     {

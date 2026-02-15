@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using Sonarr.Api.V3.Series;
+using Streamarr.Api.V3.Series;
 
-namespace NzbDrone.Integration.Test
+namespace Streamarr.Integration.Test
 {
     [TestFixture]
     public class HttpLogFixture : IntegrationTest

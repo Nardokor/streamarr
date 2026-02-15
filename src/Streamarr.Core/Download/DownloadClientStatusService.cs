@@ -1,10 +1,10 @@
 using System;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider.Status;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public interface IDownloadClientStatusService : IProviderStatusServiceBase<DownloadClientStatus>
     {

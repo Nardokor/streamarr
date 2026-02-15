@@ -2,9 +2,9 @@ using System;
 using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Cache;
+using Streamarr.Common.Cache;
 
-namespace NzbDrone.Common.Test.CacheTests
+namespace Streamarr.Common.Test.CacheTests
 {
     [TestFixture]
     public class CachedFixture

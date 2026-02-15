@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 
-namespace NzbDrone.RuntimePatches.Mono
+namespace Streamarr.RuntimePatches.Mono
 {
     // Mono 5.x - 6.x bug 19886
     // The BoringTLS provider does not enable the trust-first option that's default on in openssl 1.1.0 and up.

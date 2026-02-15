@@ -1,10 +1,10 @@
 ﻿using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Extras.Files;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Extras.Files;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Metadata.Files
+namespace Streamarr.Core.Extras.Metadata.Files
 {
     public interface IMetadataFileService : IExtraFileService<MetadataFile>
     {

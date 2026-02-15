@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
-using Sonarr.Http.REST;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Indexers
+namespace Streamarr.Api.V3.Indexers
 {
     public class IndexerFlagResource : RestResource
     {

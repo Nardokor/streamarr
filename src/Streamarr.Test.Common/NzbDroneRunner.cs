@@ -6,17 +6,17 @@ using System.Threading;
 using System.Xml.Linq;
 using NLog;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Processes;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Datastore;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Processes;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Datastore;
 using RestSharp;
 
-namespace NzbDrone.Test.Common
+namespace Streamarr.Test.Common
 {
-    public class NzbDroneRunner
+    public class StreamarrRunner
     {
         private readonly IProcessProvider _processProvider;
         private readonly IRestClient _restClient;
@@ -27,7 +27,7 @@ namespace NzbDrone.Test.Common
         public PostgresOptions PostgresOptions { get; private set; }
         public int Port { get; private set; }
 
-        public NzbDroneRunner(Logger logger, PostgresOptions postgresOptions, int port = 8989)
+        public StreamarrRunner(Logger logger, PostgresOptions postgresOptions, int port = 8989)
         {
             _processProvider = new ProcessProvider(logger);
             _restClient = new RestClient($"http://localhost:{port}/api/v3");

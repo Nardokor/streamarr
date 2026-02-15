@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Indexers.Exceptions
+namespace Streamarr.Core.Indexers.Exceptions
 {
-    public class RequestLimitReachedException : NzbDroneException
+    public class RequestLimitReachedException : StreamarrException
     {
         public TimeSpan RetryAfter { get; private set; }
 

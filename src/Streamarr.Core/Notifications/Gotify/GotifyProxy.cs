@@ -1,8 +1,8 @@
 using System.Net;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Core.Notifications.Gotify
+namespace Streamarr.Core.Notifications.Gotify
 {
     public interface IGotifyProxy
     {

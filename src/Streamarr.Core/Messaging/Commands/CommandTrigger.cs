@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Messaging.Commands
+﻿namespace Streamarr.Core.Messaging.Commands
 {
     public enum CommandTrigger
     {

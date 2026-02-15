@@ -1,8 +1,8 @@
 using System;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.Tv;
 
-namespace Sonarr.Api.V3.ImportLists
+namespace Streamarr.Api.V3.ImportLists
 {
     public class ImportListResource : ProviderResource<ImportListResource>
     {

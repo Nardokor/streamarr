@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Profiles.Qualities;
-using Sonarr.Http.REST;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Indexers
+namespace Streamarr.Api.V3.Indexers
 {
     public abstract class ReleaseControllerBase : RestController<ReleaseResource>
     {

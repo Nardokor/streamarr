@@ -1,12 +1,12 @@
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Processes;
-using NzbDrone.Host;
-using NzbDrone.Test.Common;
+using Streamarr.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Processes;
+using Streamarr.Host;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.App.Test
+namespace Streamarr.App.Test
 {
     [TestFixture]
     public class RouterTest : TestBase<UtilityModeRouter>

@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using NzbDrone.Core.Authentication;
-using NzbDrone.Core.Configuration;
+using Streamarr.Core.Authentication;
+using Streamarr.Core.Configuration;
 
-namespace Sonarr.Http.Authentication
+namespace Streamarr.Http.Authentication
 {
     public static class AuthenticationBuilderExtensions
     {

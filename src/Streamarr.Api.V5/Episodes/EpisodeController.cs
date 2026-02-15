@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.Tv;
-using NzbDrone.SignalR;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.Tv;
+using Streamarr.SignalR;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V5.Episodes;
+namespace Streamarr.Api.V5.Episodes;
 
 [V5ApiController]
 public class EpisodeController : EpisodeControllerWithSignalR

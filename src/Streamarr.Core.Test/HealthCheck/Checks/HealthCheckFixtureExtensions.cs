@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.HealthCheck;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.HealthCheck;
 
-namespace NzbDrone.Core.Test.HealthCheck.Checks
+namespace Streamarr.Core.Test.HealthCheck.Checks
 {
     public static class HealthCheckFixtureExtensions
     {

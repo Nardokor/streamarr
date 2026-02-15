@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Plex
+namespace Streamarr.Core.Notifications.Plex
 {
-    public class PlexVersionException : NzbDroneException
+    public class PlexVersionException : StreamarrException
     {
         public PlexVersionException(string message)
             : base(message)

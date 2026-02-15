@@ -1,8 +1,8 @@
 using System;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Jobs
+namespace Streamarr.Core.Jobs
 {
     public class ScheduledTask : ModelBase
     {

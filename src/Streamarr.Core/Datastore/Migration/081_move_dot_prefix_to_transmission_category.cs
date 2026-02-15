@@ -3,14 +3,14 @@ using System.Data;
 using Dapper;
 using FluentMigrator;
 using Newtonsoft.Json.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(81)]
-    public class move_dot_prefix_to_transmission_category : NzbDroneMigrationBase
+    public class move_dot_prefix_to_transmission_category : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

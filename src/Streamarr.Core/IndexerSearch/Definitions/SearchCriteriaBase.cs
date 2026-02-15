@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.IndexerSearch.Definitions
+namespace Streamarr.Core.IndexerSearch.Definitions
 {
     public abstract class SearchCriteriaBase
     {

@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace NzbDrone.Common.Extensions
+namespace Streamarr.Common.Extensions
 {
     public static class TryParseExtensions
     {

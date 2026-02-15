@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Qualities;
-using Sonarr.Api.V3.CustomFormats;
-using Sonarr.Api.V3.Series;
-using Sonarr.Http.REST;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Qualities;
+using Streamarr.Api.V3.CustomFormats;
+using Streamarr.Api.V3.Series;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Blocklist
+namespace Streamarr.Api.V3.Blocklist
 {
     public class BlocklistResource : RestResource
     {
@@ -28,7 +28,7 @@ namespace Sonarr.Api.V3.Blocklist
 
     public static class BlocklistResourceMapper
     {
-        public static BlocklistResource MapToResource(this NzbDrone.Core.Blocklisting.Blocklist model, ICustomFormatCalculationService formatCalculator)
+        public static BlocklistResource MapToResource(this Streamarr.Core.Blocklisting.Blocklist model, ICustomFormatCalculationService formatCalculator)
         {
             if (model == null)
             {

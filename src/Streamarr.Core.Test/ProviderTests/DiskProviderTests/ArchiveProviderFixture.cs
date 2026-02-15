@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Test.Common;
+using Streamarr.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.ProviderTests.DiskProviderTests
+namespace Streamarr.Core.Test.ProviderTests.DiskProviderTests
 {
     [TestFixture]
     public class ArchiveProviderFixture : TestBase<ArchiveService>

@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Crypto;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Organizer;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Crypto;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Organizer;
 
-namespace NzbDrone.Core.Download.Clients.Blackhole
+namespace Streamarr.Core.Download.Clients.Blackhole
 {
     public interface IScanWatchFolder
     {

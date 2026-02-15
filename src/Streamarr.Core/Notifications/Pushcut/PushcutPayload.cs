@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Notifications.Pushcut
+namespace Streamarr.Core.Notifications.Pushcut
 {
     public class PushcutPayload
     {

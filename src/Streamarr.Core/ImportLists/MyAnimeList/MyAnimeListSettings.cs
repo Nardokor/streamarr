@@ -1,9 +1,9 @@
 using System;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.MyAnimeList
+namespace Streamarr.Core.ImportLists.MyAnimeList
 {
     public class MalSettingsValidator : AbstractValidator<MyAnimeListSettings>
     {
@@ -52,9 +52,9 @@ namespace NzbDrone.Core.ImportLists.MyAnimeList
         [FieldDefinition(99, Label = "ImportListsMyAnimeListSettingsAuthenticateWithMyAnimeList", Type = FieldType.OAuth)]
         public string SignIn { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

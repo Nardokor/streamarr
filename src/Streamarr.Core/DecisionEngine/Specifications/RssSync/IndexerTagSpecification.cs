@@ -1,11 +1,11 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
+namespace Streamarr.Core.DecisionEngine.Specifications.RssSync
 {
     public class IndexerTagSpecification : IDownloadDecisionEngineSpecification
     {

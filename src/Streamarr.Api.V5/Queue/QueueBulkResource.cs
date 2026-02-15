@@ -1,4 +1,4 @@
-﻿namespace Sonarr.Api.V5.Queue
+﻿namespace Streamarr.Api.V5.Queue
 {
     public class QueueBulkResource
     {

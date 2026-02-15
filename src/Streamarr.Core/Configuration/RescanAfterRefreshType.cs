@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Configuration
+namespace Streamarr.Core.Configuration
 {
     public enum RescanAfterRefreshType
     {

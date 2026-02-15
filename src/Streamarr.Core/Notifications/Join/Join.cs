@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Notifications.Join
+namespace Streamarr.Core.Notifications.Join
 {
     public class Join : NotificationBase<JoinSettings>
     {

@@ -1,6 +1,6 @@
-using NzbDrone.Core.Annotations;
+using Streamarr.Core.Annotations;
 
-namespace NzbDrone.Core.Download.Clients.Flood.Models
+namespace Streamarr.Core.Download.Clients.Flood.Models
 {
     public enum AdditionalTags
     {

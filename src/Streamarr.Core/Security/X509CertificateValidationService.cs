@@ -3,11 +3,11 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http.Dispatchers;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http.Dispatchers;
+using Streamarr.Core.Configuration;
 
-namespace NzbDrone.Core.Security
+namespace Streamarr.Core.Security
 {
     public class X509CertificateValidationService : ICertificateValidationService
     {

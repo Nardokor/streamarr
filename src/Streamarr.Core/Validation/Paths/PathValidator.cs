@@ -1,9 +1,9 @@
 using FluentValidation;
 using FluentValidation.Validators;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Validation.Paths
+namespace Streamarr.Core.Validation.Paths
 {
     public static class PathValidation
     {

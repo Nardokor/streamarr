@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Queue
+namespace Streamarr.Core.Queue
 {
     public class DatetimeComparer : IComparer<DateTime?>
     {

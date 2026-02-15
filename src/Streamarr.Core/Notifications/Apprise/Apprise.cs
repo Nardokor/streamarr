@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Apprise
+namespace Streamarr.Core.Notifications.Apprise
 {
     public class Apprise : NotificationBase<AppriseSettings>
     {

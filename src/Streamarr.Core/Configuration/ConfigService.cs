@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.Http.Proxy;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Security;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Common.Http.Proxy;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.EpisodeImport;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Security;
 
-namespace NzbDrone.Core.Configuration
+namespace Streamarr.Core.Configuration
 {
     public enum ConfigKey
     {

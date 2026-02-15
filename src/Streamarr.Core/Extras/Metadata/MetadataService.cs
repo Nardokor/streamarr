@@ -4,18 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Extras.Files;
-using NzbDrone.Core.Extras.Metadata.Files;
-using NzbDrone.Core.Extras.Others;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Extras.Files;
+using Streamarr.Core.Extras.Metadata.Files;
+using Streamarr.Core.Extras.Others;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Metadata
+namespace Streamarr.Core.Extras.Metadata
 {
     public class MetadataService : ExtraFileManager<MetadataFile>
     {

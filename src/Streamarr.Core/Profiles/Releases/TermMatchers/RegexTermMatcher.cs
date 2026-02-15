@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace NzbDrone.Core.Profiles.Releases.TermMatchers
+namespace Streamarr.Core.Profiles.Releases.TermMatchers
 {
     public class RegexTermMatcher : ITermMatcher
     {

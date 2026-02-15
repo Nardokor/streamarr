@@ -5,17 +5,17 @@ using System.IO;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.Nzbget
+namespace Streamarr.Core.Download.Clients.Nzbget
 {
     public class Nzbget : UsenetClientBase<NzbgetSettings>
     {
@@ -307,7 +307,7 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
 
             if (!Settings.TvCategory.IsNullOrWhiteSpace() && !categories.Any(v => v.Name == Settings.TvCategory))
             {
-                return new NzbDroneValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientValidationCategoryMissing"))
+                return new StreamarrValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientValidationCategoryMissing"))
                 {
                     InfoLink = _proxy.GetBaseUrl(Settings),
                     DetailedDescription = _localizationService.GetLocalizedString("DownloadClientValidationCategoryMissingDetail", new Dictionary<string, object> { { "clientName", Name } })
@@ -324,7 +324,7 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
             var keepHistory = config.GetValueOrDefault("KeepHistory", "7");
             if (!int.TryParse(keepHistory, NumberStyles.None, CultureInfo.InvariantCulture, out var value) || value == 0)
             {
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientNzbgetValidationKeepHistoryZero"))
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientNzbgetValidationKeepHistoryZero"))
                 {
                     InfoLink = _proxy.GetBaseUrl(Settings),
                     DetailedDescription = _localizationService.GetLocalizedString("DownloadClientNzbgetValidationKeepHistoryZeroDetail")
@@ -332,7 +332,7 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
             }
             else if (value > 25000)
             {
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientNzbgetValidationKeepHistoryOverMax"))
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientNzbgetValidationKeepHistoryOverMax"))
                 {
                     InfoLink = _proxy.GetBaseUrl(Settings),
                     DetailedDescription = _localizationService.GetLocalizedString("DownloadClientNzbgetValidationKeepHistoryOverMaxDetail")

@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Plex
+namespace Streamarr.Core.Notifications.Plex
 {
     public enum PlexMediaType
     {

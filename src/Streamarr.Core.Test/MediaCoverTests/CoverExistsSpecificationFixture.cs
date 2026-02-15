@@ -2,12 +2,12 @@
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Http;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.MediaCoverTests
+namespace Streamarr.Core.Test.MediaCoverTests
 {
     [TestFixture]
     public class CoverAlreadyExistsSpecificationFixture : CoreTest<CoverAlreadyExistsSpecification>

@@ -1,6 +1,6 @@
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Qualities.Commands
+namespace Streamarr.Core.Qualities.Commands
 {
     public class ResetQualityDefinitionsCommand : Command
     {

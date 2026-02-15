@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.UTorrent
+namespace Streamarr.Core.Download.Clients.UTorrent
 {
     [JsonConverter(typeof(UTorrentTorrentJsonConverter))]
     public class UTorrentTorrent

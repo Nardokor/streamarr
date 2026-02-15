@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Disk;
+using Streamarr.Common.Disk;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class DownloadClientInfo
     {

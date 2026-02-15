@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
 using FluentValidation.Validators;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Core.Validation.Paths
+namespace Streamarr.Core.Validation.Paths
 {
     public class MappedNetworkDriveValidator : PropertyValidator
     {

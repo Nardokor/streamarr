@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.AutoTagging;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tags;
-using NzbDrone.SignalR;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Core.AutoTagging;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tags;
+using Streamarr.SignalR;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V3.Tags
+namespace Streamarr.Api.V3.Tags
 {
     [V3ApiController]
     public class TagController : RestControllerWithSignalR<TagResource, Tag>,

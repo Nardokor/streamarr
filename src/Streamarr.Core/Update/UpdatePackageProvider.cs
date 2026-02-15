@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using NzbDrone.Common.Cloud;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Analytics;
-using NzbDrone.Core.Datastore;
+using Streamarr.Common.Cloud;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Http;
+using Streamarr.Core.Analytics;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Update
+namespace Streamarr.Core.Update
 {
     public interface IUpdatePackageProvider
     {

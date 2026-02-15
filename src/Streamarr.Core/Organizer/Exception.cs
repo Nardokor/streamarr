@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Organizer
+namespace Streamarr.Core.Organizer
 {
-    public class NamingFormatException : NzbDroneException
+    public class NamingFormatException : StreamarrException
     {
         public NamingFormatException(string message, params object[] args)
             : base(message, args)

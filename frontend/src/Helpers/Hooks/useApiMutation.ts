@@ -27,8 +27,8 @@ function useApiMutation<T, TData>(options: MutationOptions<T, TData>) {
       path: getQueryPath(options.path) + getQueryString(options.queryParams),
       headers: {
         ...options.headers,
-        'X-Api-Key': window.Sonarr.apiKey,
-        'X-Sonarr-Client': 'Sonarr',
+        'X-Api-Key': window.Streamarr.apiKey,
+        'X-Streamarr-Client': 'Streamarr',
       },
     };
   }, [options]);

@@ -299,7 +299,7 @@ function SeriesSearchInput() {
       if (!suggestions.length || highlightedSectionIndex) {
         dispatch(
           push(
-            `${window.Sonarr.urlBase}/add/new?term=${encodeURIComponent(value)}`
+            `${window.Streamarr.urlBase}/add/new?term=${encodeURIComponent(value)}`
           )
         );
 
@@ -319,7 +319,7 @@ function SeriesSearchInput() {
 
       dispatch(
         push(
-          `${window.Sonarr.urlBase}/series/${selectedSuggestion.item.titleSlug}`
+          `${window.Streamarr.urlBase}/series/${selectedSuggestion.item.titleSlug}`
         )
       );
 
@@ -355,13 +355,13 @@ function SeriesSearchInput() {
       if ('type' in suggestion) {
         dispatch(
           push(
-            `${window.Sonarr.urlBase}/add/new?term=${encodeURIComponent(value)}`
+            `${window.Streamarr.urlBase}/add/new?term=${encodeURIComponent(value)}`
           )
         );
       } else {
         setValue('');
         dispatch(
-          push(`${window.Sonarr.urlBase}/series/${suggestion.item.titleSlug}`)
+          push(`${window.Streamarr.urlBase}/series/${suggestion.item.titleSlug}`)
         );
       }
     },

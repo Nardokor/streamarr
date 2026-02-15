@@ -45,8 +45,8 @@ function PageHeader() {
         <Link className={styles.logoLink} to="/">
           <img
             className={styles.logo}
-            src={`${window.Sonarr.urlBase}/Content/Images/logo.svg`}
-            alt="Sonarr Logo"
+            src={`${window.Streamarr.urlBase}/Content/Images/logo.svg`}
+            alt="Streamarr Logo"
           />
         </Link>
       </div>
@@ -66,7 +66,7 @@ function PageHeader() {
           className={styles.donate}
           name={icons.HEART}
           aria-label={translate('Donate')}
-          to="https://sonarr.tv/donate.html"
+          to="https://github.com/Nardokor/streamarr"
           size={14}
           title={translate('Donate')}
         />

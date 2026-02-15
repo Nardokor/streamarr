@@ -18,7 +18,7 @@
 }
 
 .selected {
-  color: var(--sonarrBlue);
+  color: var(--streamarrBlue);
 }
 
 .unselected {
@@ -32,7 +32,7 @@
     }
 
     .unselected {
-      color: var(--sonarrBlue);
+      color: var(--streamarrBlue);
     }
   }
 }

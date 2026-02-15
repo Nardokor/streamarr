@@ -4,7 +4,7 @@ import themes from 'Styles/Themes';
 
 const useTheme = () => {
   const { theme } = useUiSettingsValues();
-  const selectedTheme = theme ?? window.Sonarr.theme;
+  const selectedTheme = theme ?? window.Streamarr.theme;
   const [resolvedTheme, setResolvedTheme] = useState(selectedTheme);
 
   useEffect(() => {

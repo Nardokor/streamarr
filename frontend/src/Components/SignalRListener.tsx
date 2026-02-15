@@ -450,12 +450,12 @@ function SignalRListener() {
   useEffect(() => {
     console.log('[signalR] starting');
 
-    const url = `${window.Sonarr.urlBase}/signalr/messages`;
+    const url = `${window.Streamarr.urlBase}/signalr/messages`;
 
     connection.current = new HubConnectionBuilder()
       .configureLogging(new SignalRLogger(LogLevel.Information))
       .withUrl(
-        `${url}?access_token=${encodeURIComponent(window.Sonarr.apiKey)}`
+        `${url}?access_token=${encodeURIComponent(window.Streamarr.apiKey)}`
       )
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: (retryContext) => {

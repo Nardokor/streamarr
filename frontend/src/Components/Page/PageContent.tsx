@@ -20,8 +20,8 @@ function PageContent({
       <DocumentTitle
         title={
           title
-            ? `${title} - ${window.Sonarr.instanceName}`
-            : window.Sonarr.instanceName
+            ? `${title} - ${window.Streamarr.instanceName}`
+            : window.Streamarr.instanceName
         }
       >
         <div className={className}>{children}</div>

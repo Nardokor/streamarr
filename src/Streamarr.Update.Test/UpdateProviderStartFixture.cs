@@ -5,19 +5,19 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common;
-using NzbDrone.Common.Model;
-using NzbDrone.Test.Common;
-using NzbDrone.Update.UpdateEngine;
+using Streamarr.Common;
+using Streamarr.Common.Model;
+using Streamarr.Test.Common;
+using Streamarr.Update.UpdateEngine;
 
-namespace NzbDrone.Update.Test
+namespace Streamarr.Update.Test
 {
     [TestFixture]
    public class UpdateProviderStartFixture : TestBase
     {
         private const string UPDATE_FOLDER = @"C:\Temp\nzbdrone_update\nzbdrone\";
         private const string BACKUP_FOLDER = @"C:\Temp\nzbdrone_update\nzbdrone_backup\";
-        private const string TARGET_FOLDER = @"C:\NzbDrone\";
+        private const string TARGET_FOLDER = @"C:\Streamarr\";
 
         Mock<IIAppDirectoryInfo> _IAppDirectoryInfo;
 
@@ -94,21 +94,21 @@ namespace NzbDrone.Update.Test
             var processes = Builder<ProcessInfo>.CreateListOfSize(2).Build().ToList();
 
             Mocker.GetMock<IProcessProvider>()
-                .Setup(c => c.GetProcessByName(ProcessProvider.NzbDroneProcessName))
+                .Setup(c => c.GetProcessByName(ProcessProvider.StreamarrProcessName))
                 .Returns(processes);
 
 
             Mocker.Resolve<InstallUpdateService>().Start(TARGET_FOLDER);
 
 
-            Mocker.GetMock<IProcessProvider>().Verify(c => c.KillAll(ProcessProvider.NzbDroneProcessName), Times.Once());
+            Mocker.GetMock<IProcessProvider>().Verify(c => c.KillAll(ProcessProvider.StreamarrProcessName), Times.Once());
         }
 
         [Test]
         public void should_not_kill_nzbdrone_process_not_running()
         {
             Mocker.GetMock<IProcessProvider>()
-                .Setup(c => c.GetProcessByName(ProcessProvider.NzbDroneProcessName))
+                .Setup(c => c.GetProcessByName(ProcessProvider.StreamarrProcessName))
                 .Returns(new List<ProcessInfo>());
 
 

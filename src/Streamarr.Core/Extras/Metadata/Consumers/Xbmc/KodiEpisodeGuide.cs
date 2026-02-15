@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
+namespace Streamarr.Core.Extras.Metadata.Consumers.Xbmc
 {
     public class KodiEpisodeGuide
     {

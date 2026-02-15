@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NzbDrone.Core.Indexers.Newznab
+namespace Streamarr.Core.Indexers.Newznab
 {
     public class NewznabCapabilities
     {

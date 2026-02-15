@@ -1,14 +1,14 @@
 using System;
 using System.Linq;
 using FluentValidation;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Validation;
-using NzbDrone.Core.Validation.Paths;
-using Sonarr.Http;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Validation;
+using Streamarr.Core.Validation.Paths;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Config
+namespace Streamarr.Api.V3.Config
 {
     [V3ApiController("config/mediamanagement")]
     public class MediaManagementConfigController : ConfigController<MediaManagementConfigResource>

@@ -1,7 +1,7 @@
 using System;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public class MonitoringOptions : IEmbeddedDocument
     {

@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Mono.Disk
+namespace Streamarr.Mono.Disk
 {
-    public class LinuxPermissionsException : NzbDroneException
+    public class LinuxPermissionsException : StreamarrException
     {
         public LinuxPermissionsException(string message, params object[] args)
             : base(message, args)

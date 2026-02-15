@@ -2,11 +2,11 @@ using System.Linq;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using NzbDrone.Core.ThingiProvider;
-using Sonarr.Api.V3.Indexers;
-using Sonarr.Http.ClientSchema;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Api.V3.Indexers;
+using Streamarr.Http.ClientSchema;
 
-namespace NzbDrone.Integration.Test.ApiTests
+namespace Streamarr.Integration.Test.ApiTests
 {
     [TestFixture]
     public class IndexerFixture : IntegrationTest

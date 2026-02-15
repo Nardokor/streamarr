@@ -5,16 +5,16 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser;
+using Streamarr.Common.Cache;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser;
 
-namespace NzbDrone.Core.Localization
+namespace Streamarr.Core.Localization
 {
     public interface ILocalizationService
     {

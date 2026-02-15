@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Test.Framework
+namespace Streamarr.Core.Test.Framework
 {
     public interface IDirectDataMapper
     {

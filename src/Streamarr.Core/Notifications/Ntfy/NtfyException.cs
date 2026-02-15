@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Ntfy
+namespace Streamarr.Core.Notifications.Ntfy
 {
-    public class NtfyException : NzbDroneException
+    public class NtfyException : StreamarrException
     {
         public NtfyException(string message)
             : base(message)

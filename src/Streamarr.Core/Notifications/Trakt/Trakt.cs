@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Core.Notifications.Trakt.Resource;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Core.Notifications.Trakt.Resource;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Trakt
+namespace Streamarr.Core.Notifications.Trakt
 {
     public class Trakt : NotificationBase<TraktSettings>
     {

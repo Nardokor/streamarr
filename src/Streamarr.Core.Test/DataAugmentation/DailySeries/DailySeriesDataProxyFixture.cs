@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.DataAugmentation.DailySeries;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Core.DataAugmentation.DailySeries;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common.Categories;
 
-namespace NzbDrone.Core.Test.DataAugmentation.DailySeries
+namespace Streamarr.Core.Test.DataAugmentation.DailySeries
 {
     [TestFixture]
     [IntegrationTest]

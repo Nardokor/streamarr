@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Download.Clients.Hadouken.Models
+﻿namespace Streamarr.Core.Download.Clients.Hadouken.Models
 {
     public sealed class HadoukenTorrent
     {

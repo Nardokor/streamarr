@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Datastore;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Datastore;
 
-namespace Sonarr.Http.Extensions
+namespace Streamarr.Http.Extensions
 {
     public static class RequestExtensions
     {
@@ -104,7 +104,7 @@ namespace Sonarr.Http.Extensions
                 return source;
             }
 
-            return NzbDrone.Common.Http.UserAgentParser.ParseSource(request.Headers["User-Agent"]);
+            return Streamarr.Common.Http.UserAgentParser.ParseSource(request.Headers["User-Agent"]);
         }
 
         public static void DisableCache(this IHeaderDictionary headers)

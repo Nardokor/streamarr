@@ -3,12 +3,12 @@ using System.Data;
 using System.Linq;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(132)]
-    public class add_download_client_priority : NzbDroneMigrationBase
+    public class add_download_client_priority : StreamarrMigrationBase
     {
         // Need snapshot in time without having to instantiate.
         private static HashSet<string> _usenetImplementations = new HashSet<string>

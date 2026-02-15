@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
 
-namespace Sonarr.Http.Frontend.Mappers
+namespace Streamarr.Http.Frontend.Mappers
 {
     public class MediaCoverMapper : StaticResourceMapperBase
     {

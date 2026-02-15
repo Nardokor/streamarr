@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Messaging.Commands;
+﻿using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.HealthCheck
+namespace Streamarr.Core.HealthCheck
 {
     public class CheckHealthCommand : Command
     {

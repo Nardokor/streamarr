@@ -1,7 +1,7 @@
-using NzbDrone.Common.Messaging;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Messaging;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles.Events
+namespace Streamarr.Core.MediaFiles.Events
 {
     public class EpisodeFolderCreatedEvent : IEvent
     {

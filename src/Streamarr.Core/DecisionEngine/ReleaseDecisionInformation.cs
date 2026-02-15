@@ -1,6 +1,6 @@
-using NzbDrone.Core.IndexerSearch.Definitions;
+using Streamarr.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.DecisionEngine;
+namespace Streamarr.Core.DecisionEngine;
 
 public class ReleaseDecisionInformation
 {

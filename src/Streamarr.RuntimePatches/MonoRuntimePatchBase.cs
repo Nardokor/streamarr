@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace NzbDrone.RuntimePatches
+namespace Streamarr.RuntimePatches
 {
     public abstract class MonoRuntimePatchBase : RuntimePatchBase
     {

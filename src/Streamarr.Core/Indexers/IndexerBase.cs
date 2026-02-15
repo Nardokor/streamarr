@@ -4,17 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public abstract class IndexerBase<TSettings> : IIndexer
         where TSettings : IIndexerSettings, new()

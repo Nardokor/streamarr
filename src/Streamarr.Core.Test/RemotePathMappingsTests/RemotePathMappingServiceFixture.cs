@@ -4,12 +4,12 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.RemotePathMappingsTests
+namespace Streamarr.Core.Test.RemotePathMappingsTests
 {
     [TestFixture]
     public class RemotePathMappingServiceFixture : CoreTest<RemotePathMappingService>

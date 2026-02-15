@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.ThingiProvider
+﻿namespace Streamarr.Core.ThingiProvider
 {
     public class ProviderMessage
     {

@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Cache;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Exceptions;
-using NzbDrone.Core.Indexers.TorrentRss;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Cache;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.Exceptions;
+using Streamarr.Core.Indexers.TorrentRss;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
+namespace Streamarr.Core.Test.IndexerTests.TorrentRssIndexerTests
 {
     [TestFixture]
     public class TorrentRssParserFactoryFixture : CoreTest<TorrentRssParserFactory>

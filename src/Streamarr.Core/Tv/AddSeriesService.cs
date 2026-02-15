@@ -5,14 +5,14 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.MetadataSource;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Parser;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.MetadataSource;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Parser;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public interface IAddSeriesService
     {

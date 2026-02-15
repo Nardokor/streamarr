@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.MediaFiles
+namespace Streamarr.Core.Test.MediaFiles
 {
     [TestFixture]
     public class MediaFileRepositoryFixture : DbTest<MediaFileRepository, EpisodeFile>

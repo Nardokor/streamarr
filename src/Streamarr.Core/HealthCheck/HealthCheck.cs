@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Datastore;
+using Streamarr.Common.Http;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.HealthCheck
+namespace Streamarr.Core.HealthCheck
 {
     public class HealthCheck : ModelBase
     {

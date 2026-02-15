@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Cache;
-using NzbDrone.Core.CustomFormats.Events;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.Cache;
+using Streamarr.Core.CustomFormats.Events;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.CustomFormats
+namespace Streamarr.Core.CustomFormats
 {
     public interface ICustomFormatService
     {

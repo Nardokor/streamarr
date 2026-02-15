@@ -1,10 +1,10 @@
 ﻿using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(3)]
-    public class remove_renamed_scene_mapping_columns : NzbDroneMigrationBase
+    public class remove_renamed_scene_mapping_columns : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

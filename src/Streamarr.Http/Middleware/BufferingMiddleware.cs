@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Sonarr.Http.Middleware
+namespace Streamarr.Http.Middleware
 {
     public class BufferingMiddleware
     {

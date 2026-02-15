@@ -2,7 +2,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace NzbDrone.Core.Indexers.Tribler
+namespace Streamarr.Core.Indexers.Tribler
 {
     public class TriblerSettingsResponse
     {

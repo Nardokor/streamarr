@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport
+namespace Streamarr.Core.MediaFiles.EpisodeImport
 {
     public class ImportDecision
     {

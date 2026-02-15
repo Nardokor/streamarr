@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Equ;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.Newznab
+namespace Streamarr.Core.Indexers.Newznab
 {
     public class NewznabSettingsValidator : AbstractValidator<NewznabSettings>
     {
@@ -93,9 +93,9 @@ namespace NzbDrone.Core.Indexers.Newznab
         // Field 8 is used by TorznabSettings MinimumSeeders
         // If you need to add another field here, update TorznabSettings as well and this comment
 
-        public virtual NzbDroneValidationResult Validate()
+        public virtual StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

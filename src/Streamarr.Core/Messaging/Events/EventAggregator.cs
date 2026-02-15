@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Messaging;
-using NzbDrone.Common.Reflection;
-using NzbDrone.Common.TPL;
+using Streamarr.Common;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Messaging;
+using Streamarr.Common.Reflection;
+using Streamarr.Common.TPL;
 
-namespace NzbDrone.Core.Messaging.Events
+namespace Streamarr.Core.Messaging.Events
 {
     public class EventAggregator : IEventAggregator
     {

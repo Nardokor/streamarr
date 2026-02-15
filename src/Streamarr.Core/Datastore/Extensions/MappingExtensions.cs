@@ -2,9 +2,9 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using Dapper;
-using NzbDrone.Common.Reflection;
+using Streamarr.Common.Reflection;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public static class MappingExtensions
     {

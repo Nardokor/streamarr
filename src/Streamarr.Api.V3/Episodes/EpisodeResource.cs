@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.Tv;
-using Sonarr.Api.V3.EpisodeFiles;
-using Sonarr.Api.V3.Series;
-using Sonarr.Http.REST;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.Tv;
+using Streamarr.Api.V3.EpisodeFiles;
+using Streamarr.Api.V3.Series;
+using Streamarr.Http.REST;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Sonarr.Api.V3.Episodes
+namespace Streamarr.Api.V3.Episodes
 {
     public class EpisodeResource : RestResource
     {

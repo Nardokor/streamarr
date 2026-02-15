@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Manual
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Manual
 {
     public class ManualImportItem
     {

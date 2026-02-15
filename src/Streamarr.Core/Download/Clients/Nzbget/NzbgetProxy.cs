@@ -4,11 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Core.Download.Clients.Nzbget
+namespace Streamarr.Core.Download.Clients.Nzbget
 {
     public interface INzbgetProxy
     {

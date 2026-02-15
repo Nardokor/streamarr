@@ -4,11 +4,11 @@ using System.Linq;
 using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider.Events;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ThingiProvider.Events;
 
-namespace NzbDrone.Core.ThingiProvider
+namespace Streamarr.Core.ThingiProvider
 {
     public abstract class ProviderFactory<TProvider, TProviderDefinition> : IProviderFactory<TProvider, TProviderDefinition>, IHandle<ApplicationStartedEvent>
         where TProviderDefinition : ProviderDefinition, new()

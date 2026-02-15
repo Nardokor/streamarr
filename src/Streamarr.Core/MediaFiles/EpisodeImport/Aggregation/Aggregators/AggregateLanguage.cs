@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Language;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Download;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Language;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators
 {
     public class AggregateLanguage : IAggregateLocalEpisode
     {

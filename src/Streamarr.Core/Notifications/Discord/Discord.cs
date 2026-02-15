@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Core.Notifications.Discord.Payloads;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Core.Notifications.Discord.Payloads;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Discord
+namespace Streamarr.Core.Notifications.Discord
 {
     public class Discord : NotificationBase<DiscordSettings>
     {
@@ -643,7 +643,7 @@ namespace NzbDrone.Core.Notifications.Discord
             }
             catch (DiscordException ex)
             {
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("NotificationsValidationUnableToSendTestMessage", new Dictionary<string, object> { { "exceptionMessage", ex.Message } }));
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("NotificationsValidationUnableToSendTestMessage", new Dictionary<string, object> { { "exceptionMessage", ex.Message } }));
             }
 
             return null;

@@ -4,14 +4,14 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Queue;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Queue;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.QueueTests
+namespace Streamarr.Core.Test.QueueTests
 {
     [TestFixture]
     public class QueueServiceFixture : CoreTest<QueueService>
@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Test.QueueTests
         {
             var downloadClientInfo = Builder<DownloadClientItemClientInfo>.CreateNew().Build();
 
-            var downloadItem = Builder<NzbDrone.Core.Download.DownloadClientItem>.CreateNew()
+            var downloadItem = Builder<Streamarr.Core.Download.DownloadClientItem>.CreateNew()
                                         .With(v => v.RemainingTime = TimeSpan.FromSeconds(10))
                                         .With(v => v.DownloadClientInfo = downloadClientInfo)
                                         .Build();

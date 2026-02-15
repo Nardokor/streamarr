@@ -1,12 +1,12 @@
 ﻿using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.ParserTests.ParsingServiceTests
+namespace Streamarr.Core.Test.ParserTests.ParsingServiceTests
 {
     [TestFixture]
     public class GetSeriesFixture : CoreTest<ParsingService>

@@ -2,11 +2,11 @@
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers.Exceptions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Http;
+using Streamarr.Core.Indexers.Exceptions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers.HDBits
+namespace Streamarr.Core.Indexers.HDBits
 {
     public class HDBitsParser : IParseIndexerResponse
     {

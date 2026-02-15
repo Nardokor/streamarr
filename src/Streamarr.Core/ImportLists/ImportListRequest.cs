@@ -1,6 +1,6 @@
-using NzbDrone.Common.Http;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public class ImportListRequest
     {

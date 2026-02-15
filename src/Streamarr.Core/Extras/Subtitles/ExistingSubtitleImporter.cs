@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Extras.Files;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Extras.Files;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles.EpisodeImport.Aggregation;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Subtitles
+namespace Streamarr.Core.Extras.Subtitles
 {
     public class ExistingSubtitleImporter : ImportExistingExtraFilesBase<SubtitleFile>
     {

@@ -8,18 +8,18 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using NLog;
-using NzbDrone.Common;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Extras.Metadata.Files;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Core.Tags;
-using NzbDrone.Core.Tv;
+using Streamarr.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Extras.Metadata.Files;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Core.Tags;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
+namespace Streamarr.Core.Extras.Metadata.Consumers.Xbmc
 {
     public class XbmcMetadata : MetadataBase<XbmcMetadataSettings>
     {

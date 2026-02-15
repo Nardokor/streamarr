@@ -2,24 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Core.Backup;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.HealthCheck;
-using NzbDrone.Core.Housekeeping;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.MediaFiles.Commands;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv.Commands;
-using NzbDrone.Core.Update.Commands;
+using Streamarr.Common.Cache;
+using Streamarr.Core.Backup;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.Download;
+using Streamarr.Core.HealthCheck;
+using Streamarr.Core.Housekeeping;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.MediaFiles.Commands;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv.Commands;
+using Streamarr.Core.Update.Commands;
 
-namespace NzbDrone.Core.Jobs
+namespace Streamarr.Core.Jobs
 {
     public interface ITaskManager
     {

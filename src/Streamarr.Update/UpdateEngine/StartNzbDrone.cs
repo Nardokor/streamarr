@@ -1,27 +1,27 @@
 using System;
 using System.IO;
 using NLog;
-using NzbDrone.Common;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Processes;
-using IServiceProvider = NzbDrone.Common.IServiceProvider;
+using Streamarr.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Processes;
+using IServiceProvider = Streamarr.Common.IServiceProvider;
 
-namespace NzbDrone.Update.UpdateEngine
+namespace Streamarr.Update.UpdateEngine
 {
-    public interface IStartNzbDrone
+    public interface IStartStreamarr
     {
         void Start(AppType appType, string installationFolder);
     }
 
-    public class StartNzbDrone : IStartNzbDrone
+    public class StartStreamarr : IStartStreamarr
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IProcessProvider _processProvider;
         private readonly IStartupContext _startupContext;
         private readonly Logger _logger;
 
-        public StartNzbDrone(IServiceProvider serviceProvider, IProcessProvider processProvider, IStartupContext startupContext, Logger logger)
+        public StartStreamarr(IServiceProvider serviceProvider, IProcessProvider processProvider, IStartupContext startupContext, Logger logger)
         {
             _serviceProvider = serviceProvider;
             _processProvider = processProvider;

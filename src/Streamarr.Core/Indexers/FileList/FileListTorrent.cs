@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Indexers.FileList
+namespace Streamarr.Core.Indexers.FileList
 {
     public class FileListTorrent
     {

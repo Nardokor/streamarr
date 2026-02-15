@@ -3,10 +3,10 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Download;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Download
+namespace Streamarr.Core.Test.Download
 {
     [TestFixture]
     public class ResolveDownloadClientFixture : CoreTest<DownloadClientFactory>

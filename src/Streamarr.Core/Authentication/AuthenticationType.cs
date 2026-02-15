@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Core.Authentication
+namespace Streamarr.Core.Authentication
 {
     public enum AuthenticationType
     {

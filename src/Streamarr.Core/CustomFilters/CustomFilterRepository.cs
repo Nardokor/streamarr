@@ -1,7 +1,7 @@
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.CustomFilters
+namespace Streamarr.Core.CustomFilters
 {
     public interface ICustomFilterRepository : IBasicRepository<CustomFilter>
     {

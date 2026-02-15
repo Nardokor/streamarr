@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Parser
+﻿namespace Streamarr.Core.Parser
 {
     public static class SceneChecker
     {

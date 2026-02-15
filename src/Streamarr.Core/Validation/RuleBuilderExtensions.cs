@@ -2,9 +2,9 @@ using System;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using FluentValidation.Validators;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Validation
+namespace Streamarr.Core.Validation
 {
     public static class RuleBuilderExtensions
     {
@@ -65,7 +65,7 @@ namespace NzbDrone.Core.Validation
 
         public static IRuleBuilderOptions<T, TProp> AsWarning<T, TProp>(this IRuleBuilderOptions<T, TProp> ruleBuilder)
         {
-            return ruleBuilder.WithState(v => NzbDroneValidationState.Warning);
+            return ruleBuilder.WithState(v => StreamarrValidationState.Warning);
         }
 
         public static IRuleBuilderOptions<T, string> StartsOrEndsWithSonarr<T>(this IRuleBuilder<T, string> ruleBuilder)

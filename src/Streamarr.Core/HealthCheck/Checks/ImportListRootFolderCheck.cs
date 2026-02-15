@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.RootFolders;
-using NzbDrone.Core.ThingiProvider.Events;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.RootFolders;
+using Streamarr.Core.ThingiProvider.Events;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace Streamarr.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ProviderUpdatedEvent<IImportList>))]
     [CheckOn(typeof(ProviderDeletedEvent<IImportList>))]

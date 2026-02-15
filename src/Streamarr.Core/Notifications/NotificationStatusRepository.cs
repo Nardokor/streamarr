@@ -1,8 +1,8 @@
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider.Status;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public interface INotificationStatusRepository : IProviderStatusRepository<NotificationStatus>
     {

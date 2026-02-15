@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Crypto;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Crypto;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
 
-namespace Sonarr.Http.Frontend.Mappers
+namespace Streamarr.Http.Frontend.Mappers
 {
     public interface ICacheBreakerProvider
     {

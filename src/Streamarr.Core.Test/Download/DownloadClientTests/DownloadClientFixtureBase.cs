@@ -5,20 +5,20 @@ using FluentAssertions;
 using Moq;
 using NLog;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Test.IndexerTests;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Test.IndexerTests;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests
 {
     public abstract class DownloadClientFixtureBase<TSubject> : CoreTest<TSubject>
         where TSubject : class, IDownloadClient

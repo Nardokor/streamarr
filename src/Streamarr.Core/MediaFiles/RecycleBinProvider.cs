@@ -1,15 +1,15 @@
 using System;
 using System.IO;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles.Commands;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.MediaFiles.Commands;
+using Streamarr.Core.MediaFiles.EpisodeImport;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public interface IRecycleBinProvider
     {

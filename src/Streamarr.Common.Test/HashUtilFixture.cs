@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 
-namespace NzbDrone.Common.Test
+namespace Streamarr.Common.Test
 {
     [TestFixture]
     public class HashUtilFixture

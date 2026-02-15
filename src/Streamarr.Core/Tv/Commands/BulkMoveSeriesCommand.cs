@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Tv.Commands
+namespace Streamarr.Core.Tv.Commands
 {
     public class BulkMoveSeriesCommand : Command
     {

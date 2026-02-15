@@ -1,6 +1,6 @@
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Profiles.Qualities;
+namespace Streamarr.Core.Profiles.Qualities;
 
 public class QualityProfileSizeLimit
 {

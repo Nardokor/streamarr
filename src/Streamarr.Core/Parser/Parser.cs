@@ -6,17 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Parser
+namespace Streamarr.Core.Parser
 {
     public static class Parser
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(Parser));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(Parser));
 
         private static readonly Regex[] ReportTitleRegex = new[]
             {

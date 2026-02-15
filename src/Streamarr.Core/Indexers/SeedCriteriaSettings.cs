@@ -1,9 +1,9 @@
 using Equ;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public class SeedCriteriaSettingsValidator : AbstractValidator<SeedCriteriaSettings>
     {

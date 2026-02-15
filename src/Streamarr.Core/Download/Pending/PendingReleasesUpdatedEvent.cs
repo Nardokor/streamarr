@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Download.Pending
+namespace Streamarr.Core.Download.Pending
 {
     public class PendingReleasesUpdatedEvent : IEvent
     {

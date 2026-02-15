@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Update.History.Events;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Update.History.Events;
 
-namespace NzbDrone.Core.Update.History
+namespace Streamarr.Core.Update.History
 {
     public interface IUpdateHistoryService
     {

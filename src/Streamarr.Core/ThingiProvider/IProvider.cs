@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
 
-namespace NzbDrone.Core.ThingiProvider
+namespace Streamarr.Core.ThingiProvider
 {
     public interface IProvider
     {

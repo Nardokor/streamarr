@@ -1,10 +1,10 @@
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Notifications.Discord.Payloads;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Notifications.Discord.Payloads;
 
-namespace NzbDrone.Core.Notifications.Discord
+namespace Streamarr.Core.Notifications.Discord
 {
     public interface IDiscordProxy
     {

@@ -11,19 +11,19 @@ using FluentAssertions;
 using Moq;
 using NLog;
 using NUnit.Framework;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Http.Dispatchers;
-using NzbDrone.Common.Http.Proxy;
-using NzbDrone.Common.TPL;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Security;
-using NzbDrone.Test.Common;
-using NzbDrone.Test.Common.Categories;
-using HttpClient = NzbDrone.Common.Http.HttpClient;
+using Streamarr.Common.Cache;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Http;
+using Streamarr.Common.Http.Dispatchers;
+using Streamarr.Common.Http.Proxy;
+using Streamarr.Common.TPL;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Security;
+using Streamarr.Test.Common;
+using Streamarr.Test.Common.Categories;
+using HttpClient = Streamarr.Common.Http.HttpClient;
 
-namespace NzbDrone.Common.Test.Http
+namespace Streamarr.Common.Test.Http
 {
     [IntegrationTest]
     [TestFixture(typeof(ManagedHttpDispatcher))]

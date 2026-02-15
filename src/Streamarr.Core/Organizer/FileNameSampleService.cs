@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Organizer
+namespace Streamarr.Core.Organizer
 {
     public interface IFilenameSampleService
     {

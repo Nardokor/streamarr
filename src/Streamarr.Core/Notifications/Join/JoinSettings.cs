@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Join
+namespace Streamarr.Core.Notifications.Join
 {
     public class JoinSettingsValidator : AbstractValidator<JoinSettings>
     {
@@ -34,9 +34,9 @@ namespace NzbDrone.Core.Notifications.Join
         [FieldDefinition(3, Label = "NotificationsJoinSettingsNotificationPriority", Type = FieldType.Select, SelectOptions = typeof(JoinPriority))]
         public int Priority { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

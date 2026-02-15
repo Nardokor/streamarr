@@ -1,17 +1,17 @@
 ﻿using System;
 using FluentMigrator;
 using NLog;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Core.Datastore.Migration.Framework
+namespace Streamarr.Core.Datastore.Migration.Framework
 {
-    public abstract class NzbDroneMigrationBase : FluentMigrator.Migration
+    public abstract class StreamarrMigrationBase : FluentMigrator.Migration
     {
         protected readonly Logger _logger;
 
-        protected NzbDroneMigrationBase()
+        protected StreamarrMigrationBase()
         {
-            _logger = NzbDroneLogger.GetLogger(this);
+            _logger = StreamarrLogger.GetLogger(this);
         }
 
         protected virtual void MainDbUpgrade()

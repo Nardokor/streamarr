@@ -1,7 +1,7 @@
 using FluentValidation;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Validation
+namespace Streamarr.Core.Validation
 {
     public static class IpValidation
     {

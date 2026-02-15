@@ -6,15 +6,15 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles.UpdateEpisodeFileServiceTests
+namespace Streamarr.Core.Test.MediaFiles.UpdateEpisodeFileServiceTests
 {
     [TestFixture]
     public class ChangeFileDateForFileFixture : CoreTest<UpdateEpisodeFileService>

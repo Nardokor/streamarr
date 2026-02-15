@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace NzbDrone.Common.Extensions
+namespace Streamarr.Common.Extensions
 {
     public static class StreamExtensions
     {

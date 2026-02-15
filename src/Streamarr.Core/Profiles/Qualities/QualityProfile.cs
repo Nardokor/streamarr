@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Profiles.Qualities
+namespace Streamarr.Core.Profiles.Qualities
 {
     public class QualityProfile : ModelBase
     {

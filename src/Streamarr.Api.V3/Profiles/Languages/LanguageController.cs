@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Languages;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Core.Languages;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Profiles.Languages
+namespace Streamarr.Api.V3.Profiles.Languages
 {
     [V3ApiController]
     public class LanguageController : RestController<LanguageResource>

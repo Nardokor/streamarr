@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Indexers;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Indexers;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public interface IProcessDownloadDecisions
     {

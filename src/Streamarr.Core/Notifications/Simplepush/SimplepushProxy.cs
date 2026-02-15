@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.Http;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.Notifications.Simplepush
+namespace Streamarr.Core.Notifications.Simplepush
 {
     public interface ISimplepushProxy
     {

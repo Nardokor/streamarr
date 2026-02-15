@@ -3,12 +3,12 @@ using System.IO;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Test.Framework;
 using SixLabors.ImageSharp;
 
-namespace NzbDrone.Core.Test.MediaCoverTests
+namespace Streamarr.Core.Test.MediaCoverTests
 {
     [TestFixture]
     public class ImageResizerFixture : CoreTest<MediaCover.ImageResizer>

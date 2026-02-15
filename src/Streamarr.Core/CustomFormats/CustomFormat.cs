@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.CustomFormats
+namespace Streamarr.Core.CustomFormats
 {
     public class CustomFormat : ModelBase, IEquatable<CustomFormat>
     {

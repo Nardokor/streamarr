@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.DataAugmentation.Scene
+namespace Streamarr.Core.DataAugmentation.Scene
 {
-    public class InvalidSceneMappingException : NzbDroneException
+    public class InvalidSceneMappingException : StreamarrException
     {
         public InvalidSceneMappingException(IEnumerable<SceneMapping> mappings, string releaseTitle)
             : base(FormatMessage(mappings, releaseTitle))

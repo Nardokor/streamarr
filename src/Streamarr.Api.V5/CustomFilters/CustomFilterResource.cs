@@ -1,9 +1,9 @@
 using System.Dynamic;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.CustomFilters;
-using Sonarr.Http.REST;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.CustomFilters;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.CustomFilters;
+namespace Streamarr.Api.V5.CustomFilters;
 
 public class CustomFilterResource : RestResource
 {

@@ -1,11 +1,11 @@
 using System.Data;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(101)]
-    public class add_ultrahd_quality_in_profiles : NzbDroneMigrationBase
+    public class add_ultrahd_quality_in_profiles : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

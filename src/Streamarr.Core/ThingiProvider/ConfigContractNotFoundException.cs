@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.ThingiProvider
+namespace Streamarr.Core.ThingiProvider
 {
-    public class ConfigContractNotFoundException : NzbDroneException
+    public class ConfigContractNotFoundException : StreamarrException
     {
         public ConfigContractNotFoundException(string contract)
             : base("Couldn't find config contract " + contract)

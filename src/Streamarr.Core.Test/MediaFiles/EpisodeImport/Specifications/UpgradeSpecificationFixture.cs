@@ -4,20 +4,20 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Specifications;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.EpisodeImport.Specifications;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Profiles;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport.Specifications
+namespace Streamarr.Core.Test.MediaFiles.EpisodeImport.Specifications
 {
     [TestFixture]
     public class UpgradeSpecificationFixture : CoreTest<UpgradeSpecification>

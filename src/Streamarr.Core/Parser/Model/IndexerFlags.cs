@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Core.Parser.Model
+namespace Streamarr.Core.Parser.Model
 {
     [Flags]
     public enum IndexerFlags

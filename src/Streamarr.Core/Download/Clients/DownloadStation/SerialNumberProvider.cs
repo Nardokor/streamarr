@@ -1,11 +1,11 @@
 using System;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Crypto;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download.Clients.DownloadStation.Proxies;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Crypto;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download.Clients.DownloadStation.Proxies;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation
+namespace Streamarr.Core.Download.Clients.DownloadStation
 {
     public interface ISerialNumberProvider
     {

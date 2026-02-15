@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.Deluge
+namespace Streamarr.Core.Download.Clients.Deluge
 {
     public class DelugeSettingsValidator : AbstractValidator<DelugeSettings>
     {
@@ -66,9 +66,9 @@ namespace NzbDrone.Core.Download.Clients.Deluge
         [FieldDefinition(11, Label = "DownloadClientDelugeSettingsDirectoryCompleted", Type = FieldType.Textbox, Advanced = true, HelpText = "DownloadClientDelugeSettingsDirectoryCompletedHelpText")]
         public string CompletedDirectory { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

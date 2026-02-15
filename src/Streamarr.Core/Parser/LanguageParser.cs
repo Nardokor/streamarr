@@ -4,16 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Parser
+namespace Streamarr.Core.Parser
 {
     public static class LanguageParser
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(LanguageParser));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(LanguageParser));
 
         private static readonly RegexReplace[] CleanSeriesTitleRegex = new[]
             {

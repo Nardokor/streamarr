@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Crypto;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Crypto;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Queue
+namespace Streamarr.Core.Queue
 {
     public interface IQueueService
     {

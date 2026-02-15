@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Routing;
 
-namespace Sonarr.Http.REST.Attributes
+namespace Streamarr.Http.REST.Attributes
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class RestGetByIdAttribute : Attribute, IActionHttpMethodProvider, IRouteTemplateProvider

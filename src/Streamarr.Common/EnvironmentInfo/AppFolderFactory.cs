@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Exceptions;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Exceptions;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Common.EnvironmentInfo
+namespace Streamarr.Common.EnvironmentInfo
 {
     public interface IAppFolderFactory
     {
@@ -31,7 +31,7 @@ namespace NzbDrone.Common.EnvironmentInfo
             _startupContext = startupContext;
             _diskProvider = diskProvider;
             _diskTransferService = diskTransferService;
-            _logger = NzbDroneLogger.GetLogger(this);
+            _logger = StreamarrLogger.GetLogger(this);
         }
 
         public void Register()

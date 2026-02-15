@@ -1,6 +1,6 @@
-using NzbDrone.Core.Annotations;
+using Streamarr.Core.Annotations;
 
-namespace NzbDrone.Core.Notifications.Telegram
+namespace Streamarr.Core.Notifications.Telegram
 {
     // Maintain the same values as MetadataLinkType
 

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.CustomFormats.Events
+namespace Streamarr.Core.CustomFormats.Events
 {
     public class CustomFormatAddedEvent : IEvent
     {

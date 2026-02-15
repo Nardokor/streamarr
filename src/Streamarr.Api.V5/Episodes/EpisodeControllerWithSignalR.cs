@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv;
-using NzbDrone.SignalR;
-using Sonarr.Api.V5.EpisodeFiles;
-using Sonarr.Api.V5.Series;
-using Sonarr.Http.REST;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.Download;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv;
+using Streamarr.SignalR;
+using Streamarr.Api.V5.EpisodeFiles;
+using Streamarr.Api.V5.Series;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Episodes;
+namespace Streamarr.Api.V5.Episodes;
 
 public abstract class EpisodeControllerWithSignalR : RestControllerWithSignalR<EpisodeResource, Episode>,
                                                      IHandle<EpisodeGrabbedEvent>,
@@ -90,7 +90,7 @@ public abstract class EpisodeControllerWithSignalR : RestControllerWithSignalR<E
 
         if (includeSeries || includeEpisodeFile || includeImages)
         {
-            var seriesDict = new Dictionary<int, NzbDrone.Core.Tv.Series>();
+            var seriesDict = new Dictionary<int, Streamarr.Core.Tv.Series>();
             for (var i = 0; i < episodes.Count; i++)
             {
                 var episode = episodes[i];

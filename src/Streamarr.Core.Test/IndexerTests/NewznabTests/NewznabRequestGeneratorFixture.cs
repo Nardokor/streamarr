@@ -3,12 +3,12 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Newznab;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.Newznab;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
+namespace Streamarr.Core.Test.IndexerTests.NewznabTests
 {
     public class NewznabRequestGeneratorFixture : CoreTest<NewznabRequestGenerator>
     {

@@ -1,8 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Sonarr.Http.REST;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Localization;
+namespace Streamarr.Api.V5.Localization;
 
 public class LocalizationResourceSerializer : JsonConverter<Dictionary<string, string>>
 {

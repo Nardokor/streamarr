@@ -1,7 +1,7 @@
 ﻿using RestSharp;
-using Sonarr.Api.V3.Queue;
+using Streamarr.Api.V3.Queue;
 
-namespace NzbDrone.Integration.Test.Client
+namespace Streamarr.Integration.Test.Client
 {
     public class QueueClient : ClientBase<QueueResource>
     {

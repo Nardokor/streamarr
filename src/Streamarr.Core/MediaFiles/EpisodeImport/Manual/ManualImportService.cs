@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles.EpisodeImport.Aggregation;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Manual
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Manual
 {
     public interface IManualImportService
     {

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.IndexerSearch.Definitions;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers.FileList
+namespace Streamarr.Core.Indexers.FileList
 {
     public class FileListRequestGenerator : IIndexerRequestGenerator
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Indexers.HDBits
+namespace Streamarr.Core.Indexers.HDBits
 {
     public class TorrentQuery
     {

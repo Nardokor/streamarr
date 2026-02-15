@@ -1,12 +1,12 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.Validation.Paths;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.Validation.Paths;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V5.RemotePathMappings;
+namespace Streamarr.Api.V5.RemotePathMappings;
 
 [V5ApiController]
 public class RemotePathMappingController : RestController<RemotePathMappingResource>

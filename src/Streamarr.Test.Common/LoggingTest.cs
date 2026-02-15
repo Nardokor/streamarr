@@ -5,15 +5,15 @@ using NLog.Config;
 using NLog.Targets;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Test.Common
+namespace Streamarr.Test.Common
 {
     public abstract class LoggingTest
     {
-        protected static readonly Logger TestLogger = NzbDroneLogger.GetLogger("TestLogger");
+        protected static readonly Logger TestLogger = StreamarrLogger.GetLogger("TestLogger");
 
         protected static void InitLogging()
         {

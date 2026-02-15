@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Emby
+namespace Streamarr.Core.Notifications.Emby
 {
     public interface IMediaBrowserService
     {

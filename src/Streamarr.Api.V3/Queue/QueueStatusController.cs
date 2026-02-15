@@ -1,20 +1,20 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.TPL;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Queue;
-using NzbDrone.SignalR;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Common.TPL;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Queue;
+using Streamarr.SignalR;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Queue
+namespace Streamarr.Api.V3.Queue
 {
     [V3ApiController("queue/status")]
-    public class QueueStatusController : RestControllerWithSignalR<QueueStatusResource, NzbDrone.Core.Queue.Queue>,
+    public class QueueStatusController : RestControllerWithSignalR<QueueStatusResource, Streamarr.Core.Queue.Queue>,
                                IHandle<ObsoleteQueueUpdatedEvent>, IHandle<PendingReleasesUpdatedEvent>
     {
         private readonly IObsoleteQueueService _queueService;

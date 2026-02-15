@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.MediaFiles.Commands
+namespace Streamarr.Core.MediaFiles.Commands
 {
     public class RenameFilesCommand : Command
     {

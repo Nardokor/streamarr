@@ -1,12 +1,12 @@
 using System.Data;
 using FluentMigrator;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(109)]
-    public class import_extra_files : NzbDroneMigrationBase
+    public class import_extra_files : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

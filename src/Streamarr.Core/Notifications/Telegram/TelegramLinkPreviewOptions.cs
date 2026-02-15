@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Notifications.Telegram;
+namespace Streamarr.Core.Notifications.Telegram;
 
 public class TelegramLinkPreviewOptions
 {

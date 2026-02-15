@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Core.Extras.Files;
+using Streamarr.Core.Extras.Files;
 
-namespace NzbDrone.Core.Extras.Subtitles
+namespace Streamarr.Core.Extras.Subtitles
 {
     public class ImportedSubtitleFiles
     {

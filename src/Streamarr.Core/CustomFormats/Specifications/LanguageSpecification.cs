@@ -1,10 +1,10 @@
 using System.Linq;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.CustomFormats
+namespace Streamarr.Core.CustomFormats
 {
     public class LanguageSpecificationValidator : AbstractValidator<LanguageSpecification>
     {
@@ -71,9 +71,9 @@ namespace NzbDrone.Core.CustomFormats
             return !input.Languages?.Contains(comparedLanguage) ?? false;
         }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

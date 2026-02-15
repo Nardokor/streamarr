@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Core.Update
+namespace Streamarr.Core.Update
 {
     public class UpdatePackage
     {

@@ -1,10 +1,10 @@
 using System;
 using Dapper;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Datastore;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class FixFutureRunScheduledTasks : IHousekeepingTask
     {

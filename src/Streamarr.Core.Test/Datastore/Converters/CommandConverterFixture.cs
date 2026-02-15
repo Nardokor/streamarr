@@ -1,12 +1,12 @@
 using System.Data.SQLite;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore.Converters;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv.Commands;
+using Streamarr.Core.Datastore.Converters;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv.Commands;
 
-namespace NzbDrone.Core.Test.Datastore.Converters
+namespace Streamarr.Core.Test.Datastore.Converters
 {
     [TestFixture]
     public class CommandConverterFixture : CoreTest<CommandConverter>

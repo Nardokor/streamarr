@@ -5,13 +5,13 @@ using System.IO;
 using System.Linq;
 using FluentMigrator;
 using Newtonsoft.Json;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(51)]
-    public class download_client_import : NzbDroneMigrationBase
+    public class download_client_import : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

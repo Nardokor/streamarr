@@ -1,9 +1,9 @@
 using System.Net;
-using NzbDrone.Core.Exceptions;
+using Streamarr.Core.Exceptions;
 
-namespace NzbDrone.Core.Backup
+namespace Streamarr.Core.Backup
 {
-    public class RestoreBackupFailedException : NzbDroneClientException
+    public class RestoreBackupFailedException : StreamarrClientException
     {
         public RestoreBackupFailedException(HttpStatusCode statusCode, string message, params object[] args)
             : base(statusCode, message, args)

@@ -1,6 +1,6 @@
-using NzbDrone.Common.Messaging;
+using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class DownloadsProcessedEvent : IEvent
     {

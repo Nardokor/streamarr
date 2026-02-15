@@ -1,8 +1,8 @@
 using System.IO;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Test.Common.Datastore
+namespace Streamarr.Test.Common.Datastore
 {
     public static class SqliteDatabase
     {

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.MediaFiles.Events
+namespace Streamarr.Core.MediaFiles.Events
 {
     public class EpisodeFileAddedEvent : IEvent
     {

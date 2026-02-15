@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.Trakt.List
+namespace Streamarr.Core.ImportLists.Trakt.List
 {
     public class TraktListSettingsValidator : TraktSettingsBaseValidator<TraktListSettings>
     {
@@ -23,9 +23,9 @@ namespace NzbDrone.Core.ImportLists.Trakt.List
         [FieldDefinition(2, Label = "ImportListsTraktSettingsListName", HelpText = "ImportListsTraktSettingsListNameHelpText")]
         public string Listname { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

@@ -1,6 +1,6 @@
-using NzbDrone.Core.ProgressMessaging;
+using Streamarr.Core.ProgressMessaging;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace Streamarr.Core.Messaging.Commands
 {
     public interface ICommandResultReporter
     {

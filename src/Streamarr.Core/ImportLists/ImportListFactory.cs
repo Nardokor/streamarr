@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public interface IImportListFactory : IProviderFactory<IImportList, ImportListDefinition>
     {

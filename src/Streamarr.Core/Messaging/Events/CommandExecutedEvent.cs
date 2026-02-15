@@ -1,7 +1,7 @@
-using NzbDrone.Common.Messaging;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Common.Messaging;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Messaging.Events
+namespace Streamarr.Core.Messaging.Events
 {
     public class CommandExecutedEvent : IEvent
     {

@@ -2,27 +2,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Crypto;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Download.Aggregation;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Jobs;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Delay;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Queue;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Crypto;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.Download.Aggregation;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Jobs;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Profiles.Delay;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Queue;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.Download.Pending
+namespace Streamarr.Core.Download.Pending
 {
     public interface IPendingReleaseService
     {

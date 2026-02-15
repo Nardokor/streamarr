@@ -1,14 +1,14 @@
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles.MediaInfo
+namespace Streamarr.Core.MediaFiles.MediaInfo
 {
     public interface IUpdateMediaInfo
     {

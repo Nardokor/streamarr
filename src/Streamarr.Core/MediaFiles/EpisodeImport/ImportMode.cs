@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.MediaFiles.EpisodeImport
+namespace Streamarr.Core.MediaFiles.EpisodeImport
 {
     public enum ImportMode
     {

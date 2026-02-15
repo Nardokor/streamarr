@@ -5,16 +5,16 @@ using NLog.Config;
 using NLog.Targets;
 using NLog.Targets.Syslog;
 using NLog.Targets.Syslog.Settings;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Common.Instrumentation.Sentry;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Common.Instrumentation.Sentry;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Instrumentation
+namespace Streamarr.Core.Instrumentation
 {
     public class ReconfigureLogging : IHandleAsync<ConfigFileSavedEvent>
     {
@@ -120,7 +120,7 @@ namespace NzbDrone.Core.Instrumentation
             {
                 var format = _configFileProvider.ConsoleLogFormat;
 
-                NzbDroneLogger.ConfigureConsoleLayout(consoleTarget, format);
+                StreamarrLogger.ConfigureConsoleLayout(consoleTarget, format);
             }
         }
 

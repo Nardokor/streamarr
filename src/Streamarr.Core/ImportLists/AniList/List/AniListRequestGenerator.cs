@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Net.Http;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.ImportLists.AniList.List
+namespace Streamarr.Core.ImportLists.AniList.List
 {
     public class AniListRequestGenerator : IImportListRequestGenerator
     {

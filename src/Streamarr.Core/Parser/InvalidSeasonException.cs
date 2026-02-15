@@ -1,8 +1,8 @@
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Parser
+namespace Streamarr.Core.Parser
 {
-    public class InvalidSeasonException : NzbDroneException
+    public class InvalidSeasonException : StreamarrException
     {
         public InvalidSeasonException(string message, params object[] args)
             : base(message, args)

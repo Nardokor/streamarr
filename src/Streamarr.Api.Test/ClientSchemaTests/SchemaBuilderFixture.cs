@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Localization;
-using NzbDrone.Test.Common;
-using Sonarr.Http.ClientSchema;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Localization;
+using Streamarr.Test.Common;
+using Streamarr.Http.ClientSchema;
 
-namespace NzbDrone.Api.Test.ClientSchemaTests
+namespace Streamarr.Api.Test.ClientSchemaTests
 {
     [TestFixture]
     public class SchemaBuilderFixture : TestBase

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Serializer;
+﻿using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Common.Extensions
+namespace Streamarr.Common.Extensions
 {
     public static class ObjectExtensions
     {

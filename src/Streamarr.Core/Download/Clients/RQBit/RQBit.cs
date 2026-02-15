@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Blocklisting;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Blocklisting;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.RQBit
+namespace Streamarr.Core.Download.Clients.RQBit
 {
     public class RQBit : TorrentClientBase<RQbitSettings>
     {

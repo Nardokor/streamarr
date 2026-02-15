@@ -5,24 +5,24 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.DecisionEngine.Specifications.RssSync;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Delay;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.DecisionEngine.Specifications.RssSync;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Profiles.Delay;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
+namespace Streamarr.Core.Test.DecisionEngineTests.RssSync
 {
     [TestFixture]
     public class DelaySpecificationFixture : CoreTest<DelaySpecification>

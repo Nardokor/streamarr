@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Qualities;
-using Sonarr.Http.REST;
+using Streamarr.Core.Qualities;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Qualities
+namespace Streamarr.Api.V3.Qualities
 {
     public class QualityDefinitionResource : RestResource
     {

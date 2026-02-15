@@ -4,11 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.Datastore
+namespace Streamarr.Core.Test.Datastore
 {
     [TestFixture]
     public class WhereBuilderSqliteFixture : CoreTest

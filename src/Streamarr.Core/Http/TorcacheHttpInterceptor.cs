@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Http;
+﻿using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.Http
+namespace Streamarr.Core.Http
 {
     public class TorCacheHttpRequestInterceptor : IHttpRequestInterceptor
     {

@@ -1,4 +1,4 @@
-namespace NzbDrone.Common.EnvironmentInfo
+namespace Streamarr.Common.EnvironmentInfo
 {
     public interface IOsVersionAdapter
     {

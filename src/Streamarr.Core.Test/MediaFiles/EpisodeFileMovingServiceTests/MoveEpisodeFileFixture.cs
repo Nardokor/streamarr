@@ -4,20 +4,20 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RootFolders;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RootFolders;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles.EpisodeFileMovingServiceTests
+namespace Streamarr.Core.Test.MediaFiles.EpisodeFileMovingServiceTests
 {
     [TestFixture]
     public class MoveEpisodeFileFixture : CoreTest<EpisodeFileMovingService>

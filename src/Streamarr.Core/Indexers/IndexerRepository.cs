@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public interface IIndexerRepository : IProviderRepository<IndexerDefinition>
     {

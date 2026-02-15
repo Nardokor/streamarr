@@ -1,4 +1,4 @@
-namespace Sonarr.Api.V5.Episodes;
+namespace Streamarr.Api.V5.Episodes;
 
 public class EpisodesMonitoredResource
 {

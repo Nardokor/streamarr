@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Common.Serializer
+namespace Streamarr.Common.Serializer
 {
     public class UnderscoreStringEnumConverter : JsonConverter
     {

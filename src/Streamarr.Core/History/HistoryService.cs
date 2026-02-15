@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Download;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.History
+namespace Streamarr.Core.History
 {
     public interface IHistoryService
     {

@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.Jobs;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.SignalR;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.Jobs;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.SignalR;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.System.Tasks
+namespace Streamarr.Api.V3.System.Tasks
 {
     [V3ApiController("system/task")]
     public class TaskController : RestControllerWithSignalR<TaskResource, ScheduledTask>, IHandle<CommandExecutedEvent>

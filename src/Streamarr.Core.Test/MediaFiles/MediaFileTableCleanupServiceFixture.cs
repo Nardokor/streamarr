@@ -4,13 +4,13 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles
+namespace Streamarr.Core.Test.MediaFiles
 {
     public class MediaFileTableCleanupServiceFixture : CoreTest<MediaFileTableCleanupService>
     {

@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Parser.Model;
-using Sonarr.Http;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Indexers
+namespace Streamarr.Api.V3.Indexers
 {
     [V3ApiController]
     public class IndexerFlagController : Controller

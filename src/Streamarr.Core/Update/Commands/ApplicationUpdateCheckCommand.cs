@@ -1,6 +1,6 @@
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Update.Commands
+namespace Streamarr.Core.Update.Commands
 {
     public class ApplicationUpdateCheckCommand : Command
     {

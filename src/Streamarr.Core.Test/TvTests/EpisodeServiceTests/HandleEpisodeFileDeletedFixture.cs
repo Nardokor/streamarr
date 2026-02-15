@@ -3,15 +3,15 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.TvTests.EpisodeServiceTests
+namespace Streamarr.Core.Test.TvTests.EpisodeServiceTests
 {
     [TestFixture]
     public class HandleEpisodeFileDeletedFixture : CoreTest<EpisodeService>

@@ -1,12 +1,12 @@
 ﻿using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Extras.Metadata;
-using NzbDrone.Core.Extras.Metadata.Files;
-using NzbDrone.Core.Housekeeping.Housekeepers;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Extras.Metadata;
+using Streamarr.Core.Extras.Metadata.Files;
+using Streamarr.Core.Housekeeping.Housekeepers;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
+namespace Streamarr.Core.Test.Housekeeping.Housekeepers
 {
     [TestFixture]
     public class CleanupDuplicateMetadataFilesFixture : DbTest<CleanupDuplicateMetadataFiles, MetadataFile>

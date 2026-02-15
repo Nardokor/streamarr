@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Core.Notifications.Join
+namespace Streamarr.Core.Notifications.Join
 {
     public class JoinAuthException : JoinException
     {

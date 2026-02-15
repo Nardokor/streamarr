@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MetadataSource
+namespace Streamarr.Core.MetadataSource
 {
     public class SearchSeriesComparer : IComparer<Series>
     {

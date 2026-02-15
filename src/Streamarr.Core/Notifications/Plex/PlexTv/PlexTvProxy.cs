@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Exceptions;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Plex.PlexTv
+namespace Streamarr.Core.Notifications.Plex.PlexTv
 {
     public interface IPlexTvProxy
     {
@@ -119,11 +119,11 @@ namespace NzbDrone.Core.Notifications.Plex.PlexTv
             }
             catch (HttpException ex)
             {
-                throw new NzbDroneClientException(ex.Response.StatusCode, "Unable to connect to plex.tv");
+                throw new StreamarrClientException(ex.Response.StatusCode, "Unable to connect to plex.tv");
             }
             catch (WebException)
             {
-                throw new NzbDroneClientException(HttpStatusCode.BadRequest, "Unable to connect to plex.tv");
+                throw new StreamarrClientException(HttpStatusCode.BadRequest, "Unable to connect to plex.tv");
             }
 
             return response.Content;

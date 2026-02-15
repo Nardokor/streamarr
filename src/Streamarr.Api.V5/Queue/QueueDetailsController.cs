@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Queue;
-using NzbDrone.SignalR;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Queue;
+using Streamarr.SignalR;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Queue
+namespace Streamarr.Api.V5.Queue
 {
     [V5ApiController("queue/details")]
-    public class QueueDetailsController : RestControllerWithSignalR<QueueResource, NzbDrone.Core.Queue.Queue>,
+    public class QueueDetailsController : RestControllerWithSignalR<QueueResource, Streamarr.Core.Queue.Queue>,
                                IHandle<QueueUpdatedEvent>, IHandle<PendingReleasesUpdatedEvent>
     {
         private readonly IQueueService _queueService;

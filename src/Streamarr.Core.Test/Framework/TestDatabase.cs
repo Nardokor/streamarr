@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Moq;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Test.Framework
+namespace Streamarr.Core.Test.Framework
 {
     public interface ITestDatabase
     {

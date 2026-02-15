@@ -2,15 +2,15 @@
 using System.IO;
 using Mono.Unix;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Mono.Disk
+namespace Streamarr.Mono.Disk
 {
     public class ProcMount : IMount
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(ProcMount));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(ProcMount));
         private readonly UnixDriveInfo _unixDriveInfo;
 
         public ProcMount(DriveType driveType, string name, string mount, string type, MountOptions mountOptions)

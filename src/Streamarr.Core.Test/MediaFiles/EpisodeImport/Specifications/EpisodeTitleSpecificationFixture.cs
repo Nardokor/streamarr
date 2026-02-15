@@ -4,16 +4,16 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Specifications;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.MediaFiles.EpisodeImport;
+using Streamarr.Core.MediaFiles.EpisodeImport.Specifications;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport.Specifications
+namespace Streamarr.Core.Test.MediaFiles.EpisodeImport.Specifications
 {
     [TestFixture]
     public class EpisodeTitleSpecificationFixture : CoreTest<EpisodeTitleSpecification>

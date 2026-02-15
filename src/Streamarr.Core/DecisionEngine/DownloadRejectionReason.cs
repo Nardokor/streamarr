@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.DecisionEngine;
+namespace Streamarr.Core.DecisionEngine;
 
 public enum DownloadRejectionReason
 {

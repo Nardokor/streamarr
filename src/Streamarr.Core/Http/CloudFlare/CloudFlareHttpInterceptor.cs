@@ -1,9 +1,9 @@
 using System.Net;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.Http.CloudFlare
+namespace Streamarr.Core.Http.CloudFlare
 {
     public class CloudFlareHttpInterceptor : IHttpRequestInterceptor
     {

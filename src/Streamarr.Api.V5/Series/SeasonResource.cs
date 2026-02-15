@@ -1,7 +1,7 @@
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.Tv;
 
-namespace Sonarr.Api.V5.Series;
+namespace Streamarr.Api.V5.Series;
 
 public class SeasonResource
 {

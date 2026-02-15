@@ -4,16 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using NLog;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Common.Disk
+namespace Streamarr.Common.Disk
 {
     public abstract class DiskProviderBase : IDiskProvider
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(DiskProviderBase));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(DiskProviderBase));
 
         public static StringComparison PathStringComparison
         {

@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Core.MediaFiles.Commands
+namespace Streamarr.Core.MediaFiles.Commands
 {
     public class BackendCommandAttribute : Attribute
     {

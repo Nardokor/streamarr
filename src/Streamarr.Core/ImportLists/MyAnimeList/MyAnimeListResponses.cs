@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.ImportLists.MyAnimeList
+namespace Streamarr.Core.ImportLists.MyAnimeList
 {
     public class MyAnimeListResponse
     {

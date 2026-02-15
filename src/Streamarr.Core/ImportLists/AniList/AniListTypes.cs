@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.ImportLists.AniList
+namespace Streamarr.Core.ImportLists.AniList
 {
     public static class MediaListStatus
     {

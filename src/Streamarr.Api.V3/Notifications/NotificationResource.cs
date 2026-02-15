@@ -1,6 +1,6 @@
-using NzbDrone.Core.Notifications;
+using Streamarr.Core.Notifications;
 
-namespace Sonarr.Api.V3.Notifications
+namespace Streamarr.Api.V3.Notifications
 {
     public class NotificationResource : ProviderResource<NotificationResource>
     {

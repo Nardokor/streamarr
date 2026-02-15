@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Extras.Subtitles
+namespace Streamarr.Core.Extras.Subtitles
 {
     public static class SubtitleFileExtensions
     {

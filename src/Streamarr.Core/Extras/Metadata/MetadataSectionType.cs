@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Extras.Metadata
+namespace Streamarr.Core.Extras.Metadata
 {
     public static class MetadataSectionType
     {

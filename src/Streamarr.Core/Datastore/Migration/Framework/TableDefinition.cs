@@ -18,7 +18,7 @@ using System.Linq;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
 
-namespace NzbDrone.Core.Datastore.Migration.Framework
+namespace Streamarr.Core.Datastore.Migration.Framework
 {
     public class TableDefinition : ICloneable
     {

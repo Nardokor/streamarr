@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.Transmission
+namespace Streamarr.Core.Download.Clients.Transmission
 {
     public class TransmissionSettingsValidator : AbstractValidator<TransmissionSettings>
     {
@@ -89,9 +89,9 @@ namespace NzbDrone.Core.Download.Clients.Transmission
         [FieldDefinition(11, Label = "DownloadClientSettingsAddPaused", Type = FieldType.Checkbox)]
         public bool AddPaused { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

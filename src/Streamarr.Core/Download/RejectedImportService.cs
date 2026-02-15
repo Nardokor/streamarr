@@ -1,10 +1,10 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.MediaFiles.EpisodeImport;
 
-namespace NzbDrone.Core.Download;
+namespace Streamarr.Core.Download;
 
 public interface IRejectedImportService
 {

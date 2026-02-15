@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Core.Profiles.Qualities;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Core.Profiles.Qualities;
 
-namespace NzbDrone.Core.Qualities
+namespace Streamarr.Core.Qualities
 {
     public class QualityModelComparer : IComparer<Quality>, IComparer<QualityModel>
     {

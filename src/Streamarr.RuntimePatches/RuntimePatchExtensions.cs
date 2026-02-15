@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 using System.Text;
 using HarmonyLib;
 
-namespace NzbDrone.RuntimePatches
+namespace Streamarr.RuntimePatches
 {
     public static class RuntimePatchExtensions
     {

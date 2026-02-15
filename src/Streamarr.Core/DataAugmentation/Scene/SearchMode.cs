@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Core.DataAugmentation.Scene
+namespace Streamarr.Core.DataAugmentation.Scene
 {
     [Flags]
     public enum SearchMode

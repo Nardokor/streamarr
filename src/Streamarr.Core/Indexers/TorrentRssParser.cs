@@ -3,10 +3,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using MonoTorrent;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public class TorrentRssParser : RssParser
     {

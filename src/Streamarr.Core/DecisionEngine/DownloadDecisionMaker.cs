@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.Download.Aggregation;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.Download.Aggregation;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine
+namespace Streamarr.Core.DecisionEngine
 {
     public interface IMakeDownloadDecision
     {

@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using Sonarr.Http.Extensions;
-using Sonarr.Http.Frontend.Mappers;
+using Streamarr.Http.Extensions;
+using Streamarr.Http.Frontend.Mappers;
 
-namespace Sonarr.Http.Frontend
+namespace Streamarr.Http.Frontend
 {
     [Authorize(Policy="UI")]
     [ApiController]

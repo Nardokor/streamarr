@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
-using NzbDrone.Core.Notifications.Prowl;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Core.Notifications.Prowl;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
+using Streamarr.Test.Common.Categories;
 
-namespace NzbDrone.Core.Test.NotificationTests
+namespace Streamarr.Core.Test.NotificationTests
 {
     [Explicit]
     [ManualTest]
@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Test.NotificationTests
         [Test]
         public void SendNotification_should_not_throw_for_a_valid_apiKey()
         {
-            Subject.SendNotification("NzbDrone Test", "This is a test message from NzbDrone", _settings);
+            Subject.SendNotification("Streamarr Test", "This is a test message from Streamarr", _settings);
             ExceptionVerification.ExpectedWarns(0);
         }
 
@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Test.NotificationTests
         {
             _settings.ApiKey = _badApiKey;
 
-            Subject.SendNotification("NzbDrone Test", "This is a test message from NzbDrone", _settings);
+            Subject.SendNotification("Streamarr Test", "This is a test message from Streamarr", _settings);
 
             ExceptionVerification.ExpectedWarns(1);
         }

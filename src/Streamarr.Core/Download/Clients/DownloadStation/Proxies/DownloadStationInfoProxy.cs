@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation.Proxies
+namespace Streamarr.Core.Download.Clients.DownloadStation.Proxies
 {
     public interface IDownloadStationInfoProxy : IDiskStationProxy
     {

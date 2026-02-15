@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Telegram
+namespace Streamarr.Core.Notifications.Telegram
 {
     public class Telegram : NotificationBase<TelegramSettings>
     {

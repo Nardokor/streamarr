@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Update;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Update;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace Streamarr.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ConfigFileSavedEvent))]
     public class UpdateCheck : HealthCheckBase

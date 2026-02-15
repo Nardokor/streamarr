@@ -1,6 +1,6 @@
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public interface IUserAgentBuilder
     {

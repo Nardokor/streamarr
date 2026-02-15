@@ -1,9 +1,9 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public class UpgradeAllowedSpecification : IDownloadDecisionEngineSpecification
     {

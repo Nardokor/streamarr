@@ -1,9 +1,9 @@
 using System;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Trakt
+namespace Streamarr.Core.Notifications.Trakt
 {
     public class TraktSettingsValidator : AbstractValidator<TraktSettings>
     {
@@ -39,9 +39,9 @@ namespace NzbDrone.Core.Notifications.Trakt
         [FieldDefinition(4, Label = "NotificationsTraktSettingsAuthenticateWithTrakt", Type = FieldType.OAuth)]
         public string SignIn { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

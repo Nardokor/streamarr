@@ -3,17 +3,17 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.History;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.History;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.FailedDownloadServiceTests
+namespace Streamarr.Core.Test.Download.FailedDownloadServiceTests
 {
     [TestFixture]
     public class ProcessFailedFixture : CoreTest<FailedDownloadService>

@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace NzbDrone.Common.EnsureThat
+namespace Streamarr.Common.EnsureThat
 {
     public static class Ensure
     {

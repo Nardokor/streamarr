@@ -1,11 +1,11 @@
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
+namespace Streamarr.Core.Test.OrganizerTests.FileNameBuilderTests
 {
     [TestFixture]
     public class RequiresAbsoluteEpisodeNumberFixture : CoreTest<FileNameBuilder>

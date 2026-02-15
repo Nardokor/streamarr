@@ -1,4 +1,4 @@
-namespace Sonarr.Api.V5.Localization;
+namespace Streamarr.Api.V5.Localization;
 
 public class LocalizationLanguageResource
 {

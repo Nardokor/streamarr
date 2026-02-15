@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NzbDrone.Core.SeriesStats
+namespace Streamarr.Core.SeriesStats
 {
     public interface ISeriesStatisticsService
     {

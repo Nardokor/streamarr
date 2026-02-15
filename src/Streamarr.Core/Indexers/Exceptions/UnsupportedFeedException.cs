@@ -1,8 +1,8 @@
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Indexers.Exceptions
+namespace Streamarr.Core.Indexers.Exceptions
 {
-    public class UnsupportedFeedException : NzbDroneException
+    public class UnsupportedFeedException : StreamarrException
     {
         public UnsupportedFeedException(string message, params object[] args)
             : base(message, args)

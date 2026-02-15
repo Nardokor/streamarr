@@ -3,13 +3,13 @@ using System.IO;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation.Paths;
-using NzbDrone.Test.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation.Paths;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.ValidationTests
+namespace Streamarr.Core.Test.ValidationTests
 {
     public class SystemFolderValidatorFixture : CoreTest<SystemFolderValidator>
     {

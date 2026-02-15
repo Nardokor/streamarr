@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Tv;
-using Sonarr.Http;
+using Streamarr.Core.Tv;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V5.SeasonPass;
+namespace Streamarr.Api.V5.SeasonPass;
 
 [V5ApiController]
 public class SeasonPassController : Controller

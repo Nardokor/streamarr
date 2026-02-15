@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Notifications;
-using NzbDrone.SignalR;
-using Sonarr.Api.V5.Provider;
-using Sonarr.Http;
+using Streamarr.Core.Notifications;
+using Streamarr.SignalR;
+using Streamarr.Api.V5.Provider;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V5.Connections;
+namespace Streamarr.Api.V5.Connections;
 
 [V5ApiController]
 public class ConnectionController : ProviderControllerBase<ConnectionResource, ConnectionBulkResource, INotification, NotificationDefinition>

@@ -3,11 +3,11 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.ImportListTests
+namespace Streamarr.Core.Test.ImportListTests
 {
     public class ImportListStatusServiceFixture : CoreTest<ImportListStatusService>
     {

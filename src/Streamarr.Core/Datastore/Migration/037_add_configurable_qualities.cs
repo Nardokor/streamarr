@@ -1,13 +1,13 @@
 using System.Data;
 using System.Linq;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(37)]
-    public class add_configurable_qualities : NzbDroneMigrationBase
+    public class add_configurable_qualities : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

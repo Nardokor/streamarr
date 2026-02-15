@@ -4,15 +4,15 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.TvTests.EpisodeRepositoryTests
+namespace Streamarr.Core.Test.TvTests.EpisodeRepositoryTests
 {
     [TestFixture]
     public class EpisodesWhereCutoffUnmetFixture : DbTest<EpisodeRepository, Episode>

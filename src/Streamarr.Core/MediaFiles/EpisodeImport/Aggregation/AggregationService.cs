@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download;
+using Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Aggregation
 {
     public interface IAggregationService
     {

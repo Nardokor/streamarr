@@ -4,11 +4,11 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.TvTests.EpisodeMonitoredServiceTests
+namespace Streamarr.Core.Test.TvTests.EpisodeMonitoredServiceTests
 {
     [TestFixture]
     public class SetEpisodeMontitoredFixture : CoreTest<EpisodeMonitoredService>

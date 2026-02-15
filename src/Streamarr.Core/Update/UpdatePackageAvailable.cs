@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Update
+﻿namespace Streamarr.Core.Update
 {
     public class UpdatePackageAvailable
     {

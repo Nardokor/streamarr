@@ -4,15 +4,15 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Qualities;
-using Sonarr.Http;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.Download;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Indexers
+namespace Streamarr.Api.V3.Indexers
 {
     [V3ApiController("release/push")]
     public class ReleasePushController : ReleaseControllerBase

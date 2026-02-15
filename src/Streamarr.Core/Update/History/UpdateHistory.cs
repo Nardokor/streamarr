@@ -1,7 +1,7 @@
 ﻿using System;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Update.History
+namespace Streamarr.Core.Update.History
 {
     public class UpdateHistory : ModelBase
     {

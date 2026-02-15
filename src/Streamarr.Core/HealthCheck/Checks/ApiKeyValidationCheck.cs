@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Localization;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace Streamarr.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ApplicationStartedEvent))]
     [CheckOn(typeof(ConfigSavedEvent))]

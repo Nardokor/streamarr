@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Parser;
+using Streamarr.Core.Parser;
 
-namespace NzbDrone.Core.Test.ParserTests
+namespace Streamarr.Core.Test.ParserTests
 {
     [TestFixture]
     public class SceneCheckerFixture

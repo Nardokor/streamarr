@@ -1,8 +1,8 @@
 using System.Threading;
 using NLog;
-using NzbDrone.Common.Instrumentation.Extensions;
+using Streamarr.Common.Instrumentation.Extensions;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace Streamarr.Core.Messaging.Commands
 {
     public class TestCommandExecutor : IExecute<TestCommand>
     {

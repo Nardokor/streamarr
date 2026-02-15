@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace NzbDrone.Core.Datastore.Migration.Framework
+namespace Streamarr.Core.Datastore.Migration.Framework
 {
     public class SqliteSyntaxReader
     {

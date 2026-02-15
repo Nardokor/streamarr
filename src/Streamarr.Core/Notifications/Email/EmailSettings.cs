@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Email
+namespace Streamarr.Core.Notifications.Email
 {
     public class EmailSettingsValidator : AbstractValidator<EmailSettings>
     {
@@ -65,9 +65,9 @@ namespace NzbDrone.Core.Notifications.Email
         [FieldDefinition(8, Label = "NotificationsEmailSettingsBccAddress", HelpText = "NotificationsEmailSettingsBccAddressHelpText", Advanced = true)]
         public IEnumerable<string> Bcc { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 

@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.CustomFormats
+namespace Streamarr.Core.CustomFormats
 {
     public class ReleaseGroupSpecification : RegexSpecificationBase
     {

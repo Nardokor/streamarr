@@ -1,8 +1,8 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.Test.ExtensionTests.StringExtensionTests
+namespace Streamarr.Common.Test.ExtensionTests.StringExtensionTests
 {
     [TestFixture]
     public class ReverseFixture

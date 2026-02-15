@@ -1,9 +1,9 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
-using NzbDrone.Core.Qualities;
-using Sonarr.Api.V3.Qualities;
+using Streamarr.Core.Qualities;
+using Streamarr.Api.V3.Qualities;
 
-namespace NzbDrone.Api.Test.v3.Qualities;
+namespace Streamarr.Api.Test.v3.Qualities;
 
 [Parallelizable(ParallelScope.All)]
 public class QualityDefinitionResourceValidatorTests

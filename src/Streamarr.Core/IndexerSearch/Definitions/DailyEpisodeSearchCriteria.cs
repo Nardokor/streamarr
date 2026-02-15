@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Core.IndexerSearch.Definitions
+namespace Streamarr.Core.IndexerSearch.Definitions
 {
     public class DailyEpisodeSearchCriteria : SearchCriteriaBase
     {

@@ -2,13 +2,13 @@
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Download.Clients.DownloadStation;
-using NzbDrone.Core.Download.Clients.DownloadStation.Proxies;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Download.Clients.DownloadStation;
+using Streamarr.Core.Download.Clients.DownloadStation.Proxies;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.DownloadStationTests
 {
     [TestFixture]
     public class SerialNumberProviderFixture : CoreTest<SerialNumberProvider>

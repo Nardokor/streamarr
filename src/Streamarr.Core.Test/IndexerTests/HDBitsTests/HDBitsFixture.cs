@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.HDBits;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.HDBits;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
+namespace Streamarr.Core.Test.IndexerTests.HDBitsTests
 {
     [TestFixture]
     public class HDBitsFixture : CoreTest<HDBits>

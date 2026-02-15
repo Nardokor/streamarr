@@ -5,12 +5,12 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Download
+namespace Streamarr.Core.Test.Download
 {
     [TestFixture]
     public class GetDownloadClientsFixture : CoreTest<DownloadClientProvider>

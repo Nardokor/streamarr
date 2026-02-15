@@ -4,13 +4,13 @@ using System.Text;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Test.Common;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Test.Common;
+using Streamarr.Test.Common.Categories;
 
-namespace NzbDrone.Common.Test
+namespace Streamarr.Common.Test
 {
     [TestFixture]
     public class PathExtensionFixture : TestBase

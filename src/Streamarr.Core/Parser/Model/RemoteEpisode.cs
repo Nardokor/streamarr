@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Parser.Model
+namespace Streamarr.Core.Parser.Model
 {
     public class RemoteEpisode
     {

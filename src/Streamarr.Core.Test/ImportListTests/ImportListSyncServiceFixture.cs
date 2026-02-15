@@ -4,16 +4,16 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.ImportLists.Exclusions;
-using NzbDrone.Core.ImportLists.ImportListItems;
-using NzbDrone.Core.MetadataSource;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.ImportLists.Exclusions;
+using Streamarr.Core.ImportLists.ImportListItems;
+using Streamarr.Core.MetadataSource;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.ImportListTests
+namespace Streamarr.Core.Test.ImportListTests
 {
     public class ImportListSyncServiceFixture : CoreTest<ImportListSyncService>
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Text.Json.Serialization;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Qualities
+namespace Streamarr.Core.Qualities
 {
     public class QualityModel : IEmbeddedDocument, IEquatable<QualityModel>, IComparable
     {

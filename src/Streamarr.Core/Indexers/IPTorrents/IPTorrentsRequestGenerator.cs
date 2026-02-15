@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.IndexerSearch.Definitions;
+using Streamarr.Common.Http;
+using Streamarr.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers.IPTorrents
+namespace Streamarr.Core.Indexers.IPTorrents
 {
     public class IPTorrentsRequestGenerator : IIndexerRequestGenerator
     {

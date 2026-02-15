@@ -1,9 +1,9 @@
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Update.UpdateEngine
+namespace Streamarr.Update.UpdateEngine
 {
     public interface IBackupAndRestore
     {

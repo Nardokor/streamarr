@@ -5,20 +5,20 @@ using System.Linq;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Blocklisting;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download.Clients.DownloadStation.Proxies;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Blocklisting;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download.Clients.DownloadStation.Proxies;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation
+namespace Streamarr.Core.Download.Clients.DownloadStation
 {
     public class TorrentDownloadStation : TorrentClientBase<DownloadStationSettings>
     {
@@ -314,7 +314,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
                 if (downloadDir == null)
                 {
-                    return new NzbDroneValidationFailure(nameof(Settings.TvDirectory), _localizationService.GetLocalizedString("DownloadClientDownloadStationValidationNoDefaultDestination"))
+                    return new StreamarrValidationFailure(nameof(Settings.TvDirectory), _localizationService.GetLocalizedString("DownloadClientDownloadStationValidationNoDefaultDestination"))
                     {
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientDownloadStationValidationNoDefaultDestinationDetail", new Dictionary<string, object> { { "username", Settings.Username } })
                     };
@@ -327,7 +327,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
                 if (folderInfo.Additional == null)
                 {
-                    return new NzbDroneValidationFailure(fieldName, _localizationService.GetLocalizedString("DownloadClientDownloadStationValidationSharedFolderMissing"))
+                    return new StreamarrValidationFailure(fieldName, _localizationService.GetLocalizedString("DownloadClientDownloadStationValidationSharedFolderMissing"))
                     {
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientDownloadStationValidationSharedFolderMissingDetail", new Dictionary<string, object> { { "sharedFolder", sharedFolder } })
                     };
@@ -335,7 +335,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
                 if (!folderInfo.IsDir)
                 {
-                    return new NzbDroneValidationFailure(fieldName, _localizationService.GetLocalizedString("DownloadClientDownloadStationValidationFolderMissing"))
+                    return new StreamarrValidationFailure(fieldName, _localizationService.GetLocalizedString("DownloadClientDownloadStationValidationFolderMissing"))
                     {
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientDownloadStationValidationFolderMissingDetail", new Dictionary<string, object> { { "downloadDir", downloadDir }, { "sharedFolder", sharedFolder } })
                     };
@@ -347,12 +347,12 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             {
                 // User could not have permission to access to downloadstation
                 _logger.Error(ex, ex.Message);
-                return new NzbDroneValidationFailure(string.Empty, ex.Message);
+                return new StreamarrValidationFailure(string.Empty, ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Error testing Torrent Download Station");
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationUnknownException", new Dictionary<string, object> { { "exception", ex.Message } }));
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationUnknownException", new Dictionary<string, object> { { "exception", ex.Message } }));
             }
         }
 
@@ -365,7 +365,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             catch (DownloadClientAuthenticationException ex)
             {
                 _logger.Error(ex, ex.Message);
-                return new NzbDroneValidationFailure("Username", _localizationService.GetLocalizedString("DownloadClientValidationAuthenticationFailure"))
+                return new StreamarrValidationFailure("Username", _localizationService.GetLocalizedString("DownloadClientValidationAuthenticationFailure"))
                 {
                     DetailedDescription = _localizationService.GetLocalizedString("DownloadClientValidationAuthenticationFailureDetail", new Dictionary<string, object> { { "clientName", Name } })
                 };
@@ -376,19 +376,19 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
                 if (ex.Status == WebExceptionStatus.ConnectFailure)
                 {
-                    return new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
+                    return new StreamarrValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
                     {
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnectDetail")
                     };
                 }
 
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationUnknownException", new Dictionary<string, object> { { "exception", ex.Message } }));
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationUnknownException", new Dictionary<string, object> { { "exception", ex.Message } }));
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Error testing Torrent Download Station");
 
-                return new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
+                return new StreamarrValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
                        {
                            DetailedDescription = ex.Message
                        };
@@ -423,7 +423,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             }
             catch (Exception ex)
             {
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationTestTorrents", new Dictionary<string, object> { { "exceptionMessage", ex.Message } }));
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationTestTorrents", new Dictionary<string, object> { { "exceptionMessage", ex.Message } }));
             }
         }
 

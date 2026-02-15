@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(197)]
-    public class list_add_missing_search : NzbDroneMigrationBase
+    public class list_add_missing_search : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

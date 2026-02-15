@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace NzbDrone.Core.Download.Clients.Tribler
+namespace Streamarr.Core.Download.Clients.Tribler
 {
     public enum DownloadStatus
     {

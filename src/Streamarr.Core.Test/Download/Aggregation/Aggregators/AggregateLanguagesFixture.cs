@@ -4,15 +4,15 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Download.Aggregation.Aggregators;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.TorrentRss;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Download.Aggregation.Aggregators;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.TorrentRss;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.Download.Aggregation.Aggregators
+namespace Streamarr.Core.Test.Download.Aggregation.Aggregators
 {
     [TestFixture]
     public class AggregateLanguagesFixture : CoreTest<AggregateLanguages>

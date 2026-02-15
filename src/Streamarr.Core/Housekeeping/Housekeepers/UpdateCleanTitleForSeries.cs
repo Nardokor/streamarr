@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class UpdateCleanTitleForSeries : IHousekeepingTask
     {

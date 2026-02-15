@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Net;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.ImportLists.Exceptions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.ImportLists.Exceptions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.Trakt
+namespace Streamarr.Core.ImportLists.Trakt
 {
     public class TraktParser : IParseImportListResponse
     {

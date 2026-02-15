@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Localization;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Core.Localization;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Localization
+namespace Streamarr.Api.V3.Localization
 {
     [V3ApiController]
     public class LocalizationController : RestController<LocalizationResource>

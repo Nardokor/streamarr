@@ -1,6 +1,6 @@
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public interface IImportListSettings : IProviderConfig
     {

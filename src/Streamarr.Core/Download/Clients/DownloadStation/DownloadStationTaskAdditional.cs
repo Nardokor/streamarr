@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation
+namespace Streamarr.Core.Download.Clients.DownloadStation
 {
     public class DownloadStationTaskAdditional
     {

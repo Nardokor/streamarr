@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using NLog;
-using NzbDrone.Common.Cloud;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.Cloud;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace Streamarr.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ConfigSavedEvent))]
     public class ProxyCheck : HealthCheckBase

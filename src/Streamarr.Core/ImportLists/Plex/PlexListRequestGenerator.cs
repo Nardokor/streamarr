@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Notifications.Plex.PlexTv;
+using Streamarr.Core.Notifications.Plex.PlexTv;
 
-namespace NzbDrone.Core.ImportLists.Plex
+namespace Streamarr.Core.ImportLists.Plex
 {
     public class PlexListRequestGenerator : IImportListRequestGenerator
     {

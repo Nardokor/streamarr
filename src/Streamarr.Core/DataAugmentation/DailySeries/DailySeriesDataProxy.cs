@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Cloud;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Cloud;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.DataAugmentation.DailySeries
+namespace Streamarr.Core.DataAugmentation.DailySeries
 {
     public interface IDailySeriesDataProxy
     {

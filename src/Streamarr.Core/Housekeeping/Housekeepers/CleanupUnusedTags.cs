@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
-using NzbDrone.Core.AutoTagging;
-using NzbDrone.Core.AutoTagging.Specifications;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.AutoTagging;
+using Streamarr.Core.AutoTagging.Specifications;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class CleanupUnusedTags : IHousekeepingTask
     {

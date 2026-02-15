@@ -1,10 +1,10 @@
 using System.Data;
 using System.Text.Json;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Reflection;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Reflection;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace Streamarr.Core.Datastore.Converters
 {
     public class CommandConverter : EmbeddedDocumentConverter<Command>
     {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Update.History;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Update.History;
 
-namespace NzbDrone.Core.Update
+namespace Streamarr.Core.Update
 {
     public interface IRecentUpdateProvider
     {

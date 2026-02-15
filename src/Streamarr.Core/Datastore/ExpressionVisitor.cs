@@ -5,7 +5,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     /// <summary>
     /// Expression visitor

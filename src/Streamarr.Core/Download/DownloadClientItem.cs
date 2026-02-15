@@ -1,10 +1,10 @@
 using System;
 using System.Diagnostics;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     [DebuggerDisplay("{DownloadClientInfo?.Name}:{Title}")]
     public class DownloadClientItem

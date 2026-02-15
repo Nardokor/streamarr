@@ -1,10 +1,10 @@
 using System;
 using System.IO;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Common.Processes
+namespace Streamarr.Common.Processes
 {
     public interface IProvidePidFile
     {

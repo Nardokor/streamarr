@@ -3,13 +3,13 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.RootFolders;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.RootFolders;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.TvTests
+namespace Streamarr.Core.Test.TvTests
 {
     [TestFixture]
     public class SeriesFolderPathBuilderFixture : CoreTest<SeriesPathBuilder>

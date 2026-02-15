@@ -4,17 +4,17 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests
+namespace Streamarr.Core.Test.DecisionEngineTests
 {
     [TestFixture]
     public class DownloadDecisionMakerFixture : CoreTest<DownloadDecisionMaker>
@@ -275,7 +275,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
             Mocker.SetConstant<IEnumerable<IDownloadDecisionEngineSpecification>>(new List<IDownloadDecisionEngineSpecification>
             {
-                Mocker.Resolve<NzbDrone.Core.DecisionEngine.Specifications.Search.EpisodeRequestedSpecification>()
+                Mocker.Resolve<Streamarr.Core.DecisionEngine.Specifications.Search.EpisodeRequestedSpecification>()
             });
 
             var decisions = Subject.GetSearchDecision(reports, criteria);

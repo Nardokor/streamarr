@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Host.AccessControl
+namespace Streamarr.Host.AccessControl
 {
-    public class RemoteAccessException : NzbDroneException
+    public class RemoteAccessException : StreamarrException
     {
         public RemoteAccessException(string message, params object[] args)
             : base(message, args)

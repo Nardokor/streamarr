@@ -1,7 +1,7 @@
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.AutoTagging.Specifications
+namespace Streamarr.Core.AutoTagging.Specifications
 {
     public abstract class AutoTaggingSpecificationBase : IAutoTaggingSpecification
     {
@@ -17,7 +17,7 @@ namespace NzbDrone.Core.AutoTagging.Specifications
             return (IAutoTaggingSpecification)MemberwiseClone();
         }
 
-        public abstract NzbDroneValidationResult Validate();
+        public abstract StreamarrValidationResult Validate();
 
         public bool IsSatisfiedBy(Series series)
         {

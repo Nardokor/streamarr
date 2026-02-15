@@ -1,8 +1,8 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Test.Qualities
+namespace Streamarr.Core.Test.Qualities
 {
     [TestFixture]
     public class QualityFinderFixture

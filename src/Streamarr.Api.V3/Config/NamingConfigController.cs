@@ -3,13 +3,13 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Organizer;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Organizer;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V3.Config
+namespace Streamarr.Api.V3.Config
 {
     [V3ApiController("config/naming")]
     public class NamingConfigController : RestController<NamingConfigResource>

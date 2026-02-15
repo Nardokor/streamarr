@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.AutoTagging.Specifications
+namespace Streamarr.Core.AutoTagging.Specifications
 {
     public class GenreSpecificationValidator : AbstractValidator<GenreSpecification>
     {
@@ -31,9 +31,9 @@ namespace NzbDrone.Core.AutoTagging.Specifications
             return series.Genres.Any(genre => Value.ContainsIgnoreCase(genre));
         }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

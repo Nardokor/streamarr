@@ -7,15 +7,15 @@ using DryIoc.ImTools;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Newznab;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Http;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.Newznab;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
+namespace Streamarr.Core.Test.IndexerTests.NewznabTests
 {
     [TestFixture]
     public class NewznabFixture : CoreTest<Newznab>

@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Notifications.Gotify
+namespace Streamarr.Core.Notifications.Gotify
 {
     public class GotifyMessage
     {

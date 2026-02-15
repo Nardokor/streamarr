@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Notifications.Trakt.Resource
+namespace Streamarr.Core.Notifications.Trakt.Resource
 {
     public class TraktCollectShowsResource
     {

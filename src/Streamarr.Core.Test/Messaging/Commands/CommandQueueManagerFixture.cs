@@ -4,11 +4,11 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Download;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Messaging.Commands
+namespace Streamarr.Core.Test.Messaging.Commands
 {
     [TestFixture]
     public class CommandQueueManagerFixture : CoreTest<CommandQueueManager>

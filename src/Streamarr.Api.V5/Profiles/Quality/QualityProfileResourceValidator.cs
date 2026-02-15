@@ -1,7 +1,7 @@
 using FluentValidation;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Qualities;
 
-namespace Sonarr.Api.V5.Profiles.Quality;
+namespace Streamarr.Api.V5.Profiles.Quality;
 
 public class QualityProfileResourceValidator : AbstractValidator<QualityProfileResource>
 {

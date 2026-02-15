@@ -4,20 +4,20 @@ using System.Linq;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Blocklisting;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.Tags;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Blocklisting;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.Tags;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.QBittorrent
+namespace Streamarr.Core.Download.Clients.QBittorrent
 {
     public class QBittorrent : TorrentClientBase<QBittorrentSettings>
     {
@@ -464,7 +464,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 if (version < Version.Parse("1.5"))
                 {
                     // API version 5 introduced the "save_path" property in /query/torrents
-                    return new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationErrorVersion",
+                    return new StreamarrValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationErrorVersion",
                             new Dictionary<string, object>
                             {
                                 { "clientName", Name }, { "requiredVersion", "3.2.4" }, { "reportedVersion", version }
@@ -475,7 +475,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                     // API version 6 introduced support for labels
                     if (Settings.TvCategory.IsNotNullOrWhiteSpace())
                     {
-                        return new NzbDroneValidationFailure("Category", _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryUnsupported"))
+                        return new StreamarrValidationFailure("Category", _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryUnsupported"))
                         {
                             DetailedDescription = _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryUnsupportedDetail")
                         };
@@ -484,7 +484,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 else if (Settings.TvCategory.IsNullOrWhiteSpace())
                 {
                     // warn if labels are supported, but category is not provided
-                    return new NzbDroneValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryRecommended"))
+                    return new StreamarrValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryRecommended"))
                     {
                         IsWarning = true,
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryRecommendedDetail")
@@ -495,7 +495,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 var config = Proxy.GetConfig(Settings);
                 if (RemovesCompletedDownloads(config))
                 {
-                    return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationRemovesAtRatioLimit"))
+                    return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationRemovesAtRatioLimit"))
                     {
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationRemovesAtRatioLimitDetail")
                     };
@@ -505,7 +505,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             {
                 _logger.Error(ex, ex.Message);
 
-                return new NzbDroneValidationFailure(Settings.ApiKey.IsNotNullOrWhiteSpace() ? "ApiKey" : "Username", _localizationService.GetLocalizedString("DownloadClientValidationAuthenticationFailure"))
+                return new StreamarrValidationFailure(Settings.ApiKey.IsNotNullOrWhiteSpace() ? "ApiKey" : "Username", _localizationService.GetLocalizedString("DownloadClientValidationAuthenticationFailure"))
                 {
                     DetailedDescription = _localizationService.GetLocalizedString("DownloadClientValidationAuthenticationFailureDetail", new Dictionary<string, object> { { "clientName", Name } })
                 };
@@ -515,19 +515,19 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 _logger.Error(ex, "Unable to connect to qBittorrent");
                 if (ex.Status == WebExceptionStatus.ConnectFailure)
                 {
-                    return new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
+                    return new StreamarrValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
                     {
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnectDetail")
                     };
                 }
 
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationUnknownException", new Dictionary<string, object> { { "exception", ex.Message } }));
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationUnknownException", new Dictionary<string, object> { { "exception", ex.Message } }));
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Unable to test qBittorrent");
 
-                return new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
+                return new StreamarrValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
                 {
                     DetailedDescription = ex.Message
                 };
@@ -559,7 +559,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
                 if (!labels.ContainsKey(Settings.TvCategory))
                 {
-                    return new NzbDroneValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryAddFailure"))
+                    return new StreamarrValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryAddFailure"))
                     {
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryAddFailureDetail")
                     };
@@ -573,7 +573,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
                 if (!labels.ContainsKey(Settings.TvImportedCategory))
                 {
-                    return new NzbDroneValidationFailure("TvImportedCategory", _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryAddFailure"))
+                    return new StreamarrValidationFailure("TvImportedCategory", _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryAddFailure"))
                     {
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationCategoryAddFailureDetail")
                     };
@@ -601,14 +601,14 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 {
                     if (!recentPriorityDefault)
                     {
-                        return new NzbDroneValidationFailure(nameof(Settings.RecentTvPriority), _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationQueueingNotEnabled"))
+                        return new StreamarrValidationFailure(nameof(Settings.RecentTvPriority), _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationQueueingNotEnabled"))
                         {
                             DetailedDescription = _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationQueueingNotEnabledDetail")
                         };
                     }
                     else if (!olderPriorityDefault)
                     {
-                        return new NzbDroneValidationFailure(nameof(Settings.OlderTvPriority), _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationQueueingNotEnabled"))
+                        return new StreamarrValidationFailure(nameof(Settings.OlderTvPriority), _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationQueueingNotEnabled"))
                         {
                             DetailedDescription = _localizationService.GetLocalizedString("DownloadClientQbittorrentValidationQueueingNotEnabledDetail")
                         };
@@ -618,7 +618,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             catch (Exception ex)
             {
                 _logger.Error(ex, "Failed to test qBittorrent");
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationUnknownException", new Dictionary<string, object> { { "exception", ex.Message } }));
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationUnknownException", new Dictionary<string, object> { { "exception", ex.Message } }));
             }
 
             return null;
@@ -633,7 +633,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             catch (Exception ex)
             {
                 _logger.Error(ex, "Failed to get torrents");
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationTestTorrents", new Dictionary<string, object> { { "exceptionMessage", ex.Message } }));
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationTestTorrents", new Dictionary<string, object> { { "exceptionMessage", ex.Message } }));
             }
 
             return null;

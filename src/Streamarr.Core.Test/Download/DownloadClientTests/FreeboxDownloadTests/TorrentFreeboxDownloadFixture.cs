@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Download.Clients.FreeboxDownload;
-using NzbDrone.Core.Download.Clients.FreeboxDownload.Responses;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Download.Clients.FreeboxDownload;
+using Streamarr.Core.Download.Clients.FreeboxDownload.Responses;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.FreeboxDownloadTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.FreeboxDownloadTests
 {
     [TestFixture]
     public class TorrentFreeboxDownloadFixture : DownloadClientFixtureBase<TorrentFreeboxDownload>

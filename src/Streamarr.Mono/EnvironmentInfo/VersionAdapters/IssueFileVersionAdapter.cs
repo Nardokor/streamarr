@@ -1,8 +1,8 @@
 using System.Linq;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Mono.EnvironmentInfo.VersionAdapters
+namespace Streamarr.Mono.EnvironmentInfo.VersionAdapters
 {
     public class IssueFileVersionAdapter : IOsVersionAdapter
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.RQBit.ResponseModels;
+namespace Streamarr.Core.Download.Clients.RQBit.ResponseModels;
 
 public class TorrentResponse
 {

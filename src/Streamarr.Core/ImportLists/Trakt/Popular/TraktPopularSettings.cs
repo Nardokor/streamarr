@@ -1,10 +1,10 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.Trakt.Popular
+namespace Streamarr.Core.ImportLists.Trakt.Popular
 {
     public class TraktPopularSettingsValidator : TraktSettingsBaseValidator<TraktPopularSettings>
     {
@@ -57,9 +57,9 @@ namespace NzbDrone.Core.ImportLists.Trakt.Popular
         [FieldDefinition(6, Label = "ImportListsTraktSettingsAdditionalParameters", HelpText = "ImportListsTraktSettingsAdditionalParametersHelpText", Advanced = true)]
         public string TraktAdditionalParameters { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

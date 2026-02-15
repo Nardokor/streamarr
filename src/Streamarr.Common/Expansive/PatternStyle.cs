@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Common.Expansive
+namespace Streamarr.Common.Expansive
 {
     internal class PatternStyle
     {

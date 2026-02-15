@@ -2,7 +2,7 @@
 using System.Threading;
 using RestSharp;
 
-namespace NzbDrone.Integration.Test.Client
+namespace Streamarr.Integration.Test.Client
 {
     public class LogsClient : ClientBase
     {

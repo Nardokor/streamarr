@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NzbDrone.Common.EnsureThat;
+using Streamarr.Common.EnsureThat;
 
-namespace NzbDrone.Common.Cache
+namespace Streamarr.Common.Cache
 {
     public interface ICacheManager
     {

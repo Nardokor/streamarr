@@ -1,14 +1,14 @@
-﻿using NzbDrone.Core.Validation;
+﻿using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ThingiProvider
+namespace Streamarr.Core.ThingiProvider
 {
     public class NullConfig : IProviderConfig
     {
         public static readonly NullConfig Instance = new NullConfig();
 
-        public NzbDroneValidationResult Validate()
+        public StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult();
+            return new StreamarrValidationResult();
         }
     }
 }

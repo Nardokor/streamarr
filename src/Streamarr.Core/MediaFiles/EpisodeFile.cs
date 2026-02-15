@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public class EpisodeFile : ModelBase
     {

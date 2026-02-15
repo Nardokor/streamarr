@@ -1,7 +1,7 @@
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
-namespace NzbDrone.Common.Http.Dispatchers
+namespace Streamarr.Common.Http.Dispatchers
 {
     public interface ICertificateValidationService
     {

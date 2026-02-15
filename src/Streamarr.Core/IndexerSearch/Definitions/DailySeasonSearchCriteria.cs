@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.IndexerSearch.Definitions
+namespace Streamarr.Core.IndexerSearch.Definitions
 {
     public class DailySeasonSearchCriteria : SearchCriteriaBase
     {

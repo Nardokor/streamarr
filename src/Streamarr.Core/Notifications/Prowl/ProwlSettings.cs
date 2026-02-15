@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Prowl
+namespace Streamarr.Core.Notifications.Prowl
 {
     public class ProwlSettingsValidator : AbstractValidator<ProwlSettings>
     {
@@ -24,9 +24,9 @@ namespace NzbDrone.Core.Notifications.Prowl
 
         public bool IsValid => !string.IsNullOrWhiteSpace(ApiKey) && Priority >= -2 && Priority <= 2;
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

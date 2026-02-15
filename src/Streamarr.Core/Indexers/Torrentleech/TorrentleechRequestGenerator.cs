@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.IndexerSearch.Definitions;
+using Streamarr.Common.Http;
+using Streamarr.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers.Torrentleech
+namespace Streamarr.Core.Indexers.Torrentleech
 {
     public class TorrentleechRequestGenerator : IIndexerRequestGenerator
     {

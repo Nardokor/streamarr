@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Processes;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Processes;
 
-namespace NzbDrone.Update.UpdateEngine
+namespace Streamarr.Update.UpdateEngine
 {
     public interface IInstallUpdateService
     {
@@ -19,11 +19,11 @@ namespace NzbDrone.Update.UpdateEngine
         private readonly IDiskTransferService _diskTransferService;
         private readonly IDetectApplicationType _detectApplicationType;
         private readonly IDetectExistingVersion _detectExistingVersion;
-        private readonly ITerminateNzbDrone _terminateNzbDrone;
+        private readonly ITerminateStreamarr _terminateStreamarr;
         private readonly IAppFolderInfo _appFolderInfo;
         private readonly IBackupAndRestore _backupAndRestore;
         private readonly IBackupAppData _backupAppData;
-        private readonly IStartNzbDrone _startNzbDrone;
+        private readonly IStartStreamarr _startStreamarr;
         private readonly IProcessProvider _processProvider;
         private readonly Logger _logger;
 
@@ -31,11 +31,11 @@ namespace NzbDrone.Update.UpdateEngine
                                     IDiskTransferService diskTransferService,
                                     IDetectApplicationType detectApplicationType,
                                     IDetectExistingVersion detectExistingVersion,
-                                    ITerminateNzbDrone terminateNzbDrone,
+                                    ITerminateStreamarr terminateStreamarr,
                                     IAppFolderInfo appFolderInfo,
                                     IBackupAndRestore backupAndRestore,
                                     IBackupAppData backupAppData,
-                                    IStartNzbDrone startNzbDrone,
+                                    IStartStreamarr startStreamarr,
                                     IProcessProvider processProvider,
                                     Logger logger)
         {
@@ -43,11 +43,11 @@ namespace NzbDrone.Update.UpdateEngine
             _diskTransferService = diskTransferService;
             _detectApplicationType = detectApplicationType;
             _detectExistingVersion = detectExistingVersion;
-            _terminateNzbDrone = terminateNzbDrone;
+            _terminateStreamarr = terminateStreamarr;
             _appFolderInfo = appFolderInfo;
             _backupAndRestore = backupAndRestore;
             _backupAppData = backupAppData;
-            _startNzbDrone = startNzbDrone;
+            _startStreamarr = startStreamarr;
             _processProvider = processProvider;
             _logger = logger;
         }
@@ -103,7 +103,7 @@ namespace NzbDrone.Update.UpdateEngine
 
             if (OsInfo.IsWindows)
             {
-                _terminateNzbDrone.Terminate(processId);
+                _terminateStreamarr.Terminate(processId);
             }
 
             try
@@ -143,11 +143,11 @@ namespace NzbDrone.Update.UpdateEngine
             {
                 if (OsInfo.IsWindows)
                 {
-                    _startNzbDrone.Start(appType, installationFolder);
+                    _startStreamarr.Start(appType, installationFolder);
                 }
                 else
                 {
-                    _terminateNzbDrone.Terminate(processId);
+                    _terminateStreamarr.Terminate(processId);
 
                     _logger.Info("Waiting for external auto-restart.");
                     var theDakoLimit = 10;
@@ -164,7 +164,7 @@ namespace NzbDrone.Update.UpdateEngine
 
                     if (!_processProvider.Exists(ProcessProvider.SONARR_PROCESS_NAME))
                     {
-                        _startNzbDrone.Start(appType, installationFolder);
+                        _startStreamarr.Start(appType, installationFolder);
                     }
                 }
             }

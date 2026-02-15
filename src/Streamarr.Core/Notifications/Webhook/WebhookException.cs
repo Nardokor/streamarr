@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
-    public class WebhookException : NzbDroneException
+    public class WebhookException : StreamarrException
     {
         public WebhookException(string message)
             : base(message)

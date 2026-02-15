@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Profiles.Qualities;
-using Sonarr.Http;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V5.Profiles.Quality
+namespace Streamarr.Api.V5.Profiles.Quality
 {
     [V5ApiController("qualityprofile/schema")]
     public class QualityProfileSchemaController : Controller

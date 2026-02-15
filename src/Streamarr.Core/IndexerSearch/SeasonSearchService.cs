@@ -1,9 +1,9 @@
 using NLog;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Core.Download;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.IndexerSearch
+namespace Streamarr.Core.IndexerSearch
 {
     public class SeasonSearchService : IExecute<SeasonSearchCommand>
     {

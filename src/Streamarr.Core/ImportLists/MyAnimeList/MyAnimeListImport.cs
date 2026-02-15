@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.Cloud;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Cloud;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.MyAnimeList
+namespace Streamarr.Core.ImportLists.MyAnimeList
 {
     public class MyAnimeListImport : HttpImportListBase<MyAnimeListSettings>
     {

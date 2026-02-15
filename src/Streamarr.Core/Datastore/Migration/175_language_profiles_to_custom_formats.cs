@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(175)]
-    public class language_profiles_to_custom_formats : NzbDroneMigrationBase
+    public class language_profiles_to_custom_formats : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

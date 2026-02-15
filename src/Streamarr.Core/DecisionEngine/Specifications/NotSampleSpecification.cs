@@ -1,8 +1,8 @@
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public class NotSampleSpecification : IDownloadDecisionEngineSpecification
     {

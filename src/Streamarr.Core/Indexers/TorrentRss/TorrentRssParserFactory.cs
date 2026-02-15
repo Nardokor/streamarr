@@ -1,10 +1,10 @@
 ﻿using System;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Indexers.Exceptions;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Indexers.Exceptions;
 
-namespace NzbDrone.Core.Indexers.TorrentRss
+namespace Streamarr.Core.Indexers.TorrentRss
 {
     public interface ITorrentRssParserFactory
     {

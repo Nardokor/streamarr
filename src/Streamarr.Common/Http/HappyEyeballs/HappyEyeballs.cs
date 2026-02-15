@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NzbDrone.Common.Http.HappyEyeballs;
+namespace Streamarr.Common.Http.HappyEyeballs;
 
 /*
 Until .NET implements Happy Eyeballs natively, use third-party implementation from

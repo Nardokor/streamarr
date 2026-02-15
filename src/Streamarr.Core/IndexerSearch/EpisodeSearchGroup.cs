@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.IndexerSearch
+namespace Streamarr.Core.IndexerSearch
 {
     public class EpisodeSearchGroup
     {

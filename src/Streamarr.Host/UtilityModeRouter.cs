@@ -1,11 +1,11 @@
 using NLog;
-using NzbDrone.Common;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Processes;
-using NzbDrone.Host.AccessControl;
-using IServiceProvider = NzbDrone.Common.IServiceProvider;
+using Streamarr.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Processes;
+using Streamarr.Host.AccessControl;
+using IServiceProvider = Streamarr.Common.IServiceProvider;
 
-namespace NzbDrone.Host
+namespace Streamarr.Host
 {
     public interface IUtilityModeRouter
     {

@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
+﻿using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class CleanupTemporaryUpdateFiles : IHousekeepingTask
     {

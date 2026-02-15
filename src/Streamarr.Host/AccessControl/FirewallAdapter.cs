@@ -2,10 +2,10 @@ using System;
 using System.Linq;
 using NetFwTypeLib;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
 
-namespace NzbDrone.Host.AccessControl
+namespace Streamarr.Host.AccessControl
 {
     public interface IFirewallAdapter
     {
@@ -29,21 +29,21 @@ namespace NzbDrone.Host.AccessControl
         {
             if (IsFirewallEnabled())
             {
-                if (!IsNzbDronePortOpen(_configFileProvider.Port))
+                if (!IsStreamarrPortOpen(_configFileProvider.Port))
                 {
-                    _logger.Debug("Opening Port for NzbDrone: {0}", _configFileProvider.Port);
+                    _logger.Debug("Opening Port for Streamarr: {0}", _configFileProvider.Port);
                     OpenFirewallPort(_configFileProvider.Port);
                 }
 
-                if (_configFileProvider.EnableSsl && !IsNzbDronePortOpen(_configFileProvider.SslPort))
+                if (_configFileProvider.EnableSsl && !IsStreamarrPortOpen(_configFileProvider.SslPort))
                 {
-                    _logger.Debug("Opening SSL Port for NzbDrone: {0}", _configFileProvider.SslPort);
+                    _logger.Debug("Opening SSL Port for Streamarr: {0}", _configFileProvider.SslPort);
                     OpenFirewallPort(_configFileProvider.SslPort);
                 }
             }
         }
 
-        private bool IsNzbDronePortOpen(int port)
+        private bool IsStreamarrPortOpen(int port)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace NzbDrone.Host.AccessControl
                 var port = (INetFwOpenPort)Activator.CreateInstance(type);
 
                 port.Port = portNumber;
-                port.Name = "NzbDrone";
+                port.Name = "Streamarr";
                 port.Protocol = NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP;
                 port.Enabled = true;
 
@@ -82,7 +82,7 @@ namespace NzbDrone.Host.AccessControl
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Failed to open port in firewall for NzbDrone " + portNumber);
+                _logger.Warn(ex, "Failed to open port in firewall for Streamarr " + portNumber);
             }
         }
 

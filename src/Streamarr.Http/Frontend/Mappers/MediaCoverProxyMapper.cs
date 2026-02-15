@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
-using NzbDrone.Core.MediaCover;
+using Streamarr.Core.MediaCover;
 
-namespace Sonarr.Http.Frontend.Mappers
+namespace Streamarr.Http.Frontend.Mappers
 {
     public class MediaCoverProxyMapper : IMapHttpRequestsToDisk
     {

@@ -1,10 +1,10 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications.Search
+namespace Streamarr.Core.DecisionEngine.Specifications.Search
 {
     public class SingleEpisodeSearchMatchSpecification : IDownloadDecisionEngineSpecification
     {

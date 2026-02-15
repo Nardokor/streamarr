@@ -1,10 +1,10 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public class AcceptableSizeSpecification : IDownloadDecisionEngineSpecification
     {

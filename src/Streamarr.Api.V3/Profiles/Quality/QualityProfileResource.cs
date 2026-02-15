@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Profiles;
-using NzbDrone.Core.Profiles.Qualities;
-using Sonarr.Http.REST;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Profiles;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Profiles.Quality
+namespace Streamarr.Api.V3.Profiles.Quality
 {
     public class QualityProfileResource : RestResource
     {
@@ -22,7 +22,7 @@ namespace Sonarr.Api.V3.Profiles.Quality
     public class QualityProfileQualityItemResource : RestResource
     {
         public string Name { get; set; }
-        public NzbDrone.Core.Qualities.Quality Quality { get; set; }
+        public Streamarr.Core.Qualities.Quality Quality { get; set; }
         public List<QualityProfileQualityItemResource> Items { get; set; }
         public bool Allowed { get; set; }
         public double? MinSize { get; set; }
@@ -127,7 +127,7 @@ namespace Sonarr.Api.V3.Profiles.Quality
             {
                 Id = resource.Id,
                 Name = resource.Name,
-                Quality = resource.Quality != null ? (NzbDrone.Core.Qualities.Quality)resource.Quality.Id : null,
+                Quality = resource.Quality != null ? (Streamarr.Core.Qualities.Quality)resource.Quality.Id : null,
                 Items = resource.Items.ConvertAll(ToModel),
                 Allowed = resource.Allowed,
                 MinSize = resource.MinSize,

@@ -1,7 +1,7 @@
 using System.Net;
-using Sonarr.Http.Exceptions;
+using Streamarr.Http.Exceptions;
 
-namespace Sonarr.Http.REST
+namespace Streamarr.Http.REST
 {
     public class UnsupportedMediaTypeException : ApiException
     {

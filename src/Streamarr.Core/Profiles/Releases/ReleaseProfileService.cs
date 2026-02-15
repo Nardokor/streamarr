@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Profiles.Releases
+namespace Streamarr.Core.Profiles.Releases
 {
     public interface IReleaseProfileService
     {

@@ -1,7 +1,7 @@
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.AutoTagging.Specifications
+namespace Streamarr.Core.AutoTagging.Specifications
 {
     public interface IAutoTaggingSpecification
     {
@@ -10,7 +10,7 @@ namespace NzbDrone.Core.AutoTagging.Specifications
         string Name { get; set; }
         bool Negate { get; set; }
         bool Required { get; set; }
-        NzbDroneValidationResult Validate();
+        StreamarrValidationResult Validate();
 
         IAutoTaggingSpecification Clone();
         bool IsSatisfiedBy(Series series);

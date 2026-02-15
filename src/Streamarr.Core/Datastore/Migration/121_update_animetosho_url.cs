@@ -1,11 +1,11 @@
 using FluentMigrator;
 using Newtonsoft.Json.Linq;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(121)]
-    public class update_animetosho_url : NzbDroneMigrationBase
+    public class update_animetosho_url : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

@@ -1,10 +1,10 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Serializer;
-using Sonarr.Api.V3.Profiles.Release;
-using Sonarr.Http.REST;
+using Streamarr.Common.Serializer;
+using Streamarr.Api.V3.Profiles.Release;
+using Streamarr.Http.REST;
 
-namespace NzbDrone.Api.Test.v3.ReleaseProfiles
+namespace Streamarr.Api.Test.v3.ReleaseProfiles
 {
     [TestFixture]
     public class ReleaseProfilesFixture

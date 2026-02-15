@@ -5,11 +5,11 @@ using System.Linq;
 using Dapper;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Datastore.Migration
+namespace Streamarr.Core.Test.Datastore.Migration
 {
     [TestFixture]
     public class parse_title_from_existing_subtitle_filesFixture : MigrationTest<parse_title_from_existing_subtitle_files>

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public class IndexerPageableRequestChain
     {

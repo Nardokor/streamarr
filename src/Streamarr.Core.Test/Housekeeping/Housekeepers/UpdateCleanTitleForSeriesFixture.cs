@@ -1,11 +1,11 @@
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Housekeeping.Housekeepers;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Housekeeping.Housekeepers;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
+namespace Streamarr.Core.Test.Housekeeping.Housekeepers
 {
     [TestFixture]
     public class UpdateCleanTitleForSeriesFixture : CoreTest<UpdateCleanTitleForSeries>

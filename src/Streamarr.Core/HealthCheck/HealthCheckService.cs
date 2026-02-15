@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Messaging;
-using NzbDrone.Common.Reflection;
-using NzbDrone.Common.TPL;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.Cache;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Messaging;
+using Streamarr.Common.Reflection;
+using Streamarr.Common.TPL;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.HealthCheck
+namespace Streamarr.Core.HealthCheck
 {
     public interface IHealthCheckService
     {

@@ -2,13 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.TPL;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.TPL;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
 using Timer = System.Timers.Timer;
 
-namespace NzbDrone.Core.Jobs
+namespace Streamarr.Core.Jobs
 {
     public class Scheduler :
         IHandle<ApplicationStartedEvent>,

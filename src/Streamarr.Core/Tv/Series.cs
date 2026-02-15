@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Profiles.Qualities;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Profiles.Qualities;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public class Series : ModelBase
     {

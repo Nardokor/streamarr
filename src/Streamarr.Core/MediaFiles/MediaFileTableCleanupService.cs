@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NLog;
-using NzbDrone.Common;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Tv;
+using Streamarr.Common;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public interface IMediaFileTableCleanupService
     {

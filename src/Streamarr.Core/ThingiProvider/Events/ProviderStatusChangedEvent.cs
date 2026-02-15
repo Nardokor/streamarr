@@ -1,7 +1,7 @@
-using NzbDrone.Common.Messaging;
-using NzbDrone.Core.ThingiProvider.Status;
+using Streamarr.Common.Messaging;
+using Streamarr.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.ThingiProvider.Events
+namespace Streamarr.Core.ThingiProvider.Events
 {
     public class ProviderStatusChangedEvent<TProvider> : IEvent
     {

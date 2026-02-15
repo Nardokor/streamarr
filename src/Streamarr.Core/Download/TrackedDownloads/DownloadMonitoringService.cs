@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.TPL;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.TPL;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Download.TrackedDownloads
+namespace Streamarr.Core.Download.TrackedDownloads
 {
     public class DownloadMonitoringService : IExecute<RefreshMonitoredDownloadsCommand>,
                                              IExecute<CheckForFinishedDownloadCommand>,

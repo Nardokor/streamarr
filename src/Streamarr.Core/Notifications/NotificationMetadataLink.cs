@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public class NotificationMetadataLink
     {

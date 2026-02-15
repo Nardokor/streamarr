@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.History;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.History;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public interface IFailedDownloadService
     {

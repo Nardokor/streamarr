@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Core.Download.Clients
+namespace Streamarr.Core.Download.Clients
 {
     public class TorrentSeedConfiguration
     {

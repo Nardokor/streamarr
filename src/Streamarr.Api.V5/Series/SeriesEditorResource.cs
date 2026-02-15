@@ -1,6 +1,6 @@
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Tv;
 
-namespace Sonarr.Api.V5.Series;
+namespace Streamarr.Api.V5.Series;
 
 public class SeriesEditorResource
 {

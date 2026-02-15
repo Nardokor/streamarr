@@ -3,12 +3,12 @@ using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Download.Clients.Sabnzbd.Responses;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Download.Clients.Sabnzbd.Responses;
 
-namespace NzbDrone.Core.Download.Clients.Sabnzbd
+namespace Streamarr.Core.Download.Clients.Sabnzbd
 {
     public interface ISabnzbdProxy
     {

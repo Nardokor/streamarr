@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Download;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.Blocklisting
+namespace Streamarr.Core.Blocklisting
 {
     public interface IBlocklistService
     {

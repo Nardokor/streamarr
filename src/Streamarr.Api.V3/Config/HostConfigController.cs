@@ -3,18 +3,18 @@ using System.Linq;
 using System.Reflection;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Authentication;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Update;
-using NzbDrone.Core.Validation;
-using NzbDrone.Core.Validation.Paths;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Authentication;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Update;
+using Streamarr.Core.Validation;
+using Streamarr.Core.Validation.Paths;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V3.Config
+namespace Streamarr.Api.V3.Config
 {
     [V3ApiController("config/host")]
     public class HostConfigController : RestController<HostConfigResource>

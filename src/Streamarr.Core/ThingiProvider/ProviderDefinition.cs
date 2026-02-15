@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Equ;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.ThingiProvider
+namespace Streamarr.Core.ThingiProvider
 {
     public abstract class ProviderDefinition : ModelBase
     {

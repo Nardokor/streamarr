@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace NzbDrone.Core.Datastore;
+namespace Streamarr.Core.Datastore;
 
 public static class DatabaseVersionParser
 {

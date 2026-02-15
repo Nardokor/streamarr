@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
-using NzbDrone.Core.Configuration;
+using Streamarr.Core.Configuration;
 
-namespace NzbDrone.Http.Authentication
+namespace Streamarr.Http.Authentication
 {
     public class UiAuthorizationPolicyProvider : IAuthorizationPolicyProvider
     {

@@ -2,10 +2,10 @@ using System.IO;
 using FluentAssertions;
 using Mono.Unix;
 using NUnit.Framework;
-using NzbDrone.Mono.Disk;
-using NzbDrone.Test.Common;
+using Streamarr.Mono.Disk;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Mono.Test.DiskProviderTests
+namespace Streamarr.Mono.Test.DiskProviderTests
 {
     [TestFixture]
     [Platform(Exclude = "Win")]

@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(125)]
-    public class remove_notify_my_android_and_pushalot_notifications : NzbDroneMigrationBase
+    public class remove_notify_my_android_and_pushalot_notifications : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

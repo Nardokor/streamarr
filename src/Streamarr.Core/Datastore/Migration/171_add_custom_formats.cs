@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(171)]
-    public class add_custom_formats : NzbDroneMigrationBase
+    public class add_custom_formats : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

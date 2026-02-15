@@ -1,14 +1,14 @@
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.MetadataSource;
-using NzbDrone.Core.MetadataSource.SkyHook;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Core.MetadataSource;
+using Streamarr.Core.MetadataSource.SkyHook;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
+using Streamarr.Test.Common.Categories;
 
-namespace NzbDrone.Core.Test.MetadataSource.SkyHook
+namespace Streamarr.Core.Test.MetadataSource.SkyHook
 {
     [TestFixture]
     [IntegrationTest]

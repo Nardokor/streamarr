@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.MetadataSource;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.SeriesStats;
-using Sonarr.Http;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.MetadataSource;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.SeriesStats;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V5.Series;
+namespace Streamarr.Api.V5.Series;
 
 [V5ApiController("series/lookup")]
 public class SeriesLookupController : Controller
@@ -28,7 +28,7 @@ public class SeriesLookupController : Controller
         return MapToResource(tvDbResults);
     }
 
-    private IEnumerable<SeriesResource> MapToResource(IEnumerable<NzbDrone.Core.Tv.Series> series)
+    private IEnumerable<SeriesResource> MapToResource(IEnumerable<Streamarr.Core.Tv.Series> series)
     {
         foreach (var currentSeries in series)
         {

@@ -1,14 +1,14 @@
 using System;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Localization
+namespace Streamarr.Core.Test.Localization
 {
     [TestFixture]
     public class LocalizationServiceFixture : CoreTest<LocalizationService>

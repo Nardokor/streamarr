@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Common.Disk
+namespace Streamarr.Common.Disk
 {
-    public class NotParentException : NzbDroneException
+    public class NotParentException : StreamarrException
     {
         public NotParentException(string message, params object[] args)
             : base(message, args)

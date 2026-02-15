@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(120)]
-    public class update_series_episodes_history_indexes : NzbDroneMigrationBase
+    public class update_series_episodes_history_indexes : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

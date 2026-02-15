@@ -3,10 +3,10 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Indexer
+namespace Streamarr.Core.Test.Indexer
 {
     [TestFixture]
     public class ResolveIndexerFixture : CoreTest<IndexerFactory>

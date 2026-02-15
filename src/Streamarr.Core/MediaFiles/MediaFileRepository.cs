@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public interface IMediaFileRepository : IBasicRepository<EpisodeFile>
     {

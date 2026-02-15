@@ -1,9 +1,9 @@
 using FluentValidation;
-using NzbDrone.Core.Configuration;
-using Sonarr.Http;
-using Sonarr.Http.Validation;
+using Streamarr.Core.Configuration;
+using Streamarr.Http;
+using Streamarr.Http.Validation;
 
-namespace Sonarr.Api.V3.Config
+namespace Streamarr.Api.V3.Config
 {
     [V3ApiController("config/indexer")]
     public class IndexerConfigController : ConfigController<IndexerConfigResource>

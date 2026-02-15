@@ -3,21 +3,21 @@ using System.Linq;
 using System.Threading;
 using NLog;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Indexers.Newznab;
-using NzbDrone.Test.Common;
-using NzbDrone.Test.Common.Datastore;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Indexers.Newznab;
+using Streamarr.Test.Common;
+using Streamarr.Test.Common.Datastore;
 
-namespace NzbDrone.Integration.Test
+namespace Streamarr.Integration.Test
 {
     [Parallelizable(ParallelScope.Fixtures)]
     public abstract class IntegrationTest : IntegrationTestBase
     {
         protected static int StaticPort = 8989;
 
-        protected NzbDroneRunner _runner;
+        protected StreamarrRunner _runner;
 
         public override string SeriesRootFolder => GetTempDirectory("SeriesRootFolder");
 
@@ -40,7 +40,7 @@ namespace NzbDrone.Integration.Test
                 CreatePostgresDb(PostgresOptions);
             }
 
-            _runner = new NzbDroneRunner(LogManager.GetCurrentClassLogger(), PostgresOptions, Port);
+            _runner = new StreamarrRunner(LogManager.GetCurrentClassLogger(), PostgresOptions, Port);
             _runner.Kill();
 
             _runner.Start();

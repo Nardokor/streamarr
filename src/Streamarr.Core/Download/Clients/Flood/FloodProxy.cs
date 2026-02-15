@@ -3,12 +3,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Download.Clients.Flood.Types;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Download.Clients.Flood.Types;
 
-namespace NzbDrone.Core.Download.Clients.Flood
+namespace Streamarr.Core.Download.Clients.Flood
 {
     public interface IFloodProxy
     {

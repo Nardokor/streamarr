@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.CustomFormats.Specifications.LanguageSpecification
+namespace Streamarr.Core.Test.CustomFormats.Specifications.LanguageSpecification
 {
     [TestFixture]
     public class MultiLanguageFixture : CoreTest<Core.CustomFormats.LanguageSpecification>

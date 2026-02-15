@@ -3,10 +3,10 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace Sonarr.Http.Frontend.Mappers
+namespace Streamarr.Http.Frontend.Mappers
 {
     public abstract class HtmlMapperBase : StaticResourceMapperBase
     {

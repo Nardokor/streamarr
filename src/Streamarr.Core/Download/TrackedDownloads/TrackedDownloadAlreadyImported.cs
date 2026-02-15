@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.History;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.History;
 
-namespace NzbDrone.Core.Download.TrackedDownloads
+namespace Streamarr.Core.Download.TrackedDownloads
 {
     public interface ITrackedDownloadAlreadyImported
     {

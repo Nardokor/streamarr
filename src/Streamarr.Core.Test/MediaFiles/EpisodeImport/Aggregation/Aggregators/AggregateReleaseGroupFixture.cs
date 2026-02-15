@@ -1,13 +1,13 @@
 ﻿using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport.Aggregation.Aggregators
+namespace Streamarr.Core.Test.MediaFiles.EpisodeImport.Aggregation.Aggregators
 {
     [TestFixture]
     public class AggregateReleaseGroupFixture : CoreTest<AggregateReleaseGroup>

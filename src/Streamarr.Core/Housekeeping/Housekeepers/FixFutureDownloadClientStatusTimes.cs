@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Download;
+﻿using Streamarr.Core.Download;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class FixFutureDownloadClientStatusTimes : FixFutureProviderStatusTimes<DownloadClientStatus>, IHousekeepingTask
     {

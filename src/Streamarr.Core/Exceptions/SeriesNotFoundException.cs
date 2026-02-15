@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Exceptions
+namespace Streamarr.Core.Exceptions
 {
-    public class SeriesNotFoundException : NzbDroneException
+    public class SeriesNotFoundException : StreamarrException
     {
         public int TvdbSeriesId { get; set; }
 

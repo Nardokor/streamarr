@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Sonarr.Api.V3.Series;
+using Streamarr.Api.V3.Series;
 
-namespace Sonarr.Api.V3.SeasonPass
+namespace Streamarr.Api.V3.SeasonPass
 {
     public class SeasonPassSeriesResource
     {

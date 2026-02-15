@@ -1,6 +1,6 @@
-using NzbDrone.Core.Annotations;
+using Streamarr.Core.Annotations;
 
-namespace NzbDrone.Core.ImportLists.Trakt.User
+namespace Streamarr.Core.ImportLists.Trakt.User
 {
     public enum TraktUserListType
     {

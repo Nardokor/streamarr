@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Tv;
+﻿using Streamarr.Core.Tv;
 
-namespace Sonarr.Api.V5.SeasonPass;
+namespace Streamarr.Api.V5.SeasonPass;
 
 public class SeasonPassResource
 {

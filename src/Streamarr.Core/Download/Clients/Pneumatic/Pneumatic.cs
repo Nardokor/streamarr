@@ -4,17 +4,17 @@ using System.IO;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RemotePathMappings;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RemotePathMappings;
 
-namespace NzbDrone.Core.Download.Clients.Pneumatic
+namespace Streamarr.Core.Download.Clients.Pneumatic
 {
     public class Pneumatic : DownloadClientBase<PneumaticSettings>
     {

@@ -6,15 +6,15 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.MediaFiles.MediaInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.MediaFiles.MediaInfo;
 
-namespace NzbDrone.Core.Datastore.Migration;
+namespace Streamarr.Core.Datastore.Migration;
 
 [Migration(225)]
-public class mediainfo_multiple_streams : NzbDroneMigrationBase
+public class mediainfo_multiple_streams : StreamarrMigrationBase
 {
     private readonly JsonSerializerOptions _serializerSettings;
 

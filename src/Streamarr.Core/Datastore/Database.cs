@@ -3,9 +3,9 @@ using System.Data.Common;
 using System.Data.SQLite;
 using Dapper;
 using NLog;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public interface IDatabase
     {
@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Datastore
         private readonly string _databaseName;
         private readonly Func<DbConnection> _datamapperFactory;
 
-        private readonly Logger _logger = NzbDroneLogger.GetLogger(typeof(Database));
+        private readonly Logger _logger = StreamarrLogger.GetLogger(typeof(Database));
 
         public Database(string databaseName, Func<DbConnection> datamapperFactory)
         {

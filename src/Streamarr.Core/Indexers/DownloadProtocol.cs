@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Indexers
+﻿namespace Streamarr.Core.Indexers
 {
     public enum DownloadProtocol
     {

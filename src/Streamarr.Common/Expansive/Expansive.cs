@@ -5,7 +5,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace NzbDrone.Common.Expansive
+namespace Streamarr.Common.Expansive
 {
     public static class Expansive
     {

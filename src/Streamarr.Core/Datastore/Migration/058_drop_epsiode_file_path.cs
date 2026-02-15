@@ -1,10 +1,10 @@
 ﻿using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(58)]
-    public class drop_episode_file_path : NzbDroneMigrationBase
+    public class drop_episode_file_path : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

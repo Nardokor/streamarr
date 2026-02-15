@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 using System.Net;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.ImportLists.Exceptions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.ImportLists.Exceptions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.Simkl
+namespace Streamarr.Core.ImportLists.Simkl
 {
     public class SimklParser : IParseImportListResponse
     {
         private ImportListResponse _importResponse;
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(SimklParser));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(SimklParser));
 
         public SimklParser()
         {

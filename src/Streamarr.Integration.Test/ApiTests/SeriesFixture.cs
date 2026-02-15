@@ -4,7 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace NzbDrone.Integration.Test.ApiTests
+namespace Streamarr.Integration.Test.ApiTests
 {
     [TestFixture]
     public class SeriesFixture : IntegrationTest

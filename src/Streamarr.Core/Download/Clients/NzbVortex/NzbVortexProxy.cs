@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Download.Clients.NzbVortex.Responses;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Download.Clients.NzbVortex.Responses;
 
-namespace NzbDrone.Core.Download.Clients.NzbVortex
+namespace Streamarr.Core.Download.Clients.NzbVortex
 {
     public interface INzbVortexProxy
     {

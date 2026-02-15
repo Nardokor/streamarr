@@ -1,9 +1,9 @@
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Authentication;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Update;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Authentication;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Update;
 
-namespace Sonarr.Api.V5.System;
+namespace Streamarr.Api.V5.System;
 
 public class SystemResource
 {

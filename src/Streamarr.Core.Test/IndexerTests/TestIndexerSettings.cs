@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Test.IndexerTests
+namespace Streamarr.Core.Test.IndexerTests
 {
     public class TestIndexerSettings : IIndexerSettings
     {
-        public NzbDroneValidationResult Validate()
+        public StreamarrValidationResult Validate()
         {
             throw new NotImplementedException();
         }

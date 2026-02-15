@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.HealthCheck.Checks;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.HealthCheck.Checks;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.HealthCheck.Checks
+namespace Streamarr.Core.Test.HealthCheck.Checks
 {
     [TestFixture]
     public class RemovedSeriesCheckFixture : CoreTest<RemovedSeriesCheck>

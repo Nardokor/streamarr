@@ -3,14 +3,14 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.DiskSpace;
-using NzbDrone.Core.RootFolders;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Core.DiskSpace;
+using Streamarr.Core.RootFolders;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.DiskSpace
+namespace Streamarr.Core.Test.DiskSpace
 {
     [TestFixture]
     public class DiskSpaceServiceFixture : CoreTest<DiskSpaceService>

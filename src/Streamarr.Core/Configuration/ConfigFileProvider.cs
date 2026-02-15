@@ -6,21 +6,21 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Extensions.Options;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Common.Options;
-using NzbDrone.Core.Authentication;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Update;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Common.Options;
+using Streamarr.Core.Authentication;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Update;
 
-namespace NzbDrone.Core.Configuration
+namespace Streamarr.Core.Configuration
 {
     public interface IConfigFileProvider : IHandleAsync<ApplicationStartedEvent>,
                                            IExecute<ResetApiKeyCommand>

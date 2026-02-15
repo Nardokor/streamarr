@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Cache;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public interface IEpisodeService
     {

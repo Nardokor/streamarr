@@ -1,4 +1,4 @@
-namespace Sonarr.Api.V5.Calendar;
+namespace Streamarr.Api.V5.Calendar;
 
 public enum CalendarSubresource
 {

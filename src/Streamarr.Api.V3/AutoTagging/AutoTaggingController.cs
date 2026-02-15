@@ -3,15 +3,15 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.AutoTagging;
-using NzbDrone.Core.AutoTagging.Specifications;
-using NzbDrone.Core.Validation;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.AutoTagging;
+using Streamarr.Core.AutoTagging.Specifications;
+using Streamarr.Core.Validation;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V3.AutoTagging
+namespace Streamarr.Api.V3.AutoTagging
 {
     [V3ApiController]
     public class AutoTaggingController : RestController<AutoTaggingResource>
@@ -104,7 +104,7 @@ namespace Sonarr.Api.V3.AutoTagging
 
         private void VerifyValidationResult(ValidationResult validationResult)
         {
-            var result = new NzbDroneValidationResult(validationResult.Errors);
+            var result = new StreamarrValidationResult(validationResult.Errors);
 
             if (!result.IsValid)
             {

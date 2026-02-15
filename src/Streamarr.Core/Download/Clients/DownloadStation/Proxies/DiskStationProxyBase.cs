@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Download.Clients.DownloadStation.Responses;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Download.Clients.DownloadStation.Responses;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation.Proxies
+namespace Streamarr.Core.Download.Clients.DownloadStation.Proxies
 {
     public interface IDiskStationProxy
     {

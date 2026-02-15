@@ -1,7 +1,7 @@
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace Sonarr.Api.V5.Provider
+namespace Streamarr.Api.V5.Provider
 {
     public class ProviderTestAllResult
     {

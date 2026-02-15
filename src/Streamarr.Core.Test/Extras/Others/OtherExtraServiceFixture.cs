@@ -4,15 +4,15 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Extras.Others;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Extras.Others;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Extras.Others
+namespace Streamarr.Core.Test.Extras.Others
 {
     [TestFixture]
     public class OtherExtraServiceFixture : CoreTest<OtherExtraService>

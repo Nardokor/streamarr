@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Qualities;
 
-namespace Sonarr.Api.V3.EpisodeFiles
+namespace Streamarr.Api.V3.EpisodeFiles
 {
     public class EpisodeFileListResource
     {

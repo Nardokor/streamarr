@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Sonarr.Api.V3.CustomFormats
+namespace Streamarr.Api.V3.CustomFormats
 {
     public class CustomFormatBulkResource
     {

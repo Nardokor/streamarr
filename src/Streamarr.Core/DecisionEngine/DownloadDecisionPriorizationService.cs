@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Profiles.Delay;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Profiles.Delay;
 
-namespace NzbDrone.Core.DecisionEngine
+namespace Streamarr.Core.DecisionEngine
 {
     public interface IPrioritizeDownloadDecision
     {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Notifications.Signal
+namespace Streamarr.Core.Notifications.Signal
 {
     public class Signal : NotificationBase<SignalSettings>
     {

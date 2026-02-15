@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Notifications.Plex.PlexTv;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Notifications.Plex.PlexTv;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.Plex
+namespace Streamarr.Core.ImportLists.Plex
 {
     public class PlexImport : HttpImportListBase<PlexListSettings>
     {

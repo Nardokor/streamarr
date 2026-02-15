@@ -8,14 +8,14 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Options;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Test.Common.Datastore;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Options;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Test.Common.Datastore;
 
-namespace NzbDrone.Core.Test.Framework
+namespace Streamarr.Core.Test.Framework
 {
     public abstract class DbTest<TSubject, TModel> : DbTest
         where TSubject : class

@@ -1,7 +1,7 @@
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using Sonarr.Http.REST;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.EpisodeFiles
+namespace Streamarr.Api.V5.EpisodeFiles
 {
     public class MediaInfoResource : RestResource
     {

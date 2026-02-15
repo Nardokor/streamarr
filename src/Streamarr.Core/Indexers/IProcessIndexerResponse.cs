@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public interface IParseIndexerResponse
     {

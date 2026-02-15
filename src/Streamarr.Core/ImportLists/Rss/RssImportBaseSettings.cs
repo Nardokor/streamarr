@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.Rss
+namespace Streamarr.Core.ImportLists.Rss
 {
     public class RssImportSettingsValidator<TSettings> : AbstractValidator<TSettings>
         where TSettings : RssImportBaseSettings<TSettings>
@@ -23,9 +23,9 @@ namespace NzbDrone.Core.ImportLists.Rss
         [FieldDefinition(0, Label = "ImportListsSettingsRssUrl", Type = FieldType.Textbox)]
         public virtual string Url { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this as TSettings));
+            return new StreamarrValidationResult(Validator.Validate(this as TSettings));
         }
     }
 }

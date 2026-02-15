@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Http;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.Notifications.Prowl
+namespace Streamarr.Core.Notifications.Prowl
 {
     public interface IProwlProxy
     {

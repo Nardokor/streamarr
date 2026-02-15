@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Mailgun
+namespace Streamarr.Core.Notifications.Mailgun
 {
-    public class MailgunException : NzbDroneException
+    public class MailgunException : StreamarrException
     {
         public MailgunException(string message)
             : base(message)

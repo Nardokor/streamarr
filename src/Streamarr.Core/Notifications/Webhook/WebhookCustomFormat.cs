@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using NzbDrone.Core.CustomFormats;
+using Streamarr.Core.CustomFormats;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookCustomFormat
     {

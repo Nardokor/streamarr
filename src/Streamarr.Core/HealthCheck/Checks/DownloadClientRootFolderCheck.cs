@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.RootFolders;
-using NzbDrone.Core.ThingiProvider.Events;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Localization;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.RootFolders;
+using Streamarr.Core.ThingiProvider.Events;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace Streamarr.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ProviderUpdatedEvent<IDownloadClient>))]
     [CheckOn(typeof(ProviderDeletedEvent<IDownloadClient>))]

@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
+namespace Streamarr.Core.Extras.Metadata.Consumers.Xbmc
 {
     public interface IDetectXbmcNfo
     {

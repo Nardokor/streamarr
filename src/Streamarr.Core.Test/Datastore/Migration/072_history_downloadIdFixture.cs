@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Datastore.Migration
+namespace Streamarr.Core.Test.Datastore.Migration
 {
     [TestFixture]
     public class history_downloadIdFixture : MigrationTest<history_downloadId>
@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             history.DownloadId.Should().Be("123");
         }
 
-        private void InsertHistory(NzbDroneMigrationBase migration, Dictionary<string, string> data)
+        private void InsertHistory(StreamarrMigrationBase migration, Dictionary<string, string> data)
         {
             migration.Insert.IntoTable("History").Row(new
             {

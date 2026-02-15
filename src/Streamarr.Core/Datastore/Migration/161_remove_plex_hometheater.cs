@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Data;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Converters;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Converters;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(161)]
-    public class remove_plex_hometheatre : NzbDroneMigrationBase
+    public class remove_plex_hometheatre : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

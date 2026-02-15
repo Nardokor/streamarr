@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NzbDrone.Core.SeriesStats;
+using Streamarr.Core.SeriesStats;
 
-namespace Sonarr.Api.V3.Series
+namespace Streamarr.Api.V3.Series
 {
     public class SeasonStatisticsResource
     {

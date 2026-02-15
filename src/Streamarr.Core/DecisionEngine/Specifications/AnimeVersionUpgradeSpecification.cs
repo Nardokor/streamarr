@@ -1,12 +1,12 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public class AnimeVersionUpgradeSpecification : IDownloadDecisionEngineSpecification
     {

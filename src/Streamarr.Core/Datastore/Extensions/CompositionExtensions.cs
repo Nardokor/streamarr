@@ -1,7 +1,7 @@
 using DryIoc;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Extensions
+namespace Streamarr.Core.Datastore.Extensions
 {
     public static class CompositionExtensions
     {

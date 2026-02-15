@@ -1,6 +1,6 @@
-using NzbDrone.Core.IndexerSearch.Definitions;
+using Streamarr.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public interface IIndexerRequestGenerator
     {

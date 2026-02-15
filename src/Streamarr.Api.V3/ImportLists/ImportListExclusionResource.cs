@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.ImportLists.Exclusions;
-using Sonarr.Http.REST;
+using Streamarr.Core.ImportLists.Exclusions;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.ImportLists
+namespace Streamarr.Api.V3.ImportLists
 {
     public class ImportListExclusionResource : RestResource
     {

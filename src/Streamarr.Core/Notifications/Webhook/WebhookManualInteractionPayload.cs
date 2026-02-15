@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookManualInteractionPayload : WebhookPayload
     {

@@ -1,10 +1,10 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Exceptions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Exceptions
+namespace Streamarr.Core.Exceptions
 {
-    public class ReleaseDownloadException : NzbDroneException
+    public class ReleaseDownloadException : StreamarrException
     {
         public ReleaseInfo Release { get; set; }
 

@@ -8,14 +8,14 @@ using Microsoft.Extensions.Hosting.WindowsServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NLog;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Host
+namespace Streamarr.Host
 {
     public class RestartableServiceLifetime : IHostLifetime, IDisposable
     {
         private static readonly Lock StaticLock = new();
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(RestartableServiceLifetime));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(RestartableServiceLifetime));
         private static WindowsServiceWrapper _singletonService;
         private static bool _serviceBaseRunCalled;
 

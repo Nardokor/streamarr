@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Data;
 using FluentMigrator;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(20)]
-    public class add_year_and_seasons_to_series : NzbDroneMigrationBase
+    public class add_year_and_seasons_to_series : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

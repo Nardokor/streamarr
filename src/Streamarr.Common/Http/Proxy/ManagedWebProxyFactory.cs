@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.Http.Proxy
+namespace Streamarr.Common.Http.Proxy
 {
     public interface ICreateManagedWebProxy
     {

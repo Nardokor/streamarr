@@ -1,8 +1,8 @@
 using System;
 using System.Text.Json.Serialization;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace Streamarr.Core.Messaging.Commands
 {
     [JsonConverter(typeof(PolymorphicWriteOnlyJsonConverter<Command>))]
     public abstract class Command

@@ -1,6 +1,6 @@
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Qualities
+namespace Streamarr.Core.Qualities
 {
     public class QualityDefinition : ModelBase
     {

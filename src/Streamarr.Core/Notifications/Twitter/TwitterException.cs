@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Twitter
+namespace Streamarr.Core.Notifications.Twitter
 {
-    public class TwitterException : NzbDroneException
+    public class TwitterException : StreamarrException
     {
         public TwitterException(string message, params object[] args)
             : base(message, args)

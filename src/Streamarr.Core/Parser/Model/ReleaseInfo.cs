@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Languages;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Languages;
 
-namespace NzbDrone.Core.Parser.Model
+namespace Streamarr.Core.Parser.Model
 {
     public class ReleaseInfo
     {

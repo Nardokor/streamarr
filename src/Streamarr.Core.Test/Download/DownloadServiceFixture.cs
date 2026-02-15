@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.Download
+namespace Streamarr.Core.Test.Download
 {
     [TestFixture]
     public class DownloadServiceFixture : CoreTest<DownloadService>

@@ -1,8 +1,8 @@
-using NzbDrone.Common;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Processes;
+using Streamarr.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Processes;
 
-namespace NzbDrone.Update.UpdateEngine
+namespace Streamarr.Update.UpdateEngine
 {
     public interface IDetectApplicationType
     {

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Queue
+namespace Streamarr.Core.Queue
 {
     public class ObsoleteQueueUpdatedEvent : IEvent
     {

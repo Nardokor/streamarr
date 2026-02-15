@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.RootFolders
+namespace Streamarr.Core.RootFolders
 {
     public class UnmappedFolder
     {

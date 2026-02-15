@@ -1,6 +1,6 @@
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.CustomFilters
+namespace Streamarr.Core.CustomFilters
 {
     public class CustomFilter : ModelBase
     {

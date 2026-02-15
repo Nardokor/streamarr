@@ -1,13 +1,13 @@
 using System;
 using System.Data;
 using FluentMigrator;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(147)]
-    public class swap_filechmod_for_folderchmod : NzbDroneMigrationBase
+    public class swap_filechmod_for_folderchmod : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

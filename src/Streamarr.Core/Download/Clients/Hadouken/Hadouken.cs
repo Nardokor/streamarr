@@ -2,19 +2,19 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Blocklisting;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download.Clients.Hadouken.Models;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Blocklisting;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download.Clients.Hadouken.Models;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.Hadouken
+namespace Streamarr.Core.Download.Clients.Hadouken
 {
     public class Hadouken : TorrentClientBase<HadoukenSettings>
     {
@@ -175,11 +175,11 @@ namespace NzbDrone.Core.Download.Clients.Hadouken
             {
                 _logger.Error(ex, ex.Message);
 
-                return new NzbDroneValidationFailure("Password", _localizationService.GetLocalizedString("DownloadClientValidationAuthenticationFailure"));
+                return new StreamarrValidationFailure("Password", _localizationService.GetLocalizedString("DownloadClientValidationAuthenticationFailure"));
             }
             catch (Exception ex)
             {
-                return new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect"))
+                return new StreamarrValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect"))
                        {
                            DetailedDescription = ex.Message
                        };
@@ -197,7 +197,7 @@ namespace NzbDrone.Core.Download.Clients.Hadouken
             catch (Exception ex)
             {
                 _logger.Error(ex, ex.Message);
-                return new NzbDroneValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationTestTorrents", new Dictionary<string, object> { { "exceptionMessage", ex.Message } }));
+                return new StreamarrValidationFailure(string.Empty, _localizationService.GetLocalizedString("DownloadClientValidationTestTorrents", new Dictionary<string, object> { { "exceptionMessage", ex.Message } }));
             }
 
             return null;

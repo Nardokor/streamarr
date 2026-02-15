@@ -4,21 +4,21 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using NLog;
-using NzbDrone.Common;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Common.Processes;
-using NzbDrone.Core.Backup;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Update.Commands;
+using Streamarr.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Common.Processes;
+using Streamarr.Core.Backup;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Update.Commands;
 
-namespace NzbDrone.Core.Update
+namespace Streamarr.Core.Update
 {
     public class InstallUpdateService : IExecute<ApplicationUpdateCommand>, IExecute<ApplicationUpdateCheckCommand>, IHandle<ApplicationStartingEvent>
     {

@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
-using NzbDrone.SignalR;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
+using Streamarr.SignalR;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 using BadRequestException = Sonarr.Http.REST.BadRequestException;
 
-namespace Sonarr.Api.V3.EpisodeFiles
+namespace Streamarr.Api.V3.EpisodeFiles
 {
     [V3ApiController]
     public class EpisodeFileController : RestControllerWithSignalR<EpisodeFileResource, EpisodeFile>,
@@ -156,7 +156,7 @@ namespace Sonarr.Api.V3.EpisodeFiles
 
             if (episodeFile == null)
             {
-                throw new NzbDroneClientException(HttpStatusCode.NotFound, "Episode file not found");
+                throw new StreamarrClientException(HttpStatusCode.NotFound, "Episode file not found");
             }
 
             var series = _seriesService.GetSeries(episodeFile.SeriesId);

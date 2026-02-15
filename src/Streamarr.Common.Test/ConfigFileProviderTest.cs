@@ -3,15 +3,15 @@ using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Options;
-using NzbDrone.Core.Authentication;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Options;
+using Streamarr.Core.Authentication;
+using Streamarr.Core.Configuration;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test
+namespace Streamarr.Common.Test
 {
     [TestFixture]
 

@@ -8,13 +8,13 @@ using System.Reflection;
 using System.Text;
 using Dapper;
 using NLog;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Core.Datastore.Events;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Core.Datastore.Events;
+using Streamarr.Core.Messaging.Events;
 using Polly;
 using Polly.Retry;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public interface IBasicRepository<TModel>
         where TModel : ModelBase, new()
@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Datastore
     public class BasicRepository<TModel> : IBasicRepository<TModel>
         where TModel : ModelBase, new()
     {
-        private static readonly ILogger Logger = NzbDroneLogger.GetLogger(typeof(BasicRepository<TModel>));
+        private static readonly ILogger Logger = StreamarrLogger.GetLogger(typeof(BasicRepository<TModel>));
 
         private readonly IEventAggregator _eventAggregator;
         private readonly PropertyInfo _keyProperty;

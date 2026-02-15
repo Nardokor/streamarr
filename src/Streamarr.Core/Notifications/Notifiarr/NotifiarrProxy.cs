@@ -1,10 +1,10 @@
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Notifications.Webhook;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Notifications.Webhook;
 
-namespace NzbDrone.Core.Notifications.Notifiarr
+namespace Streamarr.Core.Notifications.Notifiarr
 {
     public interface INotifiarrProxy
     {

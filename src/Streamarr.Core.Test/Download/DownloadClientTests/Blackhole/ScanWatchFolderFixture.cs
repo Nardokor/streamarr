@@ -6,14 +6,14 @@ using System.Threading;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients.Blackhole;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients.Blackhole;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
+namespace Streamarr.Core.Test.Download.DownloadClientTests.Blackhole
 {
     [TestFixture]
     public class ScanWatchFolderFixture : CoreTest<ScanWatchFolder>

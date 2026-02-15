@@ -1,4 +1,4 @@
-namespace NzbDrone.Common.EnsureThat
+namespace Streamarr.Common.EnsureThat
 {
     public abstract class Param
     {

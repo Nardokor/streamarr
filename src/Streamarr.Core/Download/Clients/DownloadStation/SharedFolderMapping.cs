@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Disk;
+﻿using Streamarr.Common.Disk;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation
+namespace Streamarr.Core.Download.Clients.DownloadStation
 {
     public class SharedFolderMapping
     {

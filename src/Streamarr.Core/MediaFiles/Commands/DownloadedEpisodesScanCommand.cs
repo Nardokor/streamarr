@@ -1,7 +1,7 @@
-using NzbDrone.Core.MediaFiles.EpisodeImport;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Core.MediaFiles.EpisodeImport;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.MediaFiles.Commands
+namespace Streamarr.Core.MediaFiles.Commands
 {
     public class DownloadedEpisodesScanCommand : Command
     {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.Sabnzbd.Responses
+namespace Streamarr.Core.Download.Clients.Sabnzbd.Responses
 {
     public class SabnzbdRetryResponse
     {

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Indexers;
+﻿using Streamarr.Core.Indexers;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class FixFutureIndexerStatusTimes : FixFutureProviderStatusTimes<IndexerStatus>, IHousekeepingTask
     {

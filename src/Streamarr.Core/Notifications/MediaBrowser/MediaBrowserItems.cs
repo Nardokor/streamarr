@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Notifications.Emby
+namespace Streamarr.Core.Notifications.Emby
 {
     public class MediaBrowserItems
     {

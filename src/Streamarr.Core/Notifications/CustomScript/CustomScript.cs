@@ -5,21 +5,21 @@ using System.IO;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Processes;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.HealthCheck;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Tags;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Processes;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.HealthCheck;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Tags;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.CustomScript
+namespace Streamarr.Core.Notifications.CustomScript
 {
     public class CustomScript : NotificationBase<CustomScriptSettings>
     {
@@ -437,7 +437,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
 
             if (!_diskProvider.FileExists(Settings.Path))
             {
-                failures.Add(new NzbDroneValidationFailure("Path", _localizationService.GetLocalizedString("NotificationsCustomScriptValidationFileDoesNotExist")));
+                failures.Add(new StreamarrValidationFailure("Path", _localizationService.GetLocalizedString("NotificationsCustomScriptValidationFileDoesNotExist")));
             }
 
             if (failures.Empty())
@@ -453,13 +453,13 @@ namespace NzbDrone.Core.Notifications.CustomScript
 
                     if (processOutput.ExitCode != 0)
                     {
-                        failures.Add(new NzbDroneValidationFailure(string.Empty, $"Script exited with code: {processOutput.ExitCode}"));
+                        failures.Add(new StreamarrValidationFailure(string.Empty, $"Script exited with code: {processOutput.ExitCode}"));
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.Error(ex);
-                    failures.Add(new NzbDroneValidationFailure(string.Empty, ex.Message));
+                    failures.Add(new StreamarrValidationFailure(string.Empty, ex.Message));
                 }
             }
 

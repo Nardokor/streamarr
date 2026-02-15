@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Crypto;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Manual;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
-using Sonarr.Api.V3.CustomFormats;
-using Sonarr.Api.V3.Episodes;
-using Sonarr.Api.V3.Series;
-using Sonarr.Http.REST;
+using Streamarr.Common.Crypto;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles.EpisodeImport;
+using Streamarr.Core.MediaFiles.EpisodeImport.Manual;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
+using Streamarr.Api.V3.CustomFormats;
+using Streamarr.Api.V3.Episodes;
+using Streamarr.Api.V3.Series;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.ManualImport
+namespace Streamarr.Api.V3.ManualImport
 {
     public class ManualImportResource : RestResource
     {

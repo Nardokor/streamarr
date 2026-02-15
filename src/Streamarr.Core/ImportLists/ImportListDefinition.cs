@@ -1,9 +1,9 @@
 using System;
 using Equ;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public class ImportListDefinition : ProviderDefinition, IEquatable<ImportListDefinition>
     {

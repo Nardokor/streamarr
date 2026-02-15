@@ -1,7 +1,7 @@
 ﻿using System;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Instrumentation
+namespace Streamarr.Core.Instrumentation
 {
     public class Log : ModelBase
     {

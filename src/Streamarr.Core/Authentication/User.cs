@@ -1,7 +1,7 @@
 using System;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Authentication
+namespace Streamarr.Core.Authentication
 {
     public class User : ModelBase
     {

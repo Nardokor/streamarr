@@ -1,9 +1,9 @@
 using System.Net;
-using NzbDrone.Core.Exceptions;
+using Streamarr.Core.Exceptions;
 
-namespace NzbDrone.Core.Profiles.Qualities
+namespace Streamarr.Core.Profiles.Qualities
 {
-    public class QualityProfileInUseException : NzbDroneClientException
+    public class QualityProfileInUseException : StreamarrClientException
     {
         public QualityProfileInUseException(string name)
             : base(HttpStatusCode.BadRequest, "QualityProfile [{0}] is in use.", name)

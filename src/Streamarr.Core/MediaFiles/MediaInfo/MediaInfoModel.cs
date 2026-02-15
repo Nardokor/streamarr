@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.MediaFiles.MediaInfo
+namespace Streamarr.Core.MediaFiles.MediaInfo
 {
     public class MediaInfoModel : IEmbeddedDocument
     {

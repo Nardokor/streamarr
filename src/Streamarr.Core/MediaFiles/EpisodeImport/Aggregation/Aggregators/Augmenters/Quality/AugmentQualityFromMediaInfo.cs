@@ -1,11 +1,11 @@
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Quality
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Quality
 {
     public class AugmentQualityFromMediaInfo : IAugmentQuality
     {

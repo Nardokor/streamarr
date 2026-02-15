@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients.Nzbget;
-using NzbDrone.Core.Download.Clients.Sabnzbd;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.ThingiProvider.Events;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients.Nzbget;
+using Streamarr.Core.Download.Clients.Sabnzbd;
+using Streamarr.Core.Localization;
+using Streamarr.Core.ThingiProvider.Events;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace Streamarr.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ProviderUpdatedEvent<IDownloadClient>))]
     [CheckOn(typeof(ProviderDeletedEvent<IDownloadClient>))]

@@ -1,9 +1,9 @@
 ﻿using System;
 using NLog;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public class MinimumAgeSpecification : IDownloadDecisionEngineSpecification
     {

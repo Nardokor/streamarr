@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Messaging;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Qualities;
+using Streamarr.Common.Messaging;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class DownloadIgnoredEvent : IEvent
     {

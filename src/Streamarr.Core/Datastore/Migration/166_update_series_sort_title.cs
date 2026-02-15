@@ -1,12 +1,12 @@
 using System.Data;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(166)]
-    public class update_series_sort_title : NzbDroneMigrationBase
+    public class update_series_sort_title : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

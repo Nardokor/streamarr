@@ -5,16 +5,16 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.IndexerSearch;
-using NzbDrone.Core.MediaFiles.Commands;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Manual;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Update.Commands;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.IndexerSearch;
+using Streamarr.Core.MediaFiles.Commands;
+using Streamarr.Core.MediaFiles.EpisodeImport.Manual;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Update.Commands;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Messaging.Commands
+namespace Streamarr.Core.Test.Messaging.Commands
 {
     [TestFixture]
     public class CommandEqualityComparerFixture

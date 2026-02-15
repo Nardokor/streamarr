@@ -1,7 +1,7 @@
 using Newtonsoft.Json.Linq;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Common.Instrumentation
+namespace Streamarr.Common.Instrumentation
 {
     public class CleansingJsonVisitor : JsonVisitor
     {

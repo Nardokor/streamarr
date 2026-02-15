@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Download.Clients.Nzbget
+﻿namespace Streamarr.Core.Download.Clients.Nzbget
 {
     public class JsonError
     {

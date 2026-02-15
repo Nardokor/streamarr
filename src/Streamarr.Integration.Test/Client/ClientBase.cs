@@ -3,12 +3,12 @@ using System.Linq;
 using System.Net;
 using FluentAssertions;
 using NLog;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Serializer;
 using RestSharp;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace NzbDrone.Integration.Test.Client
+namespace Streamarr.Integration.Test.Client
 {
     public class ClientBase
     {

@@ -1,7 +1,7 @@
-﻿using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+﻿using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public class EpisodeDeleteMessage
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Indexers.BroadcastheNet
+namespace Streamarr.Core.Indexers.BroadcastheNet
 {
     public class BroadcastheNetTorrentQuery
     {

@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Signal
+namespace Streamarr.Core.Notifications.Signal
 {
     public class SignalSettingsValidator : AbstractValidator<SignalSettings>
     {
@@ -41,9 +41,9 @@ namespace NzbDrone.Core.Notifications.Signal
         [FieldDefinition(6, Label = "Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password, HelpText = "NotificationsSignalSettingsPasswordHelpText")]
         public string AuthPassword { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

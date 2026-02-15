@@ -6,16 +6,16 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Backup
+namespace Streamarr.Core.Backup
 {
     public interface IBackupService
     {

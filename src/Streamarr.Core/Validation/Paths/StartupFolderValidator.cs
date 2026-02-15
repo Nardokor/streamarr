@@ -1,8 +1,8 @@
 ﻿using FluentValidation.Validators;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Validation.Paths
+namespace Streamarr.Core.Validation.Paths
 {
     public class StartupFolderValidator : PropertyValidator
     {

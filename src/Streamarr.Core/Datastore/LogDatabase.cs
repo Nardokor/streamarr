@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public interface ILogDatabase : IDatabase
     {

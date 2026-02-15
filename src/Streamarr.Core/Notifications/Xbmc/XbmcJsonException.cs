@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Core.Notifications.Xbmc
+namespace Streamarr.Core.Notifications.Xbmc
 {
     public class XbmcJsonException : Exception
     {

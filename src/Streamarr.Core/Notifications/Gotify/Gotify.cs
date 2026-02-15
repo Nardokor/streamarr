@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Gotify
+namespace Streamarr.Core.Notifications.Gotify
 {
     public class Gotify : NotificationBase<GotifySettings>
     {

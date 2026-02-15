@@ -1,8 +1,8 @@
-﻿using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Extras.Files;
-using NzbDrone.Core.Messaging.Events;
+﻿using Streamarr.Core.Datastore;
+using Streamarr.Core.Extras.Files;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Extras.Metadata.Files
+namespace Streamarr.Core.Extras.Metadata.Files
 {
     public interface IMetadataFileRepository : IExtraFileRepository<MetadataFile>
     {

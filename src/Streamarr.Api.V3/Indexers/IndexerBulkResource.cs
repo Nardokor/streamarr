@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Indexers;
+using Streamarr.Core.Indexers;
 
-namespace Sonarr.Api.V3.Indexers
+namespace Streamarr.Api.V3.Indexers
 {
     public class IndexerBulkResource : ProviderBulkResource<IndexerBulkResource>
     {

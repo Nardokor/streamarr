@@ -2,10 +2,10 @@ using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Test.Common;
-using Sonarr.Api.V3.Series;
+using Streamarr.Test.Common;
+using Streamarr.Api.V3.Series;
 
-namespace NzbDrone.Integration.Test.ApiTests
+namespace Streamarr.Integration.Test.ApiTests
 {
     [TestFixture]
     public class EpisodeFixture : IntegrationTest

@@ -2,14 +2,14 @@
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles.MediaFileDeletionService
+namespace Streamarr.Core.Test.MediaFiles.MediaFileDeletionService
 {
     [TestFixture]
     public class DeleteEpisodeFileFixture : CoreTest<Core.MediaFiles.MediaFileDeletionService>
@@ -63,7 +63,7 @@ namespace NzbDrone.Core.Test.MediaFiles.MediaFileDeletionService
         [Test]
         public void should_throw_if_root_folder_does_not_exist()
         {
-            Assert.Throws<NzbDroneClientException>(() => Subject.DeleteEpisodeFile(_series, _episodeFile));
+            Assert.Throws<StreamarrClientException>(() => Subject.DeleteEpisodeFile(_series, _episodeFile));
             ExceptionVerification.ExpectedWarns(1);
         }
 
@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Test.MediaFiles.MediaFileDeletionService
         {
             GivenRootFolderExists();
 
-            Assert.Throws<NzbDroneClientException>(() => Subject.DeleteEpisodeFile(_series, _episodeFile));
+            Assert.Throws<StreamarrClientException>(() => Subject.DeleteEpisodeFile(_series, _episodeFile));
             ExceptionVerification.ExpectedWarns(1);
         }
 
@@ -133,7 +133,7 @@ namespace NzbDrone.Core.Test.MediaFiles.MediaFileDeletionService
                   .Setup(s => s.DeleteFile(_episodeFile.Path, "Series Title"))
                   .Throws(new IOException());
 
-            Assert.Throws<NzbDroneClientException>(() => Subject.DeleteEpisodeFile(_series, _episodeFile));
+            Assert.Throws<StreamarrClientException>(() => Subject.DeleteEpisodeFile(_series, _episodeFile));
 
             ExceptionVerification.ExpectedErrors(1);
             Mocker.GetMock<IRecycleBinProvider>().Verify(v => v.DeleteFile(_episodeFile.Path, "Series Title"), Times.Once());

@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Jobs
+namespace Streamarr.Core.Jobs
 {
     public interface IScheduledTaskRepository : IBasicRepository<ScheduledTask>
     {

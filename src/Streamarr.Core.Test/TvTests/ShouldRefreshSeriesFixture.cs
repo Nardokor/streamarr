@@ -3,10 +3,10 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.TvTests
+namespace Streamarr.Core.Test.TvTests
 {
     [TestFixture]
     public class ShouldRefreshSeriesFixture : TestBase<ShouldRefreshSeries>

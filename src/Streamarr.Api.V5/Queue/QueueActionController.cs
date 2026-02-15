@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Pending;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Queue
+namespace Streamarr.Api.V5.Queue
 {
     [V5ApiController("queue")]
     public class QueueActionController : Controller

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Extras.Files;
+﻿using Streamarr.Core.Extras.Files;
 
-namespace NzbDrone.Core.Extras.Others
+namespace Streamarr.Core.Extras.Others
 {
     public class OtherExtraFile : ExtraFile
     {

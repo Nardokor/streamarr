@@ -2,10 +2,10 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using NUnit.Framework;
-using NzbDrone.Common.Test.DiskTests;
-using NzbDrone.Windows.Disk;
+using Streamarr.Common.Test.DiskTests;
+using Streamarr.Windows.Disk;
 
-namespace NzbDrone.Windows.Test.DiskProviderTests
+namespace Streamarr.Windows.Test.DiskProviderTests
 {
     [TestFixture]
     [Platform("Win")]

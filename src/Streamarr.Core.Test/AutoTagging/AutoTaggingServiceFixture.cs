@@ -3,12 +3,12 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.AutoTagging;
-using NzbDrone.Core.AutoTagging.Specifications;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.AutoTagging;
+using Streamarr.Core.AutoTagging.Specifications;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.AutoTagging
+namespace Streamarr.Core.Test.AutoTagging
 {
     [TestFixture]
     public class AutoTaggingServiceFixture : CoreTest<AutoTaggingService>

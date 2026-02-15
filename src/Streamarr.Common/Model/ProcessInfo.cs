@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Common.Model
+﻿namespace Streamarr.Common.Model
 {
     public class ProcessInfo
     {

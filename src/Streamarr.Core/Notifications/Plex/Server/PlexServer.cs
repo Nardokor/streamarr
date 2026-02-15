@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Notifications.Plex.PlexTv;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Notifications.Plex.PlexTv;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Plex.Server
+namespace Streamarr.Core.Notifications.Plex.Server
 {
     public class PlexServer : NotificationBase<PlexServerSettings>
     {

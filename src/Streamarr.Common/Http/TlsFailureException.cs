@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public class TlsFailureException : WebException
     {

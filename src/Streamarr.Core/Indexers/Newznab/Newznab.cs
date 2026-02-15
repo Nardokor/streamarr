@@ -4,15 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.Newznab
+namespace Streamarr.Core.Indexers.Newznab
 {
     public class Newznab : HttpIndexerBase<NewznabSettings>
     {

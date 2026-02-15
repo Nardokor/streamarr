@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.ThingiProvider.Status;
+using Streamarr.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public abstract class FixFutureProviderStatusTimes<TModel>
         where TModel : ProviderStatusBase, new()

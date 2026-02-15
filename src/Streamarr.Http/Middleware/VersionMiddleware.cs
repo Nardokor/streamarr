@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using NzbDrone.Common.EnvironmentInfo;
-using Sonarr.Http.Extensions;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Http.Extensions;
 
-namespace Sonarr.Http.Middleware
+namespace Streamarr.Http.Middleware
 {
     public class VersionMiddleware
     {

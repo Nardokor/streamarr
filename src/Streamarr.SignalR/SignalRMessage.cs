@@ -1,6 +1,6 @@
-using NzbDrone.Core.Datastore.Events;
+using Streamarr.Core.Datastore.Events;
 
-namespace NzbDrone.SignalR
+namespace Streamarr.SignalR
 {
     public class SignalRMessage
     {

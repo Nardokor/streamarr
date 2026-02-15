@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     /* This class was copied from gubenkoved TolerantEnumConverter.cs file, which is available from github
      * https://gist.github.com/gubenkoved/999eb73e227b7063a67a50401578c3a7

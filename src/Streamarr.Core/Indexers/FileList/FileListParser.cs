@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers.Exceptions;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Http;
+using Streamarr.Core.Indexers.Exceptions;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers.FileList
+namespace Streamarr.Core.Indexers.FileList
 {
     public class FileListParser : IParseIndexerResponse
     {

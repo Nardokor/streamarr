@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Aggregation
 {
-    public class AugmentingFailedException : NzbDroneException
+    public class AugmentingFailedException : StreamarrException
     {
         public AugmentingFailedException(string message, params object[] args)
             : base(message, args)

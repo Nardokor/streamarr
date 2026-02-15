@@ -4,11 +4,11 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Disk;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.ProviderTests.DiskScanProviderTests
+namespace Streamarr.Core.Test.ProviderTests.DiskScanProviderTests
 {
     public class GetVideoFilesFixture : CoreTest<DiskScanService>
     {

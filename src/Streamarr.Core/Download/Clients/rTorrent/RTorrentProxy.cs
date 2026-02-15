@@ -4,11 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download.Extensions;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download.Extensions;
 
-namespace NzbDrone.Core.Download.Clients.RTorrent
+namespace Streamarr.Core.Download.Clients.RTorrent
 {
     public interface IRTorrentProxy
     {

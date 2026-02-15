@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public interface IDownloadClient : IProvider
     {

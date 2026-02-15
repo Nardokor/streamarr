@@ -1,7 +1,7 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public class CorruptDatabaseException : SonarrStartupException
     {

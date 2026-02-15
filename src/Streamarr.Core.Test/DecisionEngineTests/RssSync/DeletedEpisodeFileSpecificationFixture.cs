@@ -4,20 +4,20 @@ using System.IO;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.DecisionEngine.Specifications.RssSync;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.DecisionEngine.Specifications.RssSync;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
+namespace Streamarr.Core.Test.DecisionEngineTests.RssSync
 {
     [TestFixture]
     public class DeletedEpisodeFileSpecificationFixture : CoreTest<DeletedEpisodeFileSpecification>

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.MetadataSource.SkyHook;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.MetadataSource.SkyHook;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common.Categories;
 
-namespace NzbDrone.Core.Test.MetadataSource.SkyHook
+namespace Streamarr.Core.Test.MetadataSource.SkyHook
 {
     [TestFixture]
     [IntegrationTest]

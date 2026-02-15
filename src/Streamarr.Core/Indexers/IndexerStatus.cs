@@ -1,7 +1,7 @@
-﻿using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider.Status;
+﻿using Streamarr.Core.Parser.Model;
+using Streamarr.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public class IndexerStatus : ProviderStatusBase
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Cache;
+using Streamarr.Common.Cache;
 
-namespace NzbDrone.Core.DataAugmentation.DailySeries
+namespace Streamarr.Core.DataAugmentation.DailySeries
 {
     public interface IDailySeriesService
     {

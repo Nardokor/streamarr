@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.DataAugmentation.Scene
+namespace Streamarr.Core.DataAugmentation.Scene
 {
     public interface ISceneMappingService
     {

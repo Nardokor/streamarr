@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.IPTorrents;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.Http;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.IPTorrents;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerTests.IPTorrentsTests
+namespace Streamarr.Core.Test.IndexerTests.IPTorrentsTests
 {
     [TestFixture]
     public class IPTorrentsFixture : CoreTest<IPTorrents>

@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Notifiarr
+namespace Streamarr.Core.Notifications.Notifiarr
 {
-    public class NotifiarrException : NzbDroneException
+    public class NotifiarrException : StreamarrException
     {
         public NotifiarrException(string message)
             : base(message)

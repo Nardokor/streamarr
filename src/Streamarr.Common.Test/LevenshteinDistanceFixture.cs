@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Extensions;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test
+namespace Streamarr.Common.Test
 {
     [TestFixture]
     public class LevenshteinDistanceFixture : TestBase

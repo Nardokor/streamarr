@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Core.DataAugmentation.Scene;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Core.DataAugmentation.Scene;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Indexers.Newznab
+namespace Streamarr.Core.Indexers.Newznab
 {
     public class NewznabRequestGenerator : IIndexerRequestGenerator
     {
@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public NewznabRequestGenerator(INewznabCapabilitiesProvider capabilitiesProvider)
         {
-            _logger = NzbDroneLogger.GetLogger(GetType());
+            _logger = StreamarrLogger.GetLogger(GetType());
             _capabilitiesProvider = capabilitiesProvider;
 
             MaxPages = 30;

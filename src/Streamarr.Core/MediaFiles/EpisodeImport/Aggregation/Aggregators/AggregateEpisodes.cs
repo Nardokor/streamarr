@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators
 {
     public class AggregateEpisodes : IAggregateLocalEpisode
     {

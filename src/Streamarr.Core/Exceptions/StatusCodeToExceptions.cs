@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace NzbDrone.Core.Exceptions
+namespace Streamarr.Core.Exceptions
 {
     public static class StatusCodeToExceptions
     {

@@ -7,13 +7,13 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http.Dispatchers;
-using NzbDrone.Common.TPL;
+using Streamarr.Common.Cache;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http.Dispatchers;
+using Streamarr.Common.TPL;
 
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public interface IHttpClient
     {

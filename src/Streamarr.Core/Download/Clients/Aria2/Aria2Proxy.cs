@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download.Extensions;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download.Extensions;
 
-namespace NzbDrone.Core.Download.Clients.Aria2
+namespace Streamarr.Core.Download.Clients.Aria2
 {
     public interface IAria2Proxy
     {

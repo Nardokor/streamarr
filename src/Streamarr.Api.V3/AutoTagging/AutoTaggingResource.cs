@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using NzbDrone.Core.AutoTagging;
-using NzbDrone.Core.AutoTagging.Specifications;
-using Sonarr.Http.ClientSchema;
-using Sonarr.Http.REST;
+using Streamarr.Core.AutoTagging;
+using Streamarr.Core.AutoTagging.Specifications;
+using Streamarr.Http.ClientSchema;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.AutoTagging
+namespace Streamarr.Api.V3.AutoTagging
 {
     public class AutoTaggingResource : RestResource
     {

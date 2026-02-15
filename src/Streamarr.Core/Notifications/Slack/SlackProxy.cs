@@ -1,10 +1,10 @@
 using System.Net.Http;
 using NLog;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Notifications.Slack.Payloads;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Notifications.Slack.Payloads;
 
-namespace NzbDrone.Core.Notifications.Slack
+namespace Streamarr.Core.Notifications.Slack
 {
     public interface ISlackProxy
     {

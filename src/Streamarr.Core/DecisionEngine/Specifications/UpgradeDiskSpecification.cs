@@ -1,11 +1,11 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public class UpgradeDiskSpecification : IDownloadDecisionEngineSpecification
     {
@@ -125,7 +125,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             return DownloadSpecDecision.Accept();
         }
 
-        private DownloadSpecDecision CheckUpgradeSpecification(NzbDrone.Core.MediaFiles.EpisodeFile file, NzbDrone.Core.Profiles.Qualities.QualityProfile qualityProfile, RemoteEpisode subject)
+        private DownloadSpecDecision CheckUpgradeSpecification(Streamarr.Core.MediaFiles.EpisodeFile file, Streamarr.Core.Profiles.Qualities.QualityProfile qualityProfile, RemoteEpisode subject)
         {
             if (file == null)
             {

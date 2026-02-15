@@ -1,8 +1,8 @@
 using System.Linq;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Processes;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Processes;
 
-namespace NzbDrone.Mono.EnvironmentInfo.VersionAdapters
+namespace Streamarr.Mono.EnvironmentInfo.VersionAdapters
 {
     public class FreebsdVersionAdapter : IOsVersionAdapter
     {

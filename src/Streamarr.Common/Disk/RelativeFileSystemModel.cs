@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Common.Disk
+namespace Streamarr.Common.Disk
 {
     public class RelativeFileSystemModel
     {

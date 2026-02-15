@@ -4,15 +4,15 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using NLog;
-using NzbDrone.Common;
-using NzbDrone.Common.Composition;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common;
+using Streamarr.Common.Composition;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace Streamarr.Core.Messaging.Commands
 {
     public interface IManageCommandQueue
     {
@@ -228,7 +228,7 @@ namespace NzbDrone.Core.Messaging.Commands
         {
             if (!_commandQueue.RemoveIfQueued(id))
             {
-                throw new NzbDroneClientException(HttpStatusCode.Conflict, "Unable to cancel task");
+                throw new StreamarrClientException(HttpStatusCode.Conflict, "Unable to cancel task");
             }
         }
 

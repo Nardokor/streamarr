@@ -3,11 +3,11 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Download;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Download
+namespace Streamarr.Core.Test.Download
 {
     public class DownloadClientStatusServiceFixture : CoreTest<DownloadClientStatusService>
     {

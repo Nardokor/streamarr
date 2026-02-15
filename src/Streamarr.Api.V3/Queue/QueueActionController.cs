@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Pending;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Queue
+namespace Streamarr.Api.V3.Queue
 {
     [V3ApiController("queue")]
     public class QueueActionController : Controller

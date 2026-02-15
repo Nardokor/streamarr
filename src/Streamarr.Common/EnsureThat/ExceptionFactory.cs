@@ -1,7 +1,7 @@
 ﻿using System;
 using NLog;
 
-namespace NzbDrone.Common.EnsureThat
+namespace Streamarr.Common.EnsureThat
 {
     internal static class ExceptionFactory
     {

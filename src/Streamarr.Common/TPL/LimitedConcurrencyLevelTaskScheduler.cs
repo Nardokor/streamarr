@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NzbDrone.Common.TPL
+namespace Streamarr.Common.TPL
 {
     public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
     {

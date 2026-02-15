@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookGrabbedRelease
     {

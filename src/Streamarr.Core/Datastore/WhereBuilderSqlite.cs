@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using Dapper;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public class WhereBuilderSqlite : WhereBuilder
     {

@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Download.Clients.UTorrent
+﻿namespace Streamarr.Core.Download.Clients.UTorrent
 {
     public enum UTorrentState
     {

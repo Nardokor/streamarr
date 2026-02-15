@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.Rss.Plex
+namespace Streamarr.Core.ImportLists.Rss.Plex
 {
     public class PlexRssImportSettingsValidator : AbstractValidator<PlexRssImportSettings>
     {
@@ -19,9 +19,9 @@ namespace NzbDrone.Core.ImportLists.Rss.Plex
         [FieldDefinition(0, Label = "ImportListsSettingsRssUrl", Type = FieldType.Textbox, HelpLink = "https://app.plex.tv/desktop/#!/settings/watchlist")]
         public override string Url { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

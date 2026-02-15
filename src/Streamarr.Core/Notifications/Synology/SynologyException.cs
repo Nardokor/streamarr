@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Synology
+namespace Streamarr.Core.Notifications.Synology
 {
-    public class SynologyException : NzbDroneException
+    public class SynologyException : StreamarrException
     {
         public SynologyException(string message)
             : base(message)

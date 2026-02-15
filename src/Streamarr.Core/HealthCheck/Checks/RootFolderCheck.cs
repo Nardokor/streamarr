@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.RootFolders;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Localization;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.RootFolders;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace Streamarr.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(SeriesDeletedEvent))]
     [CheckOn(typeof(SeriesMovedEvent))]

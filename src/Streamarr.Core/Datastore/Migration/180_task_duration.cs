@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(180)]
-    public class task_duration : NzbDroneMigrationBase
+    public class task_duration : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

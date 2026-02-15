@@ -1,13 +1,13 @@
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.History;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Qualities;
-using Sonarr.Api.V5.CustomFormats;
-using Sonarr.Api.V5.Episodes;
-using Sonarr.Api.V5.Series;
-using Sonarr.Http.REST;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.History;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Qualities;
+using Streamarr.Api.V5.CustomFormats;
+using Streamarr.Api.V5.Episodes;
+using Streamarr.Api.V5.Series;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.History;
+namespace Streamarr.Api.V5.History;
 
 public class HistoryResource : RestResource
 {

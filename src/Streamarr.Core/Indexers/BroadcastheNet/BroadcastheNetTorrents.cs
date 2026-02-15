@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Indexers.BroadcastheNet
+namespace Streamarr.Core.Indexers.BroadcastheNet
 {
     public class BroadcastheNetTorrents
     {

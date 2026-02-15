@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.SeriesStats
+namespace Streamarr.Core.SeriesStats
 {
     public interface ISeriesStatisticsRepository
     {

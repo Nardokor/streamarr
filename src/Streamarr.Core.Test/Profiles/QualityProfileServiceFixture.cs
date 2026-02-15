@@ -3,14 +3,14 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.Profiles
+namespace Streamarr.Core.Test.Profiles
 {
     [TestFixture]
     public class QualityProfileServiceFixture : CoreTest<QualityProfileService>

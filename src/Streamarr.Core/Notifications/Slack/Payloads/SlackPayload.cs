@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Notifications.Slack.Payloads
+namespace Streamarr.Core.Notifications.Slack.Payloads
 {
     public class SlackPayload
     {

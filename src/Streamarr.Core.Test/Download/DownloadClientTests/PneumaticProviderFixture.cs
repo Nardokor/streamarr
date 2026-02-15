@@ -6,19 +6,19 @@ using FizzWare.NBuilder;
 using Moq;
 using NLog;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients.Pneumatic;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Test.IndexerTests;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients.Pneumatic;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Test.IndexerTests;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests
 {
     [TestFixture]
     public class PneumaticProviderFixture : CoreTest<Pneumatic>

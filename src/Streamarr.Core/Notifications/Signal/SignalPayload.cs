@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Signal
+namespace Streamarr.Core.Notifications.Signal
 {
     public class SignalPayload
     {

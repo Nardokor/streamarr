@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NzbDrone.Core.Languages
+namespace Streamarr.Core.Languages
 {
     public class LanguagesComparer : IComparer<List<Language>>
     {

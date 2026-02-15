@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc.Routing;
 
-namespace Sonarr.Http
+namespace Streamarr.Http
 {
     public class VersionedFeedControllerAttribute : Attribute, IRouteTemplateProvider
     {

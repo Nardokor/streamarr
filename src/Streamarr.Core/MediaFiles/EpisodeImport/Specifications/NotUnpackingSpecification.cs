@@ -1,13 +1,13 @@
 using System;
 using System.IO;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Specifications
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Specifications
 {
     public class NotUnpackingSpecification : IImportDecisionEngineSpecification
     {

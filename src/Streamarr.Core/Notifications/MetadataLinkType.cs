@@ -1,6 +1,6 @@
-using NzbDrone.Core.Annotations;
+using Streamarr.Core.Annotations;
 
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public enum MetadataLinkType
     {

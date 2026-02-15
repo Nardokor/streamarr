@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using NLog;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Download.Clients.Hadouken.Models;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Download.Clients.Hadouken.Models;
 
-namespace NzbDrone.Core.Download.Clients.Hadouken
+namespace Streamarr.Core.Download.Clients.Hadouken
 {
     public interface IHadoukenProxy
     {

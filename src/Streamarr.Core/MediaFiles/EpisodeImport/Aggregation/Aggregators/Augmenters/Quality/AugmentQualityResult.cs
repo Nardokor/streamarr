@@ -1,6 +1,6 @@
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Quality
+namespace Streamarr.Core.MediaFiles.EpisodeImport.Aggregation.Aggregators.Augmenters.Quality
 {
     public class AugmentQualityResult
     {

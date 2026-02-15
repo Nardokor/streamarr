@@ -1,6 +1,6 @@
-using NzbDrone.Core.Annotations;
+using Streamarr.Core.Annotations;
 
-namespace NzbDrone.Core.Download.Clients.QBittorrent
+namespace Streamarr.Core.Download.Clients.QBittorrent
 {
     public enum QBittorrentState
     {

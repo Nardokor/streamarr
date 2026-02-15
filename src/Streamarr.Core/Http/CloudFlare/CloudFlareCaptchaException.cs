@@ -1,9 +1,9 @@
-using NzbDrone.Common.Exceptions;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Exceptions;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.Http.CloudFlare
+namespace Streamarr.Core.Http.CloudFlare
 {
-    public class CloudFlareCaptchaException : NzbDroneException
+    public class CloudFlareCaptchaException : StreamarrException
     {
         public HttpResponse Response { get; set; }
 

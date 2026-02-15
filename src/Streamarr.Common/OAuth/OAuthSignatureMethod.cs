@@ -1,4 +1,4 @@
-namespace NzbDrone.Common.OAuth
+namespace Streamarr.Common.OAuth
 {
     /// <summary>
     /// The encryption method to use when hashing a request signature.

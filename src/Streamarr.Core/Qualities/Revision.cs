@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace NzbDrone.Core.Qualities
+namespace Streamarr.Core.Qualities
 {
     public class Revision : IEquatable<Revision>, IComparable<Revision>
     {

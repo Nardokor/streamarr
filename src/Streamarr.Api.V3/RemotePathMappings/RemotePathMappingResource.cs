@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.RemotePathMappings;
-using Sonarr.Http.REST;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.RemotePathMappings
+namespace Streamarr.Api.V3.RemotePathMappings
 {
     public class RemotePathMappingResource : RestResource
     {

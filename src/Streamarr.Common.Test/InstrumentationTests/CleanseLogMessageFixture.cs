@@ -1,8 +1,8 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Common.Test.InstrumentationTests
+namespace Streamarr.Common.Test.InstrumentationTests
 {
     [TestFixture]
     public class CleanseLogMessageFixture

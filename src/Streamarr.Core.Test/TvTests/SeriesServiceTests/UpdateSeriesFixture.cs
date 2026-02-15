@@ -4,11 +4,11 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.AutoTagging;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.AutoTagging;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.TvTests.SeriesServiceTests
+namespace Streamarr.Core.Test.TvTests.SeriesServiceTests
 {
     [TestFixture]
     public class UpdateSeriesFixture : CoreTest<SeriesService>

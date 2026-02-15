@@ -1,11 +1,11 @@
 using System.IO;
 using System.Linq;
-using NzbDrone.Core.Extras.Files;
-using NzbDrone.Core.Extras.Others;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Extras.Files;
+using Streamarr.Core.Extras.Others;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace Streamarr.Core.Housekeeping.Housekeepers
 {
     public class CleanupExtraFilesInExcludedFolders : IHousekeepingTask
     {

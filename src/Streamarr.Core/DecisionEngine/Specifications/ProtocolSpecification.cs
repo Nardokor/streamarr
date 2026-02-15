@@ -1,9 +1,9 @@
 using NLog;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Delay;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Profiles.Delay;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public class ProtocolSpecification : IDownloadDecisionEngineSpecification
     {

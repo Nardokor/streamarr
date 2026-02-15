@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Parser.Model
+namespace Streamarr.Core.Parser.Model
 {
     public class ImportListItemInfo : ModelBase
     {

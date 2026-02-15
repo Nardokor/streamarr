@@ -4,11 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using NLog;
-using NzbDrone.Common.Extensions;
-using Sonarr.Http.ErrorManagement;
-using Sonarr.Http.Extensions;
+using Streamarr.Common.Extensions;
+using Streamarr.Http.ErrorManagement;
+using Streamarr.Http.Extensions;
 
-namespace Sonarr.Http.Middleware
+namespace Streamarr.Http.Middleware
 {
     public class LoggingMiddleware
     {

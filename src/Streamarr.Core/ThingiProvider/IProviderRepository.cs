@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Datastore;
+﻿using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.ThingiProvider
+namespace Streamarr.Core.ThingiProvider
 {
     public interface IProviderRepository<TProvider> : IBasicRepository<TProvider>
         where TProvider : ModelBase, new()

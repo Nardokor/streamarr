@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics;
-using NzbDrone.Common.EnsureThat.Resources;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.EnsureThat.Resources;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.EnsureThat
+namespace Streamarr.Common.EnsureThat
 {
     public static class EnsureDateTimeExtensions
     {

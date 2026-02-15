@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using NLog;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.Disk
+namespace Streamarr.Common.Disk
 {
     public interface IDiskTransferService
     {

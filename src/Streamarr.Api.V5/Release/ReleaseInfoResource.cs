@@ -1,7 +1,7 @@
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
 
-namespace Sonarr.Api.V5.Release;
+namespace Streamarr.Api.V5.Release;
 
 public class ReleaseInfoResource
 {

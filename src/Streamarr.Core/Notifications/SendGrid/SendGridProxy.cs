@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Core.Notifications.SendGrid
+namespace Streamarr.Core.Notifications.SendGrid
 {
     public interface ISendGridProxy
     {

@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients.DownloadStation;
-using NzbDrone.Core.Download.Clients.DownloadStation.Proxies;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients.DownloadStation;
+using Streamarr.Core.Download.Clients.DownloadStation.Proxies;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.DownloadStationTests
 {
     [TestFixture]
     public class UsenetDownloadStationFixture : DownloadClientFixtureBase<UsenetDownloadStation>

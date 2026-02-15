@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NzbDrone.Core.Download.Clients.Sabnzbd
+namespace Streamarr.Core.Download.Clients.Sabnzbd
 {
     public class SabnzbdJsonError
     {

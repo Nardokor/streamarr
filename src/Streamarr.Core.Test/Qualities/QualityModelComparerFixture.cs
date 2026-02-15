@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Qualities
+namespace Streamarr.Core.Test.Qualities
 {
     [TestFixture]
     public class QualityModelComparerFixture : CoreTest

@@ -1,6 +1,6 @@
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.Configuration
+namespace Streamarr.Core.Configuration
 {
     public class Config : ModelBase
     {

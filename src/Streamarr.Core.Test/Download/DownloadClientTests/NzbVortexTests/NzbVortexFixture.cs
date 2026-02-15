@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Download.Clients.Nzbget;
-using NzbDrone.Core.Download.Clients.NzbVortex;
-using NzbDrone.Core.Download.Clients.NzbVortex.Responses;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Download.Clients.Nzbget;
+using Streamarr.Core.Download.Clients.NzbVortex;
+using Streamarr.Core.Download.Clients.NzbVortex.Responses;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbVortexTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.NzbVortexTests
 {
     [TestFixture]
     public class NzbVortexFixture : DownloadClientFixtureBase<NzbVortex>

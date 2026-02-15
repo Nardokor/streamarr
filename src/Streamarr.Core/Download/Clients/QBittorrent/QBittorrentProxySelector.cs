@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 
 using NLog;
-using NzbDrone.Common.Cache;
+using Streamarr.Common.Cache;
 
-namespace NzbDrone.Core.Download.Clients.QBittorrent
+namespace Streamarr.Core.Download.Clients.QBittorrent
 {
     public interface IQBittorrentProxy
     {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Blocklisting
+namespace Streamarr.Core.Blocklisting
 {
     public interface IBlocklistRepository : IBasicRepository<Blocklist>
     {

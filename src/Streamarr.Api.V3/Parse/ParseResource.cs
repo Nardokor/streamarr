@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
-using Sonarr.Api.V3.CustomFormats;
-using Sonarr.Api.V3.Episodes;
-using Sonarr.Api.V3.Series;
-using Sonarr.Http.REST;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Api.V3.CustomFormats;
+using Streamarr.Api.V3.Episodes;
+using Streamarr.Api.V3.Series;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Parse
+namespace Streamarr.Api.V3.Parse
 {
     public class ParseResource : RestResource
     {

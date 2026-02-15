@@ -6,15 +6,15 @@ using System.Reflection;
 using System.Text;
 using Dapper;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public static class SqlBuilderExtensions
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(SqlBuilderExtensions));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(SqlBuilderExtensions));
 
         public static bool LogSql { get; set; }
 

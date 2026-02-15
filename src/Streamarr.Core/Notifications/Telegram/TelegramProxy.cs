@@ -5,13 +5,13 @@ using System.Text;
 using System.Web;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.Notifications.Telegram
+namespace Streamarr.Core.Notifications.Telegram
 {
     public interface ITelegramProxy
     {

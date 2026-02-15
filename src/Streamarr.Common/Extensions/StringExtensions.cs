@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace NzbDrone.Common.Extensions
+namespace Streamarr.Common.Extensions
 {
     public static class StringExtensions
     {

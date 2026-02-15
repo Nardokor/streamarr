@@ -2,10 +2,10 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.ParserTests
+namespace Streamarr.Core.Test.ParserTests
 {
     [TestFixture]
     public class AbsoluteEpisodeNumberParserFixture : CoreTest

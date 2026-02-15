@@ -2,19 +2,19 @@ using System;
 using System.IO;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Processes;
-using NzbDrone.Test.Common;
-using NzbDrone.Update.UpdateEngine;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Processes;
+using Streamarr.Test.Common;
+using Streamarr.Update.UpdateEngine;
 
-namespace NzbDrone.Update.Test
+namespace Streamarr.Update.Test
 {
     [TestFixture]
     public class InstallUpdateServiceFixture : TestBase<InstallUpdateService>
     {
         private const int _processId = 12;
-        private string _targetFolder = @"C:\NzbDrone\".AsOsAgnostic();
+        private string _targetFolder = @"C:\Streamarr\".AsOsAgnostic();
 
         [SetUp]
         public void Setup()

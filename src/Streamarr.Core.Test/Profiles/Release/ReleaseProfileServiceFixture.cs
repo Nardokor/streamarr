@@ -3,10 +3,10 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Profiles.Releases;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Profiles.Releases;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Profiles
+namespace Streamarr.Core.Test.Profiles
 {
     [TestFixture]
     public class ReleaseProfileServiceFixture : CoreTest<ReleaseProfileService>

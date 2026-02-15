@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using NzbDrone.Core.CustomFormats;
+using Streamarr.Core.CustomFormats;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace Streamarr.Core.Datastore.Converters
 {
     public class CustomFormatIntConverter : JsonConverter<CustomFormat>
     {

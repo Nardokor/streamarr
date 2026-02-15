@@ -6,13 +6,13 @@ using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Model;
-using NzbDrone.Common.Processes;
-using NzbDrone.Test.Common;
-using NzbDrone.Test.Dummy;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Model;
+using Streamarr.Common.Processes;
+using Streamarr.Test.Common;
+using Streamarr.Test.Dummy;
 
-namespace NzbDrone.Common.Test
+namespace Streamarr.Common.Test
 {
     [NonParallelizable]
     [TestFixture]

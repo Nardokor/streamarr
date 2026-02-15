@@ -2,12 +2,12 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(69)]
-    public class quality_proper : NzbDroneMigrationBase
+    public class quality_proper : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

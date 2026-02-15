@@ -3,7 +3,7 @@ using NLog.Common;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
 
-namespace NzbDrone.Core.Instrumentation
+namespace Streamarr.Core.Instrumentation
 {
     [Target("SlowRunningAsyncTargetWrapper", IsWrapper = true)]
     public class SlowRunningAsyncTargetWrapper : AsyncTargetWrapper

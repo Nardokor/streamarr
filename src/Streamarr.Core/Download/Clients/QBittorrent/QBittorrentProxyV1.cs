@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
 
-namespace NzbDrone.Core.Download.Clients.QBittorrent
+namespace Streamarr.Core.Download.Clients.QBittorrent
 {
     // API https://github.com/qbittorrent/qBittorrent/wiki/WebUI-API-Documentation
 

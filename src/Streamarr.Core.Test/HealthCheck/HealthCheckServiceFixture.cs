@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Messaging;
-using NzbDrone.Common.TPL;
-using NzbDrone.Core.HealthCheck;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Messaging;
+using Streamarr.Common.TPL;
+using Streamarr.Core.HealthCheck;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.HealthCheck
+namespace Streamarr.Core.Test.HealthCheck
 {
     public class HealthCheckServiceFixture : CoreTest<HealthCheckService>
     {

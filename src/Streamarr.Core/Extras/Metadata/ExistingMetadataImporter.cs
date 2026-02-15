@@ -2,15 +2,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Extras.Files;
-using NzbDrone.Core.Extras.Metadata.Files;
-using NzbDrone.Core.Extras.Subtitles;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Extras.Files;
+using Streamarr.Core.Extras.Metadata.Files;
+using Streamarr.Core.Extras.Subtitles;
+using Streamarr.Core.MediaFiles.EpisodeImport.Aggregation;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Metadata
+namespace Streamarr.Core.Extras.Metadata
 {
     public class ExistingMetadataImporter : ImportExistingExtraFilesBase<MetadataFile>
     {

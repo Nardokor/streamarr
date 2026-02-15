@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NzbDrone.Core.CustomFilters
+namespace Streamarr.Core.CustomFilters
 {
     public interface ICustomFilterService
     {

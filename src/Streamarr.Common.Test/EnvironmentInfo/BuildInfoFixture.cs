@@ -1,8 +1,8 @@
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Common.Test.EnvironmentInfo
+namespace Streamarr.Common.Test.EnvironmentInfo
 {
     [TestFixture]
     public class BuildInfoFixture

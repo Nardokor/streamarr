@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.RootFolders;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.RootFolders;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.DiskSpace
+namespace Streamarr.Core.DiskSpace
 {
     public interface IDiskSpaceService
     {

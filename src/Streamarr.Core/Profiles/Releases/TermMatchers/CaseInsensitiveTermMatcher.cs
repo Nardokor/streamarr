@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Profiles.Releases.TermMatchers
+﻿namespace Streamarr.Core.Profiles.Releases.TermMatchers
 {
     public sealed class CaseInsensitiveTermMatcher : ITermMatcher
     {

@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.History;
-using NzbDrone.Core.Tv;
-using Sonarr.Api.V5.Episodes;
-using Sonarr.Api.V5.Series;
-using Sonarr.Http;
-using Sonarr.Http.Extensions;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.Download;
+using Streamarr.Core.History;
+using Streamarr.Core.Tv;
+using Streamarr.Api.V5.Episodes;
+using Streamarr.Api.V5.Series;
+using Streamarr.Http;
+using Streamarr.Http.Extensions;
 
-namespace Sonarr.Api.V5.History;
+namespace Streamarr.Api.V5.History;
 
 [V5ApiController]
 public class HistoryController : Controller

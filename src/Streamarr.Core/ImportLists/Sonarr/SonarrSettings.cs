@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.Sonarr
+namespace Streamarr.Core.ImportLists.Sonarr
 {
     public class SonarrSettingsValidator : AbstractValidator<SonarrSettings>
     {
@@ -50,9 +50,9 @@ namespace NzbDrone.Core.ImportLists.Sonarr
         [FieldDefinition(6, Type = FieldType.Select, SelectOptionsProviderAction = "getLanguageProfiles", Label = "Language Profiles", HelpText = "Language Profiles from the source instance to import from")]
         public IEnumerable<int> LanguageProfileIds { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

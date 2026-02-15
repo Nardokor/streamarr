@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using FluentValidation.Validators;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.MediaFiles;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.MediaFiles;
 
-namespace NzbDrone.Core.Organizer
+namespace Streamarr.Core.Organizer
 {
     public static class FileNameValidation
     {

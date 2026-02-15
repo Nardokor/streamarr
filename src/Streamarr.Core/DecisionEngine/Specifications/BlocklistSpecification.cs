@@ -1,8 +1,8 @@
 using NLog;
-using NzbDrone.Core.Blocklisting;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Blocklisting;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public class BlocklistSpecification : IDownloadDecisionEngineSpecification
     {

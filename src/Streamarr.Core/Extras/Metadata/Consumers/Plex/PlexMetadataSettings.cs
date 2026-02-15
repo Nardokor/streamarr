@@ -1,9 +1,9 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Extras.Metadata.Consumers.Plex
+namespace Streamarr.Core.Extras.Metadata.Consumers.Plex
 {
     public class PlexMetadataSettingsValidator : AbstractValidator<PlexMetadataSettings>
     {
@@ -24,9 +24,9 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Plex
         [FieldDefinition(0, Label = "MetadataPlexSettingsEpisodeMappings", Type = FieldType.Checkbox, Section = MetadataSectionType.Metadata, HelpText = "MetadataPlexSettingsEpisodeMappingsHelpText")]
         public bool EpisodeMappings { get; set; }
 
-        public NzbDroneValidationResult Validate()
+        public StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

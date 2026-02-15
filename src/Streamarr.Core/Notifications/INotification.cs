@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public interface INotification : IProvider
     {

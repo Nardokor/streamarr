@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Join
+namespace Streamarr.Core.Notifications.Join
 {
-    public class JoinException : NzbDroneException
+    public class JoinException : StreamarrException
     {
         public JoinException(string message)
             : base(message)

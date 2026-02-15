@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.HealthCheck;
+﻿using Streamarr.Core.HealthCheck;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookHealthPayload : WebhookPayload
     {

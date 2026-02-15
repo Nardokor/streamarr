@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Qualities;
-using Sonarr.Api.V3.CustomFormats;
-using Sonarr.Http.REST;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Qualities;
+using Streamarr.Api.V3.CustomFormats;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.EpisodeFiles
+namespace Streamarr.Api.V3.EpisodeFiles
 {
     public class EpisodeFileResource : RestResource
     {
@@ -35,7 +35,7 @@ namespace Sonarr.Api.V3.EpisodeFiles
 
     public static class EpisodeFileResourceMapper
     {
-        public static EpisodeFileResource ToResource(this EpisodeFile model, NzbDrone.Core.Tv.Series series, IUpgradableSpecification upgradableSpecification, ICustomFormatCalculationService formatCalculationService)
+        public static EpisodeFileResource ToResource(this EpisodeFile model, Streamarr.Core.Tv.Series series, IUpgradableSpecification upgradableSpecification, ICustomFormatCalculationService formatCalculationService)
         {
             if (model == null)
             {

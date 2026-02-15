@@ -12,7 +12,7 @@ using Windows.Storage.Streams;
 using System.Globalization;
 #endif
 
-namespace NzbDrone.Common.OAuth
+namespace Streamarr.Common.OAuth
 {
     /// <summary>
     /// A general purpose toolset for creating components of an OAuth request.

@@ -1,9 +1,9 @@
 using System.Linq;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Instrumentation.Sentry;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Instrumentation.Sentry;
 
-namespace NzbDrone.Common.Instrumentation
+namespace Streamarr.Common.Instrumentation
 {
     public class InitializeLogger
     {

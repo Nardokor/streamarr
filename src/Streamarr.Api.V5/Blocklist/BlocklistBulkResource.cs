@@ -1,4 +1,4 @@
-﻿namespace Sonarr.Api.V5.Blocklist;
+﻿namespace Streamarr.Api.V5.Blocklist;
 
 public class BlocklistBulkResource
 {

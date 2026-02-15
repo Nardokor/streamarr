@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.Tv;
 
-namespace Sonarr.Api.V3.Series
+namespace Streamarr.Api.V3.Series
 {
     public class SeasonResource
     {

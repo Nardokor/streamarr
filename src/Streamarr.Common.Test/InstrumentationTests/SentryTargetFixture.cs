@@ -4,11 +4,11 @@ using System.Linq;
 using FluentAssertions;
 using NLog;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Instrumentation.Sentry;
-using NzbDrone.Test.Common;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Instrumentation.Sentry;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test.InstrumentationTests
+namespace Streamarr.Common.Test.InstrumentationTests
 {
     [TestFixture]
     public class SentryTargetFixture : TestBase

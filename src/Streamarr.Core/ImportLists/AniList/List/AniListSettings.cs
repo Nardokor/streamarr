@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ImportLists.AniList.List
+namespace Streamarr.Core.ImportLists.AniList.List
 {
     public class AniListSettingsValidator : AniListSettingsBaseValidator<AniListSettings>
     {
@@ -66,9 +66,9 @@ namespace NzbDrone.Core.ImportLists.AniList.List
         [FieldDefinition(12, Label = "ImportListsAniListSettingsImportHiatus", Type = FieldType.Checkbox, Section = SectionImport, HelpText = "ImportListsAniListSettingsImportHiatusHelpText")]
         public bool ImportHiatus { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

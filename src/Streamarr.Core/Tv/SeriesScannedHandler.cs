@@ -1,11 +1,11 @@
 using NLog;
-using NzbDrone.Core.IndexerSearch;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Core.IndexerSearch;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public class SeriesScannedHandler : IHandle<SeriesScannedEvent>,
                                         IHandle<SeriesScanSkippedEvent>

@@ -3,13 +3,13 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.History;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.History;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.HistoryTests
+namespace Streamarr.Core.Test.HistoryTests
 {
     [TestFixture]
     public class HistoryRepositoryFixture : DbTest<HistoryRepository, EpisodeHistory>

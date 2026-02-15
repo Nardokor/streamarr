@@ -4,15 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Indexers.Newznab;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Indexers.Newznab;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.Torznab
+namespace Streamarr.Core.Indexers.Torznab
 {
     public class Torznab : HttpIndexerBase<TorznabSettings>
     {
@@ -130,7 +130,7 @@ namespace NzbDrone.Core.Indexers.Torznab
                 Settings.BaseUrl.Contains("/torznab/all") ||
                 Settings.BaseUrl.Contains("/api/v2.0/indexers/all/results/torznab"))
             {
-                return new NzbDroneValidationFailure("ApiPath", _localizationService.GetLocalizedString("IndexerValidationJackettAllNotSupported"))
+                return new StreamarrValidationFailure("ApiPath", _localizationService.GetLocalizedString("IndexerValidationJackettAllNotSupported"))
                 {
                     IsWarning = true,
                     DetailedDescription = _localizationService.GetLocalizedString("IndexerValidationJackettAllNotSupportedHelpText")

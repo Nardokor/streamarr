@@ -3,13 +3,13 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Notifications;
-using NzbDrone.Core.Notifications.Xbmc;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Notifications;
+using Streamarr.Core.Notifications.Xbmc;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.NotificationTests.Xbmc
+namespace Streamarr.Core.Test.NotificationTests.Xbmc
 {
     [TestFixture]
     public class OnDownloadFixture : CoreTest<Notifications.Xbmc.Xbmc>

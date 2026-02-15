@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Parser
+namespace Streamarr.Core.Parser
 {
-    public class InvalidDateException : NzbDroneException
+    public class InvalidDateException : StreamarrException
     {
         public InvalidDateException(string message, params object[] args)
             : base(message, args)

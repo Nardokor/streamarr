@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Download.Aggregation;
-using NzbDrone.Core.Parser;
-using Sonarr.Api.V3.CustomFormats;
-using Sonarr.Api.V3.Episodes;
-using Sonarr.Api.V3.Series;
-using Sonarr.Http;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Download.Aggregation;
+using Streamarr.Core.Parser;
+using Streamarr.Api.V3.CustomFormats;
+using Streamarr.Api.V3.Episodes;
+using Streamarr.Api.V3.Series;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.Parse
+namespace Streamarr.Api.V3.Parse
 {
     [V3ApiController]
     public class ParseController : Controller

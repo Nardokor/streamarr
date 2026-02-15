@@ -4,19 +4,19 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.History;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Qualities;
-using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Test.Qualities;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Download;
+using Streamarr.Core.History;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Profiles.Qualities;
+using Streamarr.Core.Qualities;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Test.Qualities;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.HistoryTests
+namespace Streamarr.Core.Test.HistoryTests
 {
     public class HistoryServiceFixture : CoreTest<HistoryService>
     {

@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Download.Clients.Deluge
+namespace Streamarr.Core.Download.Clients.Deluge
 {
     public class DelugeTorrentStatus
     {

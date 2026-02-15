@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Profiles.Delay
+namespace Streamarr.Core.Profiles.Delay
 {
     public interface IDelayProfileService
     {

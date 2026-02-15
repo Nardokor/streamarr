@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NzbDrone.Core.ThingiProvider;
+using Streamarr.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public interface IIndexerSettings : IProviderConfig
     {

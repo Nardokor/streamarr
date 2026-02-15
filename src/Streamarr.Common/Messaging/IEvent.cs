@@ -1,4 +1,4 @@
-namespace NzbDrone.Common.Messaging
+namespace Streamarr.Common.Messaging
 {
     public interface IEvent : IMessage
     {

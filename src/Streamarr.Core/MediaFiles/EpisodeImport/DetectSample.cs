@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using NLog;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.MediaFiles.MediaInfo;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport
+namespace Streamarr.Core.MediaFiles.EpisodeImport
 {
     public interface IDetectSample
     {

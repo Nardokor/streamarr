@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.Disk
+namespace Streamarr.Common.Disk
 {
     public struct OsPath : IEquatable<OsPath>
     {

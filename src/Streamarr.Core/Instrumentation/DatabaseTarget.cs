@@ -6,12 +6,12 @@ using NLog.Common;
 using NLog.Config;
 using NLog.Targets;
 using Npgsql;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Instrumentation
+namespace Streamarr.Core.Instrumentation
 {
     public class DatabaseTarget : TargetWithLayout, IHandle<ApplicationShutdownRequested>
     {
@@ -67,7 +67,7 @@ namespace NzbDrone.Core.Instrumentation
                     Level = logEvent.Level.Name
                 };
 
-                if (log.Logger.StartsWith("NzbDrone."))
+                if (log.Logger.StartsWith("Streamarr."))
                 {
                     log.Logger = log.Logger.Remove(0, 9);
                 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public struct ScriptImportInfo
     {

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Core.Messaging.Commands;
+﻿using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Lifecycle.Commands
+namespace Streamarr.Core.Lifecycle.Commands
 {
     public class ShutdownCommand : Command
     {

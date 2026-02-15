@@ -3,14 +3,14 @@ using System.Data;
 using System.IO;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(203)]
-    public class release_type : NzbDroneMigrationBase
+    public class release_type : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

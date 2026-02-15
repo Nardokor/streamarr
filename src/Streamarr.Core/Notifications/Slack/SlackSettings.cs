@@ -1,8 +1,8 @@
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Slack
+namespace Streamarr.Core.Notifications.Slack
 {
     public class SlackSettingsValidator : AbstractValidator<SlackSettings>
     {
@@ -29,9 +29,9 @@ namespace NzbDrone.Core.Notifications.Slack
         [FieldDefinition(3, Label = "NotificationsSlackSettingsChannel", HelpText = "NotificationsSlackSettingsChannelHelpText", Type = FieldType.Textbox)]
         public string Channel { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

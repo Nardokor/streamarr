@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Http
+namespace Streamarr.Http
 {
     public class ApiInfoResource
     {

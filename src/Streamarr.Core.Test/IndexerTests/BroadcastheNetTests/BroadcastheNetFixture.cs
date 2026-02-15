@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.BroadcastheNet;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Http;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.BroadcastheNet;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
+namespace Streamarr.Core.Test.IndexerTests.BroadcastheNetTests
 {
     [TestFixture]
     public class BroadcastheNetFixture : CoreTest<BroadcastheNet>

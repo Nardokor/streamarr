@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(103)]
-    public class fix_metadata_file_extensions : NzbDroneMigrationBase
+    public class fix_metadata_file_extensions : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

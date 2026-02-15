@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.MetadataSource.SkyHook.Resource
+namespace Streamarr.Core.MetadataSource.SkyHook.Resource
 {
     public class ShowResource
     {

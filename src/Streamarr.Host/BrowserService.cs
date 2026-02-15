@@ -1,10 +1,10 @@
 ﻿using System;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Processes;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Processes;
+using Streamarr.Core.Configuration;
 
-namespace NzbDrone.Host
+namespace Streamarr.Host
 {
     public interface IBrowserService
     {

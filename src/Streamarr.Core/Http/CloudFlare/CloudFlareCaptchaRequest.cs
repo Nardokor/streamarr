@@ -1,6 +1,6 @@
-using NzbDrone.Common.Http;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.Http.CloudFlare
+namespace Streamarr.Core.Http.CloudFlare
 {
     public class CloudFlareCaptchaRequest
     {

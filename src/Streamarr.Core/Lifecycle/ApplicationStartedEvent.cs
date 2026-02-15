@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Lifecycle
+namespace Streamarr.Core.Lifecycle
 {
     [LifecycleEvent]
     public class ApplicationStartedEvent : IEvent

@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Gotify
+namespace Streamarr.Core.Notifications.Gotify
 {
-    public class GotifyException : NzbDroneException
+    public class GotifyException : StreamarrException
     {
         public GotifyException(string message)
             : base(message)

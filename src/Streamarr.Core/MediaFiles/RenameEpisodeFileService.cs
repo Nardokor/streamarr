@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Core.MediaFiles.Commands;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Core.MediaFiles.Commands;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public interface IRenameEpisodeFileService
     {

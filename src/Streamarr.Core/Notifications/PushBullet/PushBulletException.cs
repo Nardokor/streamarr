@@ -1,9 +1,9 @@
 ﻿using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.PushBullet
+namespace Streamarr.Core.Notifications.PushBullet
 {
-    public class PushBulletException : NzbDroneException
+    public class PushBulletException : StreamarrException
     {
         public PushBulletException(string message)
             : base(message)

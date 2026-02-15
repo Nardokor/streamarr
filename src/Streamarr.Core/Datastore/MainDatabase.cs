@@ -3,7 +3,7 @@ using System.Data.Common;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Data;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public interface IMainDatabase : IDatabase
     {

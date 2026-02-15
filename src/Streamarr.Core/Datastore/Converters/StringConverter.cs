@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace Streamarr.Core.Datastore.Converters
 {
     public class StringConverter : JsonConverter<string>
     {

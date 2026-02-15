@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace NzbDrone.Core.Parser;
+namespace Streamarr.Core.Parser;
 
 // These are functions shared between different parser functions
 // they are not intended to be used outside of them parsing.

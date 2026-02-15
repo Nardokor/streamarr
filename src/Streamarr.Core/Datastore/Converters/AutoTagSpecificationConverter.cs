@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using NzbDrone.Core.AutoTagging.Specifications;
+using Streamarr.Core.AutoTagging.Specifications;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace Streamarr.Core.Datastore.Converters
 {
     public class AutoTaggingSpecificationConverter : JsonConverter<List<IAutoTaggingSpecification>>
     {
@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Datastore.Converters
                 reader.Read(); // Move to start of object (stored in this property)
                 ValidateToken(reader, JsonTokenType.StartObject); // Start of specification
 
-                var type = Type.GetType($"NzbDrone.Core.AutoTagging.Specifications.{typename}, Sonarr.Core", true);
+                var type = Type.GetType($"Streamarr.Core.AutoTagging.Specifications.{typename}, Sonarr.Core", true);
                 var item = (IAutoTaggingSpecification)JsonSerializer.Deserialize(ref reader, type, options);
                 results.Add(item);
 

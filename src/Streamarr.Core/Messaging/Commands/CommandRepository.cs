@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Dapper;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace Streamarr.Core.Messaging.Commands
 {
     public interface ICommandRepository : IBasicRepository<CommandModel>
     {

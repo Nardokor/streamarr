@@ -8,24 +8,24 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common;
-using NzbDrone.Common.Composition.Extensions;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Common.Options;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Datastore.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Host;
-using NzbDrone.SignalR;
-using NzbDrone.Test.Common;
+using Streamarr.Common;
+using Streamarr.Common.Composition.Extensions;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Common.Options;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Datastore.Extensions;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Host;
+using Streamarr.SignalR;
+using Streamarr.Test.Common;
 using IServiceProvider = System.IServiceProvider;
 
-namespace NzbDrone.App.Test
+namespace Streamarr.App.Test
 {
     [TestFixture]
     public class ContainerFixture : TestBase
@@ -37,9 +37,9 @@ namespace NzbDrone.App.Test
         {
             var args = new StartupContext("first", "second");
 
-            var container = new Container(rules => rules.WithNzbDroneRules())
+            var container = new Container(rules => rules.WithStreamarrRules())
                 .AutoAddServices(Bootstrap.ASSEMBLIES)
-                .AddNzbDroneLogger()
+                .AddStreamarrLogger()
                 .AddDummyDatabase()
                 .AddStartupContext(args);
 

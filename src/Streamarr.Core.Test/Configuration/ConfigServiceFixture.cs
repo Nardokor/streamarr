@@ -4,10 +4,10 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Configuration;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Configuration
+namespace Streamarr.Core.Test.Configuration
 {
     [TestFixture]
     public class ConfigServiceFixture : TestBase<ConfigService>

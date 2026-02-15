@@ -1,6 +1,6 @@
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Host.AccessControl
+namespace Streamarr.Host.AccessControl
 {
     public interface IRemoteAccessAdapter
     {

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Cache;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Http.Ping;
+using Streamarr.Common.Cache;
+using Streamarr.Core.Configuration;
+using Streamarr.Http.Ping;
 
-namespace NzbDrone.Http
+namespace Streamarr.Http
 {
     public class PingController : Controller
     {

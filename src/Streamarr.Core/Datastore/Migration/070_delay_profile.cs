@@ -4,13 +4,13 @@ using System.Data;
 using System.Linq;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(70)]
-    public class delay_profile : NzbDroneMigrationBase
+    public class delay_profile : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Common.OAuth
+﻿namespace Streamarr.Common.OAuth
 {
     /// <summary>
     /// Specifies whether the final signature value should be escaped during calculation.

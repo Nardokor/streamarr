@@ -5,9 +5,9 @@ using System.Security.Principal;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.WindowsServices;
 using NLog;
-using NzbDrone.Common.Processes;
+using Streamarr.Common.Processes;
 
-namespace NzbDrone.Common.EnvironmentInfo
+namespace Streamarr.Common.EnvironmentInfo
 {
     public class RuntimeInfo : IRuntimeInfo
     {

@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Extensions;
-using NzbDrone.Core.RootFolders;
-using Sonarr.Http.REST;
+﻿using Streamarr.Common.Extensions;
+using Streamarr.Core.RootFolders;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.RootFolders;
+namespace Streamarr.Api.V5.RootFolders;
 
 public class RootFolderResource : RestResource
 {

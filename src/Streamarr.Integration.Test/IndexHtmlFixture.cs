@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace NzbDrone.Integration.Test
+namespace Streamarr.Integration.Test
 {
     [TestFixture]
     public class IndexHtmlFixture : IntegrationTest

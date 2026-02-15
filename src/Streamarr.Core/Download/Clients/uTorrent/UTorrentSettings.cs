@@ -1,9 +1,9 @@
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.UTorrent
+namespace Streamarr.Core.Download.Clients.UTorrent
 {
     public class UTorrentSettingsValidator : AbstractValidator<UTorrentSettings>
     {
@@ -64,9 +64,9 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
         [FieldToken(TokenField.HelpText, "DownloadClientSettingsInitialState", "clientName", "uTorrent")]
         public int IntialState { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

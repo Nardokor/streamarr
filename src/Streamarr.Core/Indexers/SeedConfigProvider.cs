@@ -1,8 +1,8 @@
 using System;
-using NzbDrone.Core.Download.Clients;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Download.Clients;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers
+namespace Streamarr.Core.Indexers
 {
     public interface ISeedConfigProvider
     {

@@ -4,10 +4,10 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.TvTests.EpisodeServiceTests
+namespace Streamarr.Core.Test.TvTests.EpisodeServiceTests
 {
     [TestFixture]
     public class FindEpisodeByTitleFixture : CoreTest<EpisodeService>

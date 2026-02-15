@@ -1,6 +1,6 @@
-using NzbDrone.Core.MediaCover;
+using Streamarr.Core.MediaCover;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookImage
     {

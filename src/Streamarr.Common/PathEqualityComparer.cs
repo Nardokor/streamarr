@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common
+namespace Streamarr.Common
 {
     public class PathEqualityComparer : IEqualityComparer<string>
     {

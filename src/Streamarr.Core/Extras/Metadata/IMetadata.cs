@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Extras.Metadata.Files;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Extras.Metadata.Files;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Extras.Metadata
+namespace Streamarr.Core.Extras.Metadata
 {
     public interface IMetadata : IProvider
     {

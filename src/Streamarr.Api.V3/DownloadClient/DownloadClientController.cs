@@ -1,9 +1,9 @@
 using FluentValidation;
-using NzbDrone.Core.Download;
-using NzbDrone.SignalR;
-using Sonarr.Http;
+using Streamarr.Core.Download;
+using Streamarr.SignalR;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.DownloadClient
+namespace Streamarr.Api.V3.DownloadClient
 {
     [V3ApiController]
     public class DownloadClientController : ProviderControllerBase<DownloadClientResource, DownloadClientBulkResource, IDownloadClient, DownloadClientDefinition>

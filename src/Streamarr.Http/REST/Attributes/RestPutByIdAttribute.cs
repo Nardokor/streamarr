@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Sonarr.Http.REST.Attributes
+namespace Streamarr.Http.REST.Attributes
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class RestPutByIdAttribute : HttpPutAttribute

@@ -1,6 +1,6 @@
-using NzbDrone.Core.Extras.Metadata;
+using Streamarr.Core.Extras.Metadata;
 
-namespace Sonarr.Api.V3.Metadata
+namespace Streamarr.Api.V3.Metadata
 {
     public class MetadataBulkResource : ProviderBulkResource<MetadataBulkResource>
     {

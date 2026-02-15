@@ -1,11 +1,11 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.RootFolders;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Core.RootFolders;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.RootFolderTests
+namespace Streamarr.Core.Test.RootFolderTests
 {
     [TestFixture]
     public class GetBestRootFolderPathFixture : CoreTest<RootFolderService>

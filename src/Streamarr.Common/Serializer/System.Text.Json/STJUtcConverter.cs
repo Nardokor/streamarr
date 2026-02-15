@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace NzbDrone.Common.Serializer
+namespace Streamarr.Common.Serializer
 {
     public class STJUtcConverter : JsonConverter<DateTime>
     {

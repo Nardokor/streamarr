@@ -2,14 +2,14 @@
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.DecisionEngine.Specifications.RssSync;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.DecisionEngine.Specifications.RssSync;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests
+namespace Streamarr.Core.Test.DecisionEngineTests
 {
     [TestFixture]
 

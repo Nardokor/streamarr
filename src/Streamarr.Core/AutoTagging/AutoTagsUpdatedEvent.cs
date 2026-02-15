@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.AutoTagging
+namespace Streamarr.Core.AutoTagging
 {
     public class AutoTagsUpdatedEvent : IEvent
     {

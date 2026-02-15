@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Common.Disk
+namespace Streamarr.Common.Disk
 {
     public static class LongPathSupport
     {

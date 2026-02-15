@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Text;
-using NzbDrone.Core.Extras.Files;
-using NzbDrone.Core.Languages;
+using Streamarr.Core.Extras.Files;
+using Streamarr.Core.Languages;
 
-namespace NzbDrone.Core.Extras.Subtitles
+namespace Streamarr.Core.Extras.Subtitles
 {
     public class SubtitleFile : ExtraFile
     {

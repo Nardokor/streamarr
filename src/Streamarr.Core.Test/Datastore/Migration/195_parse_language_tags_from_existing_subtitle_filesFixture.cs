@@ -4,10 +4,10 @@ using System.Linq;
 using Dapper;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore.Migration;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Datastore.Migration;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Datastore.Migration
+namespace Streamarr.Core.Test.Datastore.Migration
 {
     [TestFixture]
     public class parse_language_tags_from_existing_subtitle_filesFixture : MigrationTest<parse_language_tags_from_existing_subtitle_files>

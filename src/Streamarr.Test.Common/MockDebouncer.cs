@@ -1,7 +1,7 @@
 using System;
-using NzbDrone.Common.TPL;
+using Streamarr.Common.TPL;
 
-namespace NzbDrone.Test.Common
+namespace Streamarr.Test.Common
 {
     public class MockDebouncer : Debouncer
     {

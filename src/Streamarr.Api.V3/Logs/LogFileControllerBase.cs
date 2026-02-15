@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Configuration;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Configuration;
 
-namespace Sonarr.Api.V3.Logs
+namespace Streamarr.Api.V3.Logs
 {
     public abstract class LogFileControllerBase : Controller
     {

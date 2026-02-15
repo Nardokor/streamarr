@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.ImportLists.Exclusions;
-using Sonarr.Http;
-using Sonarr.Http.Extensions;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.ImportLists.Exclusions;
+using Streamarr.Http;
+using Streamarr.Http.Extensions;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V3.ImportLists
+namespace Streamarr.Api.V3.ImportLists
 {
     [V3ApiController]
     public class ImportListExclusionController : RestController<ImportListExclusionResource>

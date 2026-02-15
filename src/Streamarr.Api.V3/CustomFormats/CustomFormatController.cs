@@ -3,14 +3,14 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Validation;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Validation;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
 
-namespace Sonarr.Api.V3.CustomFormats
+namespace Streamarr.Api.V3.CustomFormats
 {
     [V3ApiController]
     public class CustomFormatController : RestController<CustomFormatResource>
@@ -140,7 +140,7 @@ namespace Sonarr.Api.V3.CustomFormats
 
         private void VerifyValidationResult(ValidationResult validationResult)
         {
-            var result = new NzbDroneValidationResult(validationResult.Errors);
+            var result = new StreamarrValidationResult(validationResult.Errors);
 
             if (!result.IsValid)
             {

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public class PostgresOptions
     {

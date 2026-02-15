@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Download.Clients.FreeboxDownload
+﻿namespace Streamarr.Core.Download.Clients.FreeboxDownload
 {
     public class FreeboxDownloadException : DownloadClientException
     {

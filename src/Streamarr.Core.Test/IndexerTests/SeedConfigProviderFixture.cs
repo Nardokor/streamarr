@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Torznab;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.Torznab;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerTests
+namespace Streamarr.Core.Test.IndexerTests
 {
     [TestFixture]
     public class SeedConfigProviderFixture : CoreTest<SeedConfigProvider>

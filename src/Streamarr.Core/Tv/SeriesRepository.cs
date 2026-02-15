@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Tv
+namespace Streamarr.Core.Tv
 {
     public interface ISeriesRepository : IBasicRepository<Series>
     {

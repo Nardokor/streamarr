@@ -2,14 +2,14 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Authentication;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Messaging.Events;
-using Sonarr.Http.Extensions;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Authentication;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Http.Extensions;
 
-namespace NzbDrone.Http.Authentication
+namespace Streamarr.Http.Authentication
 {
     public class UiAuthorizationHandler : AuthorizationHandler<BypassableDenyAnonymousAuthorizationRequirement>, IAuthorizationRequirement, IHandle<ConfigSavedEvent>
     {

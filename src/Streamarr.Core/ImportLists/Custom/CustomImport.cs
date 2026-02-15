@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.Custom
+namespace Streamarr.Core.ImportLists.Custom
 {
     public class CustomImport : ImportListBase<CustomSettings>
     {

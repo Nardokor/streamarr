@@ -1,9 +1,9 @@
-using NzbDrone.Common.Reflection;
-using NzbDrone.Core.ThingiProvider;
-using Sonarr.Http.ClientSchema;
-using Sonarr.Http.REST;
+using Streamarr.Common.Reflection;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Http.ClientSchema;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Provider
+namespace Streamarr.Api.V5.Provider
 {
     public class ProviderResource<T> : RestResource
     {

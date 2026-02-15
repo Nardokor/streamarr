@@ -1,11 +1,11 @@
 using System;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
 
-namespace NzbDrone.Core.Datastore
+namespace Streamarr.Core.Datastore
 {
     public interface IRestoreDatabase
     {
@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Datastore
     {
         private readonly IDiskProvider _diskProvider;
         private readonly IAppFolderInfo _appFolderInfo;
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(DatabaseRestorationService));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(DatabaseRestorationService));
 
         public DatabaseRestorationService(IDiskProvider diskProvider, IAppFolderInfo appFolderInfo)
         {

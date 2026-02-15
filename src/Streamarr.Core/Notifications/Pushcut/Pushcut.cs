@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.MediaCover;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Pushcut
+namespace Streamarr.Core.Notifications.Pushcut
 {
     public class Pushcut : NotificationBase<PushcutSettings>
     {

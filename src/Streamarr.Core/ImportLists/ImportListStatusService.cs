@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider.Status;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public interface IImportListStatusService : IProviderStatusServiceBase<ImportListStatus>
     {

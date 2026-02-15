@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Housekeeping
+namespace Streamarr.Core.Housekeeping
 {
     public interface IHousekeepingTask
     {

@@ -1,13 +1,13 @@
 ﻿using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Extras.Metadata.Files;
-using NzbDrone.Core.Housekeeping.Housekeepers;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Extras.Metadata.Files;
+using Streamarr.Core.Housekeeping.Housekeepers;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
+namespace Streamarr.Core.Test.Housekeeping.Housekeepers
 {
     [TestFixture]
     public class CleanupAbsolutePathMetadataFilesFixture : DbTest<CleanupAbsolutePathMetadataFiles, MetadataFile>

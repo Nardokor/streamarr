@@ -1,9 +1,9 @@
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnsureThat;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnsureThat;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test.EnsureTest
+namespace Streamarr.Common.Test.EnsureTest
 {
     [TestFixture]
     public class PathExtensionFixture : TestBase

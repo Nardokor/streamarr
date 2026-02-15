@@ -3,12 +3,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Equ;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Indexers.Newznab;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Indexers.Newznab;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.Torznab
+namespace Streamarr.Core.Indexers.Torznab
 {
     public class TorznabSettingsValidator : AbstractValidator<TorznabSettings>
     {
@@ -61,9 +61,9 @@ namespace NzbDrone.Core.Indexers.Torznab
         [FieldDefinition(11, Type = FieldType.Checkbox, Label = "IndexerSettingsRejectBlocklistedTorrentHashes", HelpText = "IndexerSettingsRejectBlocklistedTorrentHashesHelpText", Advanced = true)]
         public bool RejectBlocklistedTorrentHashesWhileGrabbing { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
 
         public bool Equals(TorznabSettings other)

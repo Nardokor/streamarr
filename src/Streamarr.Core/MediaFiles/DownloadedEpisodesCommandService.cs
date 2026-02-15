@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.MediaFiles.Commands;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
-using NzbDrone.Core.Messaging.Commands;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.MediaFiles.Commands;
+using Streamarr.Core.MediaFiles.EpisodeImport;
+using Streamarr.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
     public class DownloadedEpisodesCommandService : IExecute<DownloadedEpisodesScanCommand>
     {

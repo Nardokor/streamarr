@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Twitter
+namespace Streamarr.Core.Notifications.Twitter
 {
     public class Twitter : NotificationBase<TwitterSettings>
     {

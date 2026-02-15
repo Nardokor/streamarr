@@ -7,14 +7,14 @@ using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.MetadataSource;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.MetadataSource;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.TvTests
+namespace Streamarr.Core.Test.TvTests
 {
     [TestFixture]
     public class AddSeriesFixture : CoreTest<AddSeriesService>

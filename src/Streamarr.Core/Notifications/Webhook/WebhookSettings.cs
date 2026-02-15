@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookSettingsValidator : AbstractValidator<WebhookSettings>
     {
@@ -39,9 +39,9 @@ namespace NzbDrone.Core.Notifications.Webhook
         [FieldDefinition(4, Label = "NotificationsSettingsWebhookHeaders", Type = FieldType.KeyValueList, Advanced = true)]
         public IEnumerable<KeyValuePair<string, string>> Headers { get; set; }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Mono.Disk
+namespace Streamarr.Mono.Disk
 {
     public interface IProcMountProvider
     {

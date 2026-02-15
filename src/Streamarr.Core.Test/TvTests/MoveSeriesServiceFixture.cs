@@ -4,14 +4,14 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Commands;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Organizer;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Commands;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.TvTests
+namespace Streamarr.Core.Test.TvTests
 {
     [TestFixture]
     public class MoveSeriesServiceFixture : CoreTest<MoveSeriesService>

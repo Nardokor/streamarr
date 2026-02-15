@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.ImportLists.Trakt.Popular
+namespace Streamarr.Core.ImportLists.Trakt.Popular
 {
     public class TraktPopularParser : TraktParser
     {

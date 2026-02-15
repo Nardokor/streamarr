@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.MediaFiles;
-using Sonarr.Http;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V5.FileSystem;
+namespace Streamarr.Api.V5.FileSystem;
 
 [V5ApiController]
 public class FileSystemController : Controller

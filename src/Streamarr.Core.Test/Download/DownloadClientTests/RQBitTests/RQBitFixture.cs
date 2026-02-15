@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients.RQBit;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients.RQBit;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.RQBitTests
+namespace Streamarr.Core.Test.Download.DownloadClientTests.RQBitTests
 {
     [TestFixture]
     public class RQBitFixture : DownloadClientFixtureBase<RQBit>

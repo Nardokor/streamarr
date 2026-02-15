@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Update
+﻿namespace Streamarr.Update
 {
     public enum AppType
     {

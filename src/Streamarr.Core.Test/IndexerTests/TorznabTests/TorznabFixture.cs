@@ -6,15 +6,15 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Newznab;
-using NzbDrone.Core.Indexers.Torznab;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Http;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Indexers.Newznab;
+using Streamarr.Core.Indexers.Torznab;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
+namespace Streamarr.Core.Test.IndexerTests.TorznabTests
 {
     [TestFixture]
     public class TorznabFixture : CoreTest<Torznab>
@@ -177,7 +177,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
                 .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get)))
                 .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), recentFeed)));
 
-            var result = new NzbDroneValidationResult(Subject.Test());
+            var result = new StreamarrValidationResult(Subject.Test());
             result.IsValid.Should().BeTrue();
             result.HasWarnings.Should().BeTrue();
         }
@@ -194,7 +194,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
 
             (Subject.Definition.Settings as TorznabSettings).ApiPath = apiPath;
 
-            var result = new NzbDroneValidationResult(Subject.Test());
+            var result = new StreamarrValidationResult(Subject.Test());
             result.IsValid.Should().BeTrue();
             result.HasWarnings.Should().BeTrue();
         }

@@ -1,12 +1,12 @@
 using System;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Model;
-using NzbDrone.Common.Processes;
-using NzbDrone.Test.Common;
-using NzbDrone.Update.UpdateEngine;
+using Streamarr.Common.Model;
+using Streamarr.Common.Processes;
+using Streamarr.Test.Common;
+using Streamarr.Update.UpdateEngine;
 
-namespace NzbDrone.Update.Test
+namespace Streamarr.Update.Test
 {
     [TestFixture]
     public class ProgramFixture : TestBase<UpdateApp>

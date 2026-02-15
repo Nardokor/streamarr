@@ -1,6 +1,6 @@
-using Sonarr.Http.REST;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Config
+namespace Streamarr.Api.V3.Config
 {
     public class NamingConfigResource : RestResource
     {

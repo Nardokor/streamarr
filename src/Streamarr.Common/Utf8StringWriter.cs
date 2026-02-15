@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace NzbDrone.Common;
+namespace Streamarr.Common;
 
 public class Utf8StringWriter : StringWriter
 {

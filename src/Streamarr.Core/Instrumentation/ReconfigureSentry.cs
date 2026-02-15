@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Instrumentation.Sentry;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Instrumentation.Sentry;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Instrumentation
+namespace Streamarr.Core.Instrumentation
 {
     public class ReconfigureSentry : IHandleAsync<ApplicationStartedEvent>
     {

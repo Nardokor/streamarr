@@ -1,13 +1,13 @@
 using System;
 using System.IO;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.History;
-using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.History;
+using Streamarr.Core.MediaFiles.Events;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.Download.History
+namespace Streamarr.Core.Download.History
 {
     public interface IDownloadHistoryService
     {

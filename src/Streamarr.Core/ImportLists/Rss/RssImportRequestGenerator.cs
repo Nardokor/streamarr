@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.ImportLists.Rss
+namespace Streamarr.Core.ImportLists.Rss
 {
     public class RssImportRequestGenerator<TSettings> : IImportListRequestGenerator
         where TSettings : RssImportBaseSettings<TSettings>, new()

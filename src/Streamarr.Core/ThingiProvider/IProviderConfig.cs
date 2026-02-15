@@ -1,9 +1,9 @@
-﻿using NzbDrone.Core.Validation;
+﻿using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.ThingiProvider
+namespace Streamarr.Core.ThingiProvider
 {
     public interface IProviderConfig
     {
-        NzbDroneValidationResult Validate();
+        StreamarrValidationResult Validate();
     }
 }

@@ -1,6 +1,6 @@
-﻿using NzbDrone.Common.Messaging;
+﻿using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Profiles.Qualities;
+namespace Streamarr.Core.Profiles.Qualities;
 
 public class QualityProfileUpdatedEvent(int id) : IEvent
 {

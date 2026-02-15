@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public enum ListSyncLevelType
     {

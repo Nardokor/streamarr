@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.MediaFiles
+namespace Streamarr.Core.MediaFiles
 {
-    public class ScriptImportException : NzbDroneException
+    public class ScriptImportException : StreamarrException
     {
         public ScriptImportException(string message)
             : base(message)

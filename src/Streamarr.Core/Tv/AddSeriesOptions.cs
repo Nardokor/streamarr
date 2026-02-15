@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Tv
+﻿namespace Streamarr.Core.Tv
 {
     public class AddSeriesOptions : MonitoringOptions
     {

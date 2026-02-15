@@ -1,4 +1,4 @@
-namespace NzbDrone.Common
+namespace Streamarr.Common
 {
     public static class ConvertBase32
     {

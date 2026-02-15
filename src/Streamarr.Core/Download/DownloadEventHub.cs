@@ -1,10 +1,10 @@
 ﻿using System;
 using NLog;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.Messaging.Events;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Download.TrackedDownloads;
+using Streamarr.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Download
+namespace Streamarr.Core.Download
 {
     public class DownloadEventHub : IHandle<DownloadFailedEvent>,
                                     IHandle<DownloadCompletedEvent>,

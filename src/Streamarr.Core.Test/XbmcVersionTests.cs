@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Notifications.Xbmc.Model;
+using Streamarr.Core.Notifications.Xbmc.Model;
 
-namespace NzbDrone.Core.Test
+namespace Streamarr.Core.Test
 {
     public class XbmcVersionTests
     {

@@ -1,10 +1,10 @@
 ﻿using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(12)]
-    public class remove_custom_start_date : NzbDroneMigrationBase
+    public class remove_custom_start_date : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

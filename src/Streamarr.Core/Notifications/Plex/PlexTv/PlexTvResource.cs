@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Core.Notifications.Plex.PlexTv
+namespace Streamarr.Core.Notifications.Plex.PlexTv
 {
     public class PlexTvResource
     {

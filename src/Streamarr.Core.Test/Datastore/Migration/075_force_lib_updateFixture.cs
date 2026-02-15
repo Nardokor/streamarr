@@ -1,10 +1,10 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore.Migration;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.Datastore.Migration;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Datastore.Migration
+namespace Streamarr.Core.Test.Datastore.Migration
 {
     [TestFixture]
     public class force_lib_updateFixture : MigrationTest<force_lib_update>
@@ -25,14 +25,14 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             {
                 c.Insert.IntoTable("ScheduledTasks").Row(new
                 {
-                    TypeName = "NzbDrone.Core.Tv.Commands.RefreshSeriesCommand",
+                    TypeName = "Streamarr.Core.Tv.Commands.RefreshSeriesCommand",
                     Interval = 10,
                     LastExecution = "2000-01-01 00:00:00"
                 });
 
                 c.Insert.IntoTable("ScheduledTasks").Row(new
                 {
-                    TypeName = "NzbDrone.Core.Backup.BackupCommand",
+                    TypeName = "Streamarr.Core.Backup.BackupCommand",
                     Interval = 10,
                     LastExecution = "2000-01-01 00:00:00"
                 });
@@ -40,11 +40,11 @@ namespace NzbDrone.Core.Test.Datastore.Migration
 
             var jobs = db.Query<ScheduledTasks75>("SELECT \"TypeName\", \"LastExecution\" FROM \"ScheduledTasks\"");
 
-            jobs.Single(c => c.TypeName == "NzbDrone.Core.Tv.Commands.RefreshSeriesCommand")
+            jobs.Single(c => c.TypeName == "Streamarr.Core.Tv.Commands.RefreshSeriesCommand")
                 .LastExecution.Year.Should()
                 .Be(2014);
 
-            jobs.Single(c => c.TypeName == "NzbDrone.Core.Backup.BackupCommand")
+            jobs.Single(c => c.TypeName == "Streamarr.Core.Backup.BackupCommand")
                .LastExecution.Year.Should()
                .Be(2000);
         }

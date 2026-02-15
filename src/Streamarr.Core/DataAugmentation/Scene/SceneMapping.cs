@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.DataAugmentation.Scene
+namespace Streamarr.Core.DataAugmentation.Scene
 {
     public class SceneMapping : ModelBase
     {

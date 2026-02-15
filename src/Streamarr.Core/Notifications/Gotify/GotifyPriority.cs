@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Gotify
+namespace Streamarr.Core.Notifications.Gotify
 {
     public enum GotifyPriority
     {

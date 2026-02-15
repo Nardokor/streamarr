@@ -1,7 +1,7 @@
 using FluentValidation.Validators;
-using NzbDrone.Common.Disk;
+using Streamarr.Common.Disk;
 
-namespace NzbDrone.Core.Validation
+namespace Streamarr.Core.Validation
 {
     public class FolderChmodValidator : PropertyValidator
     {

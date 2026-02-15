@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.MediaFiles.MediaInfo;
+namespace Streamarr.Core.MediaFiles.MediaInfo;
 
 internal static class FFMpegCoreSideDataTypes
 {

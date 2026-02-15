@@ -11,15 +11,15 @@ using FluentMigrator.Runner.Processors.SQLite;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace NzbDrone.Core.Datastore.Migration.Framework
+namespace Streamarr.Core.Datastore.Migration.Framework
 {
-    public class NzbDroneSQLiteProcessor : SQLiteProcessor
+    public class StreamarrSQLiteProcessor : SQLiteProcessor
     {
         private readonly SQLiteQuoter _quoter;
 
-        public NzbDroneSQLiteProcessor(SQLiteDbFactory factory,
+        public StreamarrSQLiteProcessor(SQLiteDbFactory factory,
                                        SQLiteGenerator generator,
-                                       ILogger<NzbDroneSQLiteProcessor> logger,
+                                       ILogger<StreamarrSQLiteProcessor> logger,
                                        IOptionsSnapshot<ProcessorOptions> options,
                                        IConnectionStringAccessor connectionStringAccessor,
                                        IServiceProvider serviceProvider,

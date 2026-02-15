@@ -1,8 +1,8 @@
-﻿using NzbDrone.Common.Exceptions;
+﻿using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Exceptions
+namespace Streamarr.Core.Exceptions
 {
-    public class SearchFailedException : NzbDroneException
+    public class SearchFailedException : StreamarrException
     {
         public SearchFailedException(string message)
             : base(message)

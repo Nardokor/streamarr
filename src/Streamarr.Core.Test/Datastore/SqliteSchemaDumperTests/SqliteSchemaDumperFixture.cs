@@ -2,9 +2,9 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Test.Datastore.SqliteSchemaDumperTests
+namespace Streamarr.Core.Test.Datastore.SqliteSchemaDumperTests
 {
     [TestFixture]
     public class SqliteSchemaDumperFixture

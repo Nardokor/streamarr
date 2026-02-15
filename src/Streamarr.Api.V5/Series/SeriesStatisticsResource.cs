@@ -1,6 +1,6 @@
-using NzbDrone.Core.SeriesStats;
+using Streamarr.Core.SeriesStats;
 
-namespace Sonarr.Api.V5.Series;
+namespace Streamarr.Api.V5.Series;
 
 public class SeriesStatisticsResource
 {

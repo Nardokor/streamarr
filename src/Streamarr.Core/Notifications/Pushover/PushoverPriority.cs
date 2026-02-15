@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Notifications.Pushover
+﻿namespace Streamarr.Core.Notifications.Pushover
 {
     public enum PushoverPriority
     {

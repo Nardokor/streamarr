@@ -1,7 +1,7 @@
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.DataAugmentation.Scene;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.DataAugmentation.Scene;
 
-namespace Sonarr.Api.V5.Series;
+namespace Streamarr.Api.V5.Series;
 
 public class AlternateTitleResource
 {

@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.Instrumentation
+namespace Streamarr.Common.Instrumentation
 {
     public class CleanseLogMessage
     {

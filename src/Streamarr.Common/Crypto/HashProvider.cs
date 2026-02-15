@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
-using NzbDrone.Common.Disk;
+using Streamarr.Common.Disk;
 
-namespace NzbDrone.Common.Crypto
+namespace Streamarr.Common.Crypto
 {
     public interface IHashProvider
     {

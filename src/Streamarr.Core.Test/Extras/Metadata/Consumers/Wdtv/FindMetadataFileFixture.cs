@@ -2,13 +2,13 @@
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Extras.Metadata;
-using NzbDrone.Core.Extras.Metadata.Consumers.Wdtv;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.Extras.Metadata;
+using Streamarr.Core.Extras.Metadata.Consumers.Wdtv;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Extras.Metadata.Consumers.Wdtv
+namespace Streamarr.Core.Test.Extras.Metadata.Consumers.Wdtv
 {
     [TestFixture]
     public class FindMetadataFileFixture : CoreTest<WdtvMetadata>

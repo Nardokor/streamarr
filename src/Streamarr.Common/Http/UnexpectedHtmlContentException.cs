@@ -1,4 +1,4 @@
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public class UnexpectedHtmlContentException : HttpException
     {

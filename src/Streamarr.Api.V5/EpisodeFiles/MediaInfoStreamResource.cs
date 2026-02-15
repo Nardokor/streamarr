@@ -1,6 +1,6 @@
-using NzbDrone.Core.MediaFiles.MediaInfo;
+using Streamarr.Core.MediaFiles.MediaInfo;
 
-namespace Sonarr.Api.V5.EpisodeFiles;
+namespace Streamarr.Api.V5.EpisodeFiles;
 
 public abstract class MediaInfoStreamResource
 {

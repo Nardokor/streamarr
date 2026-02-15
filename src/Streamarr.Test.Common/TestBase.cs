@@ -5,14 +5,14 @@ using FluentAssertions;
 using Moq;
 using NLog;
 using NUnit.Framework;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Messaging;
-using NzbDrone.Common.Processes;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Test.Common.AutoMoq;
+using Streamarr.Common.Cache;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Messaging;
+using Streamarr.Common.Processes;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Test.Common.AutoMoq;
 
-namespace NzbDrone.Test.Common
+namespace Streamarr.Test.Common
 {
     public abstract class TestBase<TSubject> : TestBase
         where TSubject : class
@@ -74,7 +74,7 @@ namespace NzbDrone.Test.Common
         {
             get
             {
-                var virtualPath = Path.Combine(TempFolder, "VirtualNzbDrone");
+                var virtualPath = Path.Combine(TempFolder, "VirtualStreamarr");
                 if (!Directory.Exists(virtualPath))
                 {
                     Directory.CreateDirectory(virtualPath);

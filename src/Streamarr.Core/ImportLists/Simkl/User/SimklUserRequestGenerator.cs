@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
 
-namespace NzbDrone.Core.ImportLists.Simkl.User
+namespace Streamarr.Core.ImportLists.Simkl.User
 {
     public class SimklUserRequestGenerator : IImportListRequestGenerator
     {

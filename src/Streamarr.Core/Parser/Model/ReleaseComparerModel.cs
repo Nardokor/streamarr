@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Core.Blocklisting;
-using NzbDrone.Core.History;
+using Streamarr.Core.Blocklisting;
+using Streamarr.Core.History;
 
-namespace NzbDrone.Core.Parser.Model;
+namespace Streamarr.Core.Parser.Model;
 
 public class ReleaseComparerModel
 {

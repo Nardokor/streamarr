@@ -3,11 +3,11 @@ using System.Linq;
 using Dapper;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.Datastore
+namespace Streamarr.Core.Test.Datastore
 {
     public class DatabaseFixture : DbTest
     {

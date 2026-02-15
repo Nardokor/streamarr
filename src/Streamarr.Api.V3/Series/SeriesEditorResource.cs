@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Tv;
 
-namespace Sonarr.Api.V3.Series
+namespace Streamarr.Api.V3.Series
 {
     public class SeriesEditorResource
     {

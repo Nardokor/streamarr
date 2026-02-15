@@ -1,10 +1,10 @@
 using System;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.CustomFormats
+namespace Streamarr.Core.CustomFormats
 {
     public class SeasonPackSpecificationValidator : AbstractValidator<ReleaseTypeSpecification>
     {
@@ -35,9 +35,9 @@ namespace NzbDrone.Core.CustomFormats
             return input.ReleaseType == (ReleaseType)Value;
         }
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

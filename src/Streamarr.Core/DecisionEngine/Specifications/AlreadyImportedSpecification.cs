@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using NLog;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.History;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.History;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace Streamarr.Core.DecisionEngine.Specifications
 {
     public class AlreadyImportedSpecification : IDownloadDecisionEngineSpecification
     {

@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.Sabnzbd.JsonConverters
+namespace Streamarr.Core.Download.Clients.Sabnzbd.JsonConverters
 {
     public class SabnzbdQueueTimeConverter : JsonConverter
     {

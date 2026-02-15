@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Tv;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications
+namespace Streamarr.Core.Notifications
 {
     public class MediaServerUpdateQueue<TQueueHost, TItemInfo>
         where TQueueHost : class

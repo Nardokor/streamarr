@@ -1,7 +1,7 @@
 using System;
-using NzbDrone.Core.Annotations;
+using Streamarr.Core.Annotations;
 
-namespace NzbDrone.Core.ImportLists.Trakt.Popular
+namespace Streamarr.Core.ImportLists.Trakt.Popular
 {
     public enum TraktPopularListType
     {

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.MediaFiles;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V3.Episodes
+namespace Streamarr.Api.V3.Episodes
 {
     [V3ApiController("rename")]
     public class RenameEpisodeController : Controller

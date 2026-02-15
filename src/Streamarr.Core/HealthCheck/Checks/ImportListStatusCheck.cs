@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.ThingiProvider.Events;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.Localization;
+using Streamarr.Core.ThingiProvider.Events;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace Streamarr.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ProviderUpdatedEvent<IImportList>))]
     [CheckOn(typeof(ProviderDeletedEvent<IImportList>))]

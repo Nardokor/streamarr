@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Core.Messaging
+namespace Streamarr.Core.Messaging
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class EventHandleOrderAttribute : Attribute

@@ -7,18 +7,18 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Composition.Extensions;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Common.Options;
-using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Datastore.Extensions;
-using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Host;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Composition.Extensions;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Instrumentation.Extensions;
+using Streamarr.Common.Options;
+using Streamarr.Core.Datastore;
+using Streamarr.Core.Datastore.Extensions;
+using Streamarr.Core.Lifecycle;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Host;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Common.Test
+namespace Streamarr.Common.Test
 {
     [TestFixture]
     public class ServiceFactoryFixture : TestBase<ServiceFactory>
@@ -26,8 +26,8 @@ namespace NzbDrone.Common.Test
         [Test]
         public void event_handlers_should_be_unique()
         {
-            var container = new Container(rules => rules.WithNzbDroneRules())
-                .AddNzbDroneLogger()
+            var container = new Container(rules => rules.WithStreamarrRules())
+                .AddStreamarrLogger()
                 .AutoAddServices(Bootstrap.ASSEMBLIES)
                 .AddDummyDatabase()
                 .AddDummyLogDatabase()

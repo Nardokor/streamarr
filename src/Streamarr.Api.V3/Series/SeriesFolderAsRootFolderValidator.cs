@@ -1,10 +1,10 @@
 using System;
 using System.IO;
 using FluentValidation.Validators;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Organizer;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Organizer;
 
-namespace Sonarr.Api.V3.Series
+namespace Streamarr.Api.V3.Series
 {
     public class SeriesFolderAsRootFolderValidator : PropertyValidator
     {

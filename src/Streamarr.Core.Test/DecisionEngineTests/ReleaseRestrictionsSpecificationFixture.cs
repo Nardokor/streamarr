@@ -3,13 +3,13 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.DecisionEngine.Specifications;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Releases;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.DecisionEngine.Specifications;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Profiles.Releases;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests
+namespace Streamarr.Core.Test.DecisionEngineTests
 {
     [TestFixture]
     public class ReleaseRestrictionsSpecificationFixture : CoreTest<ReleaseRestrictionsSpecification>

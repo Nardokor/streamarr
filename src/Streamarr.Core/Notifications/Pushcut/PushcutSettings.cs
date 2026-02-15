@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using FluentValidation;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Pushcut
+namespace Streamarr.Core.Notifications.Pushcut
 {
     public class PushcutSettingsValidator : AbstractValidator<PushcutSettings>
     {
@@ -33,9 +33,9 @@ namespace NzbDrone.Core.Notifications.Pushcut
         [FieldDefinition(4, Label = "NotificationsPushcutSettingsMetadataLinks", Type = FieldType.Select, SelectOptions = typeof(MetadataLinkType), HelpText = "NotificationsPushcutSettingsMetadataLinksHelpText")]
         public IEnumerable<int> MetadataLinks { get; set; } = [];
 
-        public override NzbDroneValidationResult Validate()
+        public override StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

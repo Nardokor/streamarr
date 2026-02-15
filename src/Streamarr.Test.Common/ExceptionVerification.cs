@@ -6,7 +6,7 @@ using NLog;
 using NLog.Targets;
 using NUnit.Framework;
 
-namespace NzbDrone.Test.Common
+namespace Streamarr.Test.Common
 {
     public class ExceptionVerification : Target
     {

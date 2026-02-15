@@ -1,8 +1,8 @@
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
-using Sonarr.Http.REST;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.Release;
+namespace Streamarr.Api.V5.Release;
 
 public class ReleasePushResource : RestResource
 {

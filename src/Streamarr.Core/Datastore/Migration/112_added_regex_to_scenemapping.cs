@@ -1,10 +1,10 @@
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(112)]
-    public class added_regex_to_scenemapping : NzbDroneMigrationBase
+    public class added_regex_to_scenemapping : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

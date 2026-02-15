@@ -1,6 +1,6 @@
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.ImportLists.Exclusions
+namespace Streamarr.Core.ImportLists.Exclusions
 {
     public class ImportListExclusion : ModelBase
     {

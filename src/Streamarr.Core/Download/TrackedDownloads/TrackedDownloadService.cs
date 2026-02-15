@@ -2,19 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Download.Aggregation;
-using NzbDrone.Core.Download.History;
-using NzbDrone.Core.History;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Events;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.CustomFormats;
+using Streamarr.Core.Download.Aggregation;
+using Streamarr.Core.Download.History;
+using Streamarr.Core.History;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Parser;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Events;
 
-namespace NzbDrone.Core.Download.TrackedDownloads
+namespace Streamarr.Core.Download.TrackedDownloads
 {
     public interface ITrackedDownloadService
     {

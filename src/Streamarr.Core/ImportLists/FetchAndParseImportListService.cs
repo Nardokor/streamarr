@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.TPL;
-using NzbDrone.Core.ImportLists.ImportListItems;
+using Streamarr.Common.TPL;
+using Streamarr.Core.ImportLists.ImportListItems;
 
-namespace NzbDrone.Core.ImportLists
+namespace Streamarr.Core.ImportLists
 {
     public interface IFetchAndParseImportList
     {

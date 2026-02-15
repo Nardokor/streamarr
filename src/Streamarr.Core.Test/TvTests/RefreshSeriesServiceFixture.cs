@@ -5,17 +5,17 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.AutoTagging;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MetadataSource;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Commands;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.AutoTagging;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MetadataSource;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Core.Tv.Commands;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.TvTests
+namespace Streamarr.Core.Test.TvTests
 {
     [TestFixture]
     public class RefreshSeriesServiceFixture : CoreTest<RefreshSeriesService>

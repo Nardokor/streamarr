@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Sonarr.Http.Validation
+namespace Streamarr.Http.Validation
 {
     public interface IDfaMatcherBuilder
     {

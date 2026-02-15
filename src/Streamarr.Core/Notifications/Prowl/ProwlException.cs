@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Prowl
+namespace Streamarr.Core.Notifications.Prowl
 {
-    public class ProwlException : NzbDroneException
+    public class ProwlException : StreamarrException
     {
         public ProwlException(string message)
             : base(message)

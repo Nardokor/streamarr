@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Data;
 using Dapper;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Parser;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Parser;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(195)]
-    public class parse_language_tags_from_existing_subtitle_files : NzbDroneMigrationBase
+    public class parse_language_tags_from_existing_subtitle_files : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

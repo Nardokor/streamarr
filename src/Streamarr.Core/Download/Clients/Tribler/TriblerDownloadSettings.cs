@@ -1,11 +1,11 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Annotations;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.Tribler
+namespace Streamarr.Core.Download.Clients.Tribler
 {
     public class TriblerSettingsValidator : AbstractValidator<TriblerDownloadSettings>
     {
@@ -66,9 +66,9 @@ namespace NzbDrone.Core.Download.Clients.Tribler
         [FieldDefinition(9, Label = "DownloadClientTriblerSettingsSafeSeeding", Type = FieldType.Checkbox, HelpText = "DownloadClientTriblerSettingsSafeSeedingHelpText")]
         public bool SafeSeeding { get; set; }
 
-        public NzbDroneValidationResult Validate()
+        public StreamarrValidationResult Validate()
         {
-            return new NzbDroneValidationResult(Validator.Validate(this));
+            return new StreamarrValidationResult(Validator.Validate(this));
         }
     }
 }

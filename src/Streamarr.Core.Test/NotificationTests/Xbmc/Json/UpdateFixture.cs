@@ -3,12 +3,12 @@ using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.Notifications.Xbmc;
-using NzbDrone.Core.Notifications.Xbmc.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Notifications.Xbmc;
+using Streamarr.Core.Notifications.Xbmc.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Test.NotificationTests.Xbmc.Json
+namespace Streamarr.Core.Test.NotificationTests.Xbmc.Json
 {
     [TestFixture]
     public class UpdateFixture : CoreTest<XbmcService>

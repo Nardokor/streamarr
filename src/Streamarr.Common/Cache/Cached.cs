@@ -2,9 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.EnsureThat;
+using Streamarr.Common.EnsureThat;
 
-namespace NzbDrone.Common.Cache
+namespace Streamarr.Common.Cache
 {
     public class Cached<T> : ICached<T>
     {

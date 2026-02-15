@@ -1,7 +1,7 @@
-﻿using NzbDrone.Core.RemotePathMappings;
-using Sonarr.Http.REST;
+﻿using Streamarr.Core.RemotePathMappings;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.RemotePathMappings;
+namespace Streamarr.Api.V5.RemotePathMappings;
 
 public class RemotePathMappingResource : RestResource
 {

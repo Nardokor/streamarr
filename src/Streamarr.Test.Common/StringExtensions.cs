@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using NzbDrone.Common.EnvironmentInfo;
+using Streamarr.Common.EnvironmentInfo;
 
-namespace NzbDrone.Test.Common
+namespace Streamarr.Test.Common
 {
     public static class StringExtensions
     {

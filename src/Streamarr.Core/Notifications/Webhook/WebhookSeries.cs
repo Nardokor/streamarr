@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Tv;
+using Streamarr.Core.Languages;
+using Streamarr.Core.Tv;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookSeries
     {

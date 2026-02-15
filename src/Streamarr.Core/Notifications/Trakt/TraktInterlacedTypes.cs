@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Notifications.Trakt
+namespace Streamarr.Core.Notifications.Trakt
 {
     public static class TraktInterlacedTypes
     {

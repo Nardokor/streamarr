@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Messaging
+namespace Streamarr.Core.Messaging
 {
     public interface IProcessMessage
     {

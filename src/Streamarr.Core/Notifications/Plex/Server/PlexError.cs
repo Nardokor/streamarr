@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Plex.Server
+namespace Streamarr.Core.Notifications.Plex.Server
 {
     public class PlexError
     {

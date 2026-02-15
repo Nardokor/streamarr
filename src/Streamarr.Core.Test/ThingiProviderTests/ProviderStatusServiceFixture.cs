@@ -4,13 +4,13 @@ using FluentAssertions;
 using Moq;
 using NLog;
 using NUnit.Framework;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.ThingiProvider.Status;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.ThingiProvider;
+using Streamarr.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.Test.ThingiProviderTests
+namespace Streamarr.Core.Test.ThingiProviderTests
 {
     public class MockProviderStatus : ProviderStatusBase
     {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Download.Pending;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.DecisionEngine;
+using Streamarr.Core.Download.Pending;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Download.Pending.PendingReleaseServiceTests
+namespace Streamarr.Core.Test.Download.Pending.PendingReleaseServiceTests
 {
     [TestFixture]
     public class PendingReleaseServiceFixture : CoreTest<PendingReleaseService>

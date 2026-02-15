@@ -1,11 +1,11 @@
 using FluentValidation;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.Validation;
-using NzbDrone.Core.Validation.Paths;
-using NzbDrone.SignalR;
-using Sonarr.Http;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.Validation;
+using Streamarr.Core.Validation.Paths;
+using Streamarr.SignalR;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.ImportLists
+namespace Streamarr.Api.V3.ImportLists
 {
     [V3ApiController]
     public class ImportListController : ProviderControllerBase<ImportListResource, ImportListBulkResource, IImportList, ImportListDefinition>

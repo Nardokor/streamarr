@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Extensions;
+using Streamarr.Common.Extensions;
 
-namespace NzbDrone.Common.Http
+namespace Streamarr.Common.Http
 {
     public partial class HttpUri : IEquatable<HttpUri>
     {

@@ -1,6 +1,6 @@
-using NzbDrone.Core.Validation;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.CustomFormats
+namespace Streamarr.Core.CustomFormats
 {
     public abstract class CustomFormatSpecificationBase : ICustomFormatSpecification
     {
@@ -18,7 +18,7 @@ namespace NzbDrone.Core.CustomFormats
             return (ICustomFormatSpecification)MemberwiseClone();
         }
 
-        public abstract NzbDroneValidationResult Validate();
+        public abstract StreamarrValidationResult Validate();
 
         public virtual bool IsSatisfiedBy(CustomFormatInput input)
         {

@@ -2,12 +2,12 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using Sonarr.Http;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Http;
 
-namespace Sonarr.Api.V3.MediaCovers
+namespace Streamarr.Api.V3.MediaCovers
 {
     [V3ApiController]
     public class MediaCoverController : Controller

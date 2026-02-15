@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Profiles.Delay;
-using Sonarr.Http;
-using Sonarr.Http.REST;
-using Sonarr.Http.REST.Attributes;
-using Sonarr.Http.Validation;
+using Streamarr.Core.Profiles.Delay;
+using Streamarr.Http;
+using Streamarr.Http.REST;
+using Streamarr.Http.REST.Attributes;
+using Streamarr.Http.Validation;
 
-namespace Sonarr.Api.V3.Profiles.Delay
+namespace Streamarr.Api.V3.Profiles.Delay
 {
     [V3ApiController]
     public class DelayProfileController : RestController<DelayProfileResource>

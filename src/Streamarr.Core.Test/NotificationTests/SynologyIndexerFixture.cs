@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Notifications;
-using NzbDrone.Core.Notifications.Synology;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
-using NzbDrone.Test.Common;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Notifications;
+using Streamarr.Core.Notifications.Synology;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Core.Tv;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.NotificationTests
+namespace Streamarr.Core.Test.NotificationTests
 {
     [TestFixture]
     public class SynologyIndexerFixture : CoreTest<SynologyIndexer>

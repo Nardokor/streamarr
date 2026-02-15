@@ -1,17 +1,17 @@
 ﻿using System;
 using FluentMigrator;
-using NzbDrone.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(75)]
-    public class force_lib_update : NzbDroneMigrationBase
+    public class force_lib_update : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {
             Update.Table("ScheduledTasks")
                 .Set(new { LastExecution = "2014-01-01 00:00:00" })
-                .Where(new { TypeName = "NzbDrone.Core.Tv.Commands.RefreshSeriesCommand" });
+                .Where(new { TypeName = "Streamarr.Core.Tv.Commands.RefreshSeriesCommand" });
 
             Update.Table("Series")
                 .Set(new { LastInfoSync = "2014-01-01 00:00:00" })

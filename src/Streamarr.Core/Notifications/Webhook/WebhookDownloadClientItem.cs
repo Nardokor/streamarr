@@ -1,7 +1,7 @@
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Qualities;
+using Streamarr.Core.Download;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookDownloadClientItem
     {

@@ -5,13 +5,13 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.ImportLists.ImportListItems;
-using NzbDrone.Core.MetadataSource;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
+using Streamarr.Core.ImportLists;
+using Streamarr.Core.ImportLists.ImportListItems;
+using Streamarr.Core.MetadataSource;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.ImportListTests
+namespace Streamarr.Core.Test.ImportListTests
 {
     [TestFixture]
     public class FetchAndParseImportListServiceFixture : CoreTest<FetchAndParseImportListService>

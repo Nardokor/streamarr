@@ -1,8 +1,8 @@
 using System;
-using NzbDrone.Common.Cache;
-using NzbDrone.Core.Profiles.Releases.TermMatchers;
+using Streamarr.Common.Cache;
+using Streamarr.Core.Profiles.Releases.TermMatchers;
 
-namespace NzbDrone.Core.Profiles.Releases
+namespace Streamarr.Core.Profiles.Releases
 {
     public interface ITermMatcherService
     {

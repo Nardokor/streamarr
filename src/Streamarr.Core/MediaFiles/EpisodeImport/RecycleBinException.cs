@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport
+namespace Streamarr.Core.MediaFiles.EpisodeImport
 {
     public class RecycleBinException : DirectoryNotFoundException
     {

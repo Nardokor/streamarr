@@ -4,18 +4,18 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Localization;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.RemotePathMappings;
-using NzbDrone.Core.Validation;
+using Streamarr.Common.Disk;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.Localization;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.RemotePathMappings;
+using Streamarr.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.Sabnzbd
+namespace Streamarr.Core.Download.Clients.Sabnzbd
 {
     public class Sabnzbd : UsenetClientBase<SabnzbdSettings>
     {
@@ -379,7 +379,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
 
                 if (rawVersion.Equals("develop", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return new NzbDroneValidationFailure("Version", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationDevelopVersion"))
+                    return new StreamarrValidationFailure("Version", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationDevelopVersion"))
                     {
                         IsWarning = true,
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationDevelopVersionDetail")
@@ -406,7 +406,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
             catch (Exception ex)
             {
                 _logger.Error(ex, ex.Message);
-                return new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
+                return new StreamarrValidationFailure("Host", _localizationService.GetLocalizedString("DownloadClientValidationUnableToConnect", new Dictionary<string, object> { { "clientName", Name } }))
                        {
                            DetailedDescription = ex.Message
                        };
@@ -442,7 +442,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
             var config = _proxy.GetConfig(Settings);
             if (config.Misc.pre_check && !HasVersion(1, 1))
             {
-                return new NzbDroneValidationFailure("", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationCheckBeforeDownload"))
+                return new StreamarrValidationFailure("", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationCheckBeforeDownload"))
                 {
                     InfoLink = _proxy.GetBaseUrl(Settings, "config/switches/"),
                     DetailedDescription = _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationCheckBeforeDownloadDetail")
@@ -461,7 +461,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
             {
                 if (category.Dir.EndsWith("*"))
                 {
-                    return new NzbDroneValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableJobFolders"))
+                    return new StreamarrValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableJobFolders"))
                     {
                         InfoLink = _proxy.GetBaseUrl(Settings, "config/categories/"),
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableJobFoldersDetail")
@@ -472,7 +472,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
             {
                 if (!Settings.TvCategory.IsNullOrWhiteSpace())
                 {
-                    return new NzbDroneValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientValidationCategoryMissing"))
+                    return new StreamarrValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientValidationCategoryMissing"))
                     {
                         InfoLink = _proxy.GetBaseUrl(Settings, "config/categories/"),
                         DetailedDescription = _localizationService.GetLocalizedString("DownloadClientValidationCategoryMissingDetail", new Dictionary<string, object> { { "clientName", Name } })
@@ -483,7 +483,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
             // New in SABnzbd 4.1, but on older versions this will be empty and not apply
             if (config.Sorters.Any(s => s.is_active && ContainsCategory(s.sort_cats, Settings.TvCategory)))
             {
-                return new NzbDroneValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableTvSorting"))
+                return new StreamarrValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableTvSorting"))
                 {
                     InfoLink = _proxy.GetBaseUrl(Settings, "config/sorting/"),
                     DetailedDescription = _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableTvSortingDetail")
@@ -492,7 +492,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
 
             if (config.Misc.enable_tv_sorting && ContainsCategory(config.Misc.tv_categories, Settings.TvCategory))
             {
-                return new NzbDroneValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableTvSorting"))
+                return new StreamarrValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableTvSorting"))
                 {
                     InfoLink = _proxy.GetBaseUrl(Settings, "config/sorting/"),
                     DetailedDescription = _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableTvSortingDetail")
@@ -501,7 +501,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
 
             if (config.Misc.enable_movie_sorting && ContainsCategory(config.Misc.movie_categories, Settings.TvCategory))
             {
-                return new NzbDroneValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableMovieSorting"))
+                return new StreamarrValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableMovieSorting"))
                 {
                     InfoLink = _proxy.GetBaseUrl(Settings, "config/sorting/"),
                     DetailedDescription = _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableMovieSortingDetail")
@@ -510,7 +510,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
 
             if (config.Misc.enable_date_sorting && ContainsCategory(config.Misc.date_categories, Settings.TvCategory))
             {
-                return new NzbDroneValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableDateSorting"))
+                return new StreamarrValidationFailure("TvCategory", _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableDateSorting"))
                 {
                     InfoLink = _proxy.GetBaseUrl(Settings, "config/sorting/"),
                     DetailedDescription = _localizationService.GetLocalizedString("DownloadClientSabnzbdValidationEnableDisableDateSortingDetail")

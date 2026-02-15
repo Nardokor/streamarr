@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using NzbDrone.Core.CustomFormats;
+using Streamarr.Core.CustomFormats;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace Streamarr.Core.Datastore.Converters
 {
     public class CustomFormatSpecificationListConverter : JsonConverter<List<ICustomFormatSpecification>>
     {
@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Datastore.Converters
                 reader.Read(); // Move to start of object (stored in this property)
                 ValidateToken(reader, JsonTokenType.StartObject); // Start of formattag
 
-                var type = Type.GetType($"NzbDrone.Core.CustomFormats.{typename}, Sonarr.Core", true);
+                var type = Type.GetType($"Streamarr.Core.CustomFormats.{typename}, Sonarr.Core", true);
                 var item = (ICustomFormatSpecification)JsonSerializer.Deserialize(ref reader, type, options);
                 results.Add(item);
 

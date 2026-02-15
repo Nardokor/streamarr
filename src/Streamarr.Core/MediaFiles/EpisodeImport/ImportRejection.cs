@@ -1,6 +1,6 @@
-using NzbDrone.Core.DecisionEngine;
+using Streamarr.Core.DecisionEngine;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport;
+namespace Streamarr.Core.MediaFiles.EpisodeImport;
 
 public class ImportRejection : Rejection<ImportRejectionReason>
 {

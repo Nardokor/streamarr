@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace Sonarr.Http
+namespace Streamarr.Http
 {
     public class PagingRequestResource
     {

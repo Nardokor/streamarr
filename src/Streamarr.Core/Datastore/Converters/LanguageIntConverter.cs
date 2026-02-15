@@ -3,9 +3,9 @@ using System.Data;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Dapper;
-using NzbDrone.Core.Languages;
+using Streamarr.Core.Languages;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace Streamarr.Core.Datastore.Converters
 {
     public class DapperLanguageIntConverter : SqlMapper.TypeHandler<Language>
     {

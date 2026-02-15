@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Queue
+namespace Streamarr.Core.Queue
 {
     public enum QueueStatus
     {

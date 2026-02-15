@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Download.Clients.QBittorrent
+namespace Streamarr.Core.Download.Clients.QBittorrent
 {
     public class QBittorrentLabel
     {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Localization;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Localization;
 
-namespace NzbDrone.Core.Notifications.Join
+namespace Streamarr.Core.Notifications.Join
 {
     public interface IJoinProxy
     {

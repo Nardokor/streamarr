@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.IndexerSearch.Definitions;
+using Streamarr.Common.Http;
+using Streamarr.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers.Nyaa
+namespace Streamarr.Core.Indexers.Nyaa
 {
     public class NyaaRequestGenerator : IIndexerRequestGenerator
     {

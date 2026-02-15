@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using System.Web;
 using System.Xml.Linq;
-using NzbDrone.Core.Download.Extensions;
+using Streamarr.Core.Download.Extensions;
 
-namespace NzbDrone.Core.Download.Clients.RTorrent
+namespace Streamarr.Core.Download.Clients.RTorrent
 {
     public class RTorrentTorrent
     {

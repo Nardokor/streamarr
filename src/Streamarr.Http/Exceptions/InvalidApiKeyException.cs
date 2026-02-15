@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sonarr.Http.Exceptions
+namespace Streamarr.Http.Exceptions
 {
     public class InvalidApiKeyException : Exception
     {

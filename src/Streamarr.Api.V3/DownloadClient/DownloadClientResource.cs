@@ -1,7 +1,7 @@
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Indexers;
+using Streamarr.Core.Download;
+using Streamarr.Core.Indexers;
 
-namespace Sonarr.Api.V3.DownloadClient
+namespace Streamarr.Api.V3.DownloadClient
 {
     public class DownloadClientResource : ProviderResource<DownloadClientResource>
     {

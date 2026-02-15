@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Indexers;
-using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common.Categories;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Indexers;
+using Streamarr.Core.IndexerSearch.Definitions;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common.Categories;
 
-namespace NzbDrone.Core.Test.IndexerTests.IntegrationTests
+namespace Streamarr.Core.Test.IndexerTests.IntegrationTests
 {
     [IntegrationTest]
     public class IndexerIntegrationTests : CoreTest

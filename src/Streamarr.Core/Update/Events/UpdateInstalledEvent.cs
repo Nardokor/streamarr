@@ -1,7 +1,7 @@
 ﻿using System;
-using NzbDrone.Common.Messaging;
+using Streamarr.Common.Messaging;
 
-namespace NzbDrone.Core.Update.History.Events
+namespace Streamarr.Core.Update.History.Events
 {
     public class UpdateInstalledEvent : IEvent
     {

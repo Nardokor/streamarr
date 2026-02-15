@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Common.TPL;
+namespace Streamarr.Common.TPL;
 
 public class LockByIdPool
 {

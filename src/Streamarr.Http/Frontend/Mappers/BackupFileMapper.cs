@@ -1,9 +1,9 @@
 using System.IO;
 using NLog;
-using NzbDrone.Common.Disk;
-using NzbDrone.Core.Backup;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Backup;
 
-namespace Sonarr.Http.Frontend.Mappers
+namespace Streamarr.Http.Frontend.Mappers
 {
     public class BackupFileMapper : StaticResourceMapperBase
     {

@@ -8,17 +8,17 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.Clients.Blackhole;
-using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NzbDrone.Core.Parser.Model;
-using NzbDrone.Test.Common;
+using Streamarr.Common.Disk;
+using Streamarr.Common.Http;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.Clients.Blackhole;
+using Streamarr.Core.Exceptions;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.MediaFiles.TorrentInfo;
+using Streamarr.Core.Parser.Model;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
+namespace Streamarr.Core.Test.Download.DownloadClientTests.Blackhole
 {
     [TestFixture]
     public class TorrentBlackholeFixture : DownloadClientFixtureBase<TorrentBlackhole>

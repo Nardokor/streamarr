@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider.Events;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.ThingiProvider.Events;
 
-namespace NzbDrone.Core.Indexers;
+namespace Streamarr.Core.Indexers;
 
 public interface ICachedIndexerSettingsProvider
 {
@@ -16,7 +16,7 @@ public interface ICachedIndexerSettingsProvider
 
 public class CachedIndexerSettingsProvider : ICachedIndexerSettingsProvider, IHandle<ProviderUpdatedEvent<IIndexer>>, IHandle<ProviderDeletedEvent<IIndexer>>
 {
-    private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(CachedIndexerSettingsProvider));
+    private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(CachedIndexerSettingsProvider));
 
     private readonly IIndexerFactory _indexerFactory;
     private readonly ICached<CachedIndexerSettings> _cache;

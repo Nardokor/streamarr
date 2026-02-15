@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.IndexerSearch.Definitions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers.HDBits
+namespace Streamarr.Core.Indexers.HDBits
 {
     public class HDBitsRequestGenerator : IIndexerRequestGenerator
     {

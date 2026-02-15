@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles.EpisodeImport.Manual;
-using NzbDrone.Core.Qualities;
-using Sonarr.Http;
-using Sonarr.Http.REST;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Languages;
+using Streamarr.Core.MediaFiles.EpisodeImport.Manual;
+using Streamarr.Core.Qualities;
+using Streamarr.Http;
+using Streamarr.Http.REST;
 
-namespace Sonarr.Api.V5.ManualImport;
+namespace Streamarr.Api.V5.ManualImport;
 
 [V5ApiController]
 public class ManualImportController : Controller

@@ -4,13 +4,13 @@ using System.IO;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation.Sentry;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation.Sentry;
 
-namespace NzbDrone.Common.Instrumentation
+namespace Streamarr.Common.Instrumentation
 {
-    public static class NzbDroneLogger
+    public static class StreamarrLogger
     {
         private const string FileLogLayout = @"${date:format=yyyy-MM-dd HH\:mm\:ss.f}|${level}|${logger}|${message}${onexception:inner=${newline}${newline}[v${assembly-version}] ${exception:format=ToString}${newline}}";
         private const string ConsoleFormat = "[${level}] ${logger}: ${message} ${onexception:inner=${newline}${newline}[v${assembly-version}] ${exception:format=ToString}${newline}}";
@@ -20,7 +20,7 @@ namespace NzbDrone.Common.Instrumentation
 
         private static bool _isConfigured;
 
-        static NzbDroneLogger()
+        static StreamarrLogger()
         {
             LogManager.Configuration = new LoggingConfiguration();
         }
@@ -95,7 +95,7 @@ namespace NzbDrone.Common.Instrumentation
             catch (Exception ex)
             {
                 Console.WriteLine("Failed to load dependency, may need an OS update: " + ex.ToString());
-                LogManager.GetLogger(nameof(NzbDroneLogger)).Debug(ex, "Failed to load dependency, may need an OS update");
+                LogManager.GetLogger(nameof(StreamarrLogger)).Debug(ex, "Failed to load dependency, may need an OS update");
 
                 // We still need the logging rules, so use a null target.
                 target = new NullTarget();
@@ -221,7 +221,7 @@ namespace NzbDrone.Common.Instrumentation
 
         public static Logger GetLogger(Type obj)
         {
-            return LogManager.GetLogger(obj.Name.Replace("NzbDrone.", ""));
+            return LogManager.GetLogger(obj.Name.Replace("Streamarr.", ""));
         }
 
         public static Logger GetLogger(object obj)
@@ -233,8 +233,8 @@ namespace NzbDrone.Common.Instrumentation
         {
             target.Layout = format switch
             {
-                ConsoleLogFormat.Clef => NzbDroneLogger.ClefLogLayout,
-                _ => NzbDroneLogger.CleansingConsoleLayout
+                ConsoleLogFormat.Clef => StreamarrLogger.ClefLogLayout,
+                _ => StreamarrLogger.CleansingConsoleLayout
             };
         }
 

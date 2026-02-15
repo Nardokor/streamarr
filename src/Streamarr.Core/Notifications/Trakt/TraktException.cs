@@ -1,9 +1,9 @@
 using System;
-using NzbDrone.Common.Exceptions;
+using Streamarr.Common.Exceptions;
 
-namespace NzbDrone.Core.Notifications.Trakt
+namespace Streamarr.Core.Notifications.Trakt
 {
-    public class TraktException : NzbDroneException
+    public class TraktException : StreamarrException
     {
         public TraktException(string message)
             : base(message)

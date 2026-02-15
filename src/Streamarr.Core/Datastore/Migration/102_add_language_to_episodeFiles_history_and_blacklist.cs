@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using FluentMigrator;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Datastore.Converters;
-using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Languages;
+using Streamarr.Common.Extensions;
+using Streamarr.Core.Datastore.Converters;
+using Streamarr.Core.Datastore.Migration.Framework;
+using Streamarr.Core.Languages;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace Streamarr.Core.Datastore.Migration
 {
     [Migration(102)]
-    public class add_language_to_episodeFiles_history_and_blacklist : NzbDroneMigrationBase
+    public class add_language_to_episodeFiles_history_and_blacklist : StreamarrMigrationBase
     {
         protected override void MainDbUpgrade()
         {

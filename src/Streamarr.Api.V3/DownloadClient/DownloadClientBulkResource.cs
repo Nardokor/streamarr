@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using NzbDrone.Core.Download;
+using Streamarr.Core.Download;
 
-namespace Sonarr.Api.V3.DownloadClient
+namespace Streamarr.Api.V3.DownloadClient
 {
     public class DownloadClientBulkResource : ProviderBulkResource<DownloadClientBulkResource>
     {

@@ -1,6 +1,6 @@
-using NzbDrone.Core.Datastore;
+using Streamarr.Core.Datastore;
 
-namespace NzbDrone.Core.MediaCover
+namespace Streamarr.Core.MediaCover
 {
     public enum MediaCoverTypes
     {

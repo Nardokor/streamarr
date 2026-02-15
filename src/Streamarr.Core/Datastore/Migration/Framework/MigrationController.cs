@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Extensions.Logging;
 
-namespace NzbDrone.Core.Datastore.Migration.Framework
+namespace Streamarr.Core.Datastore.Migration.Framework
 {
     public interface IMigrationController
     {
@@ -45,10 +45,10 @@ namespace NzbDrone.Core.Datastore.Migration.Framework
                 .Configure<RunnerOptions>(cfg => cfg.IncludeUntaggedMaintenances = true)
                 .ConfigureRunner(builder => builder
                     .AddPostgres15_0()
-                    .AddNzbDroneSQLite()
+                    .AddStreamarrSQLite()
                     .WithGlobalConnectionString(connectionString)
                     .ScanIn(Assembly.GetExecutingAssembly()).For.All())
-                .Configure<TypeFilterOptions>(opt => opt.Namespace = "NzbDrone.Core.Datastore.Migration")
+                .Configure<TypeFilterOptions>(opt => opt.Namespace = "Streamarr.Core.Datastore.Migration")
                 .Configure<ProcessorOptions>(opt =>
                 {
                     opt.PreviewOnly = false;

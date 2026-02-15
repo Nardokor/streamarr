@@ -3,16 +3,16 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Instrumentation;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Qualities;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Instrumentation;
+using Streamarr.Core.MediaFiles;
+using Streamarr.Core.Qualities;
 
-namespace NzbDrone.Core.Parser
+namespace Streamarr.Core.Parser
 {
     public class QualityParser
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(QualityParser));
+        private static readonly Logger Logger = StreamarrLogger.GetLogger(typeof(QualityParser));
 
         private static readonly Regex SourceRegex = new(@"\b(?:
                                                                 (?<bluray>BluRay|Blu-Ray|HD-?DVD|BDMux|BD(?!$))|

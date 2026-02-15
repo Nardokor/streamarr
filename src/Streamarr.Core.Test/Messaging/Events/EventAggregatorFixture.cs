@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common;
-using NzbDrone.Common.Messaging;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Test.Common;
+using Streamarr.Common;
+using Streamarr.Common.Messaging;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Test.Common;
 
-namespace NzbDrone.Core.Test.Messaging.Events
+namespace Streamarr.Core.Test.Messaging.Events
 {
     [TestFixture]
     public class EventAggregatorFixture : TestBase<EventAggregator>

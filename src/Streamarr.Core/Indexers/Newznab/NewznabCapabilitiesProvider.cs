@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Indexers.Exceptions;
+using Streamarr.Common.Cache;
+using Streamarr.Common.Extensions;
+using Streamarr.Common.Http;
+using Streamarr.Common.Serializer;
+using Streamarr.Core.Indexers.Exceptions;
 
-namespace NzbDrone.Core.Indexers.Newznab
+namespace Streamarr.Core.Indexers.Newznab
 {
     public interface INewznabCapabilitiesProvider
     {

@@ -1,4 +1,4 @@
-namespace NzbDrone.Core.Notifications.Webhook
+namespace Streamarr.Core.Notifications.Webhook
 {
     public class WebhookSeriesDeletePayload : WebhookPayload
     {

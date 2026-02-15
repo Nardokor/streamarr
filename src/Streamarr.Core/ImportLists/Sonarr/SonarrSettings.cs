@@ -28,22 +28,22 @@ namespace Streamarr.Core.ImportLists.Sonarr
             RootFolderPaths = Array.Empty<string>();
         }
 
-        [FieldDefinition(0, Label = "ImportListsSonarrSettingsFullUrl", HelpText = "ImportListsSonarrSettingsFullUrlHelpText")]
+        [FieldDefinition(0, Label = "ImportListsStreamarrSettingsFullUrl", HelpText = "ImportListsStreamarrSettingsFullUrlHelpText")]
         public override string BaseUrl { get; set; } = string.Empty;
 
-        [FieldDefinition(1, Label = "ApiKey", HelpText = "ImportListsSonarrSettingsApiKeyHelpText")]
+        [FieldDefinition(1, Label = "ApiKey", HelpText = "ImportListsStreamarrSettingsApiKeyHelpText")]
         public string ApiKey { get; set; }
 
-        [FieldDefinition(2, Label = "ImportListsSonarrSettingsSyncSeasonMonitoring", HelpText = "ImportListsSonarrSettingsSyncSeasonMonitoringHelpText", Type = FieldType.Checkbox)]
+        [FieldDefinition(2, Label = "ImportListsStreamarrSettingsSyncSeasonMonitoring", HelpText = "ImportListsStreamarrSettingsSyncSeasonMonitoringHelpText", Type = FieldType.Checkbox)]
         public bool SyncSeasonMonitoring { get; set; }
 
-        [FieldDefinition(3, Type = FieldType.Select, SelectOptionsProviderAction = "getProfiles", Label = "QualityProfiles", HelpText = "ImportListsSonarrSettingsQualityProfilesHelpText")]
+        [FieldDefinition(3, Type = FieldType.Select, SelectOptionsProviderAction = "getProfiles", Label = "QualityProfiles", HelpText = "ImportListsStreamarrSettingsQualityProfilesHelpText")]
         public IEnumerable<int> ProfileIds { get; set; }
 
-        [FieldDefinition(4, Type = FieldType.Select, SelectOptionsProviderAction = "getTags", Label = "Tags", HelpText = "ImportListsSonarrSettingsTagsHelpText")]
+        [FieldDefinition(4, Type = FieldType.Select, SelectOptionsProviderAction = "getTags", Label = "Tags", HelpText = "ImportListsStreamarrSettingsTagsHelpText")]
         public IEnumerable<int> TagIds { get; set; }
 
-        [FieldDefinition(5, Type = FieldType.Select, SelectOptionsProviderAction = "getRootFolders", Label = "RootFolders", HelpText = "ImportListsSonarrSettingsRootFoldersHelpText")]
+        [FieldDefinition(5, Type = FieldType.Select, SelectOptionsProviderAction = "getRootFolders", Label = "RootFolders", HelpText = "ImportListsStreamarrSettingsRootFoldersHelpText")]
         public IEnumerable<string> RootFolderPaths { get; set; }
 
         // TODO: Remove this eventually, no translation added as deprecated

@@ -75,7 +75,7 @@ namespace Streamarr.Core.ImportLists.Sonarr
                 if (ex.Response.HasHttpRedirect)
                 {
                     _logger.Error(ex, "Sonarr returned redirect and is invalid");
-                    return new ValidationFailure("BaseUrl", _localizationService.GetLocalizedString("ImportListsSonarrValidationInvalidUrl"));
+                    return new ValidationFailure("BaseUrl", _localizationService.GetLocalizedString("ImportListsStreamarrValidationInvalidUrl"));
                 }
 
                 _logger.Error(ex, "Unable to connect to import list.");

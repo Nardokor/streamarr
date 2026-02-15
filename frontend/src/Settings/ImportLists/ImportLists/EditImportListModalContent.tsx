@@ -282,7 +282,7 @@ function EditImportListModalContent({
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>{translate('SonarrTags')}</FormLabel>
+              <FormLabel>{translate('StreamarrTags')}</FormLabel>
 
               <FormInputGroup
                 type={inputTypes.TAG}

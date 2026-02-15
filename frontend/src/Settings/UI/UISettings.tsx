@@ -1,5 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 import Alert from 'Components/Alert';
 import FieldSet from 'Components/FieldSet';
 import Form from 'Components/Form/Form';
@@ -12,7 +11,6 @@ import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import { inputTypes, kinds } from 'Helpers/Props';
 import SettingsToolbar from 'Settings/SettingsToolbar';
-import createLanguagesSelector from 'Store/Selectors/createLanguagesSelector';
 import themes from 'Styles/Themes';
 import { InputChanged } from 'typings/inputs';
 import timeZoneOptions from 'Utilities/Date/timeZoneOptions';
@@ -63,22 +61,9 @@ export const timeFormatOptions: EnhancedSelectInputValue<string>[] = [
 
 function UISettings() {
   const {
-    items,
-    isFetching: isLanguagesFetching,
-    isPopulated: isLanguagesPopulated,
-    error: languagesError,
-  } = useSelector(
-    createLanguagesSelector({
-      Any: true,
-      Original: true,
-      Unknown: true,
-    })
-  );
-
-  const {
-    isFetching: isSettingsFetching,
-    isFetched: isSettingsPopulated,
-    error: settingsError,
+    isFetching,
+    isFetched: isPopulated,
+    error,
     hasPendingChanges,
     hasSettings,
     settings,
@@ -88,19 +73,6 @@ function UISettings() {
     saveSettings,
     updateSetting,
   } = useManageUiSettings();
-
-  const isFetching = isLanguagesFetching || isSettingsFetching;
-  const isPopulated = isLanguagesPopulated && isSettingsPopulated;
-  const error = languagesError || settingsError;
-
-  const languages = useMemo(() => {
-    return items.map((item) => {
-      return {
-        key: item.id,
-        value: item.name,
-      };
-    });
-  }, [items]);
 
   const themeOptions = Object.keys(themes).map((theme) => ({
     key: theme,
@@ -253,29 +225,6 @@ function UISettings() {
               </FormGroup>
             </FieldSet>
 
-            <FieldSet legend={translate('Language')}>
-              <FormGroup>
-                <FormLabel>{translate('UiLanguage')}</FormLabel>
-                <FormInputGroup
-                  type={inputTypes.LANGUAGE_SELECT}
-                  name="uiLanguage"
-                  helpText={translate('UiLanguageHelpText')}
-                  helpTextWarning={translate('BrowserReloadRequired')}
-                  onChange={handleInputChange}
-                  {...settings.uiLanguage}
-                  errors={
-                    languages.some(
-                      (language) => language.key === settings.uiLanguage.value
-                    )
-                      ? settings.uiLanguage.errors
-                      : [
-                          ...settings.uiLanguage.errors,
-                          { message: translate('InvalidUILanguage') },
-                        ]
-                  }
-                />
-              </FormGroup>
-            </FieldSet>
           </Form>
         ) : null}
       </PageContentBody>

@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 using NLog;
 using Streamarr.Common.Cache;
 using Streamarr.Common.EnvironmentInfo;
-using Streamarr.Common.Extensions;
 using Streamarr.Core.Configuration;
 using Streamarr.Core.Configuration.Events;
-using Streamarr.Core.Languages;
 using Streamarr.Core.Messaging.Events;
-using Streamarr.Core.Parser;
 
 namespace Streamarr.Core.Localization
 {
@@ -33,7 +30,6 @@ namespace Streamarr.Core.Localization
 
         private readonly ICached<Dictionary<string, string>> _cache;
 
-        private readonly IConfigService _configService;
         private readonly IAppFolderInfo _appFolderInfo;
         private readonly Logger _logger;
 
@@ -42,7 +38,6 @@ namespace Streamarr.Core.Localization
                                    ICacheManager cacheManager,
                                    Logger logger)
         {
-            _configService = configService;
             _appFolderInfo = appFolderInfo;
             _cache = cacheManager.GetCache<Dictionary<string, string>>(typeof(Dictionary<string, string>), "localization");
             _logger = logger;
@@ -50,9 +45,7 @@ namespace Streamarr.Core.Localization
 
         public Dictionary<string, string> GetLocalizationDictionary()
         {
-            var language = GetLanguageFileName();
-
-            return GetLocalizationDictionary(language);
+            return GetLocalizationDictionary(DefaultCulture);
         }
 
         public string GetLocalizedString(string phrase)
@@ -62,19 +55,12 @@ namespace Streamarr.Core.Localization
 
         public string GetLocalizedString(string phrase, Dictionary<string, object> tokens)
         {
-            var language = GetLanguageFileName();
-
             if (string.IsNullOrEmpty(phrase))
             {
                 throw new ArgumentNullException(nameof(phrase));
             }
 
-            if (language == null)
-            {
-                language = DefaultCulture;
-            }
-
-            var dictionary = GetLocalizationDictionary(language);
+            var dictionary = GetLocalizationDictionary(DefaultCulture);
 
             if (dictionary.TryGetValue(phrase, out var value))
             {
@@ -86,15 +72,7 @@ namespace Streamarr.Core.Localization
 
         public string GetLanguageIdentifier()
         {
-            var isoLanguage = IsoLanguages.Get((Language)_configService.UILanguage) ?? IsoLanguages.Get(Language.English);
-            var language = isoLanguage.TwoLetterCode;
-
-            if (isoLanguage.CountryCode.IsNotNullOrWhiteSpace())
-            {
-                language = $"{language}-{isoLanguage.CountryCode.ToUpperInvariant()}";
-            }
-
-            return language;
+            return DefaultCulture;
         }
 
         private string ReplaceTokens(string input, Dictionary<string, object> tokens)
@@ -111,83 +89,34 @@ namespace Streamarr.Core.Localization
             });
         }
 
-        private string GetLanguageFileName()
-        {
-            return GetLanguageIdentifier().Replace("-", "_").ToLowerInvariant();
-        }
-
         private Dictionary<string, string> GetLocalizationDictionary(string language)
         {
-            if (string.IsNullOrEmpty(language))
-            {
-                throw new ArgumentNullException(nameof(language));
-            }
-
             var startupFolder = _appFolderInfo.StartUpFolder;
-
             var prefix = Path.Combine(startupFolder, "Localization", "Core");
-            var key = prefix + language;
 
-            return _cache.Get("localization", () => GetDictionary(prefix, language, DefaultCulture + ".json").GetAwaiter().GetResult());
+            return _cache.Get("localization", () => LoadDictionary(prefix).GetAwaiter().GetResult());
         }
 
-        private async Task<Dictionary<string, string>> GetDictionary(string prefix, string culture, string baseFilename)
+        private async Task<Dictionary<string, string>> LoadDictionary(string prefix)
         {
-            if (string.IsNullOrEmpty(culture))
-            {
-                throw new ArgumentNullException(nameof(culture));
-            }
-
             var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var filePath = Path.Combine(prefix, DefaultCulture + ".json");
 
-            var baseFilenamePath = Path.Combine(prefix, baseFilename);
-
-            var alternativeFilenamePath = Path.Combine(prefix, GetResourceFilename(culture));
-
-            await CopyInto(dictionary, baseFilenamePath).ConfigureAwait(false);
-
-            if (culture.Contains('_'))
+            if (!File.Exists(filePath))
             {
-                var languageBaseFilenamePath = Path.Combine(prefix, GetResourceFilename(culture.Split('_')[0]));
-                await CopyInto(dictionary, languageBaseFilenamePath).ConfigureAwait(false);
+                _logger.Error("Missing localization resource: {0}", filePath);
+                return dictionary;
             }
 
-            await CopyInto(dictionary, alternativeFilenamePath).ConfigureAwait(false);
-
-            return dictionary;
-        }
-
-        private async Task CopyInto(IDictionary<string, string> dictionary, string resourcePath)
-        {
-            if (!File.Exists(resourcePath))
-            {
-                _logger.Error("Missing translation/culture resource: {0}", resourcePath);
-                return;
-            }
-
-            await using var fs = File.OpenRead(resourcePath);
+            await using var fs = File.OpenRead(filePath);
             var dict = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(fs);
 
             foreach (var key in dict.Keys)
             {
                 dictionary[key] = dict[key];
             }
-        }
 
-        private static string GetResourceFilename(string culture)
-        {
-            var parts = culture.Split('_');
-
-            if (parts.Length == 2)
-            {
-                culture = parts[0].ToLowerInvariant() + "_" + parts[1].ToUpperInvariant();
-            }
-            else
-            {
-                culture = culture.ToLowerInvariant();
-            }
-
-            return culture + ".json";
+            return dictionary;
         }
 
         public void HandleAsync(ConfigSavedEvent message)

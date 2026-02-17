@@ -1,0 +1,94 @@
+using Streamarr.Common.Http.Proxy;
+using Streamarr.Core.Authentication;
+using Streamarr.Core.Configuration;
+using Streamarr.Core.Security;
+using Streamarr.Core.Update;
+using Streamarr.Http.REST;
+
+namespace Streamarr.Api.V1.Config;
+
+public class HostConfigResource : RestResource
+{
+    public string BindAddress { get; set; } = string.Empty;
+    public int Port { get; set; }
+    public int SslPort { get; set; }
+    public bool EnableSsl { get; set; }
+    public bool LaunchBrowser { get; set; }
+    public AuthenticationType AuthenticationMethod { get; set; }
+    public AuthenticationRequiredType AuthenticationRequired { get; set; }
+    public bool AnalyticsEnabled { get; set; }
+    public string Username { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string PasswordConfirmation { get; set; } = string.Empty;
+    public string LogLevel { get; set; } = string.Empty;
+    public int LogSizeLimit { get; set; }
+    public string ConsoleLogLevel { get; set; } = string.Empty;
+    public string Branch { get; set; } = string.Empty;
+    public string ApiKey { get; set; } = string.Empty;
+    public string SslCertPath { get; set; } = string.Empty;
+    public string SslKeyPath { get; set; } = string.Empty;
+    public string SslCertPassword { get; set; } = string.Empty;
+    public string UrlBase { get; set; } = string.Empty;
+    public string InstanceName { get; set; } = string.Empty;
+    public string ApplicationUrl { get; set; } = string.Empty;
+    public bool UpdateAutomatically { get; set; }
+    public UpdateMechanism UpdateMechanism { get; set; }
+    public string UpdateScriptPath { get; set; } = string.Empty;
+    public bool ProxyEnabled { get; set; }
+    public ProxyType ProxyType { get; set; }
+    public string ProxyHostname { get; set; } = string.Empty;
+    public int ProxyPort { get; set; }
+    public string ProxyUsername { get; set; } = string.Empty;
+    public string ProxyPassword { get; set; } = string.Empty;
+    public string ProxyBypassFilter { get; set; } = string.Empty;
+    public bool ProxyBypassLocalAddresses { get; set; }
+    public CertificateValidationType CertificateValidation { get; set; }
+    public string BackupFolder { get; set; } = string.Empty;
+    public int BackupInterval { get; set; }
+    public int BackupRetention { get; set; }
+    public bool TrustCgnatIpAddresses { get; set; }
+}
+
+public static class HostConfigResourceMapper
+{
+    public static HostConfigResource ToResource(this IConfigFileProvider model, IConfigService configService)
+    {
+        return new HostConfigResource
+        {
+            BindAddress = model.BindAddress,
+            Port = model.Port,
+            SslPort = model.SslPort,
+            EnableSsl = model.EnableSsl,
+            LaunchBrowser = model.LaunchBrowser,
+            AuthenticationMethod = model.AuthenticationMethod,
+            AuthenticationRequired = model.AuthenticationRequired,
+            AnalyticsEnabled = model.AnalyticsEnabled,
+            LogLevel = model.LogLevel,
+            LogSizeLimit = model.LogSizeLimit,
+            ConsoleLogLevel = model.ConsoleLogLevel,
+            Branch = model.Branch,
+            ApiKey = model.ApiKey,
+            SslCertPath = model.SslCertPath,
+            SslKeyPath = model.SslKeyPath,
+            SslCertPassword = model.SslCertPassword,
+            UrlBase = model.UrlBase,
+            InstanceName = model.InstanceName,
+            UpdateAutomatically = model.UpdateAutomatically,
+            UpdateMechanism = model.UpdateMechanism,
+            UpdateScriptPath = model.UpdateScriptPath,
+            ProxyEnabled = configService.ProxyEnabled,
+            ProxyType = configService.ProxyType,
+            ProxyHostname = configService.ProxyHostname,
+            ProxyPort = configService.ProxyPort,
+            ProxyUsername = configService.ProxyUsername,
+            ProxyPassword = configService.ProxyPassword,
+            ProxyBypassFilter = configService.ProxyBypassFilter,
+            ProxyBypassLocalAddresses = configService.ProxyBypassLocalAddresses,
+            CertificateValidation = configService.CertificateValidation,
+            BackupFolder = configService.BackupFolder,
+            BackupInterval = configService.BackupInterval,
+            BackupRetention = configService.BackupRetention,
+            ApplicationUrl = configService.ApplicationUrl
+        };
+    }
+}

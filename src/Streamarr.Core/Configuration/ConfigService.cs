@@ -6,21 +6,12 @@ using NLog;
 using Streamarr.Common.EnsureThat;
 using Streamarr.Common.Http.Proxy;
 using Streamarr.Core.Configuration.Events;
-using Streamarr.Core.ImportLists;
 using Streamarr.Core.Languages;
-using Streamarr.Core.MediaFiles;
-using Streamarr.Core.MediaFiles.EpisodeImport;
 using Streamarr.Core.Messaging.Events;
-using Streamarr.Core.Qualities;
 using Streamarr.Core.Security;
 
 namespace Streamarr.Core.Configuration
 {
-    public enum ConfigKey
-    {
-        DownloadedEpisodesFolder
-    }
-
     public class ConfigService : IConfigService
     {
         private readonly IConfigRepository _repository;
@@ -80,18 +71,6 @@ namespace Streamarr.Core.Configuration
             return _repository.Get(key.ToLower()) != null;
         }
 
-        public bool AutoUnmonitorPreviouslyDownloadedEpisodes
-        {
-            get { return GetValueBoolean("AutoUnmonitorPreviouslyDownloadedEpisodes"); }
-            set { SetValue("AutoUnmonitorPreviouslyDownloadedEpisodes", value); }
-        }
-
-        public int Retention
-        {
-            get { return GetValueInt("Retention", 0); }
-            set { SetValue("Retention", value); }
-        }
-
         public string RecycleBin
         {
             get { return GetValue("RecycleBin", string.Empty); }
@@ -104,61 +83,6 @@ namespace Streamarr.Core.Configuration
             set { SetValue("RecycleBinCleanupDays", value); }
         }
 
-        public int RssSyncInterval
-        {
-            get { return GetValueInt("RssSyncInterval", 15); }
-
-            set { SetValue("RssSyncInterval", value); }
-        }
-
-        public int MaximumSize
-        {
-            get { return GetValueInt("MaximumSize", 0); }
-            set { SetValue("MaximumSize", value); }
-        }
-
-        public int MinimumAge
-        {
-            get { return GetValueInt("MinimumAge", 0); }
-
-            set { SetValue("MinimumAge", value); }
-        }
-
-        public ProperDownloadTypes DownloadPropersAndRepacks
-        {
-            get { return GetValueEnum("DownloadPropersAndRepacks", ProperDownloadTypes.PreferAndUpgrade); }
-
-            set { SetValue("DownloadPropersAndRepacks", value); }
-        }
-
-        public bool EnableCompletedDownloadHandling
-        {
-            get { return GetValueBoolean("EnableCompletedDownloadHandling", true); }
-
-            set { SetValue("EnableCompletedDownloadHandling", value); }
-        }
-
-        public bool AutoRedownloadFailed
-        {
-            get { return GetValueBoolean("AutoRedownloadFailed", true); }
-
-            set { SetValue("AutoRedownloadFailed", value); }
-        }
-
-        public bool AutoRedownloadFailedFromInteractiveSearch
-        {
-            get { return GetValueBoolean("AutoRedownloadFailedFromInteractiveSearch", true); }
-
-            set { SetValue("AutoRedownloadFailedFromInteractiveSearch", value); }
-        }
-
-        public bool CreateEmptySeriesFolders
-        {
-            get { return GetValueBoolean("CreateEmptySeriesFolders", false); }
-
-            set { SetValue("CreateEmptySeriesFolders", value); }
-        }
-
         public bool DeleteEmptyFolders
         {
             get { return GetValueBoolean("DeleteEmptyFolders", false); }
@@ -166,27 +90,6 @@ namespace Streamarr.Core.Configuration
             set { SetValue("DeleteEmptyFolders", value); }
         }
 
-        public FileDateType FileDate
-        {
-            get { return GetValueEnum("FileDate", FileDateType.None); }
-
-            set { SetValue("FileDate", value); }
-        }
-
-        public string DownloadClientWorkingFolders
-        {
-            get { return GetValue("DownloadClientWorkingFolders", "_UNPACK_|_FAILED_"); }
-            set { SetValue("DownloadClientWorkingFolders", value); }
-        }
-
-        public int DownloadClientHistoryLimit
-        {
-            get { return GetValueInt("DownloadClientHistoryLimit", 60); }
-
-            set { SetValue("DownloadClientHistoryLimit", value); }
-        }
-
-        // TODO: Rename to 'Skip Free Space Check'
         public bool SkipFreeSpaceCheckWhenImporting
         {
             get { return GetValueBoolean("SkipFreeSpaceCheckWhenImporting", false); }
@@ -208,73 +111,6 @@ namespace Streamarr.Core.Configuration
             set { SetValue("CopyUsingHardlinks", value); }
         }
 
-        public bool EnableMediaInfo
-        {
-            get { return GetValueBoolean("EnableMediaInfo", true); }
-
-            set { SetValue("EnableMediaInfo", value); }
-        }
-
-        public bool UseScriptImport
-        {
-            get { return GetValueBoolean("UseScriptImport", false); }
-
-            set { SetValue("UseScriptImport", value); }
-        }
-
-        public string ScriptImportPath
-        {
-            get { return GetValue("ScriptImportPath"); }
-
-            set { SetValue("ScriptImportPath", value); }
-        }
-
-        public bool ImportExtraFiles
-        {
-            get { return GetValueBoolean("ImportExtraFiles", false); }
-
-            set { SetValue("ImportExtraFiles", value); }
-        }
-
-        public string ExtraFileExtensions
-        {
-            get { return GetValue("ExtraFileExtensions", "srt"); }
-
-            set { SetValue("ExtraFileExtensions", value); }
-        }
-
-        public RescanAfterRefreshType RescanAfterRefresh
-        {
-            get { return GetValueEnum("RescanAfterRefresh", RescanAfterRefreshType.Always); }
-
-            set { SetValue("RescanAfterRefresh", value); }
-        }
-
-        public EpisodeTitleRequiredType EpisodeTitleRequired
-        {
-            get { return GetValueEnum("EpisodeTitleRequired", EpisodeTitleRequiredType.Always); }
-
-            set { SetValue("EpisodeTitleRequired", value); }
-        }
-
-        public string UserRejectedExtensions
-        {
-            get { return GetValue("UserRejectedExtensions", string.Empty); }
-            set { SetValue("UserRejectedExtensions", value); }
-        }
-
-        public SeasonPackUpgradeType SeasonPackUpgrade
-        {
-            get { return GetValueEnum("SeasonPackUpgrade", SeasonPackUpgradeType.All); }
-            set { SetValue("SeasonPackUpgrade", value); }
-        }
-
-        public double SeasonPackUpgradeThreshold
-        {
-            get { return GetValueDouble("SeasonPackUpgradeThreshold", 100.0); }
-            set { SetValue("SeasonPackUpgradeThreshold", value); }
-        }
-
         public bool SetPermissionsLinux
         {
             get { return GetValueBoolean("SetPermissionsLinux", false); }
@@ -294,18 +130,6 @@ namespace Streamarr.Core.Configuration
             get { return GetValue("ChownGroup", ""); }
 
             set { SetValue("ChownGroup", value); }
-        }
-
-        public ListSyncLevelType ListSyncLevel
-        {
-            get { return GetValueEnum("ListSyncLevel", ListSyncLevelType.Disabled); }
-            set { SetValue("ListSyncLevel", value); }
-        }
-
-        public int ListSyncTag
-        {
-            get { return GetValueInt("ListSyncTag"); }
-            set { SetValue("ListSyncTag", value); }
         }
 
         public int FirstDayOfWeek

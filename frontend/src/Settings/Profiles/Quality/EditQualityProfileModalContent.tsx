@@ -18,7 +18,6 @@ import useQualityProfileInUse from 'Settings/Profiles/Quality/useQualityProfileI
 import dimensions from 'Styles/Variables/dimensions';
 import { InputChanged } from 'typings/inputs';
 import translate from 'Utilities/String/translate';
-import QualityProfileFormatItems from './QualityProfileFormatItems';
 import { DragMoveState } from './QualityProfileItemDragSource';
 import QualityProfileItems, {
   EditQualityProfileMode,
@@ -92,11 +91,7 @@ function EditQualityProfileModalContent({
     name,
     upgradeAllowed,
     cutoff,
-    minFormatScore,
-    minUpgradeFormatScore,
-    cutoffFormatScore,
     items,
-    formatItems,
   } = item;
 
   const qualities = useMemo(() => {
@@ -434,24 +429,6 @@ function EditQualityProfileModalContent({
     setMode(newMode);
   }, []);
 
-  const handleFormatItemScoreChange = useCallback(
-    (formatId: number, score: number) => {
-      const newFormatItems = formatItems.value.map((formatItem) => {
-        if (formatItem.format === formatId) {
-          return {
-            ...formatItem,
-            score,
-          };
-        }
-
-        return formatItem;
-      });
-
-      updateValue('formatItems', newFormatItems);
-    },
-    [formatItems, updateValue]
-  );
-
   useEffect(() => {
     let bodyHeight = 0;
 
@@ -580,69 +557,6 @@ function EditQualityProfileModalContent({
                     </FormGroup>
                   ) : null}
 
-                  {formatItems.value.length > 0 ? (
-                    <FormGroup size={sizes.EXTRA_SMALL}>
-                      <FormLabel size={sizes.SMALL}>
-                        {translate('MinimumCustomFormatScore')}
-                      </FormLabel>
-
-                      <FormInputGroup
-                        type={inputTypes.NUMBER}
-                        name="minFormatScore"
-                        {...minFormatScore}
-                        helpText={translate('MinimumCustomFormatScoreHelpText')}
-                        onChange={handleInputChange}
-                      />
-                    </FormGroup>
-                  ) : null}
-
-                  {upgradeAllowed.value && formatItems.value.length > 0 ? (
-                    <FormGroup size={sizes.EXTRA_SMALL}>
-                      <FormLabel size={sizes.SMALL}>
-                        {translate('UpgradeUntilCustomFormatScore')}
-                      </FormLabel>
-
-                      <FormInputGroup
-                        type={inputTypes.NUMBER}
-                        name="cutoffFormatScore"
-                        {...cutoffFormatScore}
-                        helpText={translate(
-                          'UpgradeUntilCustomFormatScoreEpisodeHelpText'
-                        )}
-                        onChange={handleInputChange}
-                      />
-                    </FormGroup>
-                  ) : null}
-
-                  {upgradeAllowed.value && formatItems.value.length > 0 ? (
-                    <FormGroup size={sizes.EXTRA_SMALL}>
-                      <FormLabel size={sizes.SMALL}>
-                        {translate('MinimumCustomFormatScoreIncrement')}
-                      </FormLabel>
-
-                      <FormInputGroup
-                        type={inputTypes.NUMBER}
-                        name="minUpgradeFormatScore"
-                        min={1}
-                        {...minUpgradeFormatScore}
-                        helpText={translate(
-                          'MinimumCustomFormatScoreIncrementHelpText'
-                        )}
-                        onChange={handleInputChange}
-                      />
-                    </FormGroup>
-                  ) : null}
-
-                  <div className={styles.formatItemLarge}>
-                    <QualityProfileFormatItems
-                      profileFormatItems={formatItems.value}
-                      errors={formatItems.errors}
-                      warnings={formatItems.warnings}
-                      onQualityProfileFormatItemScoreChange={
-                        handleFormatItemScoreChange
-                      }
-                    />
-                  </div>
                 </div>
 
                 <div className={styles.formGroupWrapper}>
@@ -666,16 +580,6 @@ function EditQualityProfileModalContent({
                   />
                 </div>
 
-                <div className={styles.formatItemSmall}>
-                  <QualityProfileFormatItems
-                    profileFormatItems={formatItems.value}
-                    errors={formatItems.errors}
-                    warnings={formatItems.warnings}
-                    onQualityProfileFormatItemScoreChange={
-                      handleFormatItemScoreChange
-                    }
-                  />
-                </div>
               </div>
             </Form>
           ) : null}

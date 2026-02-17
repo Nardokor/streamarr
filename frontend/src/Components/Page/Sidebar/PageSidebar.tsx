@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import ReactDOM from 'react-dom';
 import { useLocation } from 'react-router';
-import QueueStatus from 'Activity/Queue/Status/QueueStatus';
 import {
   setIsSidebarVisible,
   useAppDimension,
@@ -49,66 +48,6 @@ interface SidebarItem {
 
 const LINKS: SidebarItem[] = [
   {
-    iconName: icons.SERIES_CONTINUING,
-    title: () => translate('Series'),
-    to: '/',
-    alias: '/series',
-    children: [
-      {
-        title: () => translate('AddNew'),
-        to: '/add/new',
-      },
-      {
-        title: () => translate('LibraryImport'),
-        to: '/add/import',
-      },
-    ],
-  },
-
-  {
-    iconName: icons.CALENDAR,
-    title: () => translate('Calendar'),
-    to: '/calendar',
-  },
-
-  {
-    iconName: icons.ACTIVITY,
-    title: () => translate('Activity'),
-    to: '/activity/queue',
-    children: [
-      {
-        title: () => translate('Queue'),
-        to: '/activity/queue',
-        statusComponent: QueueStatus,
-      },
-      {
-        title: () => translate('History'),
-        to: '/activity/history',
-      },
-      {
-        title: () => translate('Blocklist'),
-        to: '/activity/blocklist',
-      },
-    ],
-  },
-
-  {
-    iconName: icons.WARNING,
-    title: () => translate('Wanted'),
-    to: '/wanted/missing',
-    children: [
-      {
-        title: () => translate('Missing'),
-        to: '/wanted/missing',
-      },
-      {
-        title: () => translate('CutoffUnmet'),
-        to: '/wanted/cutoffunmet',
-      },
-    ],
-  },
-
-  {
     iconName: icons.SETTINGS,
     title: () => translate('Settings'),
     to: '/settings',
@@ -124,34 +63,6 @@ const LINKS: SidebarItem[] = [
       {
         title: () => translate('Quality'),
         to: '/settings/quality',
-      },
-      {
-        title: () => translate('CustomFormats'),
-        to: '/settings/customformats',
-      },
-      {
-        title: () => translate('Indexers'),
-        to: '/settings/indexers',
-      },
-      {
-        title: () => translate('DownloadClients'),
-        to: '/settings/downloadclients',
-      },
-      {
-        title: () => translate('ImportLists'),
-        to: '/settings/importlists',
-      },
-      {
-        title: () => translate('Connect'),
-        to: '/settings/connect',
-      },
-      {
-        title: () => translate('Metadata'),
-        to: '/settings/metadata',
-      },
-      {
-        title: () => translate('MetadataSource'),
-        to: '/settings/metadatasource',
       },
       {
         title: () => translate('Tags'),

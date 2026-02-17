@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Streamarr.Core.CustomFormats;
 using Streamarr.Core.Datastore;
 using Streamarr.Core.Qualities;
 
@@ -8,18 +7,9 @@ namespace Streamarr.Core.Profiles.Qualities
 {
     public class QualityProfile : ModelBase
     {
-        public QualityProfile()
-        {
-            FormatItems = new List<ProfileFormatItem>();
-        }
-
         public string Name { get; set; }
         public bool UpgradeAllowed { get; set; }
         public int Cutoff { get; set; }
-        public int MinFormatScore { get; set; }
-        public int CutoffFormatScore { get; set; }
-        public int MinUpgradeFormatScore { get; set; }
-        public List<ProfileFormatItem> FormatItems { get; set; }
         public List<QualityProfileQualityItem> Items { get; set; }
 
         public Quality FirststAllowedQuality()
@@ -86,11 +76,6 @@ namespace Streamarr.Core.Profiles.Qualities
             }
 
             return new QualityIndex();
-        }
-
-        public int CalculateCustomFormatScore(List<CustomFormat> formats)
-        {
-            return FormatItems.Where(x => formats.Contains(x.Format)).Sum(x => x.Score);
         }
     }
 }

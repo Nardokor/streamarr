@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -20,10 +20,10 @@ namespace Streamarr.Core.Test.Configuration
         [Test]
         public void Add_new_value_to_database()
         {
-            const string key = "RssSyncInterval";
+            const string key = "RecycleBinCleanupDays";
             const int value = 12;
 
-            Subject.RssSyncInterval = value;
+            Subject.RecycleBinCleanupDays = value;
 
             AssertUpsert(key, value);
         }
@@ -31,7 +31,7 @@ namespace Streamarr.Core.Test.Configuration
         [Test]
         public void Get_value_should_return_default_when_no_value()
         {
-            Subject.RssSyncInterval.Should().Be(15);
+            Subject.RecycleBinCleanupDays.Should().Be(7);
         }
 
         [Test]
@@ -45,8 +45,8 @@ namespace Streamarr.Core.Test.Configuration
         [Test]
         public void get_value_with_out_persist_should_not_store_default_value()
         {
-            var interval = Subject.RssSyncInterval;
-            interval.Should().Be(15);
+            var interval = Subject.RecycleBinCleanupDays;
+            interval.Should().Be(7);
             Mocker.GetMock<IConfigRepository>().Verify(c => c.Insert(It.IsAny<Config>()), Times.Never());
         }
 

@@ -1,7 +1,6 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Streamarr.Core.AutoTagging;
 using Streamarr.Core.Datastore.Events;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Tags;
@@ -14,8 +13,7 @@ namespace Streamarr.Api.V1.Tags;
 
 [V1ApiController]
 public class TagController : RestControllerWithSignalR<TagResource, Tag>,
-                             IHandle<TagsUpdatedEvent>,
-                             IHandle<AutoTagsUpdatedEvent>
+                             IHandle<TagsUpdatedEvent>
 {
     private readonly ITagService _tagService;
 
@@ -66,12 +64,6 @@ public class TagController : RestControllerWithSignalR<TagResource, Tag>,
 
     [NonAction]
     public void Handle(TagsUpdatedEvent message)
-    {
-        BroadcastResourceChange(ModelAction.Sync);
-    }
-
-    [NonAction]
-    public void Handle(AutoTagsUpdatedEvent message)
     {
         BroadcastResourceChange(ModelAction.Sync);
     }

@@ -7,7 +7,6 @@ using Streamarr.Common.Disk;
 using Streamarr.Core.DiskSpace;
 using Streamarr.Core.RootFolders;
 using Streamarr.Core.Test.Framework;
-using Streamarr.Core.Tv;
 using Streamarr.Test.Common;
 
 namespace Streamarr.Core.Test.DiskSpace
@@ -15,16 +14,14 @@ namespace Streamarr.Core.Test.DiskSpace
     [TestFixture]
     public class DiskSpaceServiceFixture : CoreTest<DiskSpaceService>
     {
-        private string _seriesFolder;
-        private string _seriesFolder2;
         private string _rootFolder;
+        private string _rootFolder2;
 
         [SetUp]
         public void SetUp()
         {
-            _seriesFolder = @"G:\fasdlfsdf\series".AsOsAgnostic();
-            _seriesFolder2 = @"G:\fasdlfsdf\series2".AsOsAgnostic();
             _rootFolder = @"G:\fasdlfsdf".AsOsAgnostic();
+            _rootFolder2 = @"G:\fasdlfsdf2".AsOsAgnostic();
 
             Mocker.GetMock<IDiskProvider>()
                   .Setup(v => v.GetMounts())
@@ -42,21 +39,14 @@ namespace Streamarr.Core.Test.DiskSpace
                   .Setup(v => v.GetTotalSize(It.IsAny<string>()))
                   .Returns(0);
 
-            GivenSeries();
+            GivenRootFolders();
         }
 
-        private void GivenSeries(params string[] seriesPaths)
-        {
-            Mocker.GetMock<ISeriesService>()
-                .Setup(v => v.GetAllSeriesPaths())
-                .Returns(new Dictionary<int, string>(seriesPaths.Select((value, i) => new KeyValuePair<int, string>(i, value))));
-        }
-
-        private void GivenRootFolder(string seriesPath, string rootFolderPath)
+        private void GivenRootFolders(params string[] rootFolderPaths)
         {
             Mocker.GetMock<IRootFolderService>()
-                .Setup(v => v.GetBestRootFolderPath(seriesPath))
-                .Returns(rootFolderPath);
+                .Setup(v => v.All())
+                .Returns(rootFolderPaths.Select(p => new RootFolder { Path = p }).ToList());
         }
 
         private void GivenExistingFolder(string folder)
@@ -67,10 +57,9 @@ namespace Streamarr.Core.Test.DiskSpace
         }
 
         [Test]
-        public void should_check_diskspace_for_series_folders()
+        public void should_check_diskspace_for_root_folders()
         {
-            GivenSeries(_seriesFolder);
-            GivenRootFolder(_seriesFolder, _rootFolder);
+            GivenRootFolders(_rootFolder);
             GivenExistingFolder(_rootFolder);
 
             var freeSpace = Subject.GetFreeSpace();
@@ -81,9 +70,7 @@ namespace Streamarr.Core.Test.DiskSpace
         [Test]
         public void should_check_diskspace_for_same_root_folder_only_once()
         {
-            GivenSeries(_seriesFolder, _seriesFolder2);
-            GivenRootFolder(_seriesFolder, _rootFolder);
-            GivenRootFolder(_seriesFolder2, _rootFolder);
+            GivenRootFolders(_rootFolder, _rootFolder);
             GivenExistingFolder(_rootFolder);
 
             var freeSpace = Subject.GetFreeSpace();
@@ -95,10 +82,9 @@ namespace Streamarr.Core.Test.DiskSpace
         }
 
         [Test]
-        public void should_not_check_diskspace_for_missing_series_root_folders()
+        public void should_not_check_diskspace_for_missing_root_folders()
         {
-            GivenSeries(_seriesFolder);
-            GivenRootFolder(_seriesFolder, _rootFolder);
+            GivenRootFolders(_rootFolder);
 
             var freeSpace = Subject.GetFreeSpace();
 

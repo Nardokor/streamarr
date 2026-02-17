@@ -5,13 +5,10 @@ import AppState from 'App/State/AppState';
 import { useTranslations } from 'App/useTranslations';
 import useCommands from 'Commands/useCommands';
 import useCustomFilters from 'Filters/useCustomFilters';
-import useSeries from 'Series/useSeries';
 import { useQualityProfiles } from 'Settings/Profiles/Quality/useQualityProfiles';
 import { useUiSettings } from 'Settings/UI/useUiSettings';
 import { fetchCustomFilters } from 'Store/Actions/customFilterActions';
 import {
-  fetchImportLists,
-  fetchIndexerFlags,
   fetchLanguages,
 } from 'Store/Actions/settingsActions';
 import useSystemStatus from 'System/Status/useSystemStatus';
@@ -24,7 +21,6 @@ const createErrorsSelector = ({
   tagsError,
   translationsError,
   uiSettingsError,
-  seriesError,
   qualityProfilesError,
 }: {
   customFiltersError: ApiError | null;
@@ -32,39 +28,29 @@ const createErrorsSelector = ({
   tagsError: ApiError | null;
   translationsError: ApiError | null;
   uiSettingsError: ApiError | null;
-  seriesError: ApiError | null;
   qualityProfilesError: ApiError | null;
 }) =>
   createSelector(
     (state: AppState) => state.settings.languages.error,
-    (state: AppState) => state.settings.importLists.error,
-    (state: AppState) => state.settings.indexerFlags.error,
-    (languagesError, importListsError, indexerFlagsError) => {
+    (languagesError) => {
       const hasError = !!(
         customFiltersError ||
-        seriesError ||
         uiSettingsError ||
         qualityProfilesError ||
         languagesError ||
-        importListsError ||
-        indexerFlagsError ||
         systemStatusError ||
         tagsError ||
-        translationsError ||
-        uiSettingsError
+        translationsError
       );
 
       return {
         hasError,
         errors: {
-          seriesError,
           customFiltersError,
           tagsError,
           uiSettingsError,
           qualityProfilesError,
           languagesError,
-          importListsError,
-          indexerFlagsError,
           systemStatusError,
           translationsError,
         },
@@ -79,8 +65,6 @@ const useAppPage = () => {
 
   const { isFetched: isCustomFiltersFetched, error: customFiltersError } =
     useCustomFilters();
-
-  const { isSuccess: isSeriesFetched, error: seriesError } = useSeries();
 
   const { isFetched: isSystemStatusFetched, error: systemStatusError } =
     useSystemStatus();
@@ -98,15 +82,12 @@ const useAppPage = () => {
 
   const isAppStatePopulated = useSelector(
     (state: AppState) =>
-      state.settings.languages.isPopulated &&
-      state.settings.importLists.isPopulated &&
-      state.settings.indexerFlags.isPopulated
+      state.settings.languages.isPopulated
   );
 
   const isPopulated =
     isAppStatePopulated &&
     isCustomFiltersFetched &&
-    isSeriesFetched &&
     isSystemStatusFetched &&
     isTagsFetched &&
     isTranslationsFetched &&
@@ -116,7 +97,6 @@ const useAppPage = () => {
   const { hasError, errors } = useSelector(
     createErrorsSelector({
       customFiltersError,
-      seriesError,
       systemStatusError,
       tagsError,
       translationsError,
@@ -141,8 +121,6 @@ const useAppPage = () => {
   useEffect(() => {
     dispatch(fetchCustomFilters());
     dispatch(fetchLanguages());
-    dispatch(fetchImportLists());
-    dispatch(fetchIndexerFlags());
   }, [dispatch]);
 
   return useMemo(() => {

@@ -72,8 +72,6 @@ function ProviderFieldFormGroup<T>({
           return 'dynamicSelect';
         }
         return 'select';
-      case 'seriesTag':
-        return 'seriesTag';
       case 'tag':
         return 'textTag';
       case 'tagSelect':

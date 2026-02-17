@@ -6,7 +6,6 @@ import {
   useManageProviderSettings,
   useProviderSettings,
 } from 'Settings/useProviderSettings';
-import { QualityProfileFormatItem } from 'typings/CustomFormat';
 import translate from 'Utilities/String/translate';
 
 export interface QualityProfileQualityItem {
@@ -34,10 +33,6 @@ export interface QualityProfileModel extends ModelBase {
   upgradeAllowed: boolean;
   cutoff: number;
   items: QualityProfileItems;
-  minFormatScore: number;
-  cutoffFormatScore: number;
-  minUpgradeFormatScore: number;
-  formatItems: QualityProfileFormatItem[];
 }
 
 const PATH = '/qualityprofile';

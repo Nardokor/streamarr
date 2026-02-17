@@ -1,7 +1,5 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Streamarr.Common.Extensions;
-using Streamarr.Core.CustomFormats;
 using Streamarr.Core.Profiles.Qualities;
 using Streamarr.Http;
 using Streamarr.Http.REST;
@@ -14,34 +12,12 @@ public class QualityProfileController : RestController<QualityProfileResource>
 {
     private readonly IQualityProfileService _profileService;
 
-    public QualityProfileController(IQualityProfileService profileService, ICustomFormatService formatService)
+    public QualityProfileController(IQualityProfileService profileService)
     {
         _profileService = profileService;
         SharedValidator.RuleFor(c => c.Name).NotEmpty();
-
-        SharedValidator.RuleFor(c => c.MinUpgradeFormatScore).GreaterThanOrEqualTo(1);
         SharedValidator.RuleFor(c => c.Cutoff).ValidCutoff();
         SharedValidator.RuleFor(c => c.Items).ValidItems();
-
-        SharedValidator.RuleFor(c => c.FormatItems).Must(items =>
-        {
-            var all = formatService.All().Select(f => f.Id).ToList();
-            var ids = items.Select(i => i.Format);
-
-            return all.Except(ids).Empty();
-        }).WithMessage("All Custom Formats and no extra ones need to be present inside your Profile! Try refreshing your browser.");
-
-        SharedValidator.RuleFor(c => c).Custom((profile, context) =>
-        {
-            if (profile.FormatItems.Where(x => x.Score > 0).Sum(x => x.Score) < profile.MinFormatScore &&
-                profile.FormatItems.Max(x => x.Score) < profile.MinFormatScore)
-            {
-                context.AddFailure("Minimum Custom Format Score can never be satisfied");
-            }
-        });
-
-        SharedValidator.RuleFor(c => c)
-            .SetValidator(new QualityProfileResourceValidator());
     }
 
     [RestPostById]

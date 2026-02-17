@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Streamarr.Common.Disk;
-using Streamarr.Common.Extensions;
-using Streamarr.Core.MediaFiles;
 using Streamarr.Http;
 
 namespace Streamarr.Api.V1.FileSystem;
@@ -11,15 +9,12 @@ public class FileSystemController : Controller
 {
     private readonly IFileSystemLookupService _fileSystemLookupService;
     private readonly IDiskProvider _diskProvider;
-    private readonly IDiskScanService _diskScanService;
 
     public FileSystemController(IFileSystemLookupService fileSystemLookupService,
-                            IDiskProvider diskProvider,
-                            IDiskScanService diskScanService)
+                            IDiskProvider diskProvider)
     {
         _fileSystemLookupService = fileSystemLookupService;
         _diskProvider = diskProvider;
-        _diskScanService = diskScanService;
     }
 
     [HttpGet]
@@ -40,22 +35,5 @@ public class FileSystemController : Controller
 
         // Return folder even if it doesn't exist on disk to avoid leaking anything from the UI about the underlying system
         return new { type = "folder" };
-    }
-
-    [HttpGet("mediafiles")]
-    [Produces("application/json")]
-    public object GetMediaFiles(string path)
-    {
-        if (!_diskProvider.FolderExists(path))
-        {
-            return Array.Empty<string>();
-        }
-
-        return _diskScanService.GetVideoFiles(path).Select(f => new
-        {
-            Path = f,
-            RelativePath = path.GetRelativePath(f),
-            Name = Path.GetFileName(f)
-        });
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using Streamarr.Core.Download;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Test.Framework;
 
@@ -41,7 +40,7 @@ namespace Streamarr.Core.Test.Messaging.Commands
         [Test]
         public void should_not_remove_commands_for_five_minutes_after_they_end()
         {
-            var command = Subject.Push<RefreshMonitoredDownloadsCommand>(new RefreshMonitoredDownloadsCommand());
+            var command = Subject.Push<MessagingCleanupCommand>(new MessagingCleanupCommand());
 
             // Start the command to mimic CommandQueue's behaviour
             command.StartedAt = DateTime.Now;

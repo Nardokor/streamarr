@@ -13,17 +13,9 @@ import sortByProp from 'Utilities/Array/sortByProp';
 import BoolFilterBuilderRowValue from './BoolFilterBuilderRowValue';
 import DateFilterBuilderRowValue from './DateFilterBuilderRowValue';
 import DefaultFilterBuilderRowValue from './DefaultFilterBuilderRowValue';
-import HistoryEventTypeFilterBuilderRowValue from './HistoryEventTypeFilterBuilderRowValue';
-import IndexerFilterBuilderRowValue from './IndexerFilterBuilderRowValue';
 import LanguageFilterBuilderRowValue from './LanguageFilterBuilderRowValue';
-import MonitoredStatusFilterBuilderRowValue from './MonitoredStatusFilterBuilderRowValue';
-import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValue';
 import QualityFilterBuilderRowValue from './QualityFilterBuilderRowValue';
 import QualityProfileFilterBuilderRowValue from './QualityProfileFilterBuilderRowValue';
-import QueueStatusFilterBuilderRowValue from './QueueStatusFilterBuilderRowValue';
-import SeriesFilterBuilderRowValue from './SeriesFilterBuilderRowValue';
-import SeriesStatusFilterBuilderRowValue from './SeriesStatusFilterBuilderRowValue';
-import SeriesTypeFilterBuilderRowValue from './SeriesTypeFilterBuilderRowValue';
 import TagFilterBuilderRowValue from './TagFilterBuilderRowValue';
 import styles from './FilterBuilderRow.css';
 
@@ -88,38 +80,14 @@ function getRowValueConnector<T>(
     case filterBuilderValueTypes.DATE:
       return DateFilterBuilderRowValue;
 
-    case filterBuilderValueTypes.HISTORY_EVENT_TYPE:
-      return HistoryEventTypeFilterBuilderRowValue;
-
-    case filterBuilderValueTypes.INDEXER:
-      return IndexerFilterBuilderRowValue;
-
     case filterBuilderValueTypes.LANGUAGE:
       return LanguageFilterBuilderRowValue;
-
-    case filterBuilderValueTypes.PROTOCOL:
-      return ProtocolFilterBuilderRowValue;
 
     case filterBuilderValueTypes.QUALITY:
       return QualityFilterBuilderRowValue;
 
     case filterBuilderValueTypes.QUALITY_PROFILE:
       return QualityProfileFilterBuilderRowValue;
-
-    case filterBuilderValueTypes.QUEUE_STATUS:
-      return QueueStatusFilterBuilderRowValue;
-
-    case filterBuilderValueTypes.MONITORED_STATUS:
-      return MonitoredStatusFilterBuilderRowValue;
-
-    case filterBuilderValueTypes.SERIES:
-      return SeriesFilterBuilderRowValue;
-
-    case filterBuilderValueTypes.SERIES_STATUS:
-      return SeriesStatusFilterBuilderRowValue;
-
-    case filterBuilderValueTypes.SERIES_TYPES:
-      return SeriesTypeFilterBuilderRowValue;
 
     case filterBuilderValueTypes.TAG:
       return TagFilterBuilderRowValue;

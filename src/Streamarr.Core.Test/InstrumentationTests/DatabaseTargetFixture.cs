@@ -4,9 +4,9 @@ using FluentAssertions;
 using NLog;
 using NUnit.Framework;
 using Streamarr.Common.Instrumentation;
+using Streamarr.Core.ContentFiles;
 using Streamarr.Core.Datastore.Migration.Framework;
 using Streamarr.Core.Instrumentation;
-using Streamarr.Core.MediaFiles;
 using Streamarr.Core.Test.Framework;
 using Streamarr.Test.Common;
 
@@ -99,12 +99,12 @@ namespace Streamarr.Core.Test.InstrumentationTests
         [Test]
         public void null_string_as_arg_should_not_fail()
         {
-            var epFile = new EpisodeFile();
-            _logger.Debug("File {0} no longer exists on disk. removing from database.", epFile.RelativePath);
+            var contentFile = new ContentFile();
+            _logger.Debug("File {0} no longer exists on disk. removing from database.", contentFile.RelativePath);
 
             Thread.Sleep(1000);
 
-            epFile.RelativePath.Should().BeNull();
+            contentFile.RelativePath.Should().BeNull();
         }
 
         [TearDown]

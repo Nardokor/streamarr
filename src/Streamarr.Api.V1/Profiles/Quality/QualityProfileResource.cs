@@ -1,5 +1,3 @@
-using Streamarr.Core.CustomFormats;
-using Streamarr.Core.Profiles;
 using Streamarr.Core.Profiles.Qualities;
 using Streamarr.Http.REST;
 
@@ -11,10 +9,6 @@ public class QualityProfileResource : RestResource
     public bool UpgradeAllowed { get; set; }
     public int Cutoff { get; set; }
     public List<QualityProfileQualityItemResource> Items { get; set; } = [];
-    public int MinFormatScore { get; set; }
-    public int CutoffFormatScore { get; set; }
-    public int MinUpgradeFormatScore { get; set; }
-    public List<ProfileFormatItemResource> FormatItems { get; set; } = [];
 }
 
 public class QualityProfileQualityItemResource : RestResource
@@ -28,13 +22,6 @@ public class QualityProfileQualityItemResource : RestResource
     public double? PreferredSize { get; set; }
 }
 
-public class ProfileFormatItemResource : RestResource
-{
-    public int Format { get; set; }
-    public string? Name { get; set; }
-    public int Score { get; set; }
-}
-
 public static class ProfileResourceMapper
 {
     public static QualityProfileResource ToResource(this QualityProfile model)
@@ -45,11 +32,7 @@ public static class ProfileResourceMapper
             Name = model.Name,
             UpgradeAllowed = model.UpgradeAllowed,
             Cutoff = model.Cutoff,
-            Items = model.Items.ConvertAll(ToResource),
-            MinFormatScore = model.MinFormatScore,
-            CutoffFormatScore = model.CutoffFormatScore,
-            MinUpgradeFormatScore = model.MinUpgradeFormatScore,
-            FormatItems = model.FormatItems.ConvertAll(ToResource)
+            Items = model.Items.ConvertAll(ToResource)
         };
     }
 
@@ -68,16 +51,6 @@ public static class ProfileResourceMapper
         };
     }
 
-    public static ProfileFormatItemResource ToResource(this ProfileFormatItem model)
-    {
-        return new ProfileFormatItemResource
-        {
-            Format = model.Format.Id,
-            Name = model.Format.Name,
-            Score = model.Score
-        };
-    }
-
     public static QualityProfile ToModel(this QualityProfileResource resource)
     {
         return new QualityProfile
@@ -86,11 +59,7 @@ public static class ProfileResourceMapper
             Name = resource.Name,
             UpgradeAllowed = resource.UpgradeAllowed,
             Cutoff = resource.Cutoff,
-            Items = resource.Items.ConvertAll(ToModel),
-            MinFormatScore = resource.MinFormatScore,
-            CutoffFormatScore = resource.CutoffFormatScore,
-            MinUpgradeFormatScore = resource.MinUpgradeFormatScore,
-            FormatItems = resource.FormatItems.ConvertAll(ToModel)
+            Items = resource.Items.ConvertAll(ToModel)
         };
     }
 
@@ -106,15 +75,6 @@ public static class ProfileResourceMapper
             MinSize = resource.MinSize,
             MaxSize = resource.MaxSize,
             PreferredSize = resource.PreferredSize
-        };
-    }
-
-    public static ProfileFormatItem ToModel(this ProfileFormatItemResource resource)
-    {
-        return new ProfileFormatItem
-        {
-            Format = new CustomFormat { Id = resource.Format },
-            Score = resource.Score
         };
     }
 

@@ -7,10 +7,8 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using Streamarr.Common.Disk;
-using Streamarr.Core.Organizer;
 using Streamarr.Core.RootFolders;
 using Streamarr.Core.Test.Framework;
-using Streamarr.Core.Tv;
 using Streamarr.Test.Common;
 
 namespace Streamarr.Core.Test.RootFolderTests
@@ -18,13 +16,9 @@ namespace Streamarr.Core.Test.RootFolderTests
     [TestFixture]
     public class RootFolderServiceFixture : CoreTest<RootFolderService>
     {
-        private NamingConfig _namingConfig;
-
         [SetUp]
         public void Setup()
         {
-            _namingConfig = NamingConfig.Default;
-
             Mocker.GetMock<IDiskProvider>()
                   .Setup(m => m.FolderExists(It.IsAny<string>()))
                   .Returns(true);
@@ -36,10 +30,6 @@ namespace Streamarr.Core.Test.RootFolderTests
             Mocker.GetMock<IRootFolderRepository>()
                   .Setup(s => s.All())
                   .Returns(new List<RootFolder>());
-
-            Mocker.GetMock<INamingConfigService>()
-                  .Setup(c => c.GetConfig())
-                  .Returns(_namingConfig);
         }
 
         private void WithNonExistingFolder()
@@ -53,10 +43,6 @@ namespace Streamarr.Core.Test.RootFolderTests
         [TestCase("//server//folder")]
         public void should_be_able_to_add_root_dir(string path)
         {
-            Mocker.GetMock<ISeriesRepository>()
-                  .Setup(s => s.AllSeriesPaths())
-                  .Returns(new Dictionary<int, string>());
-
             var root = new RootFolder { Path = path.AsOsAgnostic() };
 
             Subject.Add(root);
@@ -124,9 +110,9 @@ namespace Streamarr.Core.Test.RootFolderTests
 
             var subFolders = new[]
                         {
-                            "Series1",
-                            "Series2",
-                            "Series3",
+                            "Channel1",
+                            "Channel2",
+                            "Channel3",
                             subFolder
                         };
 
@@ -136,10 +122,6 @@ namespace Streamarr.Core.Test.RootFolderTests
                   .Setup(s => s.Get(It.IsAny<int>()))
                   .Returns(rootFolder);
 
-            Mocker.GetMock<ISeriesRepository>()
-                  .Setup(s => s.AllSeriesPaths())
-                  .Returns(new Dictionary<int, string>());
-
             Mocker.GetMock<IDiskProvider>()
                   .Setup(s => s.GetDirectories(rootFolder.Path))
                   .Returns(folders);
@@ -148,48 +130,6 @@ namespace Streamarr.Core.Test.RootFolderTests
 
             unmappedFolders.Count.Should().BeGreaterThan(0);
             unmappedFolders.Should().NotContain(u => u.Name == subFolder);
-        }
-
-        [Test]
-        public void should_get_unmapped_folders_inside_letter_subfolder()
-        {
-            _namingConfig.SeriesFolderFormat = "{Series TitleFirstCharacter}\\{Series Title}".AsOsAgnostic();
-
-            var rootFolderPath = @"C:\Test\TV".AsOsAgnostic();
-            var rootFolder = Builder<RootFolder>.CreateNew()
-                .With(r => r.Path = rootFolderPath)
-                .Build();
-
-            var subFolderPath = Path.Combine(rootFolderPath, "S");
-
-            var subFolders = new[]
-            {
-                "Series1",
-                "Series2",
-                "Series3",
-            };
-
-            var folders = subFolders.Select(f => Path.Combine(subFolderPath, f)).ToArray();
-
-            Mocker.GetMock<IRootFolderRepository>()
-                .Setup(s => s.Get(It.IsAny<int>()))
-                .Returns(rootFolder);
-
-            Mocker.GetMock<ISeriesRepository>()
-                .Setup(s => s.AllSeriesPaths())
-                .Returns(new Dictionary<int, string>());
-
-            Mocker.GetMock<IDiskProvider>()
-                .Setup(s => s.GetDirectories(rootFolder.Path))
-                .Returns(new[] { subFolderPath });
-
-            Mocker.GetMock<IDiskProvider>()
-                .Setup(s => s.GetDirectories(subFolderPath))
-                .Returns(folders);
-
-            var unmappedFolders = Subject.Get(rootFolder.Id, false).UnmappedFolders;
-
-            unmappedFolders.Count.Should().Be(3);
         }
     }
 }

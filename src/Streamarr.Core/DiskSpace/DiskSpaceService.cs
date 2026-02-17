@@ -7,7 +7,6 @@ using NLog;
 using Streamarr.Common.Disk;
 using Streamarr.Common.Extensions;
 using Streamarr.Core.RootFolders;
-using Streamarr.Core.Tv;
 
 namespace Streamarr.Core.DiskSpace
 {
@@ -18,16 +17,14 @@ namespace Streamarr.Core.DiskSpace
 
     public class DiskSpaceService : IDiskSpaceService
     {
-        private readonly ISeriesService _seriesService;
         private readonly IRootFolderService _rootFolderService;
         private readonly IDiskProvider _diskProvider;
         private readonly Logger _logger;
 
         private static readonly Regex _regexSpecialDrive = new Regex(@"^/var/lib/(docker|rancher|kubelet)(/|$)|^/(boot|etc)(/|$)|/docker(/var)?/aufs(/|$)|/\.timemachine", RegexOptions.Compiled);
 
-        public DiskSpaceService(ISeriesService seriesService, IRootFolderService rootFolderService, IDiskProvider diskProvider, Logger logger)
+        public DiskSpaceService(IRootFolderService rootFolderService, IDiskProvider diskProvider, Logger logger)
         {
-            _seriesService = seriesService;
             _rootFolderService = rootFolderService;
             _diskProvider = diskProvider;
             _logger = logger;
@@ -35,7 +32,7 @@ namespace Streamarr.Core.DiskSpace
 
         public List<DiskSpace> GetFreeSpace()
         {
-            var importantRootFolders = GetSeriesRootPaths().Distinct().ToList();
+            var importantRootFolders = GetRootFolderPaths().Distinct().ToList();
 
             var optionalRootFolders = GetFixedDisksRootPaths().Except(importantRootFolders).Distinct().ToList();
 
@@ -47,15 +44,11 @@ namespace Streamarr.Core.DiskSpace
             return diskSpace;
         }
 
-        private IEnumerable<string> GetSeriesRootPaths()
+        private IEnumerable<string> GetRootFolderPaths()
         {
-            // Get all series paths and find the correct root folder for each. For each unique root folder path,
-            // ensure the path exists and get its path root and return all unique path roots.
-
-            return _seriesService.GetAllSeriesPaths()
-                .Where(s => s.Value.IsPathValid(PathValidationType.CurrentOs))
-                .Select(s => _rootFolderService.GetBestRootFolderPath(s.Value))
-                .Distinct()
+            return _rootFolderService.All()
+                .Select(r => r.Path)
+                .Where(p => p.IsPathValid(PathValidationType.CurrentOs))
                 .Where(r => _diskProvider.FolderExists(r))
                 .Select(r => _diskProvider.GetPathRoot(r))
                 .Distinct();

@@ -1,14 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using Streamarr.Common.Extensions;
-using Streamarr.Core.CustomFormats;
-using Streamarr.Core.CustomFormats.Events;
-using Streamarr.Core.ImportLists;
 using Streamarr.Core.Lifecycle;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Qualities;
-using Streamarr.Core.Tv;
 
 namespace Streamarr.Core.Profiles.Qualities
 {
@@ -25,28 +20,17 @@ namespace Streamarr.Core.Profiles.Qualities
     }
 
     public class QualityProfileService : IQualityProfileService,
-                                         IHandle<ApplicationStartedEvent>,
-                                         IHandle<CustomFormatAddedEvent>,
-                                         IHandle<CustomFormatDeletedEvent>
+                                         IHandle<ApplicationStartedEvent>
     {
         private readonly IQualityProfileRepository _qualityProfileRepository;
-        private readonly IImportListFactory _importListFactory;
-        private readonly ICustomFormatService _formatService;
-        private readonly ISeriesService _seriesService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
         public QualityProfileService(IQualityProfileRepository qualityProfileRepository,
-                                     IImportListFactory importListFactory,
-                                     ICustomFormatService formatService,
-                                     ISeriesService seriesService,
                                      IEventAggregator eventAggregator,
                                      Logger logger)
         {
             _qualityProfileRepository = qualityProfileRepository;
-            _importListFactory = importListFactory;
-            _formatService = formatService;
-            _seriesService = seriesService;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -64,12 +48,6 @@ namespace Streamarr.Core.Profiles.Qualities
 
         public void Delete(int id)
         {
-            if (_seriesService.GetAllSeries().Any(c => c.QualityProfileId == id) || _importListFactory.All().Any(c => c.QualityProfileId == id))
-            {
-                var profile = _qualityProfileRepository.Get(id);
-                throw new QualityProfileInUseException(profile.Name);
-            }
-
             _qualityProfileRepository.Delete(id);
         }
 
@@ -156,40 +134,6 @@ namespace Streamarr.Core.Profiles.Qualities
                 Quality.Bluray1080p);
         }
 
-        public void Handle(CustomFormatAddedEvent message)
-        {
-            var all = All();
-
-            foreach (var profile in all)
-            {
-                profile.FormatItems.Insert(0, new ProfileFormatItem
-                {
-                    Score = 0,
-                    Format = message.CustomFormat
-                });
-
-                Update(profile);
-            }
-        }
-
-        public void Handle(CustomFormatDeletedEvent message)
-        {
-            var all = All();
-            foreach (var profile in all)
-            {
-                profile.FormatItems = profile.FormatItems.Where(c => c.Format.Id != message.CustomFormat.Id).ToList();
-
-                if (profile.FormatItems.Empty())
-                {
-                    profile.MinFormatScore = 0;
-                    profile.CutoffFormatScore = 0;
-                    profile.MinUpgradeFormatScore = 1;
-                }
-
-                Update(profile);
-            }
-        }
-
         public QualityProfile GetDefaultProfile(string name, Quality cutoff = null, params Quality[] allowed)
         {
             var groupedQualites = Quality.DefaultQualityDefinitions.GroupBy(q => q.Weight);
@@ -239,21 +183,11 @@ namespace Streamarr.Core.Profiles.Qualities
                 groupId++;
             }
 
-            var formatItems = _formatService.All().Select(format => new ProfileFormatItem
-            {
-                Score = 0,
-                Format = format
-            }).ToList();
-
             var qualityProfile = new QualityProfile
                                  {
                                      Name = name,
                                      Cutoff = profileCutoff,
-                                     Items = items,
-                                     MinFormatScore = 0,
-                                     CutoffFormatScore = 0,
-                                     MinUpgradeFormatScore = 1,
-                                     FormatItems = formatItems
+                                     Items = items
                                  };
 
             return qualityProfile;

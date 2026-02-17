@@ -6,17 +6,11 @@ using Streamarr.Common.Cache;
 using Streamarr.Core.Backup;
 using Streamarr.Core.Configuration;
 using Streamarr.Core.Configuration.Events;
-using Streamarr.Core.DataAugmentation.Scene;
-using Streamarr.Core.Download;
 using Streamarr.Core.HealthCheck;
 using Streamarr.Core.Housekeeping;
-using Streamarr.Core.ImportLists;
-using Streamarr.Core.Indexers;
 using Streamarr.Core.Lifecycle;
-using Streamarr.Core.MediaFiles.Commands;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Messaging.Events;
-using Streamarr.Core.Tv.Commands;
 using Streamarr.Core.Update.Commands;
 
 namespace Streamarr.Core.Jobs
@@ -68,13 +62,6 @@ namespace Streamarr.Core.Jobs
                 {
                     new ScheduledTask
                     {
-                        Interval = 1,
-                        TypeName = typeof(RefreshMonitoredDownloadsCommand).FullName,
-                        Priority = CommandPriority.High
-                    },
-
-                    new ScheduledTask
-                    {
                         Interval = 5,
                         TypeName = typeof(MessagingCleanupCommand).FullName
                     },
@@ -87,20 +74,8 @@ namespace Streamarr.Core.Jobs
 
                     new ScheduledTask
                     {
-                        Interval = 3 * 60,
-                        TypeName = typeof(UpdateSceneMappingCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
                         Interval = 6 * 60,
                         TypeName = typeof(CheckHealthCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = 12 * 60,
-                        TypeName = typeof(RefreshSeriesCommand).FullName
                     },
 
                     new ScheduledTask
@@ -111,26 +86,8 @@ namespace Streamarr.Core.Jobs
 
                     new ScheduledTask
                     {
-                        Interval = 24 * 60,
-                        TypeName = typeof(CleanUpRecycleBinCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = 5,
-                        TypeName = typeof(ImportListSyncCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
                         Interval = GetBackupInterval(),
                         TypeName = typeof(BackupCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = GetRssSyncInterval(),
-                        TypeName = typeof(RssSyncCommand).FullName
                     }
                 };
 
@@ -182,23 +139,6 @@ namespace Streamarr.Core.Jobs
             return intervalMinutes * 60 * 24;
         }
 
-        private int GetRssSyncInterval()
-        {
-            var interval = _configService.RssSyncInterval;
-
-            if (interval > 0 && interval < 10)
-            {
-                return 10;
-            }
-
-            if (interval < 0)
-            {
-                return 0;
-            }
-
-            return interval;
-        }
-
         public void Handle(CommandExecutedEvent message)
         {
             var scheduledTask = _scheduledTaskRepository.All().SingleOrDefault(c => c.TypeName == message.Command.Body.GetType().FullName);
@@ -221,15 +161,11 @@ namespace Streamarr.Core.Jobs
 
         public void HandleAsync(ConfigSavedEvent message)
         {
-            var rss = _scheduledTaskRepository.GetDefinition(typeof(RssSyncCommand));
-            rss.Interval = GetRssSyncInterval();
-
             var backup = _scheduledTaskRepository.GetDefinition(typeof(BackupCommand));
             backup.Interval = GetBackupInterval();
 
-            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { rss, backup });
+            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { backup });
 
-            _cache.Find(rss.TypeName).Interval = rss.Interval;
             _cache.Find(backup.TypeName).Interval = backup.Interval;
         }
     }

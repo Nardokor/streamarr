@@ -1,9 +1,5 @@
 using System.Collections.Generic;
 using Streamarr.Common.Http.Proxy;
-using Streamarr.Core.ImportLists;
-using Streamarr.Core.MediaFiles;
-using Streamarr.Core.MediaFiles.EpisodeImport;
-using Streamarr.Core.Qualities;
 using Streamarr.Core.Security;
 
 namespace Streamarr.Core.Configuration
@@ -14,52 +10,18 @@ namespace Streamarr.Core.Configuration
 
         bool IsDefined(string key);
 
-        // Download Client
-        string DownloadClientWorkingFolders { get; set; }
-        int DownloadClientHistoryLimit { get; set; }
-
-        // Completed/Failed Download Handling (Download client)
-        bool EnableCompletedDownloadHandling { get; set; }
-        bool AutoRedownloadFailed { get; set; }
-        bool AutoRedownloadFailedFromInteractiveSearch { get; set; }
-
         // Media Management
-        bool AutoUnmonitorPreviouslyDownloadedEpisodes { get; set; }
         string RecycleBin { get; set; }
         int RecycleBinCleanupDays { get; set; }
-        ProperDownloadTypes DownloadPropersAndRepacks { get; set; }
-        bool CreateEmptySeriesFolders { get; set; }
         bool DeleteEmptyFolders { get; set; }
-        FileDateType FileDate { get; set; }
         bool SkipFreeSpaceCheckWhenImporting { get; set; }
         int MinimumFreeSpaceWhenImporting { get; set; }
         bool CopyUsingHardlinks { get; set; }
-        bool EnableMediaInfo { get; set; }
-        bool UseScriptImport { get; set; }
-        string ScriptImportPath { get; set; }
-        bool ImportExtraFiles { get; set; }
-        string ExtraFileExtensions { get; set; }
-        RescanAfterRefreshType RescanAfterRefresh { get; set; }
-        EpisodeTitleRequiredType EpisodeTitleRequired { get; set; }
-        string UserRejectedExtensions { get; set; }
-
-        // Season Pack Upgrade (Media Management)
-        SeasonPackUpgradeType SeasonPackUpgrade { get; set; }
-        double SeasonPackUpgradeThreshold { get; set; }
 
         // Permissions (Media Management)
         bool SetPermissionsLinux { get; set; }
         string ChmodFolder { get; set; }
         string ChownGroup { get; set; }
-
-        // Indexers
-        int Retention { get; set; }
-        int RssSyncInterval { get; set; }
-        int MaximumSize { get; set; }
-        int MinimumAge { get; set; }
-
-        ListSyncLevelType ListSyncLevel { get; set; }
-        int ListSyncTag { get; set; }
 
         // UI
         int FirstDayOfWeek { get; set; }

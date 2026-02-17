@@ -16,27 +16,12 @@ import NumberInput, { NumberInputProps } from './NumberInput';
 import OAuthInput, { OAuthInputProps } from './OAuthInput';
 import PasswordInput from './PasswordInput';
 import PathInput, { PathInputProps } from './PathInput';
-import DownloadClientSelectInput, {
-  DownloadClientSelectInputProps,
-} from './Select/DownloadClientSelectInput';
 import EnhancedSelectInput, {
   EnhancedSelectInputProps,
 } from './Select/EnhancedSelectInput';
-import IndexerFlagsSelectInput, {
-  IndexerFlagsSelectInputProps,
-} from './Select/IndexerFlagsSelectInput';
-import IndexerSelectInput, {
-  IndexerSelectInputProps,
-} from './Select/IndexerSelectInput';
 import LanguageSelectInput, {
   LanguageSelectInputProps,
 } from './Select/LanguageSelectInput';
-import MonitorEpisodesSelectInput, {
-  MonitorEpisodesSelectInputProps,
-} from './Select/MonitorEpisodesSelectInput';
-import MonitorNewItemsSelectInput, {
-  MonitorNewItemsSelectInputProps,
-} from './Select/MonitorNewItemsSelectInput';
 import ProviderDataSelectInput, {
   ProviderOptionSelectInputProps,
 } from './Select/ProviderOptionSelectInput';
@@ -46,12 +31,8 @@ import QualityProfileSelectInput, {
 import RootFolderSelectInput, {
   RootFolderSelectInputProps,
 } from './Select/RootFolderSelectInput';
-import SeriesTypeSelectInput, {
-  SeriesTypeSelectInputProps,
-} from './Select/SeriesTypeSelectInput';
 import UMaskInput, { UMaskInputProps } from './Select/UMaskInput';
 import DeviceInput, { DeviceInputProps } from './Tag/DeviceInput';
-import SeriesTagInput, { SeriesTagInputProps } from './Tag/SeriesTagInput';
 import TagSelectInput, { TagSelectInputProps } from './Tag/TagSelectInput';
 import TextTagInput, { TextTagInputProps } from './Tag/TextTagInput';
 import TextArea, { TextAreaProps } from './TextArea';
@@ -64,16 +45,16 @@ const componentMap: Record<InputType, ElementType> = {
   check: CheckInput,
   date: TextInput,
   device: DeviceInput,
-  downloadClientSelect: DownloadClientSelectInput,
+  downloadClientSelect: EnhancedSelectInput,
   dynamicSelect: ProviderDataSelectInput,
   file: TextInput,
   float: FloatInput,
-  indexerFlagsSelect: IndexerFlagsSelectInput,
-  indexerSelect: IndexerSelectInput,
+  indexerFlagsSelect: EnhancedSelectInput,
+  indexerSelect: EnhancedSelectInput,
   keyValueList: KeyValueListInput,
   languageSelect: LanguageSelectInput,
-  monitorEpisodesSelect: MonitorEpisodesSelectInput,
-  monitorNewItemsSelect: MonitorNewItemsSelectInput,
+  monitorEpisodesSelect: EnhancedSelectInput,
+  monitorNewItemsSelect: EnhancedSelectInput,
   number: NumberInput,
   oauth: OAuthInput,
   password: PasswordInput,
@@ -81,9 +62,9 @@ const componentMap: Record<InputType, ElementType> = {
   qualityProfileSelect: QualityProfileSelectInput,
   rootFolderSelect: RootFolderSelectInput,
   select: EnhancedSelectInput,
-  seriesTag: SeriesTagInput,
-  seriesTypeSelect: SeriesTypeSelectInput,
-  tag: SeriesTagInput,
+  seriesTag: TagSelectInput,
+  seriesTypeSelect: EnhancedSelectInput,
+  tag: TagSelectInput,
   tagSelect: TagSelectInput,
   text: TextInput,
   textArea: TextArea,
@@ -105,26 +86,16 @@ type PickProps<V, C extends InputType> = C extends 'text'
   ? TextInputProps
   : C extends 'device'
   ? DeviceInputProps
-  : C extends 'downloadClientSelect'
-  ? DownloadClientSelectInputProps
   : C extends 'dynamicSelect'
   ? ProviderOptionSelectInputProps
   : C extends 'file'
   ? TextInputProps
   : C extends 'float'
   ? FloatInputProps
-  : C extends 'indexerFlagsSelect'
-  ? IndexerFlagsSelectInputProps
-  : C extends 'indexerSelect'
-  ? IndexerSelectInputProps
   : C extends 'keyValueList'
   ? KeyValueListInputProps
   : C extends 'languageSelect'
   ? LanguageSelectInputProps
-  : C extends 'monitorEpisodesSelect'
-  ? MonitorEpisodesSelectInputProps
-  : C extends 'monitorNewItemsSelect'
-  ? MonitorNewItemsSelectInputProps
   : C extends 'number'
   ? NumberInputProps
   : C extends 'oauth'
@@ -140,12 +111,6 @@ type PickProps<V, C extends InputType> = C extends 'text'
   : C extends 'select'
   ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
     EnhancedSelectInputProps<any, V>
-  : C extends 'seriesTag'
-  ? SeriesTagInputProps<V>
-  : C extends 'seriesTypeSelect'
-  ? SeriesTypeSelectInputProps
-  : C extends 'tag'
-  ? SeriesTagInputProps<V>
   : C extends 'tagSelect'
   ? TagSelectInputProps
   : C extends 'text'
@@ -277,17 +242,6 @@ function FormInputGroup<T, C extends InputType>(
               isLastButton: index === lastButtonIndex,
             });
           })}
-
-          {/* <div className={styles.pendingChangesContainer}>
-          {
-          pending &&
-          <Icon
-          name={icons.UNSAVED_SETTING}
-          className={styles.pendingChangesIcon}
-          title="Change has not been saved yet"
-          />
-          }
-        </div> */}
         </div>
 
         {!checkInput && helpText ? <FormInputHelpText text={helpText} /> : null}

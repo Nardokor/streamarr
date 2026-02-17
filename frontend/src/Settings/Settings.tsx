@@ -36,62 +36,6 @@ function Settings() {
           {translate('QualitySettingsSummary')}
         </div>
 
-        <Link className={styles.link} to="/settings/customformats">
-          {translate('CustomFormats')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('CustomFormatsSettingsSummary')}
-        </div>
-
-        <Link className={styles.link} to="/settings/indexers">
-          {translate('Indexers')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('IndexersSettingsSummary')}
-        </div>
-
-        <Link className={styles.link} to="/settings/downloadclients">
-          {translate('DownloadClients')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('DownloadClientsSettingsSummary')}
-        </div>
-
-        <Link className={styles.link} to="/settings/importlists">
-          {translate('ImportLists')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('ImportListsSettingsSummary')}
-        </div>
-
-        <Link className={styles.link} to="/settings/connect">
-          {translate('Connect')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('ConnectSettingsSummary')}
-        </div>
-
-        <Link className={styles.link} to="/settings/metadata">
-          {translate('Metadata')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('MetadataSettingsSeriesSummary')}
-        </div>
-
-        <Link className={styles.link} to="/settings/metadatasource">
-          {translate('MetadataSource')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('MetadataSourceSettingsSeriesSummary')}
-        </div>
-
         <Link className={styles.link} to="/settings/tags">
           {translate('Tags')}
         </Link>

@@ -8,12 +8,13 @@ interface ErrorPageProps {
   version: string;
   isLocalStorageSupported: boolean;
   translationsError: ApiError | null;
-  seriesError: ApiError | null;
   customFiltersError: ApiError | null;
   tagsError: ApiError | null;
   qualityProfilesError: ApiError | null;
   uiSettingsError: ApiError | null;
   systemStatusError: ApiError | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  languagesError?: any;
 }
 
 function ErrorPage(props: ErrorPageProps) {
@@ -21,7 +22,6 @@ function ErrorPage(props: ErrorPageProps) {
     version,
     isLocalStorageSupported,
     translationsError,
-    seriesError,
     customFiltersError,
     tagsError,
     qualityProfilesError,
@@ -37,11 +37,6 @@ function ErrorPage(props: ErrorPageProps) {
     errorMessage = getErrorMessage(
       translationsError,
       translate('FailedToLoadTranslationsFromApi')
-    );
-  } else if (seriesError) {
-    errorMessage = getErrorMessage(
-      seriesError,
-      translate('FailedToLoadSeriesFromApi')
     );
   } else if (customFiltersError) {
     errorMessage = getErrorMessage(

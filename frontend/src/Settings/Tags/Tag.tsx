@@ -2,11 +2,9 @@ import React, { useCallback, useState } from 'react';
 import Card from 'Components/Card';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { kinds } from 'Helpers/Props';
-import { useTagDetail } from 'Tags/useTagDetails';
 import { useDeleteTag } from 'Tags/useTags';
 import translate from 'Utilities/String/translate';
 import TagDetailsModal from './Details/TagDetailsModal';
-import TagInUse from './TagInUse';
 import styles from './Tag.css';
 
 interface TagProps {
@@ -16,35 +14,10 @@ interface TagProps {
 
 function Tag({ id, label }: TagProps) {
   const { deleteTag } = useDeleteTag(id);
-  const {
-    delayProfileIds,
-    importListIds,
-    notificationIds,
-    restrictionIds,
-    excludedReleaseProfileIds,
-    indexerIds,
-    downloadClientIds,
-    autoTagIds,
-    seriesIds,
-  } = useTagDetail(id);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isDeleteTagModalOpen, setIsDeleteTagModalOpen] = useState(false);
 
-  const isTagUsed = !!(
-    delayProfileIds.length ||
-    importListIds.length ||
-    notificationIds.length ||
-    restrictionIds.length ||
-    excludedReleaseProfileIds.length ||
-    indexerIds.length ||
-    downloadClientIds.length ||
-    autoTagIds.length ||
-    seriesIds.length
-  );
-
-  const mergedReleaseProfileIds = Array.from(
-    new Set([...restrictionIds, ...excludedReleaseProfileIds]).values()
-  );
+  const isTagUsed = false;
 
   const handleShowDetailsPress = useCallback(() => {
     setIsDetailsModalOpen(true);
@@ -75,66 +48,11 @@ function Tag({ id, label }: TagProps) {
     >
       <div className={styles.label}>{label}</div>
 
-      {isTagUsed ? (
-        <div>
-          <TagInUse label={translate('Series')} count={seriesIds.length} />
-
-          <TagInUse
-            label={translate('DelayProfile')}
-            labelPlural={translate('DelayProfiles')}
-            count={delayProfileIds.length}
-          />
-
-          <TagInUse
-            label={translate('ImportList')}
-            labelPlural={translate('ImportLists')}
-            count={importListIds.length}
-          />
-
-          <TagInUse
-            label={translate('Connection')}
-            labelPlural={translate('Connections')}
-            count={notificationIds.length}
-          />
-
-          <TagInUse
-            label={translate('ReleaseProfile')}
-            labelPlural={translate('ReleaseProfiles')}
-            count={mergedReleaseProfileIds.length}
-          />
-
-          <TagInUse
-            label={translate('Indexer')}
-            labelPlural={translate('Indexers')}
-            count={indexerIds.length}
-          />
-
-          <TagInUse
-            label={translate('DownloadClient')}
-            labelPlural={translate('DownloadClients')}
-            count={downloadClientIds.length}
-          />
-
-          <TagInUse
-            label={translate('AutoTagging')}
-            count={autoTagIds.length}
-          />
-        </div>
-      ) : null}
-
       {!isTagUsed && <div>{translate('NoLinks')}</div>}
 
       <TagDetailsModal
         label={label}
         isTagUsed={isTagUsed}
-        seriesIds={seriesIds}
-        delayProfileIds={delayProfileIds}
-        importListIds={importListIds}
-        notificationIds={notificationIds}
-        releaseProfileIds={mergedReleaseProfileIds}
-        indexerIds={indexerIds}
-        downloadClientIds={downloadClientIds}
-        autoTagIds={autoTagIds}
         isOpen={isDetailsModalOpen}
         onModalClose={handeDetailsModalClose}
         onDeleteTagPress={handleDeleteTagPress}

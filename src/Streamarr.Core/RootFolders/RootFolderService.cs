@@ -4,12 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
-using Streamarr.Common;
 using Streamarr.Common.Cache;
 using Streamarr.Common.Disk;
 using Streamarr.Common.Extensions;
-using Streamarr.Core.Organizer;
-using Streamarr.Core.Tv;
 
 namespace Streamarr.Core.RootFolders
 {
@@ -27,8 +24,6 @@ namespace Streamarr.Core.RootFolders
     {
         private readonly IRootFolderRepository _rootFolderRepository;
         private readonly IDiskProvider _diskProvider;
-        private readonly ISeriesRepository _seriesRepository;
-        private readonly INamingConfigService _namingConfigService;
         private readonly Logger _logger;
 
         private readonly ICached<string> _cache;
@@ -48,15 +43,11 @@ namespace Streamarr.Core.RootFolders
 
         public RootFolderService(IRootFolderRepository rootFolderRepository,
                                  IDiskProvider diskProvider,
-                                 ISeriesRepository seriesRepository,
-                                 INamingConfigService namingConfigService,
                                  ICacheManager cacheManager,
                                  Logger logger)
         {
             _rootFolderRepository = rootFolderRepository;
             _diskProvider = diskProvider;
-            _seriesRepository = seriesRepository;
-            _namingConfigService = namingConfigService;
             _logger = logger;
 
             _cache = cacheManager.GetCache<string>(GetType());
@@ -72,7 +63,6 @@ namespace Streamarr.Core.RootFolders
         public List<RootFolder> AllWithUnmappedFolders()
         {
             var rootFolders = _rootFolderRepository.All().ToList();
-            var seriesPaths = _seriesRepository.AllSeriesPaths();
 
             rootFolders.ForEach(folder =>
             {
@@ -80,11 +70,9 @@ namespace Streamarr.Core.RootFolders
                 {
                     if (folder.Path.IsPathValid(PathValidationType.CurrentOs))
                     {
-                        GetDetails(folder, seriesPaths, true);
+                        GetDetails(folder, true);
                     }
                 }
-
-                // We don't want an exception to prevent the root folders from loading in the UI, so they can still be deleted
                 catch (Exception ex)
                 {
                     _logger.Error(ex, "Unable to get free space and unmapped folders for root folder {0}", folder.Path);
@@ -120,9 +108,8 @@ namespace Streamarr.Core.RootFolders
             }
 
             _rootFolderRepository.Insert(rootFolder);
-            var seriesPaths = _seriesRepository.AllSeriesPaths();
 
-            GetDetails(rootFolder, seriesPaths, true);
+            GetDetails(rootFolder, true);
             _cache.Clear();
 
             return rootFolder;
@@ -134,7 +121,36 @@ namespace Streamarr.Core.RootFolders
             _cache.Clear();
         }
 
-        private List<UnmappedFolder> GetUnmappedFolders(string path, Dictionary<int, string> seriesPaths)
+        public RootFolder Get(int id, bool timeout)
+        {
+            var rootFolder = _rootFolderRepository.Get(id);
+
+            GetDetails(rootFolder, timeout);
+
+            return rootFolder;
+        }
+
+        public string GetBestRootFolderPath(string path)
+        {
+            return _cache.Get(path, () => GetBestRootFolderPathInternal(path), TimeSpan.FromDays(1));
+        }
+
+        private void GetDetails(RootFolder rootFolder, bool timeout)
+        {
+            Task.Run(() =>
+            {
+                if (_diskProvider.FolderExists(rootFolder.Path))
+                {
+                    rootFolder.Accessible = true;
+                    rootFolder.IsEmpty = _diskProvider.FolderEmpty(rootFolder.Path);
+                    rootFolder.FreeSpace = _diskProvider.GetAvailableSpace(rootFolder.Path);
+                    rootFolder.TotalSpace = _diskProvider.GetTotalSize(rootFolder.Path);
+                    rootFolder.UnmappedFolders = GetUnmappedFolders(rootFolder.Path);
+                }
+            }).Wait(timeout ? 5000 : -1);
+        }
+
+        private List<UnmappedFolder> GetUnmappedFolders(string path)
         {
             _logger.Debug("Generating list of unmapped folders");
 
@@ -151,22 +167,11 @@ namespace Streamarr.Core.RootFolders
                 return results;
             }
 
-            var subFolderDepth = _namingConfigService.GetConfig().SeriesFolderFormat.Count(f => f == Path.DirectorySeparatorChar);
-            var possibleSeriesFolders = _diskProvider.GetDirectories(path).ToList();
+            var possibleFolders = _diskProvider.GetDirectories(path).ToList();
 
-            if (subFolderDepth > 0)
+            foreach (var folder in possibleFolders)
             {
-                for (var i = 0; i < subFolderDepth; i++)
-                {
-                    possibleSeriesFolders = possibleSeriesFolders.SelectMany(_diskProvider.GetDirectories).ToList();
-                }
-            }
-
-            var unmappedFolders = possibleSeriesFolders.Except(seriesPaths.Select(s => s.Value), PathEqualityComparer.Instance).ToList();
-
-            foreach (var unmappedFolder in unmappedFolders)
-            {
-                var di = new DirectoryInfo(unmappedFolder.Normalize());
+                var di = new DirectoryInfo(folder.Normalize());
                 results.Add(new UnmappedFolder
                 {
                     Name = di.Name,
@@ -180,36 +185,6 @@ namespace Streamarr.Core.RootFolders
 
             _logger.Debug("{0} unmapped folders detected.", results.Count);
             return results.OrderBy(u => u.Name, StringComparer.InvariantCultureIgnoreCase).ToList();
-        }
-
-        public RootFolder Get(int id, bool timeout)
-        {
-            var rootFolder = _rootFolderRepository.Get(id);
-            var seriesPaths = _seriesRepository.AllSeriesPaths();
-
-            GetDetails(rootFolder, seriesPaths, timeout);
-
-            return rootFolder;
-        }
-
-        public string GetBestRootFolderPath(string path)
-        {
-            return _cache.Get(path, () => GetBestRootFolderPathInternal(path), TimeSpan.FromDays(1));
-        }
-
-        private void GetDetails(RootFolder rootFolder, Dictionary<int, string> seriesPaths, bool timeout)
-        {
-            Task.Run(() =>
-            {
-                if (_diskProvider.FolderExists(rootFolder.Path))
-                {
-                    rootFolder.Accessible = true;
-                    rootFolder.IsEmpty = _diskProvider.FolderEmpty(rootFolder.Path);
-                    rootFolder.FreeSpace = _diskProvider.GetAvailableSpace(rootFolder.Path);
-                    rootFolder.TotalSpace = _diskProvider.GetTotalSize(rootFolder.Path);
-                    rootFolder.UnmappedFolders = GetUnmappedFolders(rootFolder.Path, seriesPaths);
-                }
-            }).Wait(timeout ? 5000 : -1);
         }
 
         private string GetBestRootFolderPathInternal(string path)

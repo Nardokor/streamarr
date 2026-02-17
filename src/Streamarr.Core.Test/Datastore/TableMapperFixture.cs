@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using Dapper;
 using FluentAssertions;
 using NUnit.Framework;
+using Streamarr.Core.Channels;
 using Streamarr.Core.Datastore;
 using Streamarr.Core.Datastore.Converters;
-using Streamarr.Core.Tv;
 
 namespace Streamarr.Core.Test.Datastore
 {
@@ -27,7 +27,7 @@ namespace Streamarr.Core.Test.Datastore
 
         public class TypeWithNoMappableProperties
         {
-            public Series Series { get; set; }
+            public Channel Channel { get; set; }
 
             public int ReadOnly { get; private set; }
             public int WriteOnly { private get; set; }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +6,6 @@ using NLog;
 using Streamarr.Common.Cache;
 using Streamarr.Common.Disk;
 using Streamarr.Common.Extensions;
-using Streamarr.Core.Download;
 
 namespace Streamarr.Core.RemotePathMappings
 {
@@ -30,8 +29,7 @@ namespace Streamarr.Core.RemotePathMappings
 
         private readonly ICached<List<RemotePathMapping>> _cache;
 
-        public RemotePathMappingService(IDownloadClientRepository downloadClientRepository,
-                                        IRemotePathMappingRepository remotePathMappingRepository,
+        public RemotePathMappingService(IRemotePathMappingRepository remotePathMappingRepository,
                                         IDiskProvider diskProvider,
                                         ICacheManager cacheManager,
                                         Logger logger)
@@ -139,15 +137,11 @@ namespace Streamarr.Core.RemotePathMappings
                 return remotePath;
             }
 
-            _logger.Trace("Evaluating remote path remote mappings for match to host [{0}] and remote path [{1}]", host, remotePath.FullPath);
-
             foreach (var mapping in mappings)
             {
-                _logger.Trace("Checking configured remote path mapping: {0} - {1}", mapping.Host, mapping.RemotePath);
                 if (host.Equals(mapping.Host, StringComparison.InvariantCultureIgnoreCase) && new OsPath(mapping.RemotePath).Contains(remotePath))
                 {
                     var localPath = new OsPath(mapping.LocalPath) + (remotePath - new OsPath(mapping.RemotePath));
-                    _logger.Debug("Remapped remote path [{0}] to local path [{1}] for host [{2}]", remotePath, localPath, host);
 
                     return localPath;
                 }
@@ -170,15 +164,11 @@ namespace Streamarr.Core.RemotePathMappings
                 return localPath;
             }
 
-            _logger.Trace("Evaluating remote path local mappings for match to host [{0}] and local path [{1}]", host, localPath.FullPath);
-
             foreach (var mapping in mappings)
             {
-                _logger.Trace("Checking configured remote path mapping {0} - {1}", mapping.Host, mapping.RemotePath);
                 if (host.Equals(mapping.Host, StringComparison.InvariantCultureIgnoreCase) && new OsPath(mapping.LocalPath).Contains(localPath))
                 {
                     var remotePath = new OsPath(mapping.RemotePath) + (localPath - new OsPath(mapping.LocalPath));
-                    _logger.Debug("Remapped local path [{0}] to remote path [{1}] for host [{2}]", localPath, remotePath, host);
 
                     return remotePath;
                 }

@@ -3,9 +3,9 @@ using System.Linq;
 using Dapper;
 using FluentAssertions;
 using NUnit.Framework;
+using Streamarr.Core.Channels;
 using Streamarr.Core.Datastore;
 using Streamarr.Core.Test.Framework;
-using Streamarr.Core.Tv;
 
 namespace Streamarr.Core.Test.Datastore
 {
@@ -15,7 +15,7 @@ namespace Streamarr.Core.Test.Datastore
         public void SingleOrDefault_should_return_null_on_empty_db()
         {
             Mocker.Resolve<IDatabase>()
-                .OpenConnection().Query<Series>("SELECT * FROM \"Series\"")
+                .OpenConnection().Query<Channel>("SELECT * FROM \"Channels\"")
                 .SingleOrDefault()
                 .Should()
                 .BeNull();

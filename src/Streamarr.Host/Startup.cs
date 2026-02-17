@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 using NLog.Extensions.Logging;
 using StackExchange.Profiling;
-using Streamarr.Api.V1.Series;
+using Streamarr.Api.V1.Tags;
 using Streamarr.Common.EnvironmentInfo;
 using Streamarr.Common.Instrumentation;
 using Streamarr.Common.Processes;
@@ -97,7 +97,7 @@ namespace Streamarr.Host
             })
 
             // Register all controllers from the API and HTTP projects
-            .AddApplicationPart(typeof(SeriesLookupController).Assembly)
+            .AddApplicationPart(typeof(TagController).Assembly)
             .AddApplicationPart(typeof(StaticResourceController).Assembly)
             .AddJsonOptions(options =>
             {

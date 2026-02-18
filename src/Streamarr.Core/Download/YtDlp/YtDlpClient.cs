@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using NLog;
 using Streamarr.Common.Disk;
@@ -12,6 +14,9 @@ namespace Streamarr.Core.Download.YtDlp
     public interface IYtDlpClient
     {
         YtDlpDownloadResult Download(string url, string outputPath, Action<YtDlpProgress> onProgress = null);
+        YtDlpChannelInfo GetChannelInfo(string channelUrl);
+        List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null);
+        YtDlpVideoInfo GetVideoInfo(string videoUrl);
         string GetVersion();
         bool IsAvailable();
     }
@@ -29,6 +34,11 @@ namespace Streamarr.Core.Download.YtDlp
         private static readonly Regex AlreadyDownloadedRegex = new Regex(
             @"\[download\]\s+(.+)\s+has already been downloaded",
             RegexOptions.Compiled);
+
+        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
 
         private readonly IProcessProvider _processProvider;
         private readonly IDiskProvider _diskProvider;
@@ -68,6 +78,109 @@ namespace Streamarr.Core.Download.YtDlp
             }
 
             return output.Lines.Count > 0 ? output.Lines[0].Content.Trim() : string.Empty;
+        }
+
+        public YtDlpVideoInfo GetVideoInfo(string videoUrl)
+        {
+            _logger.Debug("Getting video info: {0}", videoUrl);
+
+            var args = BuildMetadataArgs(videoUrl);
+            var output = _processProvider.StartAndCapture(_settings.BinaryPath, args);
+
+            if (output.ExitCode != 0)
+            {
+                var error = string.Join(Environment.NewLine, output.Error.Select(l => l.Content));
+                throw new InvalidOperationException($"yt-dlp failed to get video info: {error}");
+            }
+
+            var json = string.Join(string.Empty, output.Standard.Select(l => l.Content));
+
+            return JsonSerializer.Deserialize<YtDlpVideoInfo>(json, JsonOptions);
+        }
+
+        public YtDlpChannelInfo GetChannelInfo(string channelUrl)
+        {
+            _logger.Debug("Getting channel info: {0}", channelUrl);
+
+            var args = $"--dump-single-json --skip-download --playlist-end 1 {Quote(channelUrl)}";
+            var output = _processProvider.StartAndCapture(_settings.BinaryPath, args);
+
+            if (output.ExitCode != 0)
+            {
+                var error = string.Join(Environment.NewLine, output.Error.Select(l => l.Content));
+                throw new InvalidOperationException($"yt-dlp failed to get channel info: {error}");
+            }
+
+            var json = string.Join(string.Empty, output.Standard.Select(l => l.Content));
+
+            return JsonSerializer.Deserialize<YtDlpChannelInfo>(json, JsonOptions);
+        }
+
+        public List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null)
+        {
+            _logger.Debug("Getting channel videos: {0} (limit={1}, dateAfter={2})", channelUrl, limit, dateAfter);
+
+            var videosUrl = channelUrl.TrimEnd('/');
+            if (!videosUrl.EndsWith("/videos"))
+            {
+                videosUrl += "/videos";
+            }
+
+            var argParts = new List<string>
+            {
+                "--flat-playlist",
+                "--dump-json",
+                "--skip-download"
+            };
+
+            if (limit.HasValue)
+            {
+                argParts.Add($"--playlist-end {limit.Value}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(dateAfter))
+            {
+                argParts.Add($"--dateafter {dateAfter}");
+            }
+
+            argParts.Add(Quote(videosUrl));
+
+            var args = string.Join(" ", argParts);
+            var output = _processProvider.StartAndCapture(_settings.BinaryPath, args);
+
+            if (output.ExitCode != 0)
+            {
+                var error = string.Join(Environment.NewLine, output.Error.Select(l => l.Content));
+                throw new InvalidOperationException($"yt-dlp failed to get channel videos: {error}");
+            }
+
+            var videos = new List<YtDlpVideoInfo>();
+
+            foreach (var line in output.Standard)
+            {
+                var trimmed = line.Content?.Trim();
+                if (string.IsNullOrWhiteSpace(trimmed))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    var video = JsonSerializer.Deserialize<YtDlpVideoInfo>(trimmed, JsonOptions);
+                    if (video != null)
+                    {
+                        videos.Add(video);
+                    }
+                }
+                catch (JsonException ex)
+                {
+                    _logger.Warn(ex, "Failed to parse video JSON line");
+                }
+            }
+
+            _logger.Debug("Found {0} videos for channel {1}", videos.Count, channelUrl);
+
+            return videos;
         }
 
         public YtDlpDownloadResult Download(string url, string outputPath, Action<YtDlpProgress> onProgress = null)
@@ -149,6 +262,11 @@ namespace Streamarr.Core.Download.YtDlp
                 ExitCode = exitCode,
                 ErrorMessage = success ? string.Empty : string.Join(Environment.NewLine, errors)
             };
+        }
+
+        private static string BuildMetadataArgs(string url)
+        {
+            return $"--dump-json --skip-download {Quote(url)}";
         }
 
         private string BuildDownloadArgs(string url, string outputPath)

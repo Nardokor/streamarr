@@ -4,7 +4,10 @@ using System.Linq;
 using Dapper;
 using Streamarr.Common.Reflection;
 using Streamarr.Core.Authentication;
+using Streamarr.Core.Channels;
 using Streamarr.Core.Configuration;
+using Streamarr.Core.ContentFiles;
+using Streamarr.Core.Creators;
 using Streamarr.Core.CustomFilters;
 using Streamarr.Core.Datastore.Converters;
 using Streamarr.Core.Instrumentation;
@@ -66,6 +69,20 @@ namespace Streamarr.Core.Datastore
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
 
             Mapper.Entity<UpdateHistory>("UpdateHistory").RegisterModel();
+
+            Mapper.Entity<Creator>("Creators").RegisterModel()
+                  .Ignore(c => c.QualityProfile)
+                  .Ignore(c => c.RootFolderPath);
+
+            Mapper.Entity<Channel>("Channels").RegisterModel()
+                  .Ignore(c => c.Creator);
+
+            Mapper.Entity<Content.Content>("Contents").RegisterModel()
+                  .Ignore(c => c.Channel)
+                  .Ignore(c => c.ContentFile);
+
+            Mapper.Entity<ContentFile>("ContentFiles").RegisterModel()
+                  .Ignore(cf => cf.Content);
         }
 
         private static void RegisterMappers()

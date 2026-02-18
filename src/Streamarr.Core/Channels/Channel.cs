@@ -1,19 +1,30 @@
 using System;
-using System.Collections.Generic;
+using Streamarr.Core.Creators;
 using Streamarr.Core.Datastore;
 
 namespace Streamarr.Core.Channels
 {
     public class Channel : ModelBase
     {
-        public string Title { get; set; }
-        public string PlatformUrl { get; set; }
-        public string PlatformId { get; set; }
-        public string Path { get; set; }
+        // Relationship
+        public int CreatorId { get; set; }
+
+        // Platform identity
+        public PlatformType Platform { get; set; }
+        public string PlatformId { get; set; } = string.Empty;
+        public string PlatformUrl { get; set; } = string.Empty;
+
+        // Display metadata
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string ThumbnailUrl { get; set; } = string.Empty;
+
+        // State
         public bool Monitored { get; set; }
-        public string RootFolderPath { get; set; }
-        public int QualityProfileId { get; set; }
-        public HashSet<int> Tags { get; set; }
-        public DateTime Added { get; set; }
+        public ChannelStatusType Status { get; set; }
+        public DateTime? LastInfoSync { get; set; }
+
+        // Navigation
+        public LazyLoaded<Creator> Creator { get; set; }
     }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
+import CreatorIndex from 'Creator/CreatorIndex';
 import GeneralSettings from 'Settings/General/GeneralSettings';
 import MediaManagement from 'Settings/MediaManagement/MediaManagement';
 import Profiles from 'Settings/Profiles/Profiles';
@@ -28,7 +29,7 @@ function AppRoutes() {
         Home
       */}
 
-      <Route exact={true} path="/" render={() => <div>Streamarr Home</div>} />
+      <Route exact={true} path="/" component={CreatorIndex} />
 
       {window.Streamarr.urlBase && (
         <Route
@@ -40,6 +41,8 @@ function AppRoutes() {
           render={RedirectWithUrlBase}
         />
       )}
+
+      <Route path="/creators" component={CreatorIndex} />
 
       {/*
         Settings

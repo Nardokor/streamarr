@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Streamarr.Core.Channels;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Creators.Events;
 using Streamarr.Core.Datastore.Events;
@@ -18,12 +19,15 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
                                  IHandle<CreatorDeletedEvent>
 {
     private readonly ICreatorService _creatorService;
+    private readonly IChannelService _channelService;
 
     public CreatorController(ICreatorService creatorService,
+                             IChannelService channelService,
                              IBroadcastSignalRMessage signalRBroadcaster)
         : base(signalRBroadcaster)
     {
         _creatorService = creatorService;
+        _channelService = channelService;
 
         SharedValidator.RuleFor(c => c.Title).NotEmpty();
         SharedValidator.RuleFor(c => c.Path).NotEmpty();
@@ -47,6 +51,22 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
     public ActionResult<CreatorResource> Create([FromBody] CreatorResource resource)
     {
         var creator = _creatorService.AddCreator(resource.ToModel());
+
+        foreach (var ch in resource.Channels)
+        {
+            _channelService.AddChannel(new Channel
+            {
+                CreatorId = creator.Id,
+                Platform = ch.Platform,
+                PlatformId = ch.PlatformId,
+                PlatformUrl = ch.PlatformUrl,
+                Title = ch.Title,
+                Description = ch.Description,
+                ThumbnailUrl = ch.ThumbnailUrl,
+                Monitored = true,
+            });
+        }
+
         return Created(creator.Id);
     }
 

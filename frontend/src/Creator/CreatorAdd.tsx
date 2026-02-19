@@ -46,6 +46,7 @@ function CreatorAdd() {
         qualityProfileId: 1,
         tags: [],
         monitored: true,
+        channels: lookupResult.channels,
       },
       {
         onSuccess: () => {

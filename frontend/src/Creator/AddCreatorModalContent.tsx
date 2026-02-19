@@ -54,6 +54,7 @@ function AddCreatorModalContent({
         qualityProfileId: 1,
         tags: [],
         monitored: true,
+        channels: lookupResult.channels,
       },
       {
         onSuccess: () => {

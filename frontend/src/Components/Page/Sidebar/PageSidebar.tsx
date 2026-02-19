@@ -48,6 +48,12 @@ interface SidebarItem {
 
 const LINKS: SidebarItem[] = [
   {
+    iconName: icons.PROFILE,
+    title: 'Creators',
+    to: '/creators',
+  },
+
+  {
     iconName: icons.SETTINGS,
     title: () => translate('Settings'),
     to: '/settings',

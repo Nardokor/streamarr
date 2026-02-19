@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
+import CreatorAdd from 'Creator/CreatorAdd';
 import CreatorIndex from 'Creator/CreatorIndex';
 import GeneralSettings from 'Settings/General/GeneralSettings';
 import MediaManagement from 'Settings/MediaManagement/MediaManagement';
@@ -41,6 +42,8 @@ function AppRoutes() {
           render={RedirectWithUrlBase}
         />
       )}
+
+      <Route exact={true} path="/creators/add" component={CreatorAdd} />
 
       <Route path="/creators" component={CreatorIndex} />
 

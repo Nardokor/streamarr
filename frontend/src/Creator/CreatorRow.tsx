@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import IconButton from 'Components/Link/IconButton';
+import Link from 'Components/Link/Link';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
@@ -38,16 +39,20 @@ function CreatorRow({ creator }: CreatorRowProps) {
     <TableRow>
       <TableRowCell className={styles.thumbnail}>
         {thumbnailUrl ? (
-          <img
-            className={styles.thumbnailImg}
-            src={thumbnailUrl}
-            alt={title}
-          />
+          <Link to={`/creators/${id}`}>
+            <img
+              className={styles.thumbnailImg}
+              src={thumbnailUrl}
+              alt={title}
+            />
+          </Link>
         ) : null}
       </TableRowCell>
 
       <TableRowCell>
-        <span className={styles.title}>{title}</span>
+        <Link className={styles.title} to={`/creators/${id}`}>
+          {title}
+        </Link>
       </TableRowCell>
 
       <TableRowCell>{path}</TableRowCell>

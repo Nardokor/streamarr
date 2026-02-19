@@ -1,0 +1,133 @@
+.header {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--borderColor);
+  margin-bottom: 20px;
+}
+
+.headerThumbnail {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.headerInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.headerTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.headerMeta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 8px;
+  color: var(--textSecondary, #888);
+  font-size: 0.85rem;
+}
+
+.headerDescription {
+  color: var(--textSecondary, #888);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.section {
+  margin-bottom: 28px;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--borderColor);
+}
+
+.channelList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.channelCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--inputBackground, #2a2a2a);
+  border-radius: 4px;
+}
+
+.channelBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--colorImportant, #e74c3c);
+  color: white;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.channelTitle {
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.channelUrl {
+  font-size: 0.8rem;
+  color: var(--textSecondary, #888);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 240px;
+}
+
+.contentThumbnail {
+  width: 56px;
+}
+
+.contentThumbnailImg {
+  width: 56px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.statusMissing {
+  background: var(--colorDanger, #e74c3c);
+  color: white;
+}
+
+.statusDownloaded {
+  background: var(--colorSuccess, #2ecc71);
+  color: white;
+}
+
+.statusMonitored {
+  background: var(--colorPrimary, #3498db);
+  color: white;
+}

@@ -1,7 +1,18 @@
+using Streamarr.Core.Channels;
 using Streamarr.Core.Creators;
 using Streamarr.Http.REST;
 
 namespace Streamarr.Api.V1.Creators;
+
+public class CreatorChannelResource
+{
+    public PlatformType Platform { get; set; }
+    public string PlatformId { get; set; } = string.Empty;
+    public string PlatformUrl { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string ThumbnailUrl { get; set; } = string.Empty;
+}
 
 public class CreatorResource : RestResource
 {
@@ -16,6 +27,9 @@ public class CreatorResource : RestResource
     public CreatorStatusType Status { get; set; }
     public DateTime Added { get; set; }
     public DateTime? LastInfoSync { get; set; }
+
+    // Populated on create only — channels to associate with the new creator
+    public List<CreatorChannelResource> Channels { get; set; } = new List<CreatorChannelResource>();
 }
 
 public static class CreatorResourceMapper

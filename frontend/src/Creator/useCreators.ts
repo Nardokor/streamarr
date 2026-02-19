@@ -3,7 +3,11 @@ import useApiMutation from 'Helpers/Hooks/useApiMutation';
 import useApiQuery from 'Helpers/Hooks/useApiQuery';
 import Channel from 'typings/Channel';
 import Content from 'typings/Content';
-import Creator, { CreatorLookupResult } from 'typings/Creator';
+import Creator, { CreatorLookupChannel, CreatorLookupResult } from 'typings/Creator';
+
+export interface AddCreatorPayload extends Partial<Creator> {
+  channels: CreatorLookupChannel[];
+}
 
 const CREATORS_PATH = '/creator';
 
@@ -63,17 +67,18 @@ export const useCreatorLookup = (term: string) => {
 export const useAddCreator = () => {
   const queryClient = useQueryClient();
 
-  const { mutate, isPending, error } = useApiMutation<number, Partial<Creator>>(
-    {
-      path: CREATORS_PATH,
-      method: 'POST',
-      mutationOptions: {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [CREATORS_PATH] });
-        },
+  const { mutate, isPending, error } = useApiMutation<
+    number,
+    AddCreatorPayload
+  >({
+    path: CREATORS_PATH,
+    method: 'POST',
+    mutationOptions: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [CREATORS_PATH] });
       },
-    }
-  );
+    },
+  });
 
   return { addCreator: mutate, isAdding: isPending, addError: error };
 };

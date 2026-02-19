@@ -1,6 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import useApiMutation from 'Helpers/Hooks/useApiMutation';
 import useApiQuery from 'Helpers/Hooks/useApiQuery';
+import Channel from 'typings/Channel';
+import Content from 'typings/Content';
 import Creator, { CreatorLookupResult } from 'typings/Creator';
 
 const CREATORS_PATH = '/creator';
@@ -17,6 +19,34 @@ const useCreators = () => {
 };
 
 export default useCreators;
+
+export const useCreator = (id: number) => {
+  return useApiQuery<Creator>({
+    path: `${CREATORS_PATH}/${id}`,
+  });
+};
+
+export const useCreatorChannels = (creatorId: number) => {
+  const result = useApiQuery<Channel[]>({
+    path: `/channel/creator/${creatorId}`,
+  });
+
+  return {
+    ...result,
+    data: result.data ?? [],
+  };
+};
+
+export const useCreatorContent = (creatorId: number) => {
+  const result = useApiQuery<Content[]>({
+    path: `/content/creator/${creatorId}`,
+  });
+
+  return {
+    ...result,
+    data: result.data ?? [],
+  };
+};
 
 export const useCreatorLookup = (term: string) => {
   const result = useApiQuery<CreatorLookupResult>({

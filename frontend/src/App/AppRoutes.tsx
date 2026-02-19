@@ -3,6 +3,7 @@ import { Redirect, Route } from 'react-router-dom';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
 import CreatorAdd from 'Creator/CreatorAdd';
+import CreatorDetail from 'Creator/CreatorDetail';
 import CreatorIndex from 'Creator/CreatorIndex';
 import GeneralSettings from 'Settings/General/GeneralSettings';
 import MediaManagement from 'Settings/MediaManagement/MediaManagement';
@@ -44,6 +45,8 @@ function AppRoutes() {
       )}
 
       <Route exact={true} path="/creators/add" component={CreatorAdd} />
+
+      <Route exact={true} path="/creators/:id(\d+)" component={CreatorDetail} />
 
       <Route path="/creators" component={CreatorIndex} />
 

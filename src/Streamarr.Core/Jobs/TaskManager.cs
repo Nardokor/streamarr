@@ -6,6 +6,7 @@ using Streamarr.Common.Cache;
 using Streamarr.Core.Backup;
 using Streamarr.Core.Configuration;
 using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.Creators.Commands;
 using Streamarr.Core.HealthCheck;
 using Streamarr.Core.Housekeeping;
 using Streamarr.Core.Lifecycle;
@@ -60,6 +61,12 @@ namespace Streamarr.Core.Jobs
         {
             var defaultTasks = new List<ScheduledTask>
                 {
+                    new ScheduledTask
+                    {
+                        Interval = 60,
+                        TypeName = typeof(RefreshCreatorCommand).FullName
+                    },
+
                     new ScheduledTask
                     {
                         Interval = 5,

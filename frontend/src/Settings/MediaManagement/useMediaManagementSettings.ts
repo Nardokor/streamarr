@@ -1,65 +1,36 @@
-import { useCallback } from 'react';
-import {
-  useManageSettings,
-  useSaveSettings,
-  useSettings,
-} from 'Settings/useSettings';
+import { useManageSettings, useSettings } from 'Settings/useSettings';
 
 export interface MediaManagementSettingsModel {
-  createEmptySeriesFolders: boolean;
+  recycleBin: string;
+  recycleBinCleanupDays: number;
   deleteEmptyFolders: boolean;
-  episodeTitleRequired: string;
-  skipFreeSpaceCheckWhenImporting: boolean;
-  minimumFreeSpaceWhenImporting: number;
-  copyUsingHardlinks: boolean;
-  useScriptImport: boolean;
-  scriptImportPath: string;
-  importExtraFiles: boolean;
-  extraFileExtensions: string;
-  userRejectedExtensions: string;
-  autoUnmonitorPreviouslyDownloadedEpisodes: boolean;
-  downloadPropersAndRepacks: string;
-  enableMediaInfo: boolean;
-  rescanAfterRefresh: string;
   setPermissionsLinux: boolean;
   chmodFolder: string;
   chownGroup: string;
-  fileDate: string;
-  recycleBin: string;
-  recycleBinCleanupDays: number;
-  allowFingerprinting: string;
-  seasonPackUpgrade: string;
-  seasonPackUpgradeThreshold: number;
+  skipFreeSpaceCheckWhenImporting: boolean;
+  minimumFreeSpaceWhenImporting: number;
+  copyUsingHardlinks: boolean;
 }
 
-const PATH = '/settings/mediamanagement';
+export interface NamingSettingsModel {
+  renameContent: boolean;
+  replaceIllegalCharacters: boolean;
+  colonReplacementFormat: number;
+  contentFileFormat: string;
+  creatorFolderFormat: string;
+}
 
-export const useMediaManagementSettingsValues = () => {
-  const { data } = useSettings<MediaManagementSettingsModel>(PATH);
-
-  return data;
-};
+const MEDIA_MANAGEMENT_PATH = '/settings/mediamanagement';
+const NAMING_PATH = '/settings/naming';
 
 export const useMediaManagementSettings = () => {
-  return useSettings<MediaManagementSettingsModel>(PATH);
+  return useSettings<MediaManagementSettingsModel>(MEDIA_MANAGEMENT_PATH);
 };
 
 export const useManageMediaManagementSettings = () => {
-  return useManageSettings<MediaManagementSettingsModel>(PATH);
+  return useManageSettings<MediaManagementSettingsModel>(MEDIA_MANAGEMENT_PATH);
 };
 
-export const useSaveMediaManagementSettings = () => {
-  const { data } = useSettings<MediaManagementSettingsModel>(PATH);
-  const { save } = useSaveSettings<MediaManagementSettingsModel>(PATH);
-
-  const saveSettings = useCallback(
-    (changes: Partial<MediaManagementSettingsModel>) => {
-      const updatedSettings = { ...data, ...changes };
-
-      save(updatedSettings);
-    },
-    [data, save]
-  );
-
-  return saveSettings;
+export const useManageNamingSettings = () => {
+  return useManageSettings<NamingSettingsModel>(NAMING_PATH);
 };

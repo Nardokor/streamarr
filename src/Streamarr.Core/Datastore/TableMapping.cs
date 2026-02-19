@@ -14,6 +14,7 @@ using Streamarr.Core.Instrumentation;
 using Streamarr.Core.Jobs;
 using Streamarr.Core.Languages;
 using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Organizer;
 using Streamarr.Core.Profiles.Qualities;
 using Streamarr.Core.Qualities;
 using Streamarr.Core.RemotePathMappings;
@@ -69,6 +70,8 @@ namespace Streamarr.Core.Datastore
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
 
             Mapper.Entity<UpdateHistory>("UpdateHistory").RegisterModel();
+
+            Mapper.Entity<NamingConfig>("NamingConfig").RegisterModel();
 
             Mapper.Entity<Creator>("Creators").RegisterModel()
                   .Ignore(c => c.QualityProfile)

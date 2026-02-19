@@ -8,28 +8,17 @@ namespace Streamarr.Core.Datastore.Migration
     {
         protected override void MainDbUpgrade()
         {
-            // Remove TV-specific columns
-            Delete.Column("UseSceneName")
-                  .Column("MultiEpisodeStyle")
-                  .Column("RenameEpisodes")
-                  .Column("StandardEpisodeFormat")
-                  .Column("DailyEpisodeFormat")
-                  .Column("AnimeEpisodeFormat")
-                  .Column("SeriesFolderFormat")
-                  .Column("SeasonFolderFormat")
-                  .Column("SpecialsFolderFormat")
-                  .Column("CustomColonReplacementFormat")
-                  .FromTable("NamingConfig");
+            // Drop the TV-specific NamingConfig table entirely and recreate for streaming content.
+            // The old table schema varied depending on how far Sonarr had migrated, so
+            // a clean drop+recreate is safer than trying to delete individual columns.
+            Delete.Table("NamingConfig");
 
-            // Add streaming content columns
-            Alter.Table("NamingConfig")
-                 .AddColumn("RenameContent").AsBoolean().WithDefaultValue(true);
-
-            Alter.Table("NamingConfig")
-                 .AddColumn("ContentFileFormat").AsString().WithDefaultValue("{Published Date} - {Content Title} [{Content Id}]");
-
-            Alter.Table("NamingConfig")
-                 .AddColumn("CreatorFolderFormat").AsString().WithDefaultValue("{Creator Title}");
+            Create.TableForModel("NamingConfig")
+                  .WithColumn("RenameContent").AsBoolean().WithDefaultValue(true)
+                  .WithColumn("ReplaceIllegalCharacters").AsBoolean().WithDefaultValue(true)
+                  .WithColumn("ColonReplacementFormat").AsInt32().WithDefaultValue(4)
+                  .WithColumn("ContentFileFormat").AsString().WithDefaultValue("{Published Date} - {Content Title} [{Content Id}]")
+                  .WithColumn("CreatorFolderFormat").AsString().WithDefaultValue("{Creator Title}");
         }
     }
 }

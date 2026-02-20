@@ -1,14 +1,26 @@
-import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import React, { useCallback, useState } from 'react';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Alert from 'Components/Alert';
 import Icon from 'Components/Icon';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
+import ConfirmModal from 'Components/Modal/ConfirmModal';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
+import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
+import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
+import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
+import CommandNames from 'Commands/CommandNames';
+import { useCommandExecuting, useExecuteCommand } from 'Commands/useCommands';
 import { icons, kinds } from 'Helpers/Props';
+import AddChannelModal from './AddChannelModal';
 import CreatorChannelSection from './CreatorChannelSection';
 import { formatDate } from './creatorUtils';
-import { useCreator, useCreatorChannels, useCreatorContent } from './useCreators';
+import {
+  useCreator,
+  useCreatorChannels,
+  useCreatorContent,
+  useDeleteCreator,
+} from './useCreators';
 import styles from './CreatorDetail.css';
 
 interface RouteParams {
@@ -19,12 +31,32 @@ type Props = RouteComponentProps<RouteParams>;
 
 function CreatorDetail({ match }: Props) {
   const creatorId = parseInt(match.params.id, 10);
+  const history = useHistory();
 
   const { data: creator, isLoading: creatorLoading } = useCreator(creatorId);
   const { data: channels, isLoading: channelsLoading } =
     useCreatorChannels(creatorId);
   const { data: content, isLoading: contentLoading } =
     useCreatorContent(creatorId);
+
+  const { deleteCreator, isDeleting } = useDeleteCreator(creatorId);
+  const executeCommand = useExecuteCommand();
+  const isRefreshing = useCommandExecuting(CommandNames.RefreshCreator);
+
+  const [addChannelOpen, setAddChannelOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+
+  const handleRefresh = useCallback(() => {
+    executeCommand({ name: CommandNames.RefreshCreator, creatorId });
+  }, [executeCommand, creatorId]);
+
+  const handleDeleteConfirm = useCallback(() => {
+    deleteCreator(undefined, {
+      onSuccess: () => {
+        history.push('/creators');
+      },
+    });
+  }, [deleteCreator, history]);
 
   const isLoading = creatorLoading || channelsLoading || contentLoading;
 
@@ -52,6 +84,31 @@ function CreatorDetail({ match }: Props) {
 
   return (
     <PageContent title={creator.title}>
+      <PageToolbar>
+        <PageToolbarSection>
+          <PageToolbarButton
+            label="Refresh"
+            iconName={icons.REFRESH}
+            isSpinning={isRefreshing}
+            onPress={handleRefresh}
+          />
+
+          <PageToolbarButton
+            label="Add Channel"
+            iconName={icons.ADD}
+            onPress={() => setAddChannelOpen(true)}
+          />
+        </PageToolbarSection>
+
+        <PageToolbarSection alignContent="right">
+          <PageToolbarButton
+            label="Delete"
+            iconName={icons.DELETE}
+            onPress={() => setDeleteConfirmOpen(true)}
+          />
+        </PageToolbarSection>
+      </PageToolbar>
+
       <PageContentBody>
         {/* Header */}
         <div className={styles.header}>
@@ -117,6 +174,23 @@ function CreatorDetail({ match }: Props) {
           </Alert>
         ) : null}
       </PageContentBody>
+
+      <AddChannelModal
+        isOpen={addChannelOpen}
+        creatorId={creatorId}
+        onModalClose={() => setAddChannelOpen(false)}
+      />
+
+      <ConfirmModal
+        isOpen={deleteConfirmOpen}
+        kind={kinds.DANGER}
+        title="Delete Creator"
+        message={`Are you sure you want to delete '${creator.title}'? This cannot be undone.`}
+        confirmLabel="Delete"
+        isSpinning={isDeleting}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteConfirmOpen(false)}
+      />
     </PageContent>
   );
 }

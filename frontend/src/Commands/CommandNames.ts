@@ -11,6 +11,7 @@ enum CommandNames {
   ManualImport = 'ManualImport',
   MissingEpisodeSearch = 'MissingEpisodeSearch',
   MoveSeries = 'MoveSeries',
+  RefreshCreator = 'RefreshCreator',
   RefreshMonitoredDownloads = 'RefreshMonitoredDownloads',
   RefreshSeries = 'RefreshSeries',
   RenameFiles = 'RenameFiles',

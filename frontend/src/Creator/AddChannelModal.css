@@ -1,0 +1,98 @@
+.searchRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 8px 10px;
+  background: var(--inputBackground, #2a2a2a);
+  border: 1px solid var(--borderColor);
+  border-radius: 4px;
+  color: var(--textColor, #eee);
+  font-size: 0.9rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--colorPrimary, #3498db);
+}
+
+.searchButton {
+  padding: 8px 16px;
+  background: var(--colorPrimary, #3498db);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.searchButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.noResults {
+  color: var(--textSecondary, #888);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 12px 0;
+}
+
+.channelList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.channelOption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--borderColor);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.channelOption:hover {
+  background: var(--inputBackground, #2a2a2a);
+}
+
+.channelSelected {
+  border-color: var(--colorPrimary, #3498db);
+  background: var(--inputBackground, #2a2a2a);
+}
+
+.channelThumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.channelInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.channelTitle {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.channelPlatform {
+  font-size: 0.75rem;
+  color: var(--textSecondary, #888);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

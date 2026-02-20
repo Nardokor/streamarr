@@ -86,6 +86,33 @@ namespace Streamarr.Core.Creators.Commands
                         continue;
                     }
 
+                    // Content type filter
+                    var typeAllowed = item.ContentType switch
+                    {
+                        ContentType.Video      => channel.DownloadVideos,
+                        ContentType.Short      => channel.DownloadShorts,
+                        ContentType.Livestream => channel.DownloadLivestreams,
+                        _                      => true
+                    };
+
+                    if (!typeAllowed)
+                    {
+                        continue;
+                    }
+
+                    // Title keyword filter (OR logic, case-insensitive)
+                    if (!string.IsNullOrWhiteSpace(channel.TitleFilter))
+                    {
+                        var terms = channel.TitleFilter.Split(
+                            new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        var lower = (item.Title ?? string.Empty).ToLowerInvariant();
+
+                        if (!terms.Any(t => lower.Contains(t.ToLowerInvariant())))
+                        {
+                            continue;
+                        }
+                    }
+
                     added.Add(new Content.Content
                     {
                         ChannelId = channel.Id,

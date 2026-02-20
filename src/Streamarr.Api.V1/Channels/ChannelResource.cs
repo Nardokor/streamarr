@@ -15,6 +15,10 @@ public class ChannelResource : RestResource
     public bool Monitored { get; set; }
     public ChannelStatusType Status { get; set; }
     public DateTime? LastInfoSync { get; set; }
+    public bool DownloadVideos { get; set; } = true;
+    public bool DownloadShorts { get; set; } = true;
+    public bool DownloadLivestreams { get; set; } = true;
+    public string TitleFilter { get; set; } = string.Empty;
 }
 
 public static class ChannelResourceMapper
@@ -33,7 +37,11 @@ public static class ChannelResourceMapper
             ThumbnailUrl = model.ThumbnailUrl,
             Monitored = model.Monitored,
             Status = model.Status,
-            LastInfoSync = model.LastInfoSync
+            LastInfoSync = model.LastInfoSync,
+            DownloadVideos = model.DownloadVideos,
+            DownloadShorts = model.DownloadShorts,
+            DownloadLivestreams = model.DownloadLivestreams,
+            TitleFilter = model.TitleFilter
         };
     }
 
@@ -50,7 +58,11 @@ public static class ChannelResourceMapper
             Description = resource.Description,
             ThumbnailUrl = resource.ThumbnailUrl,
             Monitored = resource.Monitored,
-            Status = resource.Status
+            Status = resource.Status,
+            DownloadVideos = resource.DownloadVideos,
+            DownloadShorts = resource.DownloadShorts,
+            DownloadLivestreams = resource.DownloadLivestreams,
+            TitleFilter = resource.TitleFilter
         };
     }
 

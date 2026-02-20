@@ -17,7 +17,7 @@ namespace Streamarr.Core.Download.YtDlp
         public string Thumbnail { get; set; } = string.Empty;
 
         [JsonPropertyName("duration")]
-        public int? Duration { get; set; }
+        public double? Duration { get; set; }
 
         [JsonPropertyName("upload_date")]
         public string UploadDate { get; set; } = string.Empty;

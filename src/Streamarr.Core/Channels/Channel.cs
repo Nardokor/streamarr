@@ -24,6 +24,12 @@ namespace Streamarr.Core.Channels
         public ChannelStatusType Status { get; set; }
         public DateTime? LastInfoSync { get; set; }
 
+        // Download filters
+        public bool DownloadVideos { get; set; } = true;
+        public bool DownloadShorts { get; set; } = true;
+        public bool DownloadLivestreams { get; set; } = true;
+        public string TitleFilter { get; set; } = string.Empty;
+
         // Navigation
         public LazyLoaded<Creator> Creator { get; set; }
     }

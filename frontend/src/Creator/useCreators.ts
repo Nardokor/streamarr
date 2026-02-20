@@ -83,6 +83,54 @@ export const useAddCreator = () => {
   return { addCreator: mutate, isAdding: isPending, addError: error };
 };
 
+export const useAddChannel = (creatorId: number) => {
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending, error } = useApiMutation<number, Partial<Channel>>({
+    path: '/channel',
+    method: 'POST',
+    mutationOptions: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [`/channel/creator/${creatorId}`] });
+      },
+    },
+  });
+
+  return { addChannel: mutate, isAdding: isPending, addError: error };
+};
+
+export const useUpdateChannel = (id: number, creatorId: number) => {
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending, error } = useApiMutation<number, Partial<Channel>>({
+    path: `/channel/${id}`,
+    method: 'PUT',
+    mutationOptions: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [`/channel/creator/${creatorId}`] });
+      },
+    },
+  });
+
+  return { updateChannel: mutate, isUpdating: isPending, updateError: error };
+};
+
+export const useDeleteChannel = (id: number, creatorId: number) => {
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending, error } = useApiMutation<object, void>({
+    path: `/channel/${id}`,
+    method: 'DELETE',
+    mutationOptions: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [`/channel/creator/${creatorId}`] });
+      },
+    },
+  });
+
+  return { deleteChannel: mutate, isDeleting: isPending, deleteError: error };
+};
+
 export const useDeleteCreator = (id: number) => {
   const queryClient = useQueryClient();
 

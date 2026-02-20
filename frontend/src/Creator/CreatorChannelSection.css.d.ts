@@ -2,16 +2,31 @@
 // Please do not change this file!
 interface CssExports {
   'body': string;
+  'cancelBtn': string;
   'channelTitle': string;
+  'checkLabel': string;
   'chevron': string;
   'chevronCollapsed': string;
+  'confirmBtn': string;
   'contentThumbnail': string;
   'contentThumbnailImg': string;
   'count': string;
+  'deleteBtn': string;
+  'deleteConfirm': string;
+  'deletePrompt': string;
   'emptyNote': string;
+  'filterInput': string;
   'header': string;
+  'headerActions': string;
+  'iconBtn': string;
+  'iconBtnActive': string;
   'platformBadge': string;
+  'saveBtn': string;
   'section': string;
+  'settings': string;
+  'settingsActions': string;
+  'settingsLabel': string;
+  'settingsRow': string;
   'statusBadge': string;
   'statusDownloaded': string;
   'statusMissing': string;

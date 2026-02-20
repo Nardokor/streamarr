@@ -13,6 +13,10 @@ interface Channel extends ModelBase {
   monitored: boolean;
   status: ChannelStatusType;
   lastInfoSync: string | null;
+  downloadVideos: boolean;
+  downloadShorts: boolean;
+  downloadLivestreams: boolean;
+  titleFilter: string;
 }
 
 export default Channel;

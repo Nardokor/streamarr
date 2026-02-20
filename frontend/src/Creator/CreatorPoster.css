@@ -1,0 +1,84 @@
+.card {
+  position: relative;
+  width: 170px;
+  margin: 8px;
+  padding: 0;
+  border-radius: 4px;
+  background-color: var(--cardBackgroundColor);
+  box-shadow: 0 0 8px 1px var(--cardShadowColor);
+  color: var(--defaultColor);
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  box-shadow: 0 0 14px 2px var(--cardShadowColor);
+}
+
+.thumbnailContainer {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  background: var(--inputBackground, #222);
+  overflow: hidden;
+}
+
+.thumbnail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnailPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: var(--textSecondary, #666);
+  background: var(--inputBackground, #222);
+}
+
+.info {
+  padding: 8px 10px;
+  flex: 1;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 4px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--textSecondary, #888);
+}
+
+.monitoredDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.monitoredDotOn {
+  background: var(--colorSuccess, #2ecc71);
+}
+
+.monitoredDotOff {
+  background: var(--textSecondary, #888);
+}

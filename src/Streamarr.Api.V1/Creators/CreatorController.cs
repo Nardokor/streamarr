@@ -20,14 +20,17 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
 {
     private readonly ICreatorService _creatorService;
     private readonly IChannelService _channelService;
+    private readonly ICreatorAvatarService _creatorAvatarService;
 
     public CreatorController(ICreatorService creatorService,
                              IChannelService channelService,
+                             ICreatorAvatarService creatorAvatarService,
                              IBroadcastSignalRMessage signalRBroadcaster)
         : base(signalRBroadcaster)
     {
         _creatorService = creatorService;
         _channelService = channelService;
+        _creatorAvatarService = creatorAvatarService;
 
         SharedValidator.RuleFor(c => c.Title).NotEmpty();
         SharedValidator.RuleFor(c => c.Path).NotEmpty();
@@ -66,6 +69,8 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
                 Monitored = true,
             });
         }
+
+        _creatorAvatarService.DownloadAvatar(creator);
 
         return Created(creator.Id);
     }

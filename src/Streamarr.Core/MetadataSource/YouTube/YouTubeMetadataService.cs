@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
@@ -11,6 +12,26 @@ namespace Streamarr.Core.MetadataSource.YouTube
 {
     public class YouTubeMetadataService : ICreatorMetadataService
     {
+        // Full YouTube URL (youtube.com or youtu.be)
+        private static readonly Regex YouTubeUrlRegex = new Regex(
+            @"^https?://(www\.)?(youtube\.com|youtu\.be)/",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        // @handle — starts with @ and has no whitespace
+        private static readonly Regex HandleRegex = new Regex(
+            @"^@\S+$",
+            RegexOptions.Compiled);
+
+        // YouTube channel ID: "UC" followed by exactly 22 base64url chars
+        private static readonly Regex ChannelIdRegex = new Regex(
+            @"^UC[\w\-]{22}$",
+            RegexOptions.Compiled);
+
+        // Bare handle: only word chars, dots, hyphens — no spaces, no slashes
+        private static readonly Regex BareHandleRegex = new Regex(
+            @"^[\w.\-]+$",
+            RegexOptions.Compiled);
+
         private readonly IYtDlpClient _ytDlpClient;
         private readonly Logger _logger;
 
@@ -22,42 +43,40 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         public CreatorMetadataResult SearchCreator(string query)
         {
-            var channelUrl = NormalizeChannelUrl(query);
+            query = query.Trim();
 
-            _logger.Info("Searching for creator: {0} (resolved to {1})", query, channelUrl);
+            YtDlpChannelInfo channelInfo;
 
-            var channelInfo = _ytDlpClient.GetChannelInfo(channelUrl);
-
-            var channelName = !string.IsNullOrWhiteSpace(channelInfo.Channel)
-                ? channelInfo.Channel
-                : channelInfo.Uploader;
-
-            var channelId = !string.IsNullOrWhiteSpace(channelInfo.ChannelId)
-                ? channelInfo.ChannelId
-                : channelInfo.UploaderId;
-
-            var channelPageUrl = !string.IsNullOrWhiteSpace(channelInfo.ChannelUrl)
-                ? channelInfo.ChannelUrl
-                : channelInfo.UploaderUrl;
-
-            return new CreatorMetadataResult
+            if (YouTubeUrlRegex.IsMatch(query))
             {
-                Name = channelName,
-                Description = channelInfo.Description,
-                ThumbnailUrl = channelInfo.Thumbnail,
-                Channels = new List<ChannelMetadataResult>
-                {
-                    new ChannelMetadataResult
-                    {
-                        Platform = PlatformType.YouTube,
-                        PlatformId = channelId,
-                        PlatformUrl = channelPageUrl,
-                        Title = channelName,
-                        Description = channelInfo.Description,
-                        ThumbnailUrl = channelInfo.Thumbnail
-                    }
-                }
-            };
+                _logger.Info("Lookup by URL: {0}", query);
+                channelInfo = _ytDlpClient.GetChannelInfo(query);
+            }
+            else if (HandleRegex.IsMatch(query))
+            {
+                var url = $"https://www.youtube.com/{query}";
+                _logger.Info("Lookup by handle: {0}", url);
+                channelInfo = _ytDlpClient.GetChannelInfo(url);
+            }
+            else if (ChannelIdRegex.IsMatch(query))
+            {
+                var url = $"https://www.youtube.com/channel/{query}";
+                _logger.Info("Lookup by channel ID: {0}", url);
+                channelInfo = _ytDlpClient.GetChannelInfo(url);
+            }
+            else if (BareHandleRegex.IsMatch(query))
+            {
+                var url = $"https://www.youtube.com/@{query}";
+                _logger.Info("Lookup by bare handle: {0}", url);
+                channelInfo = _ytDlpClient.GetChannelInfo(url);
+            }
+            else
+            {
+                _logger.Info("No URL pattern matched, falling back to name search: {0}", query);
+                channelInfo = SearchAndResolveChannel(query);
+            }
+
+            return BuildResult(channelInfo);
         }
 
         public ChannelMetadataResult GetChannelMetadata(string platformUrl)
@@ -95,6 +114,69 @@ namespace Streamarr.Core.MetadataSource.YouTube
             _logger.Info("Found {0} content items for {1}", videos.Count, platformUrl);
 
             return videos.Select(MapToContentMetadata).ToList();
+        }
+
+        // Use ytsearch1: to find a video from the named creator, extract its
+        // channel_url, then fetch the full channel metadata from that URL.
+        private YtDlpChannelInfo SearchAndResolveChannel(string query)
+        {
+            var searchUrl = $"ytsearch1:{query}";
+            _logger.Debug("Searching yt-dlp: {0}", searchUrl);
+
+            var searchResult = _ytDlpClient.GetChannelInfo(searchUrl);
+
+            var firstEntry = searchResult.Entries.FirstOrDefault();
+            if (firstEntry == null)
+            {
+                throw new InvalidOperationException($"No YouTube results found for: {query}");
+            }
+
+            var channelUrl = !string.IsNullOrWhiteSpace(firstEntry.ChannelUrl)
+                ? firstEntry.ChannelUrl
+                : firstEntry.UploaderUrl;
+
+            if (string.IsNullOrWhiteSpace(channelUrl))
+            {
+                throw new InvalidOperationException(
+                    $"Search returned a result but no channel URL could be extracted for: {query}");
+            }
+
+            _logger.Info("Name search resolved to channel: {0}", channelUrl);
+            return _ytDlpClient.GetChannelInfo(channelUrl);
+        }
+
+        private static CreatorMetadataResult BuildResult(YtDlpChannelInfo channelInfo)
+        {
+            var channelName = !string.IsNullOrWhiteSpace(channelInfo.Channel)
+                ? channelInfo.Channel
+                : channelInfo.Uploader;
+
+            var channelId = !string.IsNullOrWhiteSpace(channelInfo.ChannelId)
+                ? channelInfo.ChannelId
+                : channelInfo.UploaderId;
+
+            var channelPageUrl = !string.IsNullOrWhiteSpace(channelInfo.ChannelUrl)
+                ? channelInfo.ChannelUrl
+                : channelInfo.UploaderUrl;
+
+            return new CreatorMetadataResult
+            {
+                Name = channelName,
+                Description = channelInfo.Description,
+                ThumbnailUrl = channelInfo.Thumbnail,
+                Channels = new List<ChannelMetadataResult>
+                {
+                    new ChannelMetadataResult
+                    {
+                        Platform = PlatformType.YouTube,
+                        PlatformId = channelId,
+                        PlatformUrl = channelPageUrl,
+                        Title = channelName,
+                        Description = channelInfo.Description,
+                        ThumbnailUrl = channelInfo.Thumbnail
+                    }
+                }
+            };
         }
 
         private static ContentMetadataResult MapToContentMetadata(YtDlpVideoInfo video)
@@ -139,26 +221,6 @@ namespace Streamarr.Core.MetadataSource.YouTube
             }
 
             return null;
-        }
-
-        private static string NormalizeChannelUrl(string query)
-        {
-            if (query.StartsWith("http://") || query.StartsWith("https://"))
-            {
-                return query;
-            }
-
-            if (query.StartsWith("@"))
-            {
-                return $"https://www.youtube.com/{query}";
-            }
-
-            if (query.StartsWith("UC") && query.Length == 24)
-            {
-                return $"https://www.youtube.com/channel/{query}";
-            }
-
-            return $"https://www.youtube.com/@{query}";
         }
     }
 }

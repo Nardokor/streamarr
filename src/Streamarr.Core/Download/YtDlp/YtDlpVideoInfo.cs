@@ -31,6 +31,9 @@ namespace Streamarr.Core.Download.YtDlp
         [JsonPropertyName("channel_url")]
         public string ChannelUrl { get; set; } = string.Empty;
 
+        [JsonPropertyName("uploader_url")]
+        public string UploaderUrl { get; set; } = string.Empty;
+
         [JsonPropertyName("webpage_url")]
         public string WebpageUrl { get; set; } = string.Empty;
 

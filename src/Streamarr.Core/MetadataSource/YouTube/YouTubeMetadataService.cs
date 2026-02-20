@@ -68,7 +68,15 @@ namespace Streamarr.Core.MetadataSource.YouTube
             {
                 var url = $"https://www.youtube.com/@{query}";
                 _logger.Info("Lookup by bare handle: {0}", url);
-                channelInfo = _ytDlpClient.GetChannelInfo(url);
+                try
+                {
+                    channelInfo = _ytDlpClient.GetChannelInfo(url);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Info("Bare handle lookup failed ({0}), falling back to name search", ex.Message);
+                    channelInfo = SearchAndResolveChannel(query);
+                }
             }
             else
             {

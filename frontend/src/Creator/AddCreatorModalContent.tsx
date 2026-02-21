@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router';
+import Icon from 'Components/Icon';
 import Button from 'Components/Link/Button';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
+import { icons } from 'Helpers/Props';
 import useRootFolders from 'RootFolder/useRootFolders';
 import { useQualityProfilesData } from 'Settings/Profiles/Quality/useQualityProfiles';
 import { CreatorLookupResult } from 'typings/Creator';
@@ -32,10 +34,6 @@ function AddCreatorModalContent({
     useCreatorLookup(searchTerm);
   const { data: rootFolders } = useRootFolders();
   const qualityProfiles = useQualityProfilesData();
-
-  const handleSearchPress = useCallback(() => {
-    setSearchTerm(inputValue.trim());
-  }, [inputValue]);
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -70,6 +68,13 @@ function AddCreatorModalContent({
 
         <ModalBody>
           <div className={styles.searchRow}>
+            <Icon
+              className={styles.searchIcon}
+              name={icons.SEARCH}
+              size={16}
+              isSpinning={isSearching}
+            />
+
             <input
               className={styles.searchInput}
               type="text"
@@ -80,14 +85,18 @@ function AddCreatorModalContent({
               autoFocus
             />
 
-            <button
-              className={styles.searchButton}
-              disabled={inputValue.trim().length === 0 || isSearching}
-              onClick={handleSearchPress}
-              type="button"
-            >
-              {isSearching ? 'Searching…' : 'Search'}
-            </button>
+            {inputValue ? (
+              <button
+                className={styles.clearButton}
+                type="button"
+                onClick={() => {
+                  setInputValue('');
+                  setSearchTerm('');
+                }}
+              >
+                <Icon name={icons.REMOVE} size={14} />
+              </button>
+            ) : null}
           </div>
 
           {lookupResult ? (

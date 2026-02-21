@@ -1,35 +1,60 @@
 .searchRow {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 0;
   margin-bottom: 16px;
+  padding: 0 12px;
+  height: 44px;
+  background: var(--inputBackground, #1c1c1c);
+  border: 1px solid var(--borderColor, #444);
+  border-radius: 4px;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.searchRow:focus-within {
+  border-color: var(--colorPrimary, #5cbbff);
+  box-shadow: 0 0 0 1px var(--colorPrimary, #5cbbff);
+}
+
+.searchIcon {
+  color: var(--textSecondary, #888);
+  flex-shrink: 0;
+  margin-right: 10px;
 }
 
 .searchInput {
   flex: 1;
-  height: 35px;
-  padding: 0 10px;
-  border: 1px solid var(--borderColor, #aaa);
-  border-radius: 4px;
-  font-size: 14px;
-  background: var(--inputBackground, #fff);
-  color: var(--textColor, #222);
-}
-
-.searchButton {
-  height: 35px;
-  padding: 0 16px;
-  background: var(--colorPrimary, #5cbbff);
-  color: #fff;
+  height: 100%;
+  padding: 0;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  background: transparent;
   font-size: 14px;
-  white-space: nowrap;
+  color: var(--textColor, #eee);
+  outline: none;
 }
 
-.searchButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.searchInput::placeholder {
+  color: var(--textSecondary, #555);
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-left: 6px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--textSecondary, #888);
+}
+
+.clearButton:hover {
+  color: var(--textColor, #eee);
 }
 
 /* Clickable result card */

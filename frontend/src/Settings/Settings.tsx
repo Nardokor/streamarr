@@ -55,6 +55,14 @@ function Settings() {
         </Link>
 
         <div className={styles.summary}>{translate('UiSettingsSummary')}</div>
+
+        <Link className={styles.link} to="/settings/youtube">
+          YouTube
+        </Link>
+
+        <div className={styles.summary}>
+          YouTube Data API v3 key for content syncing.
+        </div>
       </PageContentBody>
     </PageContent>
   );

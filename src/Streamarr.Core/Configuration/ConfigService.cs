@@ -195,6 +195,12 @@ namespace Streamarr.Core.Configuration
             set { SetValue("UILanguage", value); }
         }
 
+        public string YouTubeApiKey
+        {
+            get { return GetValue("YouTubeApiKey", string.Empty); }
+            set { SetValue("YouTubeApiKey", value); }
+        }
+
         public bool CleanupMetadataImages
         {
             get { return GetValueBoolean("CleanupMetadataImages", true); }

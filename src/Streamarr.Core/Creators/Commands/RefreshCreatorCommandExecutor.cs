@@ -65,7 +65,7 @@ namespace Streamarr.Core.Creators.Commands
 
                 if (channel.Platform == PlatformType.YouTube)
                 {
-                    newItems = _youTubeMetadataService.GetNewContent(channel.PlatformUrl, channel.LastInfoSync);
+                    newItems = _youTubeMetadataService.GetNewContent(channel.PlatformUrl, channel.PlatformId, channel.LastInfoSync);
                 }
                 else
                 {

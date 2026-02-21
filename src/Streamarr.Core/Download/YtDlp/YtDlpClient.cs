@@ -159,7 +159,8 @@ namespace Streamarr.Core.Download.YtDlp
             var argParts = new List<string>
             {
                 "--dump-json",
-                "--skip-download"
+                "--skip-download",
+                "--ignore-errors"
             };
 
             if (limit.HasValue)

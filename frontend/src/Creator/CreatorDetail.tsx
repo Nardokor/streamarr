@@ -53,7 +53,7 @@ function CreatorDetail({ match }: Props) {
   const handleDeleteConfirm = useCallback(() => {
     deleteCreator(undefined, {
       onSuccess: () => {
-        history.push('/creators');
+        history.push('/creator');
       },
     });
   }, [deleteCreator, history]);

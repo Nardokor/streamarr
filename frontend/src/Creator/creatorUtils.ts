@@ -1,4 +1,13 @@
-import Content from 'typings/Content';
+import Content, { ContentType } from 'typings/Content';
+
+export function getContentTypeLabel(contentType: ContentType): string {
+  switch (contentType) {
+    case 1: return 'Video';
+    case 2: return 'Short';
+    case 3: return 'Live';
+    default: return '';
+  }
+}
 
 export function formatDuration(duration: string | null): string {
   if (!duration) {

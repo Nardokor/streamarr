@@ -118,17 +118,46 @@ namespace Streamarr.Core.Download.YtDlp
 
         public List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null)
         {
-            _logger.Debug("Getting channel videos: {0} (limit={1}, dateAfter={2})", channelUrl, limit, dateAfter);
+            _logger.Debug("Getting channel content: {0} (limit={1}, dateAfter={2})", channelUrl, limit, dateAfter);
 
-            var videosUrl = channelUrl.TrimEnd('/');
-            if (!videosUrl.EndsWith("/videos"))
+            // Strip any existing tab suffix so we can append our own
+            var baseUrl = channelUrl.TrimEnd('/');
+            foreach (var knownTab in new[] { "/videos", "/shorts", "/streams", "/live" })
             {
-                videosUrl += "/videos";
+                if (baseUrl.EndsWith(knownTab, StringComparison.OrdinalIgnoreCase))
+                {
+                    baseUrl = baseUrl[..^knownTab.Length];
+                    break;
+                }
             }
+
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var allVideos = new List<YtDlpVideoInfo>();
+
+            foreach (var tab in new[] { "videos", "shorts", "streams" })
+            {
+                var tabUrl = $"{baseUrl}/{tab}";
+                var items = FetchFromTab(tabUrl, limit, dateAfter);
+                foreach (var item in items)
+                {
+                    if (!string.IsNullOrWhiteSpace(item.Id) && seen.Add(item.Id))
+                    {
+                        allVideos.Add(item);
+                    }
+                }
+            }
+
+            _logger.Debug("Found {0} total content items for channel {1}", allVideos.Count, channelUrl);
+
+            return allVideos;
+        }
+
+        private List<YtDlpVideoInfo> FetchFromTab(string url, int? limit, string dateAfter)
+        {
+            _logger.Debug("Fetching tab: {0}", url);
 
             var argParts = new List<string>
             {
-                "--flat-playlist",
                 "--dump-json",
                 "--skip-download"
             };
@@ -143,7 +172,7 @@ namespace Streamarr.Core.Download.YtDlp
                 argParts.Add($"--dateafter {dateAfter}");
             }
 
-            argParts.Add(Quote(videosUrl));
+            argParts.Add(Quote(url));
 
             var args = string.Join(" ", argParts);
             var output = _processProvider.StartAndCapture(_settings.BinaryPath, args);
@@ -151,7 +180,8 @@ namespace Streamarr.Core.Download.YtDlp
             if (output.ExitCode != 0)
             {
                 var error = string.Join(Environment.NewLine, output.Error.Select(l => l.Content));
-                throw new InvalidOperationException($"yt-dlp failed to get channel videos: {error}");
+                _logger.Debug("yt-dlp returned non-zero for {0} (tab may be empty): {1}", url, error);
+                return new List<YtDlpVideoInfo>();
             }
 
             var videos = new List<YtDlpVideoInfo>();
@@ -174,12 +204,11 @@ namespace Streamarr.Core.Download.YtDlp
                 }
                 catch (JsonException ex)
                 {
-                    _logger.Warn(ex, "Failed to parse video JSON line");
+                    _logger.Warn(ex, "Failed to parse video JSON line from {0}", url);
                 }
             }
 
-            _logger.Debug("Found {0} videos for channel {1}", videos.Count, channelUrl);
-
+            _logger.Debug("Found {0} items from {1}", videos.Count, url);
             return videos;
         }
 

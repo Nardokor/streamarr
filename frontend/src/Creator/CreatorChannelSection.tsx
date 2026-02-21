@@ -8,7 +8,7 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import { icons } from 'Helpers/Props';
 import Channel from 'typings/Channel';
 import Content from 'typings/Content';
-import { formatDate, formatDuration, getStatusLabel } from './creatorUtils';
+import { formatDate, formatDuration, getContentTypeLabel, getStatusLabel } from './creatorUtils';
 import { useDeleteChannel, useUpdateChannel } from './useCreators';
 import styles from './CreatorChannelSection.css';
 
@@ -20,6 +20,7 @@ interface CreatorChannelSectionProps {
 const columns: Column[] = [
   { name: 'thumbnail', label: '', isVisible: true },
   { name: 'title', label: 'Title', isVisible: true },
+  { name: 'type', label: 'Type', isVisible: true },
   { name: 'airDate', label: 'Date', isVisible: true },
   { name: 'duration', label: 'Duration', isVisible: true },
   { name: 'status', label: 'Status', isVisible: true },
@@ -37,6 +38,13 @@ function statusClass(kind: string): string {
   if (kind === 'downloaded') return styles.statusDownloaded;
   if (kind === 'missing') return styles.statusMissing;
   return styles.statusUnmonitored;
+}
+
+function typeClass(label: string): string {
+  if (label === 'Video') return styles.typeVideo;
+  if (label === 'Short') return styles.typeShort;
+  if (label === 'Live') return styles.typeLive;
+  return '';
 }
 
 function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps) {
@@ -232,30 +240,45 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
           ) : (
             <Table columns={columns}>
               <TableBody>
-                {content.map((item) => {
-                  const status = getStatusLabel(item);
-                  return (
-                    <TableRow key={item.id}>
-                      <TableRowCell className={styles.contentThumbnail}>
-                        {item.thumbnailUrl ? (
-                          <img
-                            className={styles.contentThumbnailImg}
-                            src={item.thumbnailUrl}
-                            alt={item.title}
-                          />
-                        ) : null}
-                      </TableRowCell>
-                      <TableRowCell>{item.title}</TableRowCell>
-                      <TableRowCell>{formatDate(item.airDateUtc)}</TableRowCell>
-                      <TableRowCell>{formatDuration(item.duration)}</TableRowCell>
-                      <TableRowCell>
-                        <span className={`${styles.statusBadge} ${statusClass(status.kind)}`}>
-                          {status.text}
-                        </span>
-                      </TableRowCell>
-                    </TableRow>
-                  );
-                })}
+                {[...content]
+                  .sort((a, b) => {
+                    if (!a.airDateUtc && !b.airDateUtc) return 0;
+                    if (!a.airDateUtc) return 1;
+                    if (!b.airDateUtc) return -1;
+                    return new Date(b.airDateUtc).getTime() - new Date(a.airDateUtc).getTime();
+                  })
+                  .map((item) => {
+                    const status = getStatusLabel(item);
+                    const typeLabel = getContentTypeLabel(item.contentType);
+                    return (
+                      <TableRow key={item.id}>
+                        <TableRowCell className={styles.contentThumbnail}>
+                          {item.thumbnailUrl ? (
+                            <img
+                              className={styles.contentThumbnailImg}
+                              src={item.thumbnailUrl}
+                              alt={item.title}
+                            />
+                          ) : null}
+                        </TableRowCell>
+                        <TableRowCell>{item.title}</TableRowCell>
+                        <TableRowCell>
+                          {typeLabel ? (
+                            <span className={`${styles.typeBadge} ${typeClass(typeLabel)}`}>
+                              {typeLabel}
+                            </span>
+                          ) : null}
+                        </TableRowCell>
+                        <TableRowCell>{formatDate(item.airDateUtc)}</TableRowCell>
+                        <TableRowCell>{formatDuration(item.duration)}</TableRowCell>
+                        <TableRowCell>
+                          <span className={`${styles.statusBadge} ${statusClass(status.kind)}`}>
+                            {status.text}
+                          </span>
+                        </TableRowCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           )}

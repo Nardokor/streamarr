@@ -197,8 +197,18 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 Description = video.Description,
                 ThumbnailUrl = video.Thumbnail,
                 Duration = video.Duration.HasValue ? TimeSpan.FromSeconds(video.Duration.Value) : null,
-                AirDateUtc = ParseUploadDate(video.UploadDate)
+                AirDateUtc = ParseUploadDate(video.UploadDate) ?? ParseTimestamp(video.Timestamp)
             };
+        }
+
+        private static DateTime? ParseTimestamp(long? timestamp)
+        {
+            if (!timestamp.HasValue)
+            {
+                return null;
+            }
+
+            return DateTimeOffset.FromUnixTimeSeconds(timestamp.Value).UtcDateTime;
         }
 
         private static ContentType DetermineContentType(YtDlpVideoInfo video)

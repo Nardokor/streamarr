@@ -32,7 +32,7 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
 
   const { mutate: runTest, isPending: isTesting } = useApiMutation<
     void,
-    { apiKey: string }
+    { youTubeApiKey: string }
   >({
     path: '/settings/youtube/test',
     method: 'POST',
@@ -59,8 +59,8 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
   );
 
   const handleTest = useCallback(() => {
-    runTest({ apiKey: settings.apiKey.value ?? '' });
-  }, [runTest, settings.apiKey.value]);
+    runTest({ youTubeApiKey: settings.youTubeApiKey.value ?? '' });
+  }, [runTest, settings.youTubeApiKey.value]);
 
   const handleSave = useCallback(() => {
     saveSettings();
@@ -77,10 +77,10 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
 
           <FormInputGroup
             type={inputTypes.PASSWORD}
-            name="apiKey"
+            name="youTubeApiKey"
             helpText="YouTube Data API v3 key from Google Cloud Console."
             onChange={handleInputChange}
-            {...settings.apiKey}
+            {...settings.youTubeApiKey}
           />
         </FormGroup>
 

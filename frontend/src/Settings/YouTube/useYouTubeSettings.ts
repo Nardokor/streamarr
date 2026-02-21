@@ -6,7 +6,7 @@ import {
 import { useCallback } from 'react';
 
 export interface YouTubeSettingsModel {
-  apiKey: string;
+  youTubeApiKey: string;
 }
 
 const PATH = '/settings/youtube';

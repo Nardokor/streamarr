@@ -5,11 +5,11 @@ namespace Streamarr.Api.V1.Settings;
 
 public class YouTubeSettingsResource : RestResource
 {
-    public string ApiKey { get; set; } = string.Empty;
+    public string YouTubeApiKey { get; set; } = string.Empty;
 }
 
 public static class YouTubeSettingsResourceMapper
 {
     public static YouTubeSettingsResource ToResource(IConfigService config) =>
-        new YouTubeSettingsResource { ApiKey = config.YouTubeApiKey };
+        new YouTubeSettingsResource { YouTubeApiKey = config.YouTubeApiKey };
 }

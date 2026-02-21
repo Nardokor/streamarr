@@ -42,12 +42,17 @@ function CreatorDetail({ match }: Props) {
   const { deleteCreator, isDeleting } = useDeleteCreator(creatorId);
   const executeCommand = useExecuteCommand();
   const isRefreshing = useCommandExecuting(CommandNames.RefreshCreator);
+  const isDownloading = useCommandExecuting(CommandNames.DownloadMissingContent);
 
   const [addChannelOpen, setAddChannelOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const handleRefresh = useCallback(() => {
     executeCommand({ name: CommandNames.RefreshCreator, creatorId });
+  }, [executeCommand, creatorId]);
+
+  const handleDownloadMissing = useCallback(() => {
+    executeCommand({ name: CommandNames.DownloadMissingContent, creatorId });
   }, [executeCommand, creatorId]);
 
   const handleDeleteConfirm = useCallback(() => {
@@ -91,6 +96,13 @@ function CreatorDetail({ match }: Props) {
             iconName={icons.REFRESH}
             isSpinning={isRefreshing}
             onPress={handleRefresh}
+          />
+
+          <PageToolbarButton
+            label="Download Missing"
+            iconName={icons.DOWNLOAD}
+            isSpinning={isDownloading}
+            onPress={handleDownloadMissing}
           />
 
           <PageToolbarButton

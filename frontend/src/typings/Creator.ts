@@ -21,6 +21,7 @@ export interface CreatorLookupResult {
   description: string;
   thumbnailUrl: string;
   channels: CreatorLookupChannel[];
+  existingCreatorId?: number;
 }
 
 export interface CreatorLookupChannel {

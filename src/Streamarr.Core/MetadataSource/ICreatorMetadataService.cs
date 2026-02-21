@@ -18,6 +18,7 @@ namespace Streamarr.Core.MetadataSource
         public string Description { get; set; } = string.Empty;
         public string ThumbnailUrl { get; set; } = string.Empty;
         public List<ChannelMetadataResult> Channels { get; set; } = new List<ChannelMetadataResult>();
+        public int? ExistingCreatorId { get; set; }
     }
 
     public class ChannelMetadataResult

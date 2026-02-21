@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using Streamarr.Core.Channels;
+using Streamarr.Core.Content;
 using Streamarr.Core.Creators.Events;
 using Streamarr.Core.Messaging.Events;
 
@@ -21,14 +23,20 @@ namespace Streamarr.Core.Creators
     public class CreatorService : ICreatorService
     {
         private readonly ICreatorRepository _repo;
+        private readonly IChannelService _channelService;
+        private readonly IContentService _contentService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
         public CreatorService(ICreatorRepository repo,
+                              IChannelService channelService,
+                              IContentService contentService,
                               IEventAggregator eventAggregator,
                               Logger logger)
         {
             _repo = repo;
+            _channelService = channelService;
+            _contentService = contentService;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -85,6 +93,13 @@ namespace Streamarr.Core.Creators
 
             _logger.Info("Deleting creator '{0}'", creator.Title);
 
+            var channels = _channelService.GetByCreatorId(creatorId);
+            foreach (var channel in channels)
+            {
+                _contentService.DeleteByChannelId(channel.Id);
+            }
+
+            _channelService.DeleteByCreatorId(creatorId);
             _repo.Delete(creatorId);
             _eventAggregator.PublishEvent(new CreatorDeletedEvent(creator));
         }

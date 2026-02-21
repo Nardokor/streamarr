@@ -31,6 +31,10 @@ interface CssExports {
   'statusDownloaded': string;
   'statusMissing': string;
   'statusUnmonitored': string;
+  'typeBadge': string;
+  'typeLive': string;
+  'typeShort': string;
+  'typeVideo': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

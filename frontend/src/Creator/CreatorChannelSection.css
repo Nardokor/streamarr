@@ -224,6 +224,30 @@
   display: block;
 }
 
+.typeBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.typeVideo {
+  background: var(--colorPrimary, #3498db);
+  color: white;
+}
+
+.typeShort {
+  background: var(--colorImportant, #e74c3c);
+  color: white;
+}
+
+.typeLive {
+  background: var(--colorWarning, #f39c12);
+  color: white;
+}
+
 .statusBadge {
   display: inline-block;
   padding: 2px 8px;

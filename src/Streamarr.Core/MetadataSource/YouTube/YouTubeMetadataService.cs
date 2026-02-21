@@ -201,14 +201,14 @@ namespace Streamarr.Core.MetadataSource.YouTube
             };
         }
 
-        private static DateTime? ParseTimestamp(long? timestamp)
+        private static DateTime? ParseTimestamp(double? timestamp)
         {
-            if (!timestamp.HasValue)
+            if (!timestamp.HasValue || timestamp.Value <= 0)
             {
                 return null;
             }
 
-            return DateTimeOffset.FromUnixTimeSeconds(timestamp.Value).UtcDateTime;
+            return DateTimeOffset.FromUnixTimeSeconds((long)timestamp.Value).UtcDateTime;
         }
 
         private static ContentType DetermineContentType(YtDlpVideoInfo video)

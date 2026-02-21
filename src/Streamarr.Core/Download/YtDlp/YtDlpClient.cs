@@ -158,10 +158,9 @@ namespace Streamarr.Core.Download.YtDlp
 
             var argParts = new List<string>
             {
+                "--flat-playlist",
                 "--dump-json",
-                "--skip-download",
-                "--ignore-errors",
-                "--socket-timeout 30"
+                "--skip-download"
             };
 
             if (limit.HasValue)
@@ -297,7 +296,7 @@ namespace Streamarr.Core.Download.YtDlp
 
         private static string BuildMetadataArgs(string url)
         {
-            return $"--dump-json --skip-download {Quote(url)}";
+            return $"--dump-json --skip-download --socket-timeout 15 {Quote(url)}";
         }
 
         private string BuildDownloadArgs(string url, string outputPath)

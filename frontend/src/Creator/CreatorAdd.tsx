@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import { kinds } from 'Helpers/Props';
+import useRootFolders from 'RootFolder/useRootFolders';
 import { useAddCreator, useCreatorLookup } from './useCreators';
 import styles from './AddCreatorModalContent.css';
 
@@ -17,7 +18,16 @@ function CreatorAdd() {
   const { data: lookupResult, isFetching: isSearching } =
     useCreatorLookup(searchTerm);
 
+  const { data: rootFolders } = useRootFolders();
   const { addCreator, isAdding } = useAddCreator();
+
+  useEffect(() => {
+    if (lookupResult && rootFolders.length > 0 && !path) {
+      const base = rootFolders[0].path.replace(/\/+$/, '');
+      const folderName = lookupResult.name.trim().replace(/[\\/:*?"<>|]/g, '');
+      setPath(`${base}/${folderName}`);
+    }
+  }, [lookupResult, rootFolders]);
 
   const handleSearchPress = useCallback(() => {
     setSearchTerm(inputValue.trim());

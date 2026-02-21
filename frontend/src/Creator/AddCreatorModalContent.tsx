@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Button from 'Components/Link/Button';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import ModalBody from 'Components/Modal/ModalBody';
@@ -6,6 +6,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
+import useRootFolders from 'RootFolder/useRootFolders';
 import { useAddCreator, useCreatorLookup } from './useCreators';
 import styles from './AddCreatorModalContent.css';
 
@@ -25,7 +26,16 @@ function AddCreatorModalContent({
   const { data: lookupResult, isFetching: isSearching } =
     useCreatorLookup(searchTerm);
 
+  const { data: rootFolders } = useRootFolders();
   const { addCreator, isAdding } = useAddCreator();
+
+  useEffect(() => {
+    if (lookupResult && rootFolders.length > 0 && !path) {
+      const base = rootFolders[0].path.replace(/\/+$/, '');
+      const folderName = lookupResult.name.trim().replace(/[\\/:*?"<>|]/g, '');
+      setPath(`${base}/${folderName}`);
+    }
+  }, [lookupResult, rootFolders]);
 
   const handleSearchPress = useCallback(() => {
     setSearchTerm(inputValue.trim());

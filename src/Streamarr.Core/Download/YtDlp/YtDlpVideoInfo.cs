@@ -22,6 +22,10 @@ namespace Streamarr.Core.Download.YtDlp
         [JsonPropertyName("upload_date")]
         public string UploadDate { get; set; } = string.Empty;
 
+        // Unix timestamp — present in flat playlist entries even when upload_date is absent
+        [JsonPropertyName("timestamp")]
+        public long? Timestamp { get; set; }
+
         [JsonPropertyName("channel")]
         public string Channel { get; set; } = string.Empty;
 

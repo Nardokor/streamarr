@@ -4,6 +4,7 @@ interface CssExports {
   'addHint': string;
   'channelBadge': string;
   'channels': string;
+  'clearButton': string;
   'configForm': string;
   'configLabel': string;
   'configRow': string;
@@ -14,7 +15,7 @@ interface CssExports {
   'resultDescription': string;
   'resultInfo': string;
   'resultName': string;
-  'searchButton': string;
+  'searchIcon': string;
   'searchInput': string;
   'searchRow': string;
   'selectedCreator': string;

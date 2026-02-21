@@ -50,11 +50,11 @@ const LINKS: SidebarItem[] = [
   {
     iconName: icons.PROFILE,
     title: 'Creators',
-    to: '/creators',
+    to: '/creator',
     children: [
       {
         title: 'Add New',
-        to: '/creators/add',
+        to: '/creator/add',
       },
     ],
   },

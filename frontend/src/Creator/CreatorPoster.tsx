@@ -13,7 +13,7 @@ function CreatorPoster({ creator, channelCount }: CreatorPosterProps) {
   const { id, title, thumbnailUrl, monitored } = creator;
 
   const handlePress = useCallback(() => {
-    history.push(`/creators/${id}`);
+    history.push(`/creator/${id}`);
   }, [history, id]);
 
   return (

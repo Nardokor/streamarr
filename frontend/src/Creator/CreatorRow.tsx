@@ -39,7 +39,7 @@ function CreatorRow({ creator }: CreatorRowProps) {
     <TableRow>
       <TableRowCell className={styles.thumbnail}>
         {thumbnailUrl ? (
-          <Link to={`/creators/${id}`}>
+          <Link to={`/creator/${id}`}>
             <img
               className={styles.thumbnailImg}
               src={thumbnailUrl}
@@ -50,7 +50,7 @@ function CreatorRow({ creator }: CreatorRowProps) {
       </TableRowCell>
 
       <TableRowCell>
-        <Link className={styles.title} to={`/creators/${id}`}>
+        <Link className={styles.title} to={`/creator/${id}`}>
           {title}
         </Link>
       </TableRowCell>

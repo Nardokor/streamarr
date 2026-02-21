@@ -44,11 +44,11 @@ function AppRoutes() {
         />
       )}
 
-      <Route exact={true} path="/creators/add" component={CreatorAdd} />
+      <Route exact={true} path="/creator/add" component={CreatorAdd} />
 
-      <Route exact={true} path="/creators/:id(\d+)" component={CreatorDetail} />
+      <Route exact={true} path="/creator/:id(\d+)" component={CreatorDetail} />
 
-      <Route path="/creators" component={CreatorIndex} />
+      <Route path="/creator" component={CreatorIndex} />
 
       {/*
         Settings

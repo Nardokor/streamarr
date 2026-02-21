@@ -49,7 +49,7 @@ function CreatorAdd() {
   }, []);
 
   const handleCreatorAdded = useCallback(() => {
-    history.push('/creators');
+    history.push('/creator');
   }, [history]);
 
   return (

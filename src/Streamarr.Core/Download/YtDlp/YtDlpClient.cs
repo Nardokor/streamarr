@@ -102,7 +102,7 @@ namespace Streamarr.Core.Download.YtDlp
         {
             _logger.Debug("Getting channel info: {0}", channelUrl);
 
-            var args = $"--dump-single-json --skip-download --playlist-end 1 {Quote(channelUrl)}";
+            var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1 {Quote(channelUrl)}";
             var output = _processProvider.StartAndCapture(_settings.BinaryPath, args);
 
             if (output.ExitCode != 0)

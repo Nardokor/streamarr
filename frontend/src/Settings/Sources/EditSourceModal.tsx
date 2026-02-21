@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+import Alert from 'Components/Alert';
 import Button from 'Components/Link/Button';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import Modal from 'Components/Modal/Modal';
@@ -9,6 +10,7 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
+import useApiMutation from 'Helpers/Hooks/useApiMutation';
 import { inputTypes } from 'Helpers/Props';
 import { useManageYouTubeSettings } from 'Settings/YouTube/useYouTubeSettings';
 import { InputChanged } from 'typings/inputs';
@@ -23,6 +25,31 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
   const { settings, isSaving, saveSettings, updateSetting } =
     useManageYouTubeSettings();
 
+  const [testResult, setTestResult] = useState<'success' | 'failure' | null>(
+    null
+  );
+  const [testMessage, setTestMessage] = useState('');
+
+  const { mutate: runTest, isPending: isTesting } = useApiMutation<
+    void,
+    { apiKey: string }
+  >({
+    path: '/settings/youtube/test',
+    method: 'POST',
+    mutationOptions: {
+      onSuccess: () => {
+        setTestResult('success');
+        setTestMessage('Connection successful');
+      },
+      onError: (err) => {
+        setTestResult('failure');
+        setTestMessage(
+          err.statusBody?.message ?? err.statusText ?? 'Connection failed'
+        );
+      },
+    },
+  });
+
   const handleInputChange = useCallback(
     (change: InputChanged) => {
       // @ts-expect-error name needs to be keyof YouTubeSettingsModel
@@ -30,6 +57,10 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
     },
     [updateSetting]
   );
+
+  const handleTest = useCallback(() => {
+    runTest({ apiKey: settings.apiKey.value ?? '' });
+  }, [runTest, settings.apiKey.value]);
 
   const handleSave = useCallback(() => {
     saveSettings();
@@ -52,10 +83,20 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
             {...settings.apiKey}
           />
         </FormGroup>
+
+        {testResult !== null && (
+          <Alert kind={testResult === 'success' ? 'success' : 'danger'}>
+            {testMessage}
+          </Alert>
+        )}
       </ModalBody>
 
       <ModalFooter>
         <Button onPress={onModalClose}>Cancel</Button>
+
+        <SpinnerButton isSpinning={isTesting} onPress={handleTest}>
+          Test
+        </SpinnerButton>
 
         <SpinnerButton isSpinning={isSaving} onPress={handleSave}>
           Save

@@ -35,3 +35,43 @@
   gap: 6px;
   color: var(--textSecondary);
 }
+
+.addCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  height: 80px;
+  margin: 10px;
+  border: 2px dashed var(--borderColor);
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--textSecondary);
+}
+
+.addCard:hover {
+  border-color: var(--colorPrimary);
+  color: var(--colorPrimary);
+}
+
+.platformGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.platformCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 80px;
+  border: 1px solid var(--borderColor);
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.platformCard:hover {
+  background-color: var(--tableRowHoverBackgroundColor);
+}

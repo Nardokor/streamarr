@@ -12,6 +12,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
     {
         List<(string VideoId, DateTime PublishedAt)> GetPlaylistItems(string uploadsPlaylistId, DateTime? since = null);
         List<YoutubeVideo> GetVideoDetails(IEnumerable<string> videoIds);
+        void TestApiKey(string apiKey);
     }
 
     public class YouTubeApiClient : IYouTubeApiClient
@@ -123,6 +124,12 @@ namespace Streamarr.Core.MetadataSource.YouTube
             }
 
             return results;
+        }
+
+        public void TestApiKey(string apiKey)
+        {
+            var url = $"{BaseUrl}/videos?part=snippet&id=dQw4w9WgXcQ&key={Uri.EscapeDataString(apiKey)}";
+            Fetch<YoutubeVideosResponse>(url);
         }
 
         private T Fetch<T>(string url)

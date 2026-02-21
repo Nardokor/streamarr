@@ -41,7 +41,7 @@ namespace Streamarr.Api.V1.Settings
 
             _configService.SaveConfigDictionary(dictionary);
 
-            return Accepted(resource.Id);
+            return Accepted(GetConfig());
         }
 
         protected abstract TResource ToResource(IConfigService model);

@@ -63,4 +63,26 @@ namespace Streamarr.Core.MetadataSource.YouTube
     public class YoutubeVideoLiveStreamingDetails
     {
     }
+
+    public class YoutubeChannelsResponse
+    {
+        public List<YoutubeChannel> Items { get; set; } = new();
+    }
+
+    public class YoutubeChannel
+    {
+        public YoutubeChannelSnippet Snippet { get; set; }
+    }
+
+    public class YoutubeChannelSnippet
+    {
+        public YoutubeChannelThumbnails Thumbnails { get; set; }
+    }
+
+    public class YoutubeChannelThumbnails
+    {
+        public YoutubeVideoThumbnail Default { get; set; }
+        public YoutubeVideoThumbnail Medium { get; set; }
+        public YoutubeVideoThumbnail High { get; set; }
+    }
 }

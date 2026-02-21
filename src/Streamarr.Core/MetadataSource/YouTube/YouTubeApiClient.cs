@@ -13,6 +13,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
         List<(string VideoId, DateTime PublishedAt)> GetPlaylistItems(string uploadsPlaylistId, DateTime? since = null);
         List<YoutubeVideo> GetVideoDetails(IEnumerable<string> videoIds);
         void TestApiKey(string apiKey);
+        string GetChannelThumbnailUrl(string channelId);
     }
 
     public class YouTubeApiClient : IYouTubeApiClient
@@ -130,6 +131,24 @@ namespace Streamarr.Core.MetadataSource.YouTube
         {
             var url = $"{BaseUrl}/videos?part=snippet&id=dQw4w9WgXcQ&key={Uri.EscapeDataString(apiKey)}";
             Fetch<YoutubeVideosResponse>(url);
+        }
+
+        public string GetChannelThumbnailUrl(string channelId)
+        {
+            var apiKey = _config.YouTubeApiKey;
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                return string.Empty;
+            }
+
+            var url = $"{BaseUrl}/channels?part=snippet&id={Uri.EscapeDataString(channelId)}&key={Uri.EscapeDataString(apiKey)}";
+            var response = Fetch<YoutubeChannelsResponse>(url);
+            var thumbnails = response?.Items?.FirstOrDefault()?.Snippet?.Thumbnails;
+
+            return thumbnails?.High?.Url
+                ?? thumbnails?.Medium?.Url
+                ?? thumbnails?.Default?.Url
+                ?? string.Empty;
         }
 
         private T Fetch<T>(string url)

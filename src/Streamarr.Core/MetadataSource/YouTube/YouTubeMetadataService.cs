@@ -86,7 +86,24 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 channelInfo = SearchAndResolveChannel(query);
             }
 
-            return BuildResult(channelInfo);
+            var result = BuildResult(channelInfo);
+
+            // Supplement yt-dlp thumbnail with YouTube API result (more reliable URL)
+            var channelId = result.Channels.FirstOrDefault()?.PlatformId;
+            if (!string.IsNullOrWhiteSpace(channelId))
+            {
+                var apiThumbnail = _youTubeApiClient.GetChannelThumbnailUrl(channelId);
+                if (!string.IsNullOrEmpty(apiThumbnail))
+                {
+                    result.ThumbnailUrl = apiThumbnail;
+                    if (result.Channels.Count > 0)
+                    {
+                        result.Channels[0].ThumbnailUrl = apiThumbnail;
+                    }
+                }
+            }
+
+            return result;
         }
 
         public ChannelMetadataResult GetChannelMetadata(string platformUrl)
@@ -105,6 +122,16 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 ? channelInfo.ChannelUrl
                 : channelInfo.UploaderUrl;
 
+            var thumbnailUrl = channelInfo.Thumbnail;
+            if (!string.IsNullOrWhiteSpace(channelId))
+            {
+                var apiThumbnail = _youTubeApiClient.GetChannelThumbnailUrl(channelId);
+                if (!string.IsNullOrEmpty(apiThumbnail))
+                {
+                    thumbnailUrl = apiThumbnail;
+                }
+            }
+
             return new ChannelMetadataResult
             {
                 Platform = PlatformType.YouTube,
@@ -112,7 +139,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 PlatformUrl = channelPageUrl,
                 Title = channelName,
                 Description = channelInfo.Description,
-                ThumbnailUrl = channelInfo.Thumbnail
+                ThumbnailUrl = thumbnailUrl
             };
         }
 

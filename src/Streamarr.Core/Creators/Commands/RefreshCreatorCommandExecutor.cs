@@ -16,18 +16,24 @@ namespace Streamarr.Core.Creators.Commands
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
         private readonly YouTubeMetadataService _youTubeMetadataService;
+        private readonly IYouTubeApiClient _youTubeApiClient;
+        private readonly ICreatorAvatarService _creatorAvatarService;
         private readonly Logger _logger;
 
         public RefreshCreatorCommandExecutor(ICreatorService creatorService,
                                              IChannelService channelService,
                                              IContentService contentService,
                                              YouTubeMetadataService youTubeMetadataService,
+                                             IYouTubeApiClient youTubeApiClient,
+                                             ICreatorAvatarService creatorAvatarService,
                                              Logger logger)
         {
             _creatorService = creatorService;
             _channelService = channelService;
             _contentService = contentService;
             _youTubeMetadataService = youTubeMetadataService;
+            _youTubeApiClient = youTubeApiClient;
+            _creatorAvatarService = creatorAvatarService;
             _logger = logger;
         }
 
@@ -49,9 +55,34 @@ namespace Streamarr.Core.Creators.Commands
 
             var channels = _channelService.GetByCreatorId(creator.Id);
 
+            RefreshAvatar(creator, channels);
+
             foreach (var channel in channels.Where(c => c.Monitored))
             {
                 RefreshChannel(channel);
+            }
+        }
+
+        private void RefreshAvatar(Creator creator, List<Channel> channels)
+        {
+            var youTubeChannel = channels.FirstOrDefault(c => c.Platform == PlatformType.YouTube);
+            if (youTubeChannel == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var thumbnailUrl = _youTubeApiClient.GetChannelThumbnailUrl(youTubeChannel.PlatformId);
+                if (!string.IsNullOrEmpty(thumbnailUrl))
+                {
+                    creator.ThumbnailUrl = thumbnailUrl;
+                    _creatorAvatarService.DownloadAvatar(creator);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Failed to refresh avatar for creator '{0}'", creator.Title);
             }
         }
 

@@ -1,0 +1,31 @@
+.thumbnail {
+  width: 60px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 3px;
+  background-color: var(--tableBackgroundColor);
+}
+
+.thumbnailCell {
+  width: 76px;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.status {
+  width: 110px;
+  white-space: nowrap;
+}
+
+.message {
+  color: var(--textSecondary);
+  font-size: 0.85em;
+}
+
+.empty {
+  padding: 24px 0;
+  color: var(--textSecondary);
+  text-align: center;
+}

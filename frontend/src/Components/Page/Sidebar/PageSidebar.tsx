@@ -81,6 +81,10 @@ const LINKS: SidebarItem[] = [
         to: '/settings/tags',
       },
       {
+        title: 'Sources',
+        to: '/settings/sources',
+      },
+      {
         title: () => translate('General'),
         to: '/settings/general',
       },

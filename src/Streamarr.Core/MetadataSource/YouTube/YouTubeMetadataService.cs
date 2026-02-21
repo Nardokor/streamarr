@@ -117,11 +117,31 @@ namespace Streamarr.Core.MetadataSource.YouTube
         public List<ContentMetadataResult> GetNewContent(string platformUrl, DateTime? since = null)
         {
             var dateAfter = since?.ToString("yyyyMMdd");
-            var videos = _ytDlpClient.GetChannelVideos(platformUrl, dateAfter: dateAfter);
+            var flatVideos = _ytDlpClient.GetChannelVideos(platformUrl, dateAfter: dateAfter);
 
-            _logger.Info("Found {0} content items for {1}", videos.Count, platformUrl);
+            _logger.Info("Found {0} content items in flat listing for {1}", flatVideos.Count, platformUrl);
 
-            return videos.Select(MapToContentMetadata).ToList();
+            var results = new List<ContentMetadataResult>();
+
+            foreach (var flat in flatVideos)
+            {
+                var videoUrl = !string.IsNullOrWhiteSpace(flat.WebpageUrl)
+                    ? flat.WebpageUrl
+                    : $"https://www.youtube.com/watch?v={flat.Id}";
+
+                try
+                {
+                    var full = _ytDlpClient.GetVideoInfo(videoUrl);
+                    results.Add(MapToContentMetadata(full));
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn("Skipping video {0}: {1}", flat.Id, ex.Message);
+                    results.Add(MapToContentMetadata(flat));
+                }
+            }
+
+            return results;
         }
 
         // Use ytsearch1: to find a video from the named creator, extract its

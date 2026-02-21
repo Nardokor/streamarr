@@ -27,7 +27,7 @@ namespace Streamarr.Core.Channels
 
         public Channel FindByPlatformId(PlatformType platform, string platformId)
         {
-            return Query(c => c.Platform == platform && c.PlatformId == platformId).SingleOrDefault();
+            return Query(c => c.Platform == platform && c.PlatformId == platformId).FirstOrDefault();
         }
     }
 }

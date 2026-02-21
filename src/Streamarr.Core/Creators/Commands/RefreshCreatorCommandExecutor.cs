@@ -4,7 +4,6 @@ using System.Linq;
 using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
-using Streamarr.Core.Download;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.MetadataSource;
 using Streamarr.Core.MetadataSource.YouTube;
@@ -16,21 +15,18 @@ namespace Streamarr.Core.Creators.Commands
         private readonly ICreatorService _creatorService;
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
-        private readonly IManageCommandQueue _commandQueueManager;
         private readonly YouTubeMetadataService _youTubeMetadataService;
         private readonly Logger _logger;
 
         public RefreshCreatorCommandExecutor(ICreatorService creatorService,
                                              IChannelService channelService,
                                              IContentService contentService,
-                                             IManageCommandQueue commandQueueManager,
                                              YouTubeMetadataService youTubeMetadataService,
                                              Logger logger)
         {
             _creatorService = creatorService;
             _channelService = channelService;
             _contentService = contentService;
-            _commandQueueManager = commandQueueManager;
             _youTubeMetadataService = youTubeMetadataService;
             _logger = logger;
         }
@@ -133,18 +129,6 @@ namespace Streamarr.Core.Creators.Commands
                 {
                     _logger.Info("Found {0} new item(s) for channel '{1}'", added.Count, channel.Title);
                     _contentService.AddContents(added);
-                }
-
-                var missing = _contentService.GetMissingContent(channel.Id);
-                var downloadCommands = missing
-                    .Where(c => c.Monitored)
-                    .Select(c => new DownloadContentCommand { ContentId = c.Id })
-                    .ToList();
-
-                if (downloadCommands.Any())
-                {
-                    _logger.Debug("Queuing {0} download(s) for channel '{1}'", downloadCommands.Count, channel.Title);
-                    _commandQueueManager.PushMany(downloadCommands);
                 }
 
                 channel.LastInfoSync = DateTime.UtcNow;

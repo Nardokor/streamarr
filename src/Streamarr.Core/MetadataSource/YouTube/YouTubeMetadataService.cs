@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml;
 using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
@@ -33,11 +33,13 @@ namespace Streamarr.Core.MetadataSource.YouTube
             RegexOptions.Compiled);
 
         private readonly IYtDlpClient _ytDlpClient;
+        private readonly IYouTubeApiClient _youTubeApiClient;
         private readonly Logger _logger;
 
-        public YouTubeMetadataService(IYtDlpClient ytDlpClient, Logger logger)
+        public YouTubeMetadataService(IYtDlpClient ytDlpClient, IYouTubeApiClient youTubeApiClient, Logger logger)
         {
             _ytDlpClient = ytDlpClient;
+            _youTubeApiClient = youTubeApiClient;
             _logger = logger;
         }
 
@@ -114,34 +116,37 @@ namespace Streamarr.Core.MetadataSource.YouTube
             };
         }
 
-        public List<ContentMetadataResult> GetNewContent(string platformUrl, DateTime? since = null)
+        public List<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since = null)
         {
-            var dateAfter = since?.ToString("yyyyMMdd");
-            var flatVideos = _ytDlpClient.GetChannelVideos(platformUrl, dateAfter: dateAfter);
-
-            _logger.Info("Found {0} content items in flat listing for {1}", flatVideos.Count, platformUrl);
-
-            var results = new List<ContentMetadataResult>();
-
-            foreach (var flat in flatVideos)
+            // Derive uploads playlist ID: "UC..." → "UU..."
+            if (string.IsNullOrWhiteSpace(platformId) || !platformId.StartsWith("UC"))
             {
-                var videoUrl = !string.IsNullOrWhiteSpace(flat.WebpageUrl)
-                    ? flat.WebpageUrl
-                    : $"https://www.youtube.com/watch?v={flat.Id}";
-
-                try
-                {
-                    var full = _ytDlpClient.GetVideoInfo(videoUrl);
-                    results.Add(MapToContentMetadata(full));
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn("Skipping video {0}: {1}", flat.Id, ex.Message);
-                    results.Add(MapToContentMetadata(flat));
-                }
+                throw new InvalidOperationException(
+                    $"Cannot derive uploads playlist from channel ID '{platformId}'. Expected format: UCxxxxxxx");
             }
 
-            return results;
+            var uploadsPlaylistId = string.Concat("UU", platformId.AsSpan(2));
+
+            _logger.Info("Fetching playlist {0} via YouTube API (since: {1})", uploadsPlaylistId, since?.ToString("u") ?? "beginning");
+
+            var playlistItems = _youTubeApiClient.GetPlaylistItems(uploadsPlaylistId, since);
+
+            if (!playlistItems.Any())
+            {
+                _logger.Info("No new items found for playlist {0}", uploadsPlaylistId);
+                return new List<ContentMetadataResult>();
+            }
+
+            _logger.Info("Found {0} new items, fetching details", playlistItems.Count);
+
+            var videoDetails = _youTubeApiClient.GetVideoDetails(playlistItems.Select(p => p.VideoId));
+
+            // Build a lookup so we can attach exact publish dates
+            var publishedAtById = playlistItems.ToDictionary(p => p.VideoId, p => p.PublishedAt);
+
+            return videoDetails
+                .Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id)))
+                .ToList();
         }
 
         // Use ytsearch1: to find a video from the named creator, extract its
@@ -207,58 +212,49 @@ namespace Streamarr.Core.MetadataSource.YouTube
             };
         }
 
-        private static ContentMetadataResult MapToContentMetadata(YtDlpVideoInfo video)
+        private static ContentMetadataResult MapToContentMetadata(YoutubeVideo video, DateTime? publishedAt)
         {
+            TimeSpan? duration = null;
+            if (!string.IsNullOrWhiteSpace(video.ContentDetails?.Duration))
+            {
+                try
+                {
+                    duration = XmlConvert.ToTimeSpan(video.ContentDetails.Duration);
+                }
+                catch
+                {
+                    // malformed duration — leave null
+                }
+            }
+
+            var thumbnailUrl = video.Snippet?.Thumbnails?.Medium?.Url
+                ?? video.Snippet?.Thumbnails?.High?.Url;
+
             return new ContentMetadataResult
             {
                 PlatformContentId = video.Id,
-                ContentType = DetermineContentType(video),
-                Title = video.Title,
-                Description = video.Description,
-                ThumbnailUrl = video.Thumbnail,
-                Duration = video.Duration.HasValue ? TimeSpan.FromSeconds(video.Duration.Value) : null,
-                AirDateUtc = ParseUploadDate(video.UploadDate) ?? ParseTimestamp(video.Timestamp)
+                ContentType = DetermineContentType(video, duration),
+                Title = video.Snippet?.Title,
+                Description = video.Snippet?.Description,
+                ThumbnailUrl = thumbnailUrl,
+                Duration = duration,
+                AirDateUtc = publishedAt
             };
         }
 
-        private static DateTime? ParseTimestamp(double? timestamp)
+        private static ContentType DetermineContentType(YoutubeVideo video, TimeSpan? duration)
         {
-            if (!timestamp.HasValue || timestamp.Value <= 0)
-            {
-                return null;
-            }
-
-            return DateTimeOffset.FromUnixTimeSeconds((long)timestamp.Value).UtcDateTime;
-        }
-
-        private static ContentType DetermineContentType(YtDlpVideoInfo video)
-        {
-            if (video.WasLive == true || video.IsLive == true)
+            if (video.LiveStreamingDetails != null)
             {
                 return ContentType.Livestream;
             }
 
-            if (video.Duration.HasValue && video.Duration.Value <= 60)
+            if (duration.HasValue && duration.Value.TotalSeconds <= 60)
             {
                 return ContentType.Short;
             }
 
             return ContentType.Video;
-        }
-
-        private static DateTime? ParseUploadDate(string uploadDate)
-        {
-            if (string.IsNullOrWhiteSpace(uploadDate))
-            {
-                return null;
-            }
-
-            if (DateTime.TryParseExact(uploadDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out var date))
-            {
-                return date;
-            }
-
-            return null;
         }
     }
 }

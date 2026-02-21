@@ -35,6 +35,9 @@ namespace Streamarr.Core.Configuration
         bool EnableColorImpairedMode { get; set; }
         int UILanguage { get; set; }
 
+        // YouTube
+        string YouTubeApiKey { get; set; }
+
         // Internal
         bool CleanupMetadataImages { get; set; }
         string PlexClientIdentifier { get; }

@@ -9,7 +9,7 @@ namespace Streamarr.Core.MetadataSource
     {
         CreatorMetadataResult SearchCreator(string query);
         ChannelMetadataResult GetChannelMetadata(string platformUrl);
-        List<ContentMetadataResult> GetNewContent(string platformUrl, DateTime? since = null);
+        List<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since = null);
     }
 
     public class CreatorMetadataResult

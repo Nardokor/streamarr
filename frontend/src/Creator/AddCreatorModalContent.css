@@ -107,6 +107,23 @@
   flex-shrink: 0;
 }
 
+.resultCardExisting {
+  border-color: var(--colorSuccess, #2ecc71);
+}
+
+.resultCardExisting:hover,
+.resultCardExisting:focus {
+  border-color: var(--colorSuccess, #2ecc71);
+  background: var(--cardBackgroundColor, #f5f5f5);
+}
+
+.existingHint {
+  font-size: 12px;
+  color: var(--colorSuccess, #2ecc71);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* Config phase */
 
 .selectedCreator {

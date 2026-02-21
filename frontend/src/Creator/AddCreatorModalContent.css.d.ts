@@ -8,7 +8,9 @@ interface CssExports {
   'configLabel': string;
   'configRow': string;
   'configSelect': string;
+  'existingHint': string;
   'resultCard': string;
+  'resultCardExisting': string;
   'resultDescription': string;
   'resultInfo': string;
   'resultName': string;

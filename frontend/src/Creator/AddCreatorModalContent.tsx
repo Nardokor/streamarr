@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { useHistory } from 'react-router';
 import Button from 'Components/Link/Button';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
@@ -20,6 +21,7 @@ function AddCreatorModalContent({
   onModalClose,
   onCreatorAdded,
 }: AddCreatorModalContentProps) {
+  const history = useHistory();
   const [inputValue, setInputValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [configTarget, setConfigTarget] = useState<CreatorLookupResult | null>(
@@ -45,14 +47,21 @@ function AddCreatorModalContent({
   );
 
   const handleResultClick = useCallback(() => {
-    if (lookupResult) {
+    if (!lookupResult) return;
+
+    if (lookupResult.existingCreatorId != null) {
+      onModalClose();
+      history.push(`/creator/${lookupResult.existingCreatorId}`);
+    } else {
       setConfigTarget(lookupResult);
     }
-  }, [lookupResult]);
+  }, [lookupResult, onModalClose, history]);
 
   const handleConfigClose = useCallback(() => {
     setConfigTarget(null);
   }, []);
+
+  const isExisting = lookupResult?.existingCreatorId != null;
 
   return (
     <>
@@ -83,7 +92,7 @@ function AddCreatorModalContent({
 
           {lookupResult ? (
             <div
-              className={styles.resultCard}
+              className={`${styles.resultCard} ${isExisting ? styles.resultCardExisting : ''}`}
               onClick={handleResultClick}
               role="button"
               tabIndex={0}
@@ -120,7 +129,9 @@ function AddCreatorModalContent({
                 ) : null}
               </div>
 
-              <div className={styles.addHint}>Click to add</div>
+              <div className={isExisting ? styles.existingHint : styles.addHint}>
+                {isExisting ? 'Already added — click to view' : 'Click to add'}
+              </div>
             </div>
           ) : null}
         </ModalBody>

@@ -37,10 +37,14 @@ function CreatorAdd() {
   );
 
   const handleResultClick = useCallback(() => {
-    if (lookupResult) {
+    if (!lookupResult) return;
+
+    if (lookupResult.existingCreatorId != null) {
+      history.push(`/creator/${lookupResult.existingCreatorId}`);
+    } else {
       setConfigTarget(lookupResult);
     }
-  }, [lookupResult]);
+  }, [lookupResult, history]);
 
   const handleConfigClose = useCallback(() => {
     setConfigTarget(null);
@@ -77,7 +81,7 @@ function CreatorAdd() {
 
           {lookupResult ? (
             <div
-              className={styles.resultCard}
+              className={`${styles.resultCard} ${lookupResult.existingCreatorId != null ? styles.resultCardExisting : ''}`}
               onClick={handleResultClick}
               role="button"
               tabIndex={0}
@@ -114,7 +118,9 @@ function CreatorAdd() {
                 ) : null}
               </div>
 
-              <div className={styles.addHint}>Click to add</div>
+              <div className={lookupResult.existingCreatorId != null ? styles.existingHint : styles.addHint}>
+                {lookupResult.existingCreatorId != null ? 'Already added — click to view' : 'Click to add'}
+              </div>
             </div>
           ) : null}
         </PageContentBody>

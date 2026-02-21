@@ -22,7 +22,7 @@ function SourcesPage() {
   const [addingSource, setAddingSource] = useState(false);
   const { data: ytSettings } = useYouTubeSettings();
 
-  const isYouTubeConfigured = !!ytSettings?.apiKey;
+  const isYouTubeConfigured = !!ytSettings?.youTubeApiKey;
 
   return (
     <PageContent title="Sources">

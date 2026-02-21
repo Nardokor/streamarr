@@ -24,7 +24,7 @@ public class YouTubeSettingsController : SettingsController<YouTubeSettingsResou
     {
         try
         {
-            _youTubeApiClient.TestApiKey(resource.ApiKey ?? string.Empty);
+            _youTubeApiClient.TestApiKey(resource.YouTubeApiKey ?? string.Empty);
 
             return NoContent();
         }

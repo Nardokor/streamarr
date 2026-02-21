@@ -60,6 +60,18 @@ const LINKS: SidebarItem[] = [
   },
 
   {
+    iconName: icons.ACTIVITY,
+    title: 'Activity',
+    to: '/activity/queue',
+    children: [
+      {
+        title: 'Queue',
+        to: '/activity/queue',
+      },
+    ],
+  },
+
+  {
     iconName: icons.SETTINGS,
     title: () => translate('Settings'),
     to: '/settings',

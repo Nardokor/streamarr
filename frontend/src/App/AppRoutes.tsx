@@ -13,6 +13,7 @@ import Settings from 'Settings/Settings';
 import TagSettings from 'Settings/Tags/TagSettings';
 import SourcesPage from 'Settings/Sources/SourcesPage';
 import UISettings from 'Settings/UI/UISettings';
+import Queue from 'Activity/Queue/Queue';
 import Backups from 'System/Backup/Backups';
 import LogsTable from 'System/Events/LogsTable';
 import Logs from 'System/Logs/Logs';
@@ -70,6 +71,12 @@ function AppRoutes() {
       <Route path="/settings/sources" component={SourcesPage} />
 
       <Route path="/settings/ui" component={UISettings} />
+
+      {/*
+        Activity
+      */}
+
+      <Route path="/activity/queue" component={Queue} />
 
       {/*
         System

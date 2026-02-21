@@ -11,8 +11,8 @@ import Profiles from 'Settings/Profiles/Profiles';
 import Quality from 'Settings/Quality/Quality';
 import Settings from 'Settings/Settings';
 import TagSettings from 'Settings/Tags/TagSettings';
+import SourcesPage from 'Settings/Sources/SourcesPage';
 import UISettings from 'Settings/UI/UISettings';
-import YouTubeSettings from 'Settings/YouTube/YouTubeSettings';
 import Backups from 'System/Backup/Backups';
 import LogsTable from 'System/Events/LogsTable';
 import Logs from 'System/Logs/Logs';
@@ -67,9 +67,9 @@ function AppRoutes() {
 
       <Route path="/settings/general" component={GeneralSettings} />
 
-      <Route path="/settings/ui" component={UISettings} />
+      <Route path="/settings/sources" component={SourcesPage} />
 
-      <Route path="/settings/youtube" component={YouTubeSettings} />
+      <Route path="/settings/ui" component={UISettings} />
 
       {/*
         System

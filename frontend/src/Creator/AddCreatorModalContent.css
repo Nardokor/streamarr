@@ -8,15 +8,17 @@
   flex: 1;
   height: 35px;
   padding: 0 10px;
-  border: 1px solid #aaa;
+  border: 1px solid var(--borderColor, #aaa);
   border-radius: 4px;
   font-size: 14px;
+  background: var(--inputBackground, #fff);
+  color: var(--textColor, #222);
 }
 
 .searchButton {
   height: 35px;
   padding: 0 16px;
-  background: #5cbbff;
+  background: var(--colorPrimary, #5cbbff);
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -30,13 +32,25 @@
   cursor: not-allowed;
 }
 
-.result {
+/* Clickable result card */
+
+.resultCard {
   display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--borderColor, #ccc);
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.resultCard:hover,
+.resultCard:focus {
+  background: var(--cardBackgroundColor, #f5f5f5);
+  border-color: var(--colorPrimary, #5cbbff);
+  outline: none;
 }
 
 .thumbnail {
@@ -44,6 +58,14 @@
   height: 64px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
+}
+
+.thumbnailPlaceholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--borderColor, #ccc);
   flex-shrink: 0;
 }
 
@@ -60,7 +82,7 @@
 
 .resultDescription {
   font-size: 13px;
-  color: #888;
+  color: var(--textSecondary, #888);
   margin-bottom: 8px;
 }
 
@@ -72,19 +94,66 @@
 
 .channelBadge {
   padding: 2px 8px;
-  background: #5cbbff;
+  background: var(--colorPrimary, #5cbbff);
   color: #fff;
   border-radius: 10px;
   font-size: 12px;
 }
 
-.pathRow {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.addHint {
+  font-size: 12px;
+  color: var(--colorPrimary, #5cbbff);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.pathLabel {
-  font-weight: 500;
+/* Config phase */
+
+.selectedCreator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0 16px;
+  border-bottom: 1px solid var(--borderColor, #ccc);
+  margin-bottom: 20px;
+}
+
+.selectedName {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.configForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.configRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.configLabel {
+  width: 120px;
+  flex-shrink: 0;
   font-size: 14px;
+  font-weight: 500;
+}
+
+.configSelect {
+  flex: 1;
+  height: 35px;
+  padding: 0 10px;
+  border: 1px solid var(--borderColor, #aaa);
+  border-radius: 4px;
+  font-size: 14px;
+  background: var(--inputBackground, #fff);
+  color: var(--textColor, #222);
+}
+
+.configSelect:focus {
+  outline: none;
+  border-color: var(--colorPrimary, #5cbbff);
 }

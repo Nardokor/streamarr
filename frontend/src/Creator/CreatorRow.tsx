@@ -53,6 +53,18 @@ function CreatorRow({ creator }: CreatorRowProps) {
 
   return (
     <TableRow>
+      <TableRowCell className={styles.thumbnail}>
+        {creator.thumbnailUrl ? (
+          <img
+            className={styles.thumbnailImg}
+            src={creator.thumbnailUrl}
+            alt={title}
+          />
+        ) : (
+          <div className={styles.thumbnailPlaceholder} />
+        )}
+      </TableRowCell>
+
       <TableRowCell className={styles.monitor}>
         <span className={`${styles.monitorBadge} ${monitorClass}`}>
           {monitorType}

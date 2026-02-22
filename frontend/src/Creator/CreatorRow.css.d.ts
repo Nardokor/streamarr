@@ -12,6 +12,9 @@ interface CssExports {
   'progressBar': string;
   'progressFill': string;
   'progressText': string;
+  'thumbnail': string;
+  'thumbnailImg': string;
+  'thumbnailPlaceholder': string;
   'title': string;
 }
 export const cssExports: CssExports;

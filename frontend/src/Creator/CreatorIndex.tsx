@@ -29,6 +29,7 @@ type FilterKey = 'all' | 'monitored' | 'unmonitored';
 type SortKey = 'title' | 'added' | 'monitored';
 
 const columns: Column[] = [
+  { name: 'thumbnail', label: '', isVisible: true },
   { name: 'monitored', label: '', isVisible: true },
   { name: 'title', label: 'Creator', isVisible: true },
   { name: 'nextLive', label: 'Next Live', isVisible: true },

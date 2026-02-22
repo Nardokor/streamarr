@@ -1,3 +1,23 @@
+.thumbnail {
+  width: 48px;
+  padding: 4px 8px;
+}
+
+.thumbnailImg {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumbnailPlaceholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--borderColor, #444);
+}
+
 .monitor {
   width: 70px;
 }

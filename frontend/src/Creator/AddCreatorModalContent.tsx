@@ -1,164 +1,132 @@
-import React, { useCallback, useState } from 'react';
-import { useHistory } from 'react-router';
-import Icon from 'Components/Icon';
+import React, { useCallback, useEffect, useState } from 'react';
 import Button from 'Components/Link/Button';
+import SpinnerButton from 'Components/Link/SpinnerButton';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
-import { icons } from 'Helpers/Props';
+import { kinds } from 'Helpers/Props';
 import useRootFolders from 'RootFolder/useRootFolders';
 import { useQualityProfilesData } from 'Settings/Profiles/Quality/useQualityProfiles';
-import { CreatorLookupResult } from 'typings/Creator';
-import CreatorAddConfigModal from './CreatorAddConfigModal';
-import { useCreatorLookup } from './useCreators';
+import { useAddCreator } from './useCreators';
 import styles from './AddCreatorModalContent.css';
 
-interface AddCreatorModalContentProps {
+function sanitize(name: string): string {
+  return name.trim().replace(/[\\/:*?"<>|]/g, '');
+}
+
+interface Props {
   onModalClose: () => void;
   onCreatorAdded: () => void;
 }
 
-function AddCreatorModalContent({
-  onModalClose,
-  onCreatorAdded,
-}: AddCreatorModalContentProps) {
-  const history = useHistory();
-  const [inputValue, setInputValue] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [configTarget, setConfigTarget] = useState<CreatorLookupResult | null>(
-    null
-  );
+function AddCreatorModalContent({ onModalClose, onCreatorAdded }: Props) {
+  const [name, setName] = useState('');
+  const [rootFolderId, setRootFolderId] = useState<number | undefined>();
 
-  const { data: lookupResult, isFetching: isSearching } =
-    useCreatorLookup(searchTerm);
   const { data: rootFolders } = useRootFolders();
   const qualityProfiles = useQualityProfilesData();
+  const { addCreator, isAdding } = useAddCreator();
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        setSearchTerm(inputValue.trim());
-      }
-    },
-    [inputValue]
-  );
-
-  const handleResultClick = useCallback(() => {
-    if (!lookupResult) return;
-
-    if (lookupResult.existingCreatorId != null) {
-      onModalClose();
-      history.push(`/creator/${lookupResult.existingCreatorId}`);
-    } else {
-      setConfigTarget(lookupResult);
+  useEffect(() => {
+    if (rootFolders.length > 0 && rootFolderId === undefined) {
+      setRootFolderId(rootFolders[0].id);
     }
-  }, [lookupResult, onModalClose, history]);
+  }, [rootFolders, rootFolderId]);
 
-  const handleConfigClose = useCallback(() => {
-    setConfigTarget(null);
-  }, []);
+  const selectedFolder = rootFolders.find((f) => f.id === rootFolderId);
+  const folderName = sanitize(name);
+  const fullPath =
+    selectedFolder && folderName
+      ? `${selectedFolder.path.replace(/\/+$/, '')}/${folderName}`
+      : '';
 
-  const isExisting = lookupResult?.existingCreatorId != null;
+  const canAdd = !!folderName && rootFolderId !== undefined && !isAdding;
+
+  const handleAdd = useCallback(() => {
+    if (!canAdd || !fullPath) {
+      return;
+    }
+
+    addCreator(
+      {
+        title: name.trim(),
+        path: fullPath,
+        qualityProfileId: qualityProfiles[0]?.id ?? 1,
+        monitored: true,
+        channels: [],
+        tags: [],
+      },
+      {
+        onSuccess: () => {
+          onCreatorAdded();
+          onModalClose();
+        },
+      }
+    );
+  }, [canAdd, fullPath, name, qualityProfiles, addCreator, onCreatorAdded, onModalClose]);
 
   return (
-    <>
-      <ModalContent onModalClose={onModalClose}>
-        <ModalHeader>Add Creator</ModalHeader>
+    <ModalContent onModalClose={onModalClose}>
+      <ModalHeader>Add Creator</ModalHeader>
 
-        <ModalBody>
-          <div className={styles.searchRow}>
-            <Icon
-              className={styles.searchIcon}
-              name={icons.SEARCH}
-              size={16}
-              isSpinning={isSearching}
-            />
+      <ModalBody>
+        <div className={styles.form}>
+          <div className={styles.formRow}>
+            <label className={styles.label} htmlFor="creator-name">
+              Name
+            </label>
 
             <input
-              className={styles.searchInput}
+              id="creator-name"
+              className={styles.input}
               type="text"
-              placeholder="YouTube @handle, channel URL, or name"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
+              placeholder="Creator name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && canAdd && handleAdd()}
               autoFocus
             />
-
-            {inputValue ? (
-              <button
-                className={styles.clearButton}
-                type="button"
-                onClick={() => {
-                  setInputValue('');
-                  setSearchTerm('');
-                }}
-              >
-                <Icon name={icons.REMOVE} size={14} />
-              </button>
-            ) : null}
           </div>
 
-          {lookupResult ? (
-            <div
-              className={`${styles.resultCard} ${isExisting ? styles.resultCardExisting : ''}`}
-              onClick={handleResultClick}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && handleResultClick()}
-            >
-              {lookupResult.thumbnailUrl ? (
-                <img
-                  className={styles.thumbnail}
-                  src={lookupResult.thumbnailUrl}
-                  alt={lookupResult.name}
-                />
-              ) : (
-                <div className={styles.thumbnailPlaceholder} />
-              )}
+          <div className={styles.formRow}>
+            <label className={styles.label} htmlFor="creator-root">
+              Root Folder
+            </label>
 
-              <div className={styles.resultInfo}>
-                <div className={styles.resultName}>{lookupResult.name}</div>
+            <div className={styles.field}>
+              <select
+                id="creator-root"
+                className={styles.select}
+                value={rootFolderId ?? ''}
+                onChange={(e) => setRootFolderId(Number(e.target.value))}
+              >
+                {rootFolders.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.path}
+                  </option>
+                ))}
+              </select>
 
-                {lookupResult.description ? (
-                  <div className={styles.resultDescription}>
-                    {lookupResult.description.slice(0, 200)}
-                    {lookupResult.description.length > 200 ? '…' : ''}
-                  </div>
-                ) : null}
-
-                {lookupResult.channels.length > 0 ? (
-                  <div className={styles.channels}>
-                    {lookupResult.channels.map((ch) => (
-                      <span key={ch.platformId} className={styles.channelBadge}>
-                        {ch.platform}: {ch.title}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-
-              <div className={isExisting ? styles.existingHint : styles.addHint}>
-                {isExisting ? 'Already added — click to view' : 'Click to add'}
-              </div>
+              {fullPath ? <div className={styles.hint}>{fullPath}</div> : null}
             </div>
-          ) : null}
-        </ModalBody>
+          </div>
+        </div>
+      </ModalBody>
 
-        <ModalFooter>
-          <Button onPress={onModalClose}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
+      <ModalFooter>
+        <Button onPress={onModalClose}>Cancel</Button>
 
-      <CreatorAddConfigModal
-        isOpen={!!configTarget}
-        lookupResult={configTarget}
-        rootFolders={rootFolders}
-        qualityProfiles={qualityProfiles}
-        onModalClose={handleConfigClose}
-        onCreatorAdded={onCreatorAdded}
-      />
-    </>
+        <SpinnerButton
+          kind={kinds.PRIMARY}
+          isDisabled={!canAdd}
+          isSpinning={isAdding}
+          onPress={handleAdd}
+        >
+          Add Creator
+        </SpinnerButton>
+      </ModalFooter>
+    </ModalContent>
   );
 }
 

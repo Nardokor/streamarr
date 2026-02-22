@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using Streamarr.Common.Disk;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
 using Streamarr.Core.Creators.Events;
@@ -25,18 +26,21 @@ namespace Streamarr.Core.Creators
         private readonly ICreatorRepository _repo;
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
+        private readonly IDiskProvider _diskProvider;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
         public CreatorService(ICreatorRepository repo,
                               IChannelService channelService,
                               IContentService contentService,
+                              IDiskProvider diskProvider,
                               IEventAggregator eventAggregator,
                               Logger logger)
         {
             _repo = repo;
             _channelService = channelService;
             _contentService = contentService;
+            _diskProvider = diskProvider;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -67,6 +71,8 @@ namespace Streamarr.Core.Creators
 
             creator.CleanTitle = creator.Title.CleanCreatorTitle();
             creator.SortTitle = creator.Title?.ToLowerInvariant() ?? string.Empty;
+
+            _diskProvider.EnsureFolder(creator.Path);
 
             _repo.Insert(creator);
             _eventAggregator.PublishEvent(new CreatorAddedEvent(creator));

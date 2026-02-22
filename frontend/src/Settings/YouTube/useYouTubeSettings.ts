@@ -7,6 +7,8 @@ import { useCallback } from 'react';
 
 export interface YouTubeSettingsModel {
   youTubeApiKey: string;
+  youTubeFullRefreshIntervalHours: number;
+  youTubeLiveCheckIntervalMinutes: number;
 }
 
 const PATH = '/settings/youtube';

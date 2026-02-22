@@ -128,20 +128,18 @@ function AddChannelModal({
             </p>
           ) : (
             <>
-              {configuredPlatforms.length > 1 ? (
-                <div className={styles.platformTabs}>
-                  {configuredPlatforms.map((p) => (
-                    <button
-                      key={p.id}
-                      type="button"
-                      className={`${styles.platformTab} ${activePlatform?.id === p.id ? styles.platformTabActive : ''}`}
-                      onClick={() => handlePlatformSelect(p.id)}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
+              <div className={styles.platformTabs}>
+                {configuredPlatforms.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className={`${styles.platformTab} ${activePlatform?.id === p.id ? styles.platformTabActive : ''}`}
+                    onClick={() => handlePlatformSelect(p.id)}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
 
               <div className={styles.searchRow}>
                 <input

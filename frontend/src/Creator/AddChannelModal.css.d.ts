@@ -9,6 +9,10 @@ interface CssExports {
   'channelThumb': string;
   'channelTitle': string;
   'noResults': string;
+  'noSources': string;
+  'platformTab': string;
+  'platformTabActive': string;
+  'platformTabs': string;
   'searchButton': string;
   'searchInput': string;
   'searchRow': string;

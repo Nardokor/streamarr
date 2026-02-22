@@ -1,3 +1,46 @@
+.platformTabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.platformTab {
+  padding: 6px 16px;
+  border: 1px solid var(--borderColor);
+  border-radius: 16px;
+  background: transparent;
+  color: var(--textColor, #eee);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.platformTab:hover {
+  border-color: var(--colorPrimary, #3498db);
+}
+
+.platformTabActive {
+  border-color: var(--colorPrimary, #3498db);
+  background: var(--colorPrimary, #3498db);
+  color: #fff;
+}
+
+.noSources {
+  color: var(--textSecondary, #888);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.noSources a {
+  color: var(--colorPrimary, #3498db);
+  text-decoration: none;
+}
+
+.noSources a:hover {
+  text-decoration: underline;
+}
+
 .searchRow {
   display: flex;
   gap: 8px;

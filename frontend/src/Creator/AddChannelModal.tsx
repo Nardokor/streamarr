@@ -8,6 +8,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
+import { useYouTubeSettings } from 'Settings/YouTube/useYouTubeSettings';
 import { CreatorLookupChannel } from 'typings/Creator';
 import { useAddChannel, useCreatorLookup } from './useCreators';
 import styles from './AddChannelModal.css';
@@ -18,22 +19,35 @@ interface AddChannelModalProps {
   onModalClose: () => void;
 }
 
-function platformLabel(platform: string): string {
-  const map: Record<string, string> = {
-    youTube: 'YouTube',
-    twitch: 'Twitch',
-  };
-  return map[platform] ?? platform;
-}
+const PLATFORMS = [
+  {
+    id: 'youtube',
+    label: 'YouTube',
+    placeholder: 'YouTube @handle, channel URL, or name',
+  },
+] as const;
 
 function AddChannelModal({
   isOpen,
   creatorId,
   onModalClose,
 }: AddChannelModalProps) {
+  const { data: ytSettings } = useYouTubeSettings();
+
+  const configuredPlatforms = PLATFORMS.filter(
+    (p) => p.id === 'youtube' && !!ytSettings?.youTubeApiKey
+  );
+
+  const [selectedPlatformId, setSelectedPlatformId] = useState<string | null>(
+    null
+  );
   const [inputValue, setInputValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selected, setSelected] = useState<CreatorLookupChannel | null>(null);
+
+  const activePlatform =
+    configuredPlatforms.find((p) => p.id === selectedPlatformId) ??
+    (configuredPlatforms.length === 1 ? configuredPlatforms[0] : null);
 
   const { data: lookupResult, isFetching: isSearching } =
     useCreatorLookup(searchTerm);
@@ -88,6 +102,16 @@ function AddChannelModal({
     onModalClose();
   }, [onModalClose]);
 
+  const handlePlatformSelect = useCallback(
+    (id: string) => {
+      setSelectedPlatformId(id);
+      setInputValue('');
+      setSearchTerm('');
+      setSelected(null);
+    },
+    []
+  );
+
   const channels = lookupResult?.channels ?? [];
 
   return (
@@ -96,74 +120,101 @@ function AddChannelModal({
         <ModalHeader>Add Channel</ModalHeader>
 
         <ModalBody>
-          <div className={styles.searchRow}>
-            <input
-              className={styles.searchInput}
-              type="text"
-              placeholder="YouTube @handle, channel URL, or name"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-
-            <button
-              className={styles.searchButton}
-              type="button"
-              disabled={inputValue.trim().length === 0 || isSearching}
-              onClick={handleSearch}
-            >
-              {isSearching ? 'Searching…' : 'Search'}
-            </button>
-          </div>
-
-          {isSearching ? <LoadingIndicator /> : null}
-
-          {!isSearching && searchTerm && channels.length === 0 ? (
-            <p className={styles.noResults}>No channels found.</p>
-          ) : null}
-
-          {channels.length > 0 ? (
-            <div className={styles.channelList}>
-              {channels.map((ch) => (
-                <div
-                  key={ch.platformId}
-                  className={`${styles.channelOption} ${selected?.platformId === ch.platformId ? styles.channelSelected : ''}`}
-                  onClick={() => setSelected(ch)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => e.key === 'Enter' && setSelected(ch)}
-                >
-                  {ch.thumbnailUrl ? (
-                    <img
-                      className={styles.channelThumb}
-                      src={ch.thumbnailUrl}
-                      alt={ch.title}
-                    />
-                  ) : null}
-
-                  <div className={styles.channelInfo}>
-                    <span className={styles.channelTitle}>{ch.title}</span>
-                    <span className={styles.channelPlatform}>
-                      {platformLabel(ch.platform)}
-                    </span>
-                  </div>
+          {configuredPlatforms.length === 0 ? (
+            <p className={styles.noSources}>
+              No sources configured. Go to{' '}
+              <a href="/settings/sources">Settings &rsaquo; Sources</a> to add a
+              platform.
+            </p>
+          ) : (
+            <>
+              {configuredPlatforms.length > 1 ? (
+                <div className={styles.platformTabs}>
+                  {configuredPlatforms.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      className={`${styles.platformTab} ${activePlatform?.id === p.id ? styles.platformTabActive : ''}`}
+                      onClick={() => handlePlatformSelect(p.id)}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ) : null}
+              ) : null}
+
+              <div className={styles.searchRow}>
+                <input
+                  className={styles.searchInput}
+                  type="text"
+                  placeholder={activePlatform?.placeholder ?? 'Search…'}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+
+                <button
+                  className={styles.searchButton}
+                  type="button"
+                  disabled={inputValue.trim().length === 0 || isSearching}
+                  onClick={handleSearch}
+                >
+                  {isSearching ? 'Searching…' : 'Search'}
+                </button>
+              </div>
+
+              {isSearching ? <LoadingIndicator /> : null}
+
+              {!isSearching && searchTerm && channels.length === 0 ? (
+                <p className={styles.noResults}>No channels found.</p>
+              ) : null}
+
+              {channels.length > 0 ? (
+                <div className={styles.channelList}>
+                  {channels.map((ch) => (
+                    <div
+                      key={ch.platformId}
+                      className={`${styles.channelOption} ${selected?.platformId === ch.platformId ? styles.channelSelected : ''}`}
+                      onClick={() => setSelected(ch)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => e.key === 'Enter' && setSelected(ch)}
+                    >
+                      {ch.thumbnailUrl ? (
+                        <img
+                          className={styles.channelThumb}
+                          src={ch.thumbnailUrl}
+                          alt={ch.title}
+                        />
+                      ) : null}
+
+                      <div className={styles.channelInfo}>
+                        <span className={styles.channelTitle}>{ch.title}</span>
+                        <span className={styles.channelPlatform}>
+                          {activePlatform?.label ?? ch.platform}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </>
+          )}
         </ModalBody>
 
         <ModalFooter>
           <Button onPress={handleClose}>Cancel</Button>
 
-          <SpinnerButton
-            kind={kinds.PRIMARY}
-            isDisabled={!selected || isAdding}
-            isSpinning={isAdding}
-            onPress={handleAdd}
-          >
-            Add Channel
-          </SpinnerButton>
+          {configuredPlatforms.length > 0 ? (
+            <SpinnerButton
+              kind={kinds.PRIMARY}
+              isDisabled={!selected || isAdding}
+              isSpinning={isAdding}
+              onPress={handleAdd}
+            >
+              Add Channel
+            </SpinnerButton>
+          ) : null}
         </ModalFooter>
       </ModalContent>
     </Modal>

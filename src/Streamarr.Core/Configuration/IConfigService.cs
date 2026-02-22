@@ -35,6 +35,10 @@ namespace Streamarr.Core.Configuration
         bool EnableColorImpairedMode { get; set; }
         int UILanguage { get; set; }
 
+        // Archival
+        string GlobalPriorityKeywords { get; set; }
+        int DefaultRetentionDays { get; set; }
+
         // YouTube
         string YouTubeApiKey { get; set; }
         int YouTubeFullRefreshIntervalHours { get; set; }

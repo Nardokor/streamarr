@@ -11,6 +11,7 @@ namespace Streamarr.Core.Content
         Content FindByPlatformContentId(int channelId, string platformContentId);
         List<Content> GetWithoutFiles(int channelId);
         List<Content> GetAllMissing();
+        List<Content> GetAllDownloaded();
     }
 
     public class ContentRepository : BasicRepository<Content>, IContentRepository
@@ -40,6 +41,11 @@ namespace Streamarr.Core.Content
         public List<Content> GetAllMissing()
         {
             return Query(c => c.Monitored && c.Status == ContentStatus.Missing);
+        }
+
+        public List<Content> GetAllDownloaded()
+        {
+            return Query(c => c.Status == ContentStatus.Downloaded);
         }
     }
 }

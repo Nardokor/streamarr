@@ -19,6 +19,8 @@ public class ChannelResource : RestResource
     public bool DownloadShorts { get; set; } = true;
     public bool DownloadLivestreams { get; set; } = true;
     public string TitleFilter { get; set; } = string.Empty;
+    public string PriorityFilter { get; set; } = string.Empty;
+    public int? RetentionDays { get; set; }
 }
 
 public static class ChannelResourceMapper
@@ -41,7 +43,9 @@ public static class ChannelResourceMapper
             DownloadVideos = model.DownloadVideos,
             DownloadShorts = model.DownloadShorts,
             DownloadLivestreams = model.DownloadLivestreams,
-            TitleFilter = model.TitleFilter
+            TitleFilter = model.TitleFilter,
+            PriorityFilter = model.PriorityFilter,
+            RetentionDays = model.RetentionDays
         };
     }
 
@@ -62,7 +66,9 @@ public static class ChannelResourceMapper
             DownloadVideos = resource.DownloadVideos,
             DownloadShorts = resource.DownloadShorts,
             DownloadLivestreams = resource.DownloadLivestreams,
-            TitleFilter = resource.TitleFilter
+            TitleFilter = resource.TitleFilter,
+            PriorityFilter = resource.PriorityFilter,
+            RetentionDays = resource.RetentionDays
         };
     }
 

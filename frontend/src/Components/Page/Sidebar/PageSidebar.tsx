@@ -116,6 +116,10 @@ const LINKS: SidebarItem[] = [
         title: () => translate('Ui'),
         to: '/settings/ui',
       },
+      {
+        title: 'Archival',
+        to: '/settings/archival',
+      },
     ],
   },
 

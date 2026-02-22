@@ -63,6 +63,14 @@ function Settings() {
         <div className={styles.summary}>
           Configure platform integrations for content syncing.
         </div>
+
+        <Link className={styles.link} to="/settings/archival">
+          Archival
+        </Link>
+
+        <div className={styles.summary}>
+          Configure priority keywords and default retention policies for downloaded content.
+        </div>
       </PageContentBody>
     </PageContent>
   );

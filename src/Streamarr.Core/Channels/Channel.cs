@@ -30,6 +30,10 @@ namespace Streamarr.Core.Channels
         public bool DownloadLivestreams { get; set; } = true;
         public string TitleFilter { get; set; } = string.Empty;
 
+        // Archival
+        public string PriorityFilter { get; set; } = string.Empty;
+        public int? RetentionDays { get; set; }
+
         // Navigation
         public LazyLoaded<Creator> Creator { get; set; }
     }

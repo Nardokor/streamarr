@@ -2,9 +2,9 @@ import Content, { ContentType } from 'typings/Content';
 
 export function getContentTypeLabel(contentType: ContentType): string {
   switch (contentType) {
-    case 1: return 'Video';
-    case 2: return 'Short';
-    case 3: return 'Live';
+    case 'video': return 'Video';
+    case 'short': return 'Short';
+    case 'livestream': return 'Live';
     default: return '';
   }
 }
@@ -36,15 +36,54 @@ export function formatDate(dateStr: string | null | undefined): string {
 
 export interface StatusLabel {
   text: string;
-  kind: 'downloaded' | 'missing' | 'unmonitored';
+  kind: 'downloaded' | 'downloading' | 'missing' | 'unmonitored' | 'notAired';
 }
 
 export function getStatusLabel(content: Content): StatusLabel {
-  if (content.contentFileId > 0) {
+  // Future air date = upcoming live stream or premiere, not available yet
+  if (content.airDateUtc && new Date(content.airDateUtc) > new Date()) {
+    return { text: 'Not Aired', kind: 'notAired' };
+  }
+
+  if (content.status === 'downloading') {
+    return { text: 'Downloading', kind: 'downloading' };
+  }
+
+  if (content.status === 'downloaded' || content.contentFileId > 0) {
     return { text: 'Downloaded', kind: 'downloaded' };
   }
+
   if (content.monitored) {
     return { text: 'Missing', kind: 'missing' };
   }
+
   return { text: 'Unmonitored', kind: 'unmonitored' };
+}
+
+export function buildPlatformUrl(
+  platform: string,
+  platformContentId: string
+): string | null {
+  switch (platform) {
+    case 'youTube':
+      return `https://www.youtube.com/watch?v=${platformContentId}`;
+    case 'twitch':
+      return `https://www.twitch.tv/videos/${platformContentId}`;
+    default:
+      return null;
+  }
+}
+
+export function getNextLiveDate(content: Content[]): Date | null {
+  const now = new Date();
+  const upcoming = content
+    .filter(
+      (c) =>
+        c.contentType === 'livestream' &&
+        c.airDateUtc &&
+        new Date(c.airDateUtc) > now
+    )
+    .map((c) => new Date(c.airDateUtc!))
+    .sort((a, b) => a.getTime() - b.getTime());
+  return upcoming.length > 0 ? upcoming[0] : null;
 }

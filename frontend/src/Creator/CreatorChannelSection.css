@@ -214,6 +214,7 @@
 .contentThumbnail {
   width: 72px;
   padding: 4px 8px;
+  overflow: visible;
 }
 
 .contentThumbnailImg {
@@ -222,6 +223,16 @@
   object-fit: cover;
   border-radius: 2px;
   display: block;
+  position: relative;
+  z-index: 1;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  cursor: zoom-in;
+}
+
+.contentThumbnailImg:hover {
+  transform: scale(2.8);
+  z-index: 200;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
 }
 
 .typeBadge {
@@ -267,7 +278,32 @@
   color: white;
 }
 
+.statusDownloading {
+  background: var(--colorPrimary, #3498db);
+  color: white;
+}
+
+.statusNotAired {
+  background: var(--colorInfo, #8e44ad);
+  color: white;
+}
+
 .statusUnmonitored {
   background: var(--textSecondary, #666);
   color: white;
+}
+
+.titleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.titleLink:hover {
+  text-decoration: underline;
+  color: var(--colorPrimary, #3498db);
+}
+
+.downloadCell {
+  width: 32px;
+  text-align: center;
 }

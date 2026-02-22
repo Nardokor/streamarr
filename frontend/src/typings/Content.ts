@@ -1,7 +1,7 @@
 import ModelBase from 'App/ModelBase';
 
-export type ContentType = 0 | 1 | 2 | 3;
-export type ContentStatus = 0 | 1 | 2 | 3;
+export type ContentType = 'unknown' | 'video' | 'short' | 'livestream';
+export type ContentStatus = 'unknown' | 'missing' | 'downloading' | 'downloaded' | 'deleted';
 
 interface Content extends ModelBase {
   channelId: number;

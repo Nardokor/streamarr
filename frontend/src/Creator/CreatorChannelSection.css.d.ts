@@ -33,6 +33,7 @@ interface CssExports {
   'statusDownloading': string;
   'statusMissing': string;
   'statusNotAired': string;
+  'statusOnAir': string;
   'statusUnmonitored': string;
   'titleLink': string;
   'typeBadge': string;

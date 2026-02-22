@@ -212,21 +212,47 @@ namespace Streamarr.Core.Creators.Commands
                 }
 
                 DateTime? newAirDate = null;
+                ContentStatus? newStatus = null;
 
                 if (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow)
                 {
+                    // Still upcoming
                     newAirDate = lsd.ScheduledStartTime.Value;
+                }
+                else if (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue)
+                {
+                    // Stream has started but not ended — currently live
+                    newAirDate = lsd.ActualStartTime.Value;
+                    newStatus = ContentStatus.Live;
                 }
                 else if (lsd.ActualStartTime.HasValue)
                 {
+                    // Stream has ended — revert to missing so it can be downloaded
                     newAirDate = lsd.ActualStartTime.Value;
+                    if (content.Status == ContentStatus.Live)
+                    {
+                        newStatus = ContentStatus.Missing;
+                    }
                 }
+
+                var changed = false;
 
                 if (newAirDate.HasValue && newAirDate != content.AirDateUtc)
                 {
                     content.AirDateUtc = newAirDate;
+                    changed = true;
+                }
+
+                if (newStatus.HasValue && newStatus != content.Status)
+                {
+                    content.Status = newStatus.Value;
+                    changed = true;
+                }
+
+                if (changed)
+                {
                     _contentService.UpdateContent(content);
-                    _logger.Debug("Updated AirDateUtc for '{0}' to {1}", content.Title, newAirDate.Value);
+                    _logger.Debug("Updated livestream '{0}': AirDateUtc={1}, Status={2}", content.Title, content.AirDateUtc, content.Status);
                 }
             }
         }

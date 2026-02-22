@@ -291,6 +291,11 @@
   color: white;
 }
 
+.statusOnAir {
+  background: var(--colorDanger, #e74c3c);
+  color: white;
+}
+
 .statusUnmonitored {
   background: var(--textSecondary, #666);
   color: white;

@@ -49,6 +49,7 @@ function statusClass(kind: string): string {
   if (kind === 'downloading') return styles.statusDownloading;
   if (kind === 'missing') return styles.statusMissing;
   if (kind === 'notAired') return styles.statusNotAired;
+  if (kind === 'onAir') return styles.statusOnAir;
   return styles.statusUnmonitored;
 }
 

@@ -65,6 +65,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
     {
         public DateTime? ScheduledStartTime { get; set; }
         public DateTime? ActualStartTime { get; set; }
+        public DateTime? ActualEndTime { get; set; }
     }
 
     public class YoutubeChannelsResponse

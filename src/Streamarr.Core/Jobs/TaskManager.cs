@@ -63,8 +63,14 @@ namespace Streamarr.Core.Jobs
                 {
                     new ScheduledTask
                     {
-                        Interval = 60,
+                        Interval = GetFullRefreshInterval(),
                         TypeName = typeof(RefreshCreatorCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
+                        Interval = GetLiveCheckInterval(),
+                        TypeName = typeof(CheckLiveStreamsCommand).FullName
                     },
 
                     new ScheduledTask
@@ -146,6 +152,12 @@ namespace Streamarr.Core.Jobs
             return intervalMinutes * 60 * 24;
         }
 
+        private int GetFullRefreshInterval() =>
+            Math.Max(60, _configService.YouTubeFullRefreshIntervalHours * 60);
+
+        private int GetLiveCheckInterval() =>
+            Math.Max(5, _configService.YouTubeLiveCheckIntervalMinutes);
+
         public void Handle(CommandExecutedEvent message)
         {
             var scheduledTask = _scheduledTaskRepository.All().SingleOrDefault(c => c.TypeName == message.Command.Body.GetType().FullName);
@@ -171,9 +183,17 @@ namespace Streamarr.Core.Jobs
             var backup = _scheduledTaskRepository.GetDefinition(typeof(BackupCommand));
             backup.Interval = GetBackupInterval();
 
-            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { backup });
+            var refresh = _scheduledTaskRepository.GetDefinition(typeof(RefreshCreatorCommand));
+            refresh.Interval = GetFullRefreshInterval();
+
+            var liveCheck = _scheduledTaskRepository.GetDefinition(typeof(CheckLiveStreamsCommand));
+            liveCheck.Interval = GetLiveCheckInterval();
+
+            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { backup, refresh, liveCheck });
 
             _cache.Find(backup.TypeName).Interval = backup.Interval;
+            _cache.Find(refresh.TypeName).Interval = refresh.Interval;
+            _cache.Find(liveCheck.TypeName).Interval = liveCheck.Interval;
         }
     }
 }

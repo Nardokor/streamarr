@@ -37,6 +37,8 @@ namespace Streamarr.Core.Configuration
 
         // YouTube
         string YouTubeApiKey { get; set; }
+        int YouTubeFullRefreshIntervalHours { get; set; }
+        int YouTubeLiveCheckIntervalMinutes { get; set; }
 
         // Internal
         bool CleanupMetadataImages { get; set; }

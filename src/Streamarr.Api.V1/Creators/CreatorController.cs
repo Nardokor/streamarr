@@ -34,7 +34,6 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
 
         SharedValidator.RuleFor(c => c.Title).NotEmpty();
         SharedValidator.RuleFor(c => c.Path).NotEmpty();
-        SharedValidator.RuleFor(c => c.QualityProfileId).GreaterThan(0);
     }
 
     protected override CreatorResource GetResourceById(int id)
@@ -70,7 +69,10 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
             });
         }
 
-        _creatorAvatarService.DownloadAvatar(creator);
+        if (!string.IsNullOrEmpty(resource.ThumbnailUrl))
+        {
+            _creatorAvatarService.DownloadAvatar(creator);
+        }
 
         return Created(creator.Id);
     }

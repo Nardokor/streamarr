@@ -27,8 +27,14 @@ namespace Streamarr.Core.Download.YtDlp
             @"\[download\]\s+(?<percent>[\d.]+)%\s+of\s+~?\s*(?<total>[\d.]+\w+)\s+at\s+(?<speed>[\d.]+\w+/s)\s+ETA\s+(?<eta>\S+)",
             RegexOptions.Compiled);
 
-        private static readonly Regex DestinationRegex = new Regex(
-            @"\[(?:Merger|download)\]\s+(?:Destination:\s+)?(.+\.(?:mp4|mkv|webm|mov|avi|flv|m4a|mp3|opus|ogg|wav))",
+        // [download] Destination: /path/to/file.ext
+        private static readonly Regex DownloadDestinationRegex = new Regex(
+            @"\[download\]\s+Destination:\s+(.+\.(?:mp4|mkv|webm|mov|avi|flv|m4a|mp3|opus|ogg|wav))",
+            RegexOptions.Compiled);
+
+        // [Merger] Merging formats into "/path/to/file.ext"
+        private static readonly Regex MergerDestinationRegex = new Regex(
+            @"\[Merger\]\s+Merging formats into\s+""(.+\.(?:mp4|mkv|webm|mov|avi|flv|m4a|mp3|opus|ogg|wav))""",
             RegexOptions.Compiled);
 
         private static readonly Regex AlreadyDownloadedRegex = new Regex(
@@ -237,10 +243,16 @@ namespace Streamarr.Core.Download.YtDlp
 
                     _logger.Trace("yt-dlp: {0}", line);
 
-                    var destMatch = DestinationRegex.Match(line);
-                    if (destMatch.Success)
+                    var dlMatch = DownloadDestinationRegex.Match(line);
+                    if (dlMatch.Success)
                     {
-                        outputFile = destMatch.Groups[1].Value.Trim();
+                        outputFile = dlMatch.Groups[1].Value.Trim();
+                    }
+
+                    var mergeMatch = MergerDestinationRegex.Match(line);
+                    if (mergeMatch.Success)
+                    {
+                        outputFile = mergeMatch.Groups[1].Value.Trim();
                     }
 
                     var alreadyMatch = AlreadyDownloadedRegex.Match(line);

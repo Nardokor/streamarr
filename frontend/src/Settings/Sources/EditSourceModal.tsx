@@ -84,6 +84,34 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
           />
         </FormGroup>
 
+        <FormGroup>
+          <FormLabel>Full Refresh Interval (hours)</FormLabel>
+
+          <FormInputGroup
+            type={inputTypes.NUMBER}
+            name="youTubeFullRefreshIntervalHours"
+            helpText="How often to scan for new videos (min 1, max 168)"
+            min={1}
+            max={168}
+            onChange={handleInputChange}
+            {...settings.youTubeFullRefreshIntervalHours}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>Live Check Interval (minutes)</FormLabel>
+
+          <FormInputGroup
+            type={inputTypes.NUMBER}
+            name="youTubeLiveCheckIntervalMinutes"
+            helpText="How often to check livestream status (min 5, max 1440)"
+            min={5}
+            max={1440}
+            onChange={handleInputChange}
+            {...settings.youTubeLiveCheckIntervalMinutes}
+          />
+        </FormGroup>
+
         {testResult !== null && (
           <Alert kind={testResult === 'success' ? 'success' : 'danger'}>
             {testMessage}

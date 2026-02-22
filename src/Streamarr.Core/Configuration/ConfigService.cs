@@ -201,6 +201,18 @@ namespace Streamarr.Core.Configuration
             set { SetValue("YouTubeApiKey", value); }
         }
 
+        public int YouTubeFullRefreshIntervalHours
+        {
+            get { return GetValueInt("YouTubeFullRefreshIntervalHours", 24); }
+            set { SetValue("YouTubeFullRefreshIntervalHours", value); }
+        }
+
+        public int YouTubeLiveCheckIntervalMinutes
+        {
+            get { return GetValueInt("YouTubeLiveCheckIntervalMinutes", 60); }
+            set { SetValue("YouTubeLiveCheckIntervalMinutes", value); }
+        }
+
         public bool CleanupMetadataImages
         {
             get { return GetValueBoolean("CleanupMetadataImages", true); }

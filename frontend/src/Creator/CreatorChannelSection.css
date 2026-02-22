@@ -237,10 +237,12 @@
 
 .typeBadge {
   display: inline-block;
+  min-width: 64px;
   padding: 2px 8px;
   border-radius: 10px;
   font-size: 0.72rem;
   font-weight: 600;
+  text-align: center;
   text-transform: uppercase;
 }
 
@@ -261,7 +263,7 @@
 
 .statusBadge {
   display: inline-block;
-  min-width: 90px;
+  min-width: 120px;
   padding: 2px 8px;
   border-radius: 10px;
   font-size: 0.72rem;
@@ -287,17 +289,17 @@
 }
 
 .statusNotAired {
-  background: var(--colorInfo, #8e44ad);
+  background: var(--colorWarning, #f39c12);
   color: white;
 }
 
 .statusOnAir {
-  background: var(--colorDanger, #e74c3c);
+  background: var(--colorPrimary, #3498db);
   color: white;
 }
 
 .statusUnmonitored {
-  background: var(--textSecondary, #666);
+  background: var(--colorWarning, #f39c12);
   color: white;
 }
 

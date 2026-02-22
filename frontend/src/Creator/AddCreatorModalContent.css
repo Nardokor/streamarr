@@ -1,201 +1,62 @@
-.searchRow {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  margin-bottom: 16px;
-  padding: 0 12px;
-  height: 44px;
-  background: var(--inputBackground, #1c1c1c);
-  border: 1px solid var(--borderColor, #444);
-  border-radius: 4px;
-  transition: border-color 120ms ease, box-shadow 120ms ease;
-}
-
-.searchRow:focus-within {
-  border-color: var(--colorPrimary, #5cbbff);
-  box-shadow: 0 0 0 1px var(--colorPrimary, #5cbbff);
-}
-
-.searchIcon {
-  color: var(--textSecondary, #888);
-  flex-shrink: 0;
-  margin-right: 10px;
-}
-
-.searchInput {
-  flex: 1;
-  height: 100%;
-  padding: 0;
-  border: none;
-  background: transparent;
-  font-size: 14px;
-  color: var(--textColor, #eee);
-  outline: none;
-}
-
-.searchInput::placeholder {
-  color: var(--textSecondary, #555);
-}
-
-.clearButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  margin-left: 6px;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  color: var(--textSecondary, #888);
-}
-
-.clearButton:hover {
-  color: var(--textColor, #eee);
-}
-
-/* Clickable result card */
-
-.resultCard {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 14px;
-  border: 1px solid var(--borderColor, #ccc);
-  border-radius: 6px;
-  cursor: pointer;
-  user-select: none;
-  transition: background 120ms ease, border-color 120ms ease;
-}
-
-.resultCard:hover,
-.resultCard:focus {
-  background: var(--cardBackgroundColor, #f5f5f5);
-  border-color: var(--colorPrimary, #5cbbff);
-  outline: none;
-}
-
-.thumbnail {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.thumbnailPlaceholder {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--borderColor, #ccc);
-  flex-shrink: 0;
-}
-
-.resultInfo {
-  flex: 1;
-  min-width: 0;
-}
-
-.resultName {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.resultDescription {
-  font-size: 13px;
-  color: var(--textSecondary, #888);
-  margin-bottom: 8px;
-}
-
-.channels {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.channelBadge {
-  padding: 2px 8px;
-  background: var(--colorPrimary, #5cbbff);
-  color: #fff;
-  border-radius: 10px;
-  font-size: 12px;
-}
-
-.addHint {
-  font-size: 12px;
-  color: var(--colorPrimary, #5cbbff);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.resultCardExisting {
-  border-color: var(--colorSuccess, #2ecc71);
-}
-
-.resultCardExisting:hover,
-.resultCardExisting:focus {
-  border-color: var(--colorSuccess, #2ecc71);
-  background: var(--cardBackgroundColor, #f5f5f5);
-}
-
-.existingHint {
-  font-size: 12px;
-  color: var(--colorSuccess, #2ecc71);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-/* Config phase */
-
-.selectedCreator {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0 16px;
-  border-bottom: 1px solid var(--borderColor, #ccc);
-  margin-bottom: 20px;
-}
-
-.selectedName {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.configForm {
+.form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
-.configRow {
+.formRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
 }
 
-.configLabel {
-  width: 120px;
+.label {
+  width: 100px;
   flex-shrink: 0;
   font-size: 14px;
   font-weight: 500;
+  padding-top: 7px;
 }
 
-.configSelect {
+.input {
   flex: 1;
   height: 35px;
   padding: 0 10px;
   border: 1px solid var(--borderColor, #aaa);
   border-radius: 4px;
   font-size: 14px;
-  background: var(--inputBackground, #fff);
-  color: var(--textColor, #222);
+  background: var(--inputBackground);
+  color: var(--textColor);
 }
 
-.configSelect:focus {
+.input:focus {
   outline: none;
   border-color: var(--colorPrimary, #5cbbff);
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+}
+
+.select {
+  width: 100%;
+  height: 35px;
+  padding: 0 10px;
+  border: 1px solid var(--borderColor, #aaa);
+  border-radius: 4px;
+  font-size: 14px;
+  background: var(--inputBackground);
+  color: var(--textColor);
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--colorPrimary, #5cbbff);
+}
+
+.hint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--textSecondary, #888);
 }

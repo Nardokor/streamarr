@@ -1,12 +1,14 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
-import ConfirmModal from 'Components/Modal/ConfirmModal';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
-import { icons, kinds } from 'Helpers/Props';
+import CommandNames from 'Commands/CommandNames';
+import { useCommandExecuting, useExecuteCommand } from 'Commands/useCommands';
+import { icons } from 'Helpers/Props';
 import Creator from 'typings/Creator';
-import { useDeleteCreator } from './useCreators';
+import { formatDate, getNextLiveDate } from './creatorUtils';
+import { useCreatorChannels, useCreatorContent } from './useCreators';
 import styles from './CreatorRow.css';
 
 interface CreatorRowProps {
@@ -14,39 +16,47 @@ interface CreatorRowProps {
 }
 
 function CreatorRow({ creator }: CreatorRowProps) {
-  const { id, title, thumbnailUrl, path, monitored } = creator;
-  const { deleteCreator } = useDeleteCreator(id);
+  const { id, title, monitored } = creator;
 
-  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const { data: channels } = useCreatorChannels(id);
+  const { data: content } = useCreatorContent(id);
 
-  const handleDeletePress = useCallback(() => {
-    setIsConfirmDeleteOpen(true);
-  }, []);
+  const executeCommand = useExecuteCommand();
+  const isRefreshing = useCommandExecuting(CommandNames.RefreshCreator, { creatorId: id });
+  const isDownloading = useCommandExecuting(CommandNames.DownloadMissingContent, { creatorId: id });
 
-  const handleConfirmDeleteModalClose = useCallback(() => {
-    setIsConfirmDeleteOpen(false);
-  }, []);
+  const hasFilter = channels.some((ch) => ch.titleFilter && ch.titleFilter.trim() !== '');
+  const monitorType = !monitored ? 'None' : hasFilter ? 'Filter' : 'All';
 
-  const handleConfirmDeletePress = useCallback(() => {
-    deleteCreator(undefined, {
-      onSuccess: () => {
-        setIsConfirmDeleteOpen(false);
-      },
-    });
-  }, [deleteCreator]);
+  const downloaded = content.filter(
+    (c) => c.contentFileId > 0 || c.status === 'downloaded'
+  ).length;
+  const total = content.length;
+  const progress = total > 0 ? (downloaded / total) * 100 : 0;
+
+  const nextLive = getNextLiveDate(content);
+
+  const handleRefresh = useCallback(() => {
+    executeCommand({ name: CommandNames.RefreshCreator, creatorId: id });
+  }, [executeCommand, id]);
+
+  const handleDownloadMissing = useCallback(() => {
+    executeCommand({ name: CommandNames.DownloadMissingContent, creatorId: id });
+  }, [executeCommand, id]);
+
+  const monitorClass =
+    monitorType === 'All'
+      ? styles.monitorAll
+      : monitorType === 'Filter'
+      ? styles.monitorFilter
+      : styles.monitorNone;
 
   return (
     <TableRow>
-      <TableRowCell className={styles.thumbnail}>
-        {thumbnailUrl ? (
-          <Link to={`/creator/${id}`}>
-            <img
-              className={styles.thumbnailImg}
-              src={thumbnailUrl}
-              alt={title}
-            />
-          </Link>
-        ) : null}
+      <TableRowCell className={styles.monitor}>
+        <span className={`${styles.monitorBadge} ${monitorClass}`}>
+          {monitorType}
+        </span>
       </TableRowCell>
 
       <TableRowCell>
@@ -55,33 +65,38 @@ function CreatorRow({ creator }: CreatorRowProps) {
         </Link>
       </TableRowCell>
 
-      <TableRowCell>{path}</TableRowCell>
+      <TableRowCell className={styles.nextLive}>
+        {nextLive ? formatDate(nextLive.toISOString()) : '—'}
+      </TableRowCell>
 
-      <TableRowCell>
-        <IconButton
-          name={monitored ? icons.MONITORED : icons.UNMONITORED}
-          title={monitored ? 'Monitored' : 'Unmonitored'}
-        />
+      <TableRowCell className={styles.progress}>
+        <div className={styles.progressBar}>
+          <div
+            className={styles.progressFill}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <span className={styles.progressText}>
+          {downloaded} / {total}
+        </span>
       </TableRowCell>
 
       <TableRowCell className={styles.actions}>
         <IconButton
-          title="Delete Creator"
-          name={icons.DELETE}
-          kind={kinds.DANGER}
-          onPress={handleDeletePress}
+          name={icons.REFRESH}
+          size={12}
+          title="Refresh"
+          isSpinning={isRefreshing}
+          onPress={handleRefresh}
+        />
+        <IconButton
+          name={icons.DOWNLOAD}
+          size={12}
+          title="Download Missing"
+          isSpinning={isDownloading}
+          onPress={handleDownloadMissing}
         />
       </TableRowCell>
-
-      <ConfirmModal
-        isOpen={isConfirmDeleteOpen}
-        kind={kinds.DANGER}
-        title="Delete Creator"
-        message={`Are you sure you want to delete '${title}'? This will remove all tracked content for this creator.`}
-        confirmLabel="Delete"
-        onConfirm={handleConfirmDeletePress}
-        onCancel={handleConfirmDeleteModalClose}
-      />
     </TableRow>
   );
 }

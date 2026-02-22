@@ -24,6 +24,8 @@ export interface BaseCommandBody {
   lastStartTime: string;
   trigger: string;
   suppressMessages: boolean;
+  creatorId?: number;
+  contentId?: number;
 }
 
 export type CommandBody = BaseCommandBody;

@@ -5,6 +5,7 @@ enum CommandNames {
   ClearLog = 'ClearLog',
   CutoffUnmetEpisodeSearch = 'CutoffUnmetEpisodeSearch',
   DeleteLogFiles = 'DeleteLogFiles',
+  DownloadContent = 'DownloadContent',
   DownloadMissingContent = 'DownloadMissingContent',
   DeleteUpdateLogFiles = 'DeleteUpdateLogFiles',
   DownloadedEpisodesScan = 'DownloadedEpisodesScan',

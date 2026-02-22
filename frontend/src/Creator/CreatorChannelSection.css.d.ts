@@ -14,6 +14,7 @@ interface CssExports {
   'deleteBtn': string;
   'deleteConfirm': string;
   'deletePrompt': string;
+  'downloadCell': string;
   'emptyNote': string;
   'filterInput': string;
   'header': string;
@@ -29,8 +30,11 @@ interface CssExports {
   'settingsRow': string;
   'statusBadge': string;
   'statusDownloaded': string;
+  'statusDownloading': string;
   'statusMissing': string;
+  'statusNotAired': string;
   'statusUnmonitored': string;
+  'titleLink': string;
   'typeBadge': string;
   'typeLive': string;
   'typeShort': string;

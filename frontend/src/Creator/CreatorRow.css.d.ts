@@ -2,8 +2,16 @@
 // Please do not change this file!
 interface CssExports {
   'actions': string;
-  'thumbnail': string;
-  'thumbnailImg': string;
+  'monitor': string;
+  'monitorAll': string;
+  'monitorBadge': string;
+  'monitorFilter': string;
+  'monitorNone': string;
+  'nextLive': string;
+  'progress': string;
+  'progressBar': string;
+  'progressFill': string;
+  'progressText': string;
   'title': string;
 }
 export const cssExports: CssExports;

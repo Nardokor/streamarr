@@ -1,14 +1,23 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Icon from 'Components/Icon';
+import IconButton from 'Components/Link/IconButton';
 import Column from 'Components/Table/Column';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import TableRow from 'Components/Table/TableRow';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import CommandNames from 'Commands/CommandNames';
+import { useExecuteCommand } from 'Commands/useCommands';
 import { icons } from 'Helpers/Props';
 import Channel from 'typings/Channel';
 import Content from 'typings/Content';
-import { formatDate, formatDuration, getContentTypeLabel, getStatusLabel } from './creatorUtils';
+import {
+  buildPlatformUrl,
+  formatDate,
+  formatDuration,
+  getContentTypeLabel,
+  getStatusLabel,
+} from './creatorUtils';
 import { useDeleteChannel, useUpdateChannel } from './useCreators';
 import styles from './CreatorChannelSection.css';
 
@@ -24,6 +33,7 @@ const columns: Column[] = [
   { name: 'airDate', label: 'Date', isVisible: true },
   { name: 'duration', label: 'Duration', isVisible: true },
   { name: 'status', label: 'Status', isVisible: true },
+  { name: 'download', label: '', isVisible: true },
 ];
 
 function platformLabel(platform: string): string {
@@ -36,7 +46,9 @@ function platformLabel(platform: string): string {
 
 function statusClass(kind: string): string {
   if (kind === 'downloaded') return styles.statusDownloaded;
+  if (kind === 'downloading') return styles.statusDownloading;
   if (kind === 'missing') return styles.statusMissing;
+  if (kind === 'notAired') return styles.statusNotAired;
   return styles.statusUnmonitored;
 }
 
@@ -52,13 +64,11 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
-  // Local settings state mirrors channel props
   const [dlVideos, setDlVideos] = useState(channel.downloadVideos);
   const [dlShorts, setDlShorts] = useState(channel.downloadShorts);
   const [dlLivestreams, setDlLivestreams] = useState(channel.downloadLivestreams);
   const [titleFilter, setTitleFilter] = useState(channel.titleFilter);
 
-  // Keep local state in sync if channel prop changes (e.g. after save)
   useEffect(() => {
     setDlVideos(channel.downloadVideos);
     setDlShorts(channel.downloadShorts);
@@ -68,6 +78,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
 
   const { updateChannel, isUpdating } = useUpdateChannel(channel.id, channel.creatorId);
   const { deleteChannel } = useDeleteChannel(channel.id, channel.creatorId);
+  const executeCommand = useExecuteCommand();
 
   const handleToggle = useCallback(() => {
     setExpanded((prev) => !prev);
@@ -250,6 +261,13 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                   .map((item) => {
                     const status = getStatusLabel(item);
                     const typeLabel = getContentTypeLabel(item.contentType);
+                    const videoUrl = buildPlatformUrl(channel.platform, item.platformContentId);
+                    const canDownload =
+                      item.monitored &&
+                      status.kind !== 'downloaded' &&
+                      status.kind !== 'downloading' &&
+                      status.kind !== 'notAired';
+
                     return (
                       <TableRow key={item.id}>
                         <TableRowCell className={styles.contentThumbnail}>
@@ -261,7 +279,22 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                             />
                           ) : null}
                         </TableRowCell>
-                        <TableRowCell>{item.title}</TableRowCell>
+
+                        <TableRowCell>
+                          {videoUrl ? (
+                            <a
+                              className={styles.titleLink}
+                              href={videoUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {item.title}
+                            </a>
+                          ) : (
+                            item.title
+                          )}
+                        </TableRowCell>
+
                         <TableRowCell>
                           {typeLabel ? (
                             <span className={`${styles.typeBadge} ${typeClass(typeLabel)}`}>
@@ -269,12 +302,31 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                             </span>
                           ) : null}
                         </TableRowCell>
+
                         <TableRowCell>{formatDate(item.airDateUtc)}</TableRowCell>
+
                         <TableRowCell>{formatDuration(item.duration)}</TableRowCell>
+
                         <TableRowCell>
                           <span className={`${styles.statusBadge} ${statusClass(status.kind)}`}>
                             {status.text}
                           </span>
+                        </TableRowCell>
+
+                        <TableRowCell className={styles.downloadCell}>
+                          {canDownload ? (
+                            <IconButton
+                              name={icons.DOWNLOAD}
+                              size={12}
+                              title="Download"
+                              onPress={() =>
+                                executeCommand({
+                                  name: CommandNames.DownloadContent,
+                                  contentId: item.id,
+                                })
+                              }
+                            />
+                          ) : null}
                         </TableRowCell>
                       </TableRow>
                     );

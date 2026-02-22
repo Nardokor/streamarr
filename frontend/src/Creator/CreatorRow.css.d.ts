@@ -10,8 +10,9 @@ interface CssExports {
   'nextLive': string;
   'progress': string;
   'progressBar': string;
-  'progressFill': string;
-  'progressText': string;
+  'progressComplete': string;
+  'progressEmpty': string;
+  'progressIncomplete': string;
   'thumbnail': string;
   'thumbnailImg': string;
   'thumbnailPlaceholder': string;

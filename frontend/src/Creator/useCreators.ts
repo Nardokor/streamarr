@@ -41,6 +41,17 @@ export const useCreatorChannels = (creatorId: number) => {
   };
 };
 
+export const useAllChannels = () => {
+  const result = useApiQuery<Channel[]>({
+    path: '/channel',
+  });
+
+  return {
+    ...result,
+    data: result.data ?? [],
+  };
+};
+
 export const useCreatorContent = (creatorId: number) => {
   const result = useApiQuery<Content[]>({
     path: `/content/creator/${creatorId}`,

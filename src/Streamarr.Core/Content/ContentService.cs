@@ -10,6 +10,7 @@ namespace Streamarr.Core.Content
         List<Content> GetByChannelId(int channelId);
         Content FindByPlatformContentId(int channelId, string platformContentId);
         List<Content> GetMissingContent(int channelId);
+        List<Content> GetAllMissing();
         Content AddContent(Content content);
         void AddContents(List<Content> contents);
         Content UpdateContent(Content content);
@@ -50,6 +51,11 @@ namespace Streamarr.Core.Content
         public List<Content> GetMissingContent(int channelId)
         {
             return _repo.GetWithoutFiles(channelId);
+        }
+
+        public List<Content> GetAllMissing()
+        {
+            return _repo.GetAllMissing();
         }
 
         public Content AddContent(Content content)

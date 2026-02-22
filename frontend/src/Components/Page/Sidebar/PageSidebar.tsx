@@ -60,6 +60,18 @@ const LINKS: SidebarItem[] = [
   },
 
   {
+    iconName: icons.MISSING,
+    title: 'Wanted',
+    to: '/wanted/missing',
+    children: [
+      {
+        title: 'Missing',
+        to: '/wanted/missing',
+      },
+    ],
+  },
+
+  {
     iconName: icons.ACTIVITY,
     title: 'Activity',
     to: '/activity/queue',

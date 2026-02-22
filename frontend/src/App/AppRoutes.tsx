@@ -14,6 +14,7 @@ import TagSettings from 'Settings/Tags/TagSettings';
 import SourcesPage from 'Settings/Sources/SourcesPage';
 import UISettings from 'Settings/UI/UISettings';
 import Queue from 'Activity/Queue/Queue';
+import WantedMissing from 'Wanted/WantedMissing';
 import Backups from 'System/Backup/Backups';
 import LogsTable from 'System/Events/LogsTable';
 import Logs from 'System/Logs/Logs';
@@ -71,6 +72,12 @@ function AppRoutes() {
       <Route path="/settings/sources" component={SourcesPage} />
 
       <Route path="/settings/ui" component={UISettings} />
+
+      {/*
+        Wanted
+      */}
+
+      <Route path="/wanted/missing" component={WantedMissing} />
 
       {/*
         Activity

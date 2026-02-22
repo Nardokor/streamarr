@@ -265,8 +265,29 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 Description = video.Snippet?.Description,
                 ThumbnailUrl = thumbnailUrl,
                 Duration = duration,
-                AirDateUtc = publishedAt
+                AirDateUtc = DetermineAirDate(video, publishedAt)
             };
+        }
+
+        private static DateTime? DetermineAirDate(YoutubeVideo video, DateTime? publishedAt)
+        {
+            var lsd = video.LiveStreamingDetails;
+            if (lsd != null)
+            {
+                // Upcoming stream/premiere: use the scheduled start time
+                if (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow)
+                {
+                    return lsd.ScheduledStartTime.Value;
+                }
+
+                // Completed stream: use actual start time as the air date
+                if (lsd.ActualStartTime.HasValue)
+                {
+                    return lsd.ActualStartTime.Value;
+                }
+            }
+
+            return publishedAt;
         }
 
         private static ContentType DetermineContentType(YoutubeVideo video, TimeSpan? duration)

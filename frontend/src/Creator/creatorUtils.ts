@@ -36,10 +36,15 @@ export function formatDate(dateStr: string | null | undefined): string {
 
 export interface StatusLabel {
   text: string;
-  kind: 'downloaded' | 'downloading' | 'missing' | 'unmonitored' | 'notAired';
+  kind: 'downloaded' | 'downloading' | 'missing' | 'unmonitored' | 'notAired' | 'onAir';
 }
 
 export function getStatusLabel(content: Content): StatusLabel {
+  // Currently live
+  if (content.status === 'live') {
+    return { text: 'On Air', kind: 'onAir' };
+  }
+
   // Future air date = upcoming live stream or premiere, not available yet
   if (content.airDateUtc && new Date(content.airDateUtc) > new Date()) {
     return { text: 'Not Aired', kind: 'notAired' };

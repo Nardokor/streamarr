@@ -6,6 +6,7 @@ namespace Streamarr.Core.Content
         Missing = 1,
         Downloading = 2,
         Downloaded = 3,
-        Deleted = 4
+        Deleted = 4,
+        Live = 5
     }
 }

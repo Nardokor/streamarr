@@ -195,6 +195,18 @@ namespace Streamarr.Core.Configuration
             set { SetValue("UILanguage", value); }
         }
 
+        public string GlobalPriorityKeywords
+        {
+            get { return GetValue("GlobalPriorityKeywords", string.Empty); }
+            set { SetValue("GlobalPriorityKeywords", value); }
+        }
+
+        public int DefaultRetentionDays
+        {
+            get { return GetValueInt("DefaultRetentionDays", 0); }
+            set { SetValue("DefaultRetentionDays", value); }
+        }
+
         public string YouTubeApiKey
         {
             get { return GetValue("YouTubeApiKey", string.Empty); }

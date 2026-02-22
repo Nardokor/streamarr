@@ -6,6 +6,7 @@ using Streamarr.Common.Cache;
 using Streamarr.Core.Backup;
 using Streamarr.Core.Configuration;
 using Streamarr.Core.Configuration.Events;
+using Streamarr.Core.Content.Commands;
 using Streamarr.Core.Creators.Commands;
 using Streamarr.Core.HealthCheck;
 using Streamarr.Core.Housekeeping;
@@ -95,6 +96,12 @@ namespace Streamarr.Core.Jobs
                     {
                         Interval = 24 * 60,
                         TypeName = typeof(HousekeepingCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
+                        Interval = 24 * 60,
+                        TypeName = typeof(RetentionCleanupCommand).FullName
                     },
 
                     new ScheduledTask

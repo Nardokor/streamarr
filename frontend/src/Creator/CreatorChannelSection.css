@@ -303,6 +303,16 @@
   color: white;
 }
 
+.statusExpired {
+  background: var(--textSecondary, #666);
+  color: white;
+}
+
+.statusModified {
+  background: #e67e22;
+  color: white;
+}
+
 .titleLink {
   color: inherit;
   text-decoration: none;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using Streamarr.Core.Channels;
+using Streamarr.Core.Configuration;
 using Streamarr.Core.Content;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.MetadataSource;
@@ -19,6 +20,7 @@ namespace Streamarr.Core.Creators.Commands
         private readonly IYouTubeApiClient _youTubeApiClient;
         private readonly ICreatorAvatarService _creatorAvatarService;
         private readonly ILivestreamStatusService _livestreamStatusService;
+        private readonly IConfigService _configService;
         private readonly Logger _logger;
 
         public RefreshCreatorCommandExecutor(
@@ -29,6 +31,7 @@ namespace Streamarr.Core.Creators.Commands
             IYouTubeApiClient youTubeApiClient,
             ICreatorAvatarService creatorAvatarService,
             ILivestreamStatusService livestreamStatusService,
+            IConfigService configService,
             Logger logger)
         {
             _creatorService = creatorService;
@@ -38,6 +41,7 @@ namespace Streamarr.Core.Creators.Commands
             _youTubeApiClient = youTubeApiClient;
             _creatorAvatarService = creatorAvatarService;
             _livestreamStatusService = livestreamStatusService;
+            _configService = configService;
             _logger = logger;
         }
 
@@ -117,30 +121,36 @@ namespace Streamarr.Core.Creators.Commands
                         continue;
                     }
 
-                    // Content type filter
-                    var typeAllowed = item.ContentType switch
-                    {
-                        ContentType.Video      => channel.DownloadVideos,
-                        ContentType.Short      => channel.DownloadShorts,
-                        ContentType.Livestream => channel.DownloadLivestreams,
-                        _                      => true
-                    };
+                    // Priority keyword bypass: if title matches a priority keyword, skip all filters
+                    var isPriority = MatchesPriorityKeywords(item.Title, channel);
 
-                    if (!typeAllowed)
+                    if (!isPriority)
                     {
-                        continue;
-                    }
+                        // Content type filter
+                        var typeAllowed = item.ContentType switch
+                        {
+                            ContentType.Video      => channel.DownloadVideos,
+                            ContentType.Short      => channel.DownloadShorts,
+                            ContentType.Livestream => channel.DownloadLivestreams,
+                            _                      => true
+                        };
 
-                    // Title keyword filter (OR logic, case-insensitive)
-                    if (!string.IsNullOrWhiteSpace(channel.TitleFilter))
-                    {
-                        var terms = channel.TitleFilter.Split(
-                            new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        var lower = (item.Title ?? string.Empty).ToLowerInvariant();
-
-                        if (!terms.Any(t => lower.Contains(t.ToLowerInvariant())))
+                        if (!typeAllowed)
                         {
                             continue;
+                        }
+
+                        // Title keyword filter (OR logic, case-insensitive)
+                        if (!string.IsNullOrWhiteSpace(channel.TitleFilter))
+                        {
+                            var terms = channel.TitleFilter.Split(
+                                new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            var lower = (item.Title ?? string.Empty).ToLowerInvariant();
+
+                            if (!terms.Any(t => lower.Contains(t.ToLowerInvariant())))
+                            {
+                                continue;
+                            }
                         }
                     }
 
@@ -186,6 +196,23 @@ namespace Streamarr.Core.Creators.Commands
                     _logger.Warn(ex, "Failed to check livestream status for channel '{0}'", channel.Title);
                 }
             }
+        }
+
+        private bool MatchesPriorityKeywords(string title, Channel channel)
+        {
+            var globalKeywords = _configService.GlobalPriorityKeywords ?? string.Empty;
+            var channelKeywords = channel.PriorityFilter ?? string.Empty;
+
+            var combined = string.Join(",", globalKeywords, channelKeywords);
+            var terms = combined.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (terms.Length == 0)
+            {
+                return false;
+            }
+
+            var lower = (title ?? string.Empty).ToLowerInvariant();
+            return terms.Any(t => lower.Contains(t.ToLowerInvariant()));
         }
     }
 }

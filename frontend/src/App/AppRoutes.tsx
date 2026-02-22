@@ -13,6 +13,7 @@ import Settings from 'Settings/Settings';
 import TagSettings from 'Settings/Tags/TagSettings';
 import SourcesPage from 'Settings/Sources/SourcesPage';
 import UISettings from 'Settings/UI/UISettings';
+import ArchivalSettings from 'Settings/Archival/ArchivalSettings';
 import Queue from 'Activity/Queue/Queue';
 import WantedMissing from 'Wanted/WantedMissing';
 import Backups from 'System/Backup/Backups';
@@ -72,6 +73,8 @@ function AppRoutes() {
       <Route path="/settings/sources" component={SourcesPage} />
 
       <Route path="/settings/ui" component={UISettings} />
+
+      <Route path="/settings/archival" component={ArchivalSettings} />
 
       {/*
         Wanted

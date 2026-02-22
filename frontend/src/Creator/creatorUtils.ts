@@ -36,7 +36,7 @@ export function formatDate(dateStr: string | null | undefined): string {
 
 export interface StatusLabel {
   text: string;
-  kind: 'downloaded' | 'downloading' | 'missing' | 'unmonitored' | 'notAired' | 'onAir';
+  kind: 'downloaded' | 'downloading' | 'missing' | 'unmonitored' | 'notAired' | 'onAir' | 'expired' | 'modified';
 }
 
 export function getStatusLabel(content: Content): StatusLabel {
@@ -52,6 +52,14 @@ export function getStatusLabel(content: Content): StatusLabel {
 
   if (content.status === 'downloading') {
     return { text: 'Downloading', kind: 'downloading' };
+  }
+
+  if (content.status === 'expired') {
+    return { text: 'Expired', kind: 'expired' };
+  }
+
+  if (content.status === 'modified') {
+    return { text: 'Modified', kind: 'modified' };
   }
 
   if (content.status === 'downloaded' || content.contentFileId > 0) {

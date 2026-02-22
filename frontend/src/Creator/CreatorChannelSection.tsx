@@ -50,6 +50,8 @@ function statusClass(kind: string): string {
   if (kind === 'missing') return styles.statusMissing;
   if (kind === 'notAired') return styles.statusNotAired;
   if (kind === 'onAir') return styles.statusOnAir;
+  if (kind === 'expired') return styles.statusExpired;
+  if (kind === 'modified') return styles.statusModified;
   return styles.statusUnmonitored;
 }
 
@@ -69,13 +71,19 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
   const [dlShorts, setDlShorts] = useState(channel.downloadShorts);
   const [dlLivestreams, setDlLivestreams] = useState(channel.downloadLivestreams);
   const [titleFilter, setTitleFilter] = useState(channel.titleFilter);
+  const [priorityFilter, setPriorityFilter] = useState(channel.priorityFilter);
+  const [retentionDays, setRetentionDays] = useState<string>(
+    channel.retentionDays != null ? String(channel.retentionDays) : ''
+  );
 
   useEffect(() => {
     setDlVideos(channel.downloadVideos);
     setDlShorts(channel.downloadShorts);
     setDlLivestreams(channel.downloadLivestreams);
     setTitleFilter(channel.titleFilter);
-  }, [channel.downloadVideos, channel.downloadShorts, channel.downloadLivestreams, channel.titleFilter]);
+    setPriorityFilter(channel.priorityFilter);
+    setRetentionDays(channel.retentionDays != null ? String(channel.retentionDays) : '');
+  }, [channel.downloadVideos, channel.downloadShorts, channel.downloadLivestreams, channel.titleFilter, channel.priorityFilter, channel.retentionDays]);
 
   const { updateChannel, isUpdating } = useUpdateChannel(channel.id, channel.creatorId);
   const { deleteChannel } = useDeleteChannel(channel.id, channel.creatorId);
@@ -109,6 +117,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
 
   const handleSaveSettings = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
+    const parsedRetention = retentionDays.trim() === '' ? null : parseInt(retentionDays, 10);
     updateChannel(
       {
         ...channel,
@@ -116,12 +125,14 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
         downloadShorts: dlShorts,
         downloadLivestreams: dlLivestreams,
         titleFilter,
+        priorityFilter,
+        retentionDays: Number.isNaN(parsedRetention as number) ? null : parsedRetention,
       },
       {
         onSuccess: () => setSettingsOpen(false),
       }
     );
-  }, [channel, dlVideos, dlShorts, dlLivestreams, titleFilter, updateChannel]);
+  }, [channel, dlVideos, dlShorts, dlLivestreams, titleFilter, priorityFilter, retentionDays, updateChannel]);
 
   const handleCancelSettings = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -129,6 +140,8 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     setDlShorts(channel.downloadShorts);
     setDlLivestreams(channel.downloadLivestreams);
     setTitleFilter(channel.titleFilter);
+    setPriorityFilter(channel.priorityFilter);
+    setRetentionDays(channel.retentionDays != null ? String(channel.retentionDays) : '');
     setSettingsOpen(false);
   }, [channel]);
 
@@ -219,6 +232,29 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
               placeholder="keyword1, keyword2 (leave empty for all)"
               value={titleFilter}
               onChange={(e) => setTitleFilter(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.settingsRow}>
+            <span className={styles.settingsLabel}>Priority:</span>
+            <input
+              className={styles.filterInput}
+              type="text"
+              placeholder="keyword1, keyword2 (always download regardless of filters)"
+              value={priorityFilter}
+              onChange={(e) => setPriorityFilter(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.settingsRow}>
+            <span className={styles.settingsLabel}>Retention:</span>
+            <input
+              className={styles.filterInput}
+              type="number"
+              min="0"
+              placeholder="days (leave empty to use global default)"
+              value={retentionDays}
+              onChange={(e) => setRetentionDays(e.target.value)}
             />
           </div>
 

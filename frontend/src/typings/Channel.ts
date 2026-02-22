@@ -17,6 +17,8 @@ interface Channel extends ModelBase {
   downloadShorts: boolean;
   downloadLivestreams: boolean;
   titleFilter: string;
+  priorityFilter: string;
+  retentionDays: number | null;
 }
 
 export default Channel;

@@ -261,11 +261,14 @@
 
 .statusBadge {
   display: inline-block;
+  min-width: 90px;
   padding: 2px 8px;
   border-radius: 10px;
   font-size: 0.72rem;
   font-weight: 600;
+  text-align: center;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .statusMissing {

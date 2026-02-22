@@ -162,12 +162,72 @@ namespace Streamarr.Core.Creators.Commands
                     _contentService.AddContents(added);
                 }
 
+                // Re-check AirDateUtc for existing livestreams that haven't aired yet.
+                // Covers items synced before liveStreamingDetails was captured and rescheduled streams.
+                if (channel.Platform == PlatformType.YouTube)
+                {
+                    RefreshUpcomingLivestreamDates(channel);
+                }
+
                 channel.LastInfoSync = DateTime.UtcNow;
                 _channelService.UpdateChannel(channel);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Failed to sync channel '{0}'", channel.Title);
+            }
+        }
+
+        private void RefreshUpcomingLivestreamDates(Channel channel)
+        {
+            var existing = _contentService.GetByChannelId(channel.Id);
+
+            // Livestreams with no air date or a future air date (plus a small window for live-now)
+            var upcoming = existing
+                .Where(c => c.ContentType == ContentType.Livestream &&
+                            (c.AirDateUtc == null || c.AirDateUtc > DateTime.UtcNow.AddHours(-1)))
+                .ToList();
+
+            if (!upcoming.Any())
+            {
+                return;
+            }
+
+            _logger.Debug("Re-fetching air dates for {0} upcoming/unaired livestream(s) in '{1}'", upcoming.Count, channel.Title);
+
+            var videoDetails = _youTubeApiClient.GetVideoDetails(upcoming.Select(c => c.PlatformContentId));
+
+            foreach (var video in videoDetails)
+            {
+                var content = upcoming.FirstOrDefault(c => c.PlatformContentId == video.Id);
+                if (content == null)
+                {
+                    continue;
+                }
+
+                var lsd = video.LiveStreamingDetails;
+                if (lsd == null)
+                {
+                    continue;
+                }
+
+                DateTime? newAirDate = null;
+
+                if (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow)
+                {
+                    newAirDate = lsd.ScheduledStartTime.Value;
+                }
+                else if (lsd.ActualStartTime.HasValue)
+                {
+                    newAirDate = lsd.ActualStartTime.Value;
+                }
+
+                if (newAirDate.HasValue && newAirDate != content.AirDateUtc)
+                {
+                    content.AirDateUtc = newAirDate;
+                    _contentService.UpdateContent(content);
+                    _logger.Debug("Updated AirDateUtc for '{0}' to {1}", content.Title, newAirDate.Value);
+                }
             }
         }
     }

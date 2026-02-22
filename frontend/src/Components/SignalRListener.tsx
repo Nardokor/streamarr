@@ -153,6 +153,33 @@ function SignalRListener() {
       return;
     }
 
+    if (name === 'content') {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          typeof query.queryKey[0] === 'string' &&
+          (query.queryKey[0] as string).startsWith('/content/creator/'),
+      });
+      return;
+    }
+
+    if (name === 'channel') {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          typeof query.queryKey[0] === 'string' &&
+          (query.queryKey[0] as string).startsWith('/channel/creator/'),
+      });
+      return;
+    }
+
+    if (name === 'creator') {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          typeof query.queryKey[0] === 'string' &&
+          (query.queryKey[0] as string).startsWith('/creator'),
+      });
+      return;
+    }
+
     if (name === 'version') {
       setVersion({ version: body.version });
       return;

@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import Alert from 'Components/Alert';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import Menu from 'Components/Menu/Menu';
+import MenuContent from 'Components/Menu/MenuContent';
 import SelectedMenuItem from 'Components/Menu/SelectedMenuItem';
 import SortMenu from 'Components/Menu/SortMenu';
 import SortMenuItem from 'Components/Menu/SortMenuItem';
@@ -165,27 +166,29 @@ function CreatorIndex() {
               text="Filter"
               showIndicator={filterKey !== 'all'}
             />
-            <SelectedMenuItem
-              name="all"
-              isSelected={filterKey === 'all'}
-              onPress={handleFilterChange}
-            >
-              All
-            </SelectedMenuItem>
-            <SelectedMenuItem
-              name="monitored"
-              isSelected={filterKey === 'monitored'}
-              onPress={handleFilterChange}
-            >
-              Monitored
-            </SelectedMenuItem>
-            <SelectedMenuItem
-              name="unmonitored"
-              isSelected={filterKey === 'unmonitored'}
-              onPress={handleFilterChange}
-            >
-              Unmonitored
-            </SelectedMenuItem>
+            <MenuContent>
+              <SelectedMenuItem
+                name="all"
+                isSelected={filterKey === 'all'}
+                onPress={handleFilterChange}
+              >
+                All
+              </SelectedMenuItem>
+              <SelectedMenuItem
+                name="monitored"
+                isSelected={filterKey === 'monitored'}
+                onPress={handleFilterChange}
+              >
+                Monitored
+              </SelectedMenuItem>
+              <SelectedMenuItem
+                name="unmonitored"
+                isSelected={filterKey === 'unmonitored'}
+                onPress={handleFilterChange}
+              >
+                Unmonitored
+              </SelectedMenuItem>
+            </MenuContent>
           </Menu>
         </PageToolbarSection>
       </PageToolbar>

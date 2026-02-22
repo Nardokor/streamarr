@@ -1,5 +1,6 @@
 import React from 'react';
 import Menu from 'Components/Menu/Menu';
+import MenuContent from 'Components/Menu/MenuContent';
 import ToolbarMenuButton, {
   ToolbarMenuButtonProps,
 } from 'Components/Menu/ToolbarMenuButton';
@@ -24,7 +25,9 @@ function ViewMenu({
         text={translate('View')}
         isDisabled={isDisabled}
       />
-      {children}
+      <MenuContent>
+        {children}
+      </MenuContent>
     </Menu>
   );
 }

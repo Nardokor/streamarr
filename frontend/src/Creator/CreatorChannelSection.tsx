@@ -72,6 +72,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
   const [dlVideos, setDlVideos] = useState(channel.downloadVideos);
   const [dlShorts, setDlShorts] = useState(channel.downloadShorts);
   const [dlLivestreams, setDlLivestreams] = useState(channel.downloadLivestreams);
+  const [recordLiveOnly, setRecordLiveOnly] = useState(channel.recordLiveOnly);
   const [titleFilter, setTitleFilter] = useState(channel.titleFilter);
   const [priorityFilter, setPriorityFilter] = useState(channel.priorityFilter);
   const [retentionDays, setRetentionDays] = useState<string>(
@@ -82,10 +83,11 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     setDlVideos(channel.downloadVideos);
     setDlShorts(channel.downloadShorts);
     setDlLivestreams(channel.downloadLivestreams);
+    setRecordLiveOnly(channel.recordLiveOnly);
     setTitleFilter(channel.titleFilter);
     setPriorityFilter(channel.priorityFilter);
     setRetentionDays(channel.retentionDays != null ? String(channel.retentionDays) : '');
-  }, [channel.downloadVideos, channel.downloadShorts, channel.downloadLivestreams, channel.titleFilter, channel.priorityFilter, channel.retentionDays]);
+  }, [channel.downloadVideos, channel.downloadShorts, channel.downloadLivestreams, channel.recordLiveOnly, channel.titleFilter, channel.priorityFilter, channel.retentionDays]);
 
   const { updateChannel, isUpdating } = useUpdateChannel(channel.id, channel.creatorId);
   const { deleteChannel } = useDeleteChannel(channel.id, channel.creatorId);
@@ -135,6 +137,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
         downloadVideos: dlVideos,
         downloadShorts: dlShorts,
         downloadLivestreams: dlLivestreams,
+        recordLiveOnly,
         titleFilter,
         priorityFilter,
         retentionDays: Number.isNaN(parsedRetention as number) ? null : parsedRetention,
@@ -143,13 +146,14 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
         onSuccess: () => setSettingsOpen(false),
       }
     );
-  }, [channel, dlVideos, dlShorts, dlLivestreams, titleFilter, priorityFilter, retentionDays, updateChannel]);
+  }, [channel, dlVideos, dlShorts, dlLivestreams, recordLiveOnly, titleFilter, priorityFilter, retentionDays, updateChannel]);
 
   const handleCancelSettings = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     setDlVideos(channel.downloadVideos);
     setDlShorts(channel.downloadShorts);
     setDlLivestreams(channel.downloadLivestreams);
+    setRecordLiveOnly(channel.recordLiveOnly);
     setTitleFilter(channel.titleFilter);
     setPriorityFilter(channel.priorityFilter);
     setRetentionDays(channel.retentionDays != null ? String(channel.retentionDays) : '');
@@ -242,6 +246,15 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                 onChange={(e) => setDlLivestreams(e.target.checked)}
               />
               {' '}Live streams
+            </label>
+
+            <label className={styles.checkLabel}>
+              <input
+                type="checkbox"
+                checked={recordLiveOnly}
+                onChange={(e) => setRecordLiveOnly(e.target.checked)}
+              />
+              {' '}Record live only
             </label>
           </div>
 

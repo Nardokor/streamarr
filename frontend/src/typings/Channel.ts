@@ -16,6 +16,7 @@ interface Channel extends ModelBase {
   downloadVideos: boolean;
   downloadShorts: boolean;
   downloadLivestreams: boolean;
+  recordLiveOnly: boolean;
   titleFilter: string;
   priorityFilter: string;
   retentionDays: number | null;

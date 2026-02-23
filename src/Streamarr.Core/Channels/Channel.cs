@@ -28,6 +28,7 @@ namespace Streamarr.Core.Channels
         public bool DownloadVideos { get; set; } = true;
         public bool DownloadShorts { get; set; } = true;
         public bool DownloadLivestreams { get; set; } = true;
+        public bool RecordLiveOnly { get; set; }
         public string TitleFilter { get; set; } = string.Empty;
 
         // Archival

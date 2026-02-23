@@ -3,6 +3,8 @@ using System.Linq;
 using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
+using Streamarr.Core.Download;
+using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.MetadataSource.YouTube;
 
 namespace Streamarr.Core.Creators
@@ -16,15 +18,18 @@ namespace Streamarr.Core.Creators
     {
         private readonly IContentService _contentService;
         private readonly IYouTubeApiClient _youTubeApiClient;
+        private readonly IManageCommandQueue _commandQueueManager;
         private readonly Logger _logger;
 
         public LivestreamStatusService(
             IContentService contentService,
             IYouTubeApiClient youTubeApiClient,
+            IManageCommandQueue commandQueueManager,
             Logger logger)
         {
             _contentService = contentService;
             _youTubeApiClient = youTubeApiClient;
+            _commandQueueManager = commandQueueManager;
             _logger = logger;
         }
 
@@ -77,13 +82,32 @@ namespace Streamarr.Core.Creators
                     // Stream has started but not ended — currently live
                     newAirDate = lsd.ActualStartTime.Value;
                     newStatus = ContentStatus.Live;
+
+                    // If RecordLiveOnly: queue a download to capture the stream as it airs
+                    if (channel.RecordLiveOnly && content.Status != ContentStatus.Live)
+                    {
+                        _logger.Debug(
+                            "Queuing live recording for '{0}' (RecordLiveOnly)",
+                            content.Title);
+
+                        _commandQueueManager.Push(new DownloadContentCommand { ContentId = content.Id });
+                    }
                 }
                 else if (lsd.ActualStartTime.HasValue)
                 {
-                    // Stream has ended — revert to missing so it can be downloaded
+                    // Stream has ended
                     newAirDate = lsd.ActualStartTime.Value;
-                    if (content.Status == ContentStatus.Live)
+
+                    if (channel.RecordLiveOnly)
                     {
+                        // RecordLiveOnly: don't transition to Missing — the archive VOD is ignored
+                        _logger.Debug(
+                            "Stream '{0}' ended; skipping archive download (RecordLiveOnly)",
+                            content.Title);
+                    }
+                    else if (content.Status == ContentStatus.Live)
+                    {
+                        // Normal mode: revert to Missing so the archive VOD can be downloaded
                         newStatus = ContentStatus.Missing;
                     }
                 }

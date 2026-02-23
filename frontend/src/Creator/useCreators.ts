@@ -142,6 +142,23 @@ export const useDeleteChannel = (id: number, creatorId: number) => {
   return { deleteChannel: mutate, isDeleting: isPending, deleteError: error };
 };
 
+export const useUpdateCreator = (id: number) => {
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending, error } = useApiMutation<number, Partial<Creator>>({
+    path: `${CREATORS_PATH}/${id}`,
+    method: 'PUT',
+    mutationOptions: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [CREATORS_PATH] });
+        queryClient.invalidateQueries({ queryKey: [`${CREATORS_PATH}/${id}`] });
+      },
+    },
+  });
+
+  return { updateCreator: mutate, isUpdating: isPending, updateError: error };
+};
+
 export const useDeleteCreator = (id: number) => {
   const queryClient = useQueryClient();
 

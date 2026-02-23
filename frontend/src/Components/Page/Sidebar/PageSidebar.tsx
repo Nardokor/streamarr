@@ -80,6 +80,10 @@ const LINKS: SidebarItem[] = [
         title: 'Queue',
         to: '/activity/queue',
       },
+      {
+        title: 'History',
+        to: '/activity/history',
+      },
     ],
   },
 
@@ -119,6 +123,10 @@ const LINKS: SidebarItem[] = [
       {
         title: 'Archival',
         to: '/settings/archival',
+      },
+      {
+        title: 'Download Client',
+        to: '/settings/downloadclient',
       },
     ],
   },

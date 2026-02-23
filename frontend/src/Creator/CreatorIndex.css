@@ -3,3 +3,40 @@
   flex-wrap: wrap;
   padding: 8px;
 }
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.searchInput {
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--borderColor, #555);
+  border-radius: 4px;
+  background: var(--inputBackground, #2a2a2a);
+  color: var(--textColor, #eee);
+  font-size: 0.85rem;
+  width: 180px;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--colorPrimary, #3498db);
+}
+
+.clearBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--textSecondary, #888);
+  font-size: 0.9rem;
+  padding: 0 2px;
+  line-height: 1;
+}
+
+.clearBtn:hover {
+  color: var(--textColor, #eee);
+}

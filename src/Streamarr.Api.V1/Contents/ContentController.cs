@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
+using Streamarr.Core.ContentFiles;
 using Streamarr.Http;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
@@ -13,19 +14,31 @@ public class ContentController : RestControllerWithSignalR<ContentResource, Cont
 {
     private readonly IContentService _contentService;
     private readonly IChannelService _channelService;
+    private readonly IContentFileService _contentFileService;
 
     public ContentController(IContentService contentService,
                              IChannelService channelService,
+                             IContentFileService contentFileService,
                              IBroadcastSignalRMessage signalRBroadcaster)
         : base(signalRBroadcaster)
     {
         _contentService = contentService;
         _channelService = channelService;
+        _contentFileService = contentFileService;
     }
 
     protected override ContentResource GetResourceById(int id)
     {
-        return _contentService.GetContent(id).ToResource();
+        var resource = _contentService.GetContent(id).ToResource();
+
+        if (resource.ContentFileId > 0)
+        {
+            var file = _contentFileService.GetContentFile(resource.ContentFileId);
+            resource.FileRelativePath = file?.RelativePath;
+            resource.FileSize = file?.Size;
+        }
+
+        return resource;
     }
 
     [HttpGet("channel/{channelId:int}")]

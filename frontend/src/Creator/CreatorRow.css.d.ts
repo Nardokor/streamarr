@@ -3,10 +3,6 @@
 interface CssExports {
   'actions': string;
   'monitor': string;
-  'monitorAll': string;
-  'monitorBadge': string;
-  'monitorFilter': string;
-  'monitorNone': string;
   'nextLive': string;
   'progress': string;
   'progressBar': string;

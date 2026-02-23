@@ -44,6 +44,15 @@ namespace Streamarr.Core.Configuration
         int YouTubeFullRefreshIntervalHours { get; set; }
         int YouTubeLiveCheckIntervalMinutes { get; set; }
 
+        // Download Client (yt-dlp)
+        string YtDlpBinaryPath { get; set; }
+        string YtDlpTempDownloadFolder { get; set; }
+        string YtDlpCookieFilePath { get; set; }
+        bool YtDlpEmbedMetadata { get; set; }
+        bool YtDlpEmbedThumbnail { get; set; }
+        string YtDlpPreferredFormat { get; set; }
+        int YtDlpMaxConcurrentDownloads { get; set; }
+
         // Internal
         bool CleanupMetadataImages { get; set; }
         string PlexClientIdentifier { get; }

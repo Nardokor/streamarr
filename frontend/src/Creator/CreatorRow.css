@@ -19,32 +19,7 @@
 }
 
 .monitor {
-  width: 70px;
-}
-
-.monitorBadge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.monitorAll {
-  background: var(--colorSuccess, #2ecc71);
-  color: white;
-}
-
-.monitorFilter {
-  background: var(--colorWarning, #f39c12);
-  color: white;
-}
-
-.monitorNone {
-  background: var(--textSecondary, #666);
-  color: white;
+  width: 36px;
 }
 
 .title {

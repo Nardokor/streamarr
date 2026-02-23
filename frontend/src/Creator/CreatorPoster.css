@@ -68,17 +68,9 @@
   color: var(--textSecondary, #888);
 }
 
-.monitoredDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.monitoredDotOn {
-  background: var(--colorSuccess, #2ecc71);
-}
-
-.monitoredDotOff {
-  background: var(--textSecondary, #888);
+.monitorToggle {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  z-index: 2;
 }

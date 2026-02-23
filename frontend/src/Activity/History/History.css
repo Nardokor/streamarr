@@ -1,0 +1,45 @@
+.empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--textSecondary, #888);
+}
+
+.date {
+  width: 160px;
+  white-space: nowrap;
+  color: var(--textSecondary, #888);
+  font-size: 0.85rem;
+}
+
+.eventBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: var(--borderColor, #444);
+  color: white;
+}
+
+.eventDownloaded {
+  background: var(--colorSuccess, #2ecc71);
+}
+
+.eventFailed {
+  background: var(--colorDanger, #e74c3c);
+}
+
+.eventDeleted {
+  background: var(--textSecondary, #666);
+}
+
+.detail {
+  font-size: 0.85rem;
+  color: var(--textSecondary, #888);
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

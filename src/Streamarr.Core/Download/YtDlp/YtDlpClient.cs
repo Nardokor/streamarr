@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using NLog;
 using Streamarr.Common.Disk;
 using Streamarr.Common.Processes;
+using Streamarr.Core.Configuration;
 
 namespace Streamarr.Core.Download.YtDlp
 {
@@ -48,16 +49,28 @@ namespace Streamarr.Core.Download.YtDlp
 
         private readonly IProcessProvider _processProvider;
         private readonly IDiskProvider _diskProvider;
-        private readonly YtDlpSettings _settings;
+        private readonly IConfigService _configService;
         private readonly Logger _logger;
+
+        private YtDlpSettings Settings => new YtDlpSettings
+        {
+            BinaryPath = _configService.YtDlpBinaryPath,
+            TempDownloadFolder = _configService.YtDlpTempDownloadFolder,
+            CookieFilePath = _configService.YtDlpCookieFilePath,
+            EmbedMetadata = _configService.YtDlpEmbedMetadata,
+            EmbedThumbnail = _configService.YtDlpEmbedThumbnail,
+            PreferredFormat = _configService.YtDlpPreferredFormat,
+            MaxConcurrentDownloads = _configService.YtDlpMaxConcurrentDownloads,
+        };
 
         public YtDlpClient(IProcessProvider processProvider,
                            IDiskProvider diskProvider,
+                           IConfigService configService,
                            Logger logger)
         {
             _processProvider = processProvider;
             _diskProvider = diskProvider;
-            _settings = new YtDlpSettings();
+            _configService = configService;
             _logger = logger;
         }
 
@@ -76,7 +89,7 @@ namespace Streamarr.Core.Download.YtDlp
 
         public string GetVersion()
         {
-            var output = _processProvider.StartAndCapture(_settings.BinaryPath, "--version");
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, "--version");
 
             if (output.ExitCode != 0)
             {
@@ -91,7 +104,7 @@ namespace Streamarr.Core.Download.YtDlp
             _logger.Debug("Getting video info: {0}", videoUrl);
 
             var args = BuildMetadataArgs(videoUrl);
-            var output = _processProvider.StartAndCapture(_settings.BinaryPath, args);
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args);
 
             if (output.ExitCode != 0)
             {
@@ -109,7 +122,7 @@ namespace Streamarr.Core.Download.YtDlp
             _logger.Debug("Getting channel info: {0}", channelUrl);
 
             var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1 {Quote(channelUrl)}";
-            var output = _processProvider.StartAndCapture(_settings.BinaryPath, args);
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args);
 
             if (output.ExitCode != 0)
             {
@@ -182,7 +195,7 @@ namespace Streamarr.Core.Download.YtDlp
             argParts.Add(Quote(url));
 
             var args = string.Join(" ", argParts);
-            var output = _processProvider.StartAndCapture(_settings.BinaryPath, args);
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args);
 
             if (output.ExitCode != 0)
             {
@@ -231,7 +244,7 @@ namespace Streamarr.Core.Download.YtDlp
             _logger.Debug("yt-dlp args: {0}", args);
 
             var process = _processProvider.Start(
-                _settings.BinaryPath,
+                Settings.BinaryPath,
                 args,
                 null,
                 line =>
@@ -317,24 +330,24 @@ namespace Streamarr.Core.Download.YtDlp
             {
                 "--newline",
                 "--no-playlist",
-                "-f", Quote(_settings.PreferredFormat),
+                "-f", Quote(Settings.PreferredFormat),
                 "-o", Quote(Path.Combine(outputPath, "%(title)s [%(id)s].%(ext)s"))
             };
 
-            if (_settings.EmbedMetadata)
+            if (Settings.EmbedMetadata)
             {
                 args.Add("--embed-metadata");
             }
 
-            if (_settings.EmbedThumbnail)
+            if (Settings.EmbedThumbnail)
             {
                 args.Add("--embed-thumbnail");
             }
 
-            if (!string.IsNullOrWhiteSpace(_settings.CookieFilePath))
+            if (!string.IsNullOrWhiteSpace(Settings.CookieFilePath))
             {
                 args.Add("--cookies");
-                args.Add(Quote(_settings.CookieFilePath));
+                args.Add(Quote(Settings.CookieFilePath));
             }
 
             args.Add(Quote(url));

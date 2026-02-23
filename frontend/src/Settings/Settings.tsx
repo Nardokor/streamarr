@@ -71,6 +71,14 @@ function Settings() {
         <div className={styles.summary}>
           Configure priority keywords and default retention policies for downloaded content.
         </div>
+
+        <Link className={styles.link} to="/settings/downloadclient">
+          Download Client
+        </Link>
+
+        <div className={styles.summary}>
+          Configure yt-dlp path, format, concurrency, and other download settings.
+        </div>
       </PageContentBody>
     </PageContent>
   );

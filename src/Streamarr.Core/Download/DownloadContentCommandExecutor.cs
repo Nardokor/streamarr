@@ -7,7 +7,9 @@ using Streamarr.Core.Content;
 using Streamarr.Core.ContentFiles;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Download.YtDlp;
+using Streamarr.Core.History;
 using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Qualities;
 
 namespace Streamarr.Core.Download
 {
@@ -18,6 +20,7 @@ namespace Streamarr.Core.Download
         private readonly ICreatorService _creatorService;
         private readonly IContentFileService _contentFileService;
         private readonly IYtDlpClient _ytDlpClient;
+        private readonly IDownloadHistoryService _historyService;
         private readonly Logger _logger;
 
         public DownloadContentCommandExecutor(IContentService contentService,
@@ -25,6 +28,7 @@ namespace Streamarr.Core.Download
                                               ICreatorService creatorService,
                                               IContentFileService contentFileService,
                                               IYtDlpClient ytDlpClient,
+                                              IDownloadHistoryService historyService,
                                               Logger logger)
         {
             _contentService = contentService;
@@ -32,6 +36,7 @@ namespace Streamarr.Core.Download
             _creatorService = creatorService;
             _contentFileService = contentFileService;
             _ytDlpClient = ytDlpClient;
+            _historyService = historyService;
             _logger = logger;
         }
 
@@ -77,12 +82,29 @@ namespace Streamarr.Core.Download
                     content.Status = ContentStatus.Downloaded;
                     _contentService.UpdateContent(content);
 
+                    _historyService.Record(
+                        content.Id,
+                        channel.Id,
+                        creator.Id,
+                        content.Title,
+                        new QualityModel(),
+                        DownloadHistoryEventType.Downloaded);
+
                     _logger.Info("Successfully downloaded '{0}' ({1} bytes)", content.Title, result.FileSize);
                 }
                 else
                 {
                     content.Status = ContentStatus.Missing;
                     _contentService.UpdateContent(content);
+
+                    _historyService.Record(
+                        content.Id,
+                        channel.Id,
+                        creator.Id,
+                        content.Title,
+                        new QualityModel(),
+                        DownloadHistoryEventType.DownloadFailed,
+                        result.ErrorMessage);
 
                     _logger.Error("Failed to download '{0}': {1} (exit code {2})", content.Title, result.ErrorMessage, result.ExitCode);
                 }
@@ -91,6 +113,15 @@ namespace Streamarr.Core.Download
             {
                 content.Status = ContentStatus.Missing;
                 _contentService.UpdateContent(content);
+
+                _historyService.Record(
+                    content.Id,
+                    channel.Id,
+                    creator.Id,
+                    content.Title,
+                    new QualityModel(),
+                    DownloadHistoryEventType.DownloadFailed,
+                    ex.Message);
 
                 _logger.Error(ex, "Exception downloading '{0}'", content.Title);
                 throw;

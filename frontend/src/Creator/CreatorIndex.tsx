@@ -74,6 +74,7 @@ function CreatorIndex() {
   const [sortKey, setSortKey] = useState<SortKey>('title');
   const [sortDirection, setSortDirection] = useState<SortDirection>('ascending');
   const [filterKey, setFilterKey] = useState<FilterKey>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleViewChange = useCallback((v: string) => {
     const mode = v as ViewMode;
@@ -108,8 +109,12 @@ function CreatorIndex() {
     } else if (filterKey === 'unmonitored') {
       list = list.filter((c) => !c.monitored);
     }
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      list = list.filter((c) => c.title.toLowerCase().includes(q));
+    }
     return sortCreators(list, sortKey, sortDirection);
-  }, [creators, filterKey, sortKey, sortDirection]);
+  }, [creators, filterKey, searchQuery, sortKey, sortDirection]);
 
   const noCreators = !creators.length && !isLoading && !error;
 
@@ -117,6 +122,25 @@ function CreatorIndex() {
     <PageContent title="Creators">
       <PageToolbar>
         <PageToolbarSection>
+          <div className={styles.searchWrapper}>
+            <input
+              className={styles.searchInput}
+              type="text"
+              placeholder="Search creators…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery ? (
+              <button
+                className={styles.clearBtn}
+                type="button"
+                onClick={() => setSearchQuery('')}
+              >
+                ✕
+              </button>
+            ) : null}
+          </div>
+
           <ViewMenu>
             <ViewMenuItem
               name="poster"

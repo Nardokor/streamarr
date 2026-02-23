@@ -8,6 +8,8 @@ namespace Streamarr.Core.Datastore.Migration
     {
         protected override void MainDbUpgrade()
         {
+            Delete.Table("DownloadHistory");
+
             Create.TableForModel("DownloadHistory")
                   .WithColumn("ContentId").AsInt32().NotNullable()
                   .WithColumn("ChannelId").AsInt32().NotNullable()

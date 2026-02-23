@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import ContentDetailModal from './ContentDetailModal';
 import Icon from 'Components/Icon';
 import IconButton from 'Components/Link/IconButton';
 import Column from 'Components/Table/Column';
@@ -7,7 +8,7 @@ import TableBody from 'Components/Table/TableBody';
 import TableRow from 'Components/Table/TableRow';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import CommandNames from 'Commands/CommandNames';
-import { useExecuteCommand } from 'Commands/useCommands';
+import { useCommandExecuting, useExecuteCommand } from 'Commands/useCommands';
 import { icons } from 'Helpers/Props';
 import Channel from 'typings/Channel';
 import Content from 'typings/Content';
@@ -66,6 +67,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
   const [expanded, setExpanded] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [selectedContentId, setSelectedContentId] = useState<number | null>(null);
 
   const [dlVideos, setDlVideos] = useState(channel.downloadVideos);
   const [dlShorts, setDlShorts] = useState(channel.downloadShorts);
@@ -88,6 +90,15 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
   const { updateChannel, isUpdating } = useUpdateChannel(channel.id, channel.creatorId);
   const { deleteChannel } = useDeleteChannel(channel.id, channel.creatorId);
   const executeCommand = useExecuteCommand();
+  const isRefreshing = useCommandExecuting(CommandNames.RefreshCreator, { creatorId: channel.creatorId });
+
+  const handleRefreshChannel = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      executeCommand({ name: CommandNames.RefreshCreator, creatorId: channel.creatorId });
+    },
+    [executeCommand, channel.creatorId]
+  );
 
   const handleToggle = useCallback(() => {
     setExpanded((prev) => !prev);
@@ -155,6 +166,16 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
         <span className={styles.channelTitle}>{channel.title}</span>
 
         <span className={styles.headerActions} onClick={(e) => e.stopPropagation()}>
+          <button
+            className={styles.iconBtn}
+            onClick={handleRefreshChannel}
+            title="Refresh channel"
+            type="button"
+            disabled={isRefreshing}
+          >
+            <Icon name={icons.REFRESH} size={12} />
+          </button>
+
           {deleteConfirm ? (
             <span className={styles.deleteConfirm}>
               <span className={styles.deletePrompt}>Remove channel?</span>
@@ -306,7 +327,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                       status.kind !== 'notAired';
 
                     return (
-                      <TableRow key={item.id}>
+                      <TableRow key={item.id} onClick={() => setSelectedContentId(item.id)} style={{ cursor: 'pointer' }}>
                         <TableRowCell className={styles.contentThumbnail}>
                           {item.thumbnailUrl ? (
                             <img
@@ -373,6 +394,12 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
           )}
         </div>
       ) : null}
+
+      <ContentDetailModal
+        contentId={selectedContentId}
+        channelPlatform={channel.platform}
+        onClose={() => setSelectedContentId(null)}
+      />
     </div>
   );
 }

@@ -4,9 +4,7 @@ interface CssExports {
   'card': string;
   'info': string;
   'meta': string;
-  'monitoredDot': string;
-  'monitoredDotOff': string;
-  'monitoredDotOn': string;
+  'monitorToggle': string;
   'thumbnail': string;
   'thumbnailContainer': string;
   'thumbnailPlaceholder': string;

@@ -213,6 +213,48 @@ namespace Streamarr.Core.Configuration
             set { SetValue("YouTubeApiKey", value); }
         }
 
+        public string YtDlpBinaryPath
+        {
+            get { return GetValue("YtDlpBinaryPath", "yt-dlp"); }
+            set { SetValue("YtDlpBinaryPath", value); }
+        }
+
+        public string YtDlpTempDownloadFolder
+        {
+            get { return GetValue("YtDlpTempDownloadFolder", string.Empty); }
+            set { SetValue("YtDlpTempDownloadFolder", value); }
+        }
+
+        public string YtDlpCookieFilePath
+        {
+            get { return GetValue("YtDlpCookieFilePath", string.Empty); }
+            set { SetValue("YtDlpCookieFilePath", value); }
+        }
+
+        public bool YtDlpEmbedMetadata
+        {
+            get { return GetValueBoolean("YtDlpEmbedMetadata", true); }
+            set { SetValue("YtDlpEmbedMetadata", value); }
+        }
+
+        public bool YtDlpEmbedThumbnail
+        {
+            get { return GetValueBoolean("YtDlpEmbedThumbnail", true); }
+            set { SetValue("YtDlpEmbedThumbnail", value); }
+        }
+
+        public string YtDlpPreferredFormat
+        {
+            get { return GetValue("YtDlpPreferredFormat", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"); }
+            set { SetValue("YtDlpPreferredFormat", value); }
+        }
+
+        public int YtDlpMaxConcurrentDownloads
+        {
+            get { return GetValueInt("YtDlpMaxConcurrentDownloads", 1); }
+            set { SetValue("YtDlpMaxConcurrentDownloads", value); }
+        }
+
         public int YouTubeFullRefreshIntervalHours
         {
             get { return GetValueInt("YouTubeFullRefreshIntervalHours", 24); }

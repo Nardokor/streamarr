@@ -17,6 +17,10 @@ public class ContentResource : RestResource
     public DateTime DateAdded { get; set; }
     public bool Monitored { get; set; }
     public ContentStatus Status { get; set; }
+
+    // Populated only on single-item requests (no N+1 for lists)
+    public string? FileRelativePath { get; set; }
+    public long? FileSize { get; set; }
 }
 
 public static class ContentResourceMapper

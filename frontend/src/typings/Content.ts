@@ -16,6 +16,9 @@ interface Content extends ModelBase {
   dateAdded: string;
   monitored: boolean;
   status: ContentStatus;
+  // Populated only on single-item fetch
+  fileRelativePath?: string | null;
+  fileSize?: number | null;
 }
 
 export default Content;

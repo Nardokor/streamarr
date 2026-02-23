@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import MonitorToggleButton from 'Components/MonitorToggleButton';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
@@ -8,7 +9,7 @@ import { useCommandExecuting, useExecuteCommand } from 'Commands/useCommands';
 import { icons } from 'Helpers/Props';
 import Creator from 'typings/Creator';
 import { formatDate, getNextLiveDate } from './creatorUtils';
-import { useCreatorChannels, useCreatorContent } from './useCreators';
+import { useCreatorContent, useUpdateCreator } from './useCreators';
 import styles from './CreatorRow.css';
 
 interface CreatorRowProps {
@@ -18,15 +19,19 @@ interface CreatorRowProps {
 function CreatorRow({ creator }: CreatorRowProps) {
   const { id, title, monitored } = creator;
 
-  const { data: channels } = useCreatorChannels(id);
   const { data: content } = useCreatorContent(id);
 
   const executeCommand = useExecuteCommand();
   const isRefreshing = useCommandExecuting(CommandNames.RefreshCreator, { creatorId: id });
   const isDownloading = useCommandExecuting(CommandNames.DownloadMissingContent, { creatorId: id });
+  const { updateCreator, isUpdating } = useUpdateCreator(id);
 
-  const hasFilter = channels.some((ch) => ch.titleFilter && ch.titleFilter.trim() !== '');
-  const monitorType = !monitored ? 'None' : hasFilter ? 'Filter' : 'All';
+  const handleMonitorToggle = useCallback(
+    (value: boolean) => {
+      updateCreator({ ...creator, monitored: value });
+    },
+    [creator, updateCreator]
+  );
 
   const downloaded = content.filter(
     (c) => c.contentFileId > 0 || c.status === 'downloaded'
@@ -43,13 +48,6 @@ function CreatorRow({ creator }: CreatorRowProps) {
     executeCommand({ name: CommandNames.DownloadMissingContent, creatorId: id });
   }, [executeCommand, id]);
 
-  const monitorClass =
-    monitorType === 'All'
-      ? styles.monitorAll
-      : monitorType === 'Filter'
-      ? styles.monitorFilter
-      : styles.monitorNone;
-
   return (
     <TableRow>
       <TableRowCell className={styles.thumbnail}>
@@ -65,9 +63,11 @@ function CreatorRow({ creator }: CreatorRowProps) {
       </TableRowCell>
 
       <TableRowCell className={styles.monitor}>
-        <span className={`${styles.monitorBadge} ${monitorClass}`}>
-          {monitorType}
-        </span>
+        <MonitorToggleButton
+          monitored={monitored}
+          isSaving={isUpdating}
+          onPress={handleMonitorToggle}
+        />
       </TableRowCell>
 
       <TableRowCell>

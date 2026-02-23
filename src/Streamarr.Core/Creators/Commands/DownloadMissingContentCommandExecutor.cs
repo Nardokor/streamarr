@@ -52,6 +52,7 @@ namespace Streamarr.Core.Creators.Commands
             {
                 var missing = _contentService.GetMissingContent(channel.Id)
                     .Where(c => c.Monitored)
+                    .Where(c => !channel.RecordLiveOnly || c.ContentType != ContentType.Livestream)
                     .Select(c => new DownloadContentCommand { ContentId = c.Id });
 
                 downloadCommands.AddRange(missing);

@@ -40,6 +40,9 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
     public class YoutubeVideoSnippet
     {
+        public string ChannelId { get; set; }
+        public string ChannelTitle { get; set; }
+        public string PublishedAt { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public YoutubeVideoThumbnails Thumbnails { get; set; }

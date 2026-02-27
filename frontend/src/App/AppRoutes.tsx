@@ -15,6 +15,7 @@ import SourcesPage from 'Settings/Sources/SourcesPage';
 import UISettings from 'Settings/UI/UISettings';
 import ArchivalSettings from 'Settings/Archival/ArchivalSettings';
 import DownloadClientSettings from 'Settings/DownloadClient/DownloadClientSettings';
+import ImportSettings from 'Settings/Import/ImportSettings';
 import History from 'Activity/History/History';
 import Queue from 'Activity/Queue/Queue';
 import WantedMissing from 'Wanted/WantedMissing';
@@ -79,6 +80,8 @@ function AppRoutes() {
       <Route path="/settings/archival" component={ArchivalSettings} />
 
       <Route path="/settings/downloadclient" component={DownloadClientSettings} />
+
+      <Route path="/settings/import" component={ImportSettings} />
 
       {/*
         Wanted

@@ -14,6 +14,7 @@ using Streamarr.Core.Instrumentation;
 using Streamarr.Core.Jobs;
 using Streamarr.Core.Languages;
 using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Notifications;
 using Streamarr.Core.Organizer;
 using Streamarr.Core.Profiles.Qualities;
 using Streamarr.Core.Qualities;
@@ -86,6 +87,11 @@ namespace Streamarr.Core.Datastore
 
             Mapper.Entity<ContentFile>("ContentFiles").RegisterModel()
                   .Ignore(cf => cf.Content);
+
+            Mapper.Entity<NotificationDefinition>("Notifications").RegisterModel()
+                  .Ignore(d => d.ImplementationName)
+                  .Ignore(d => d.Message)
+                  .Ignore(d => d.SupportsOnDownload);
         }
 
         private static void RegisterMappers()

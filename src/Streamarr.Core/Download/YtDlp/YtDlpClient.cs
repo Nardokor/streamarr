@@ -237,7 +237,9 @@ namespace Streamarr.Core.Download.YtDlp
             _diskProvider.EnsureFolder(outputPath);
 
             var args = BuildDownloadArgs(url, outputPath, isLive);
-            var outputFile = string.Empty;
+            var mergedFile = string.Empty;
+            var fragmentFiles = new List<string>();
+            var alreadyDownloadedFile = string.Empty;
             var errors = new List<string>();
 
             _logger.Info("Starting yt-dlp download: {0}", url);
@@ -259,19 +261,23 @@ namespace Streamarr.Core.Download.YtDlp
                     var dlMatch = DownloadDestinationRegex.Match(line);
                     if (dlMatch.Success)
                     {
-                        outputFile = dlMatch.Groups[1].Value.Trim();
+                        var dest = dlMatch.Groups[1].Value.Trim();
+                        if (!fragmentFiles.Contains(dest))
+                        {
+                            fragmentFiles.Add(dest);
+                        }
                     }
 
                     var mergeMatch = MergerDestinationRegex.Match(line);
                     if (mergeMatch.Success)
                     {
-                        outputFile = mergeMatch.Groups[1].Value.Trim();
+                        mergedFile = mergeMatch.Groups[1].Value.Trim();
                     }
 
                     var alreadyMatch = AlreadyDownloadedRegex.Match(line);
                     if (alreadyMatch.Success)
                     {
-                        outputFile = alreadyMatch.Groups[1].Value.Trim();
+                        alreadyDownloadedFile = alreadyMatch.Groups[1].Value.Trim();
                     }
 
                     if (onProgress != null)
@@ -294,6 +300,11 @@ namespace Streamarr.Core.Download.YtDlp
 
             _processProvider.WaitForExit(process);
 
+            // Determine the final output file: merged > already-downloaded > last fragment
+            var outputFile = !string.IsNullOrEmpty(mergedFile) ? mergedFile
+                           : !string.IsNullOrEmpty(alreadyDownloadedFile) ? alreadyDownloadedFile
+                           : fragmentFiles.LastOrDefault() ?? string.Empty;
+
             var exitCode = process.ExitCode;
             var success = exitCode == 0 && !string.IsNullOrEmpty(outputFile);
             long fileSize = 0;
@@ -302,6 +313,12 @@ namespace Streamarr.Core.Download.YtDlp
             {
                 fileSize = _diskProvider.GetFileSize(outputFile);
                 _logger.Info("Download complete: {0} ({1} bytes)", outputFile, fileSize);
+
+                // For live recordings with -k, validate the merge and clean up fragments
+                if (isLive && !string.IsNullOrEmpty(mergedFile) && fragmentFiles.Count > 0)
+                {
+                    CleanUpLiveFragments(mergedFile, fragmentFiles, fileSize);
+                }
             }
             else if (exitCode == 0 && string.IsNullOrEmpty(outputFile))
             {
@@ -317,6 +334,46 @@ namespace Streamarr.Core.Download.YtDlp
                 ExitCode = exitCode,
                 ErrorMessage = success ? string.Empty : string.Join(Environment.NewLine, errors)
             };
+        }
+
+        private void CleanUpLiveFragments(string mergedFile, List<string> fragmentFiles, long mergedSize)
+        {
+            var fragmentTotal = fragmentFiles
+                .Where(f => _diskProvider.FileExists(f))
+                .Sum(f => _diskProvider.GetFileSize(f));
+
+            if (fragmentTotal == 0)
+            {
+                _logger.Debug("No fragment files found on disk; skipping cleanup");
+                return;
+            }
+
+            var ratio = (double)mergedSize / fragmentTotal;
+            _logger.Debug(
+                "Live merge check — merged: {0} bytes, fragments total: {1} bytes, ratio: {2:P1}",
+                mergedSize,
+                fragmentTotal,
+                ratio);
+
+            if (ratio >= 0.85)
+            {
+                foreach (var fragment in fragmentFiles)
+                {
+                    if (_diskProvider.FileExists(fragment))
+                    {
+                        _diskProvider.DeleteFile(fragment);
+                        _logger.Debug("Deleted fragment: {0}", fragment);
+                    }
+                }
+
+                _logger.Info("Cleaned up {0} fragment file(s) after live merge verification", fragmentFiles.Count);
+            }
+            else
+            {
+                _logger.Warn(
+                    "Merged file is only {0:P0} of fragment total — possible failed merge; keeping fragments for manual inspection",
+                    ratio);
+            }
         }
 
         private static string BuildMetadataArgs(string url)
@@ -336,6 +393,7 @@ namespace Streamarr.Core.Download.YtDlp
 
             if (isLive)
             {
+                args.Add("-k");
                 args.Add("--live-from-start");
                 args.Add("--hls-use-mpegts");
                 args.Add("--wait-for-video 5-30");

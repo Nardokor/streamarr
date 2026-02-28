@@ -115,6 +115,9 @@ namespace Streamarr.Core.HealthCheck
         UpdateAvailable,
         UpdateStartupNotWritable,
         UpdateStartupTranslocation,
-        UpdateUiNotWritable
+        UpdateUiNotWritable,
+        YtDlpNotAvailable,
+        YouTubeApiKeyNotConfigured,
+        YouTubeApiKeyInvalid
     }
 }

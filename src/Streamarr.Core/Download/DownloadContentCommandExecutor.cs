@@ -9,6 +9,8 @@ using Streamarr.Core.Creators;
 using Streamarr.Core.Download.YtDlp;
 using Streamarr.Core.History;
 using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Notifications;
 using Streamarr.Core.Qualities;
 
 namespace Streamarr.Core.Download
@@ -21,6 +23,7 @@ namespace Streamarr.Core.Download
         private readonly IContentFileService _contentFileService;
         private readonly IYtDlpClient _ytDlpClient;
         private readonly IDownloadHistoryService _historyService;
+        private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
         public DownloadContentCommandExecutor(IContentService contentService,
@@ -29,6 +32,7 @@ namespace Streamarr.Core.Download
                                               IContentFileService contentFileService,
                                               IYtDlpClient ytDlpClient,
                                               IDownloadHistoryService historyService,
+                                              IEventAggregator eventAggregator,
                                               Logger logger)
         {
             _contentService = contentService;
@@ -37,6 +41,7 @@ namespace Streamarr.Core.Download
             _contentFileService = contentFileService;
             _ytDlpClient = ytDlpClient;
             _historyService = historyService;
+            _eventAggregator = eventAggregator;
             _logger = logger;
         }
 
@@ -56,7 +61,7 @@ namespace Streamarr.Core.Download
 
             try
             {
-                var result = _ytDlpClient.Download(url, creator.Path, isLive, progress =>
+                var result = _ytDlpClient.Download(content.Id, url, creator.Path, isLive, progress =>
                 {
                     if (progress.PercentComplete.HasValue)
                     {
@@ -90,6 +95,18 @@ namespace Streamarr.Core.Download
                         content.Title,
                         new QualityModel(),
                         DownloadHistoryEventType.Downloaded);
+
+                    _eventAggregator.PublishEvent(new ContentDownloadedEvent
+                    {
+                        Message = new ContentDownloadedMessage
+                        {
+                            ContentTitle = content.Title,
+                            CreatorName = creator.Title,
+                            ChannelName = channel.Title,
+                            ContentType = content.ContentType,
+                            FileSize = result.FileSize
+                        }
+                    });
 
                     _logger.Info("Successfully downloaded '{0}' ({1} bytes)", content.Title, result.FileSize);
                 }

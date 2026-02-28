@@ -79,6 +79,14 @@ function Settings() {
         <div className={styles.summary}>
           Configure yt-dlp path, format, concurrency, and other download settings.
         </div>
+
+        <Link className={styles.link} to="/settings/connect">
+          Connect
+        </Link>
+
+        <div className={styles.summary}>
+          Configure notifications for Discord, Telegram, Plex, and more.
+        </div>
       </PageContentBody>
     </PageContent>
   );

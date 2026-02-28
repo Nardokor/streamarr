@@ -14,16 +14,28 @@ public class ImportController : Controller
         _importService = importService;
     }
 
+    [HttpPost("folders")]
+    [Produces("application/json")]
+    public List<ImportableFolder> GetFolders([FromBody] ImportFoldersRequest request)
+    {
+        return _importService.GetImportableFolders(request.RootPath);
+    }
+
     [HttpPost]
     [Produces("application/json")]
     public ImportLibraryResult ImportLibrary([FromBody] ImportLibraryRequest request)
     {
-        return _importService.Import(request.RootPath, request.QualityProfileId);
+        return _importService.Import(request.RootPath, request.FolderNames);
     }
+}
+
+public class ImportFoldersRequest
+{
+    public string RootPath { get; set; } = string.Empty;
 }
 
 public class ImportLibraryRequest
 {
     public string RootPath { get; set; } = string.Empty;
-    public int? QualityProfileId { get; set; }
+    public List<string> FolderNames { get; set; } = new();
 }

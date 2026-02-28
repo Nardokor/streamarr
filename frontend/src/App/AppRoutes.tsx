@@ -4,6 +4,7 @@ import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
 import CreatorAdd from 'Creator/CreatorAdd';
 import CreatorDetail from 'Creator/CreatorDetail';
+import CreatorImport from 'Creator/Import/CreatorImport';
 import CreatorIndex from 'Creator/CreatorIndex';
 import GeneralSettings from 'Settings/General/GeneralSettings';
 import MediaManagement from 'Settings/MediaManagement/MediaManagement';
@@ -15,7 +16,6 @@ import SourcesPage from 'Settings/Sources/SourcesPage';
 import UISettings from 'Settings/UI/UISettings';
 import ArchivalSettings from 'Settings/Archival/ArchivalSettings';
 import DownloadClientSettings from 'Settings/DownloadClient/DownloadClientSettings';
-import ImportSettings from 'Settings/Import/ImportSettings';
 import History from 'Activity/History/History';
 import Queue from 'Activity/Queue/Queue';
 import WantedMissing from 'Wanted/WantedMissing';
@@ -53,6 +53,8 @@ function AppRoutes() {
 
       <Route exact={true} path="/creator/add" component={CreatorAdd} />
 
+      <Route exact={true} path="/creator/import" component={CreatorImport} />
+
       <Route exact={true} path="/creator/:id(\d+)" component={CreatorDetail} />
 
       <Route path="/creator" component={CreatorIndex} />
@@ -80,8 +82,6 @@ function AppRoutes() {
       <Route path="/settings/archival" component={ArchivalSettings} />
 
       <Route path="/settings/downloadclient" component={DownloadClientSettings} />
-
-      <Route path="/settings/import" component={ImportSettings} />
 
       {/*
         Wanted

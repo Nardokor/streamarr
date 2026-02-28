@@ -24,9 +24,16 @@ namespace Streamarr.Core.Import
         public int FilesNotMatched { get; set; }
     }
 
+    public class ImportableFolder
+    {
+        public string FolderName { get; set; } = string.Empty;
+        public string Path { get; set; } = string.Empty;
+    }
+
     public interface IImportLibraryService
     {
-        ImportLibraryResult Import(string rootPath, int? qualityProfileId = null);
+        List<ImportableFolder> GetImportableFolders(string rootPath);
+        ImportLibraryResult Import(string rootPath, IEnumerable<string> folderNames);
     }
 
     public class ImportLibraryService : IImportLibraryService
@@ -65,7 +72,31 @@ namespace Streamarr.Core.Import
             _logger = logger;
         }
 
-        public ImportLibraryResult Import(string rootPath, int? qualityProfileId = null)
+        public List<ImportableFolder> GetImportableFolders(string rootPath)
+        {
+            if (!Directory.Exists(rootPath))
+            {
+                return new List<ImportableFolder>();
+            }
+
+            var result = new List<ImportableFolder>();
+
+            foreach (var dirPath in Directory.GetDirectories(rootPath).OrderBy(d => d))
+            {
+                if (!_creatorService.CreatorPathExists(dirPath))
+                {
+                    result.Add(new ImportableFolder
+                    {
+                        FolderName = System.IO.Path.GetFileName(dirPath),
+                        Path = dirPath,
+                    });
+                }
+            }
+
+            return result;
+        }
+
+        public ImportLibraryResult Import(string rootPath, IEnumerable<string> folderNames)
         {
             var result = new ImportLibraryResult();
 
@@ -75,10 +106,11 @@ namespace Streamarr.Core.Import
                 return result;
             }
 
-            var profileId = ResolveQualityProfileId(qualityProfileId);
+            var profileId = ResolveQualityProfileId(null);
 
-            foreach (var creatorDir in Directory.GetDirectories(rootPath))
+            foreach (var folderName in folderNames)
             {
+                var creatorDir = System.IO.Path.Combine(rootPath, folderName);
                 ImportCreatorDirectory(creatorDir, rootPath, profileId, result);
             }
 

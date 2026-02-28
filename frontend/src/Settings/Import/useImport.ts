@@ -1,8 +1,17 @@
 import useApiMutation from 'Helpers/Hooks/useApiMutation';
 
+export interface ImportableFolder {
+  folderName: string;
+  path: string;
+}
+
+export interface ImportFoldersRequest {
+  rootPath: string;
+}
+
 export interface ImportLibraryRequest {
   rootPath: string;
-  qualityProfileId?: number | null;
+  folderNames: string[];
 }
 
 export interface ImportLibraryResult {
@@ -13,6 +22,15 @@ export interface ImportLibraryResult {
   contentAlreadyLinked: number;
   filesNotMatched: number;
 }
+
+export const useGetImportableFolders = () => {
+  const { mutate, isPending, data, error } = useApiMutation<ImportableFolder[], ImportFoldersRequest>({
+    path: '/import/folders',
+    method: 'POST',
+  });
+
+  return { scanFolders: mutate, isScanning: isPending, folders: data ?? [], scanError: error };
+};
 
 export const useImportLibrary = () => {
   const { mutate, isPending, data, error } = useApiMutation<ImportLibraryResult, ImportLibraryRequest>({

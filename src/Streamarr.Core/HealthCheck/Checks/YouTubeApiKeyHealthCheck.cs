@@ -1,10 +1,12 @@
 using System;
 using Streamarr.Core.Configuration;
+using Streamarr.Core.Configuration.Events;
 using Streamarr.Core.Localization;
 using Streamarr.Core.MetadataSource.YouTube;
 
 namespace Streamarr.Core.HealthCheck.Checks
 {
+    [CheckOn(typeof(ConfigSavedEvent))]
     public class YouTubeApiKeyHealthCheck : HealthCheckBase
     {
         private readonly IConfigService _configService;

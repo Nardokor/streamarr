@@ -36,18 +36,6 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
   >({
     path: '/settings/youtube/test',
     method: 'POST',
-    mutationOptions: {
-      onSuccess: () => {
-        setTestResult('success');
-        setTestMessage('Connection successful');
-      },
-      onError: (err) => {
-        setTestResult('failure');
-        setTestMessage(
-          err.statusBody?.message ?? err.statusText ?? 'Connection failed'
-        );
-      },
-    },
   });
 
   const handleInputChange = useCallback(
@@ -59,13 +47,49 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
   );
 
   const handleTest = useCallback(() => {
-    runTest({ youTubeApiKey: settings.youTubeApiKey.value ?? '' });
+    runTest(
+      { youTubeApiKey: settings.youTubeApiKey.value ?? '' },
+      {
+        onSuccess: () => {
+          setTestResult('success');
+          setTestMessage('Connection successful');
+        },
+        onError: (err) => {
+          setTestResult('failure');
+          setTestMessage(
+            err.statusBody?.message ?? err.statusText ?? 'Connection failed'
+          );
+        },
+      }
+    );
   }, [runTest, settings.youTubeApiKey.value]);
 
   const handleSave = useCallback(() => {
-    saveSettings();
-    onModalClose();
-  }, [saveSettings, onModalClose]);
+    const apiKey = settings.youTubeApiKey.value ?? '';
+
+    if (apiKey) {
+      runTest(
+        { youTubeApiKey: apiKey },
+        {
+          onSuccess: () => {
+            setTestResult('success');
+            setTestMessage('Connection successful');
+            saveSettings();
+            onModalClose();
+          },
+          onError: (err) => {
+            setTestResult('failure');
+            setTestMessage(
+              err.statusBody?.message ?? err.statusText ?? 'Connection failed'
+            );
+          },
+        }
+      );
+    } else {
+      saveSettings();
+      onModalClose();
+    }
+  }, [settings.youTubeApiKey.value, runTest, saveSettings, onModalClose]);
 
   return (
     <>
@@ -112,6 +136,94 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
           />
         </FormGroup>
 
+        <FormGroup>
+          <FormLabel>Default: Download Videos</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="youTubeDefaultDownloadVideos"
+            helpText="Include regular videos by default for new channels"
+            onChange={handleInputChange}
+            {...settings.youTubeDefaultDownloadVideos}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>Default: Download Shorts</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="youTubeDefaultDownloadShorts"
+            helpText="Include shorts by default for new channels"
+            onChange={handleInputChange}
+            {...settings.youTubeDefaultDownloadShorts}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>Default: Download VoDs</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="youTubeDefaultDownloadVods"
+            helpText="Include past livestreams by default for new channels"
+            onChange={handleInputChange}
+            {...settings.youTubeDefaultDownloadVods}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>Default: Download Live</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="youTubeDefaultDownloadLive"
+            helpText="Record active livestreams by default for new channels"
+            onChange={handleInputChange}
+            {...settings.youTubeDefaultDownloadLive}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>Default: Watched Words</FormLabel>
+          <FormInputGroup
+            type={inputTypes.TEXT}
+            name="youTubeDefaultWatchedWords"
+            helpText="word1, word2 … — only matching content is wanted (blank = all)"
+            onChange={handleInputChange}
+            {...settings.youTubeDefaultWatchedWords}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>Default: Ignored Words</FormLabel>
+          <FormInputGroup
+            type={inputTypes.TEXT}
+            name="youTubeDefaultIgnoredWords"
+            helpText="word1, word2 … — matching content is unwanted (blank = none)"
+            onChange={handleInputChange}
+            {...settings.youTubeDefaultIgnoredWords}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>Default: Watched Defeats Ignored</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="youTubeDefaultWatchedDefeatsIgnored"
+            helpText="Watched words take priority over ignored words"
+            onChange={handleInputChange}
+            {...settings.youTubeDefaultWatchedDefeatsIgnored}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>Default: Auto Download</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="youTubeDefaultAutoDownload"
+            helpText="Automatically queue missing content for download"
+            onChange={handleInputChange}
+            {...settings.youTubeDefaultAutoDownload}
+          />
+        </FormGroup>
+
         {testResult !== null && (
           <Alert kind={testResult === 'success' ? 'success' : 'danger'}>
             {testMessage}
@@ -136,7 +248,7 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
 
 function EditSourceModal({ source, isOpen, onModalClose }: EditSourceModalProps) {
   return (
-    <Modal isOpen={isOpen} size="small" onModalClose={onModalClose}>
+    <Modal isOpen={isOpen} size="medium" onModalClose={onModalClose}>
       <ModalContent onModalClose={onModalClose}>
         {source === 'youtube' ? (
           <YouTubeSourceForm onModalClose={onModalClose} />

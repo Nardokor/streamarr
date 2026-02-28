@@ -19,6 +19,25 @@ public class YouTubeSettingsController : SettingsController<YouTubeSettingsResou
     protected override YouTubeSettingsResource ToResource(IConfigService model) =>
         YouTubeSettingsResourceMapper.ToResource(model);
 
+    public override ActionResult<YouTubeSettingsResource> SaveConfig([FromBody] YouTubeSettingsResource resource)
+    {
+        var apiKey = resource.YouTubeApiKey ?? string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(apiKey))
+        {
+            try
+            {
+                _youTubeApiClient.TestApiKey(apiKey);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"API key test failed: {ex.Message}" });
+            }
+        }
+
+        return base.SaveConfig(resource);
+    }
+
     [HttpPost("test")]
     public ActionResult TestConnection([FromBody] YouTubeSettingsResource resource)
     {

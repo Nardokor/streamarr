@@ -24,16 +24,27 @@ namespace Streamarr.Core.Channels
         public ChannelStatusType Status { get; set; }
         public DateTime? LastInfoSync { get; set; }
 
-        // Download filters
+        // Wanted filter — content types
         public bool DownloadVideos { get; set; } = true;
         public bool DownloadShorts { get; set; } = true;
-        public bool DownloadLivestreams { get; set; } = true;
-        public bool RecordLiveOnly { get; set; }
-        public string TitleFilter { get; set; } = string.Empty;
+        public bool DownloadVods { get; set; } = true;
+        public bool DownloadLive { get; set; }
 
-        // Archival
-        public string PriorityFilter { get; set; } = string.Empty;
+        // Wanted filter — word filters
+        public string WatchedWords { get; set; } = string.Empty;
+        public string IgnoredWords { get; set; } = string.Empty;
+        public bool WatchedDefeatsIgnored { get; set; } = true;
+
+        // Download mode
+        public bool AutoDownload { get; set; } = true;
+
+        // Retention
         public int? RetentionDays { get; set; }
+        public bool RetentionVideos { get; set; }
+        public bool RetentionShorts { get; set; }
+        public bool RetentionVods { get; set; }
+        public bool RetentionLive { get; set; }
+        public string RetentionExceptionWords { get; set; } = string.Empty;
 
         // Navigation
         public LazyLoaded<Creator> Creator { get; set; }

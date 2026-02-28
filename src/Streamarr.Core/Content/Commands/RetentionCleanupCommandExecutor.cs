@@ -70,6 +70,27 @@ namespace Streamarr.Core.Content.Commands
                         continue;
                     }
 
+                    // Only apply retention to content types configured for deletion
+                    var typeEligible = content.ContentType switch
+                    {
+                        ContentType.Video => channel.RetentionVideos,
+                        ContentType.Short => channel.RetentionShorts,
+                        ContentType.Vod   => channel.RetentionVods,
+                        ContentType.Live  => channel.RetentionLive,
+                        _                 => false
+                    };
+
+                    if (!typeEligible)
+                    {
+                        continue;
+                    }
+
+                    if (IsExemptByTitle(content.Title, channel.RetentionExceptionWords))
+                    {
+                        _logger.Debug("Content '{0}' is exempt from retention by exception words", content.Title);
+                        continue;
+                    }
+
                     try
                     {
                         ProcessExpiredContent(content, channel, creator);
@@ -80,6 +101,18 @@ namespace Streamarr.Core.Content.Commands
                     }
                 }
             }
+        }
+
+        private static bool IsExemptByTitle(string title, string exceptionWords)
+        {
+            if (string.IsNullOrWhiteSpace(exceptionWords))
+            {
+                return false;
+            }
+
+            return exceptionWords
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Any(w => title.Contains(w, StringComparison.OrdinalIgnoreCase));
         }
 
         private void ProcessExpiredContent(Content content, Channel channel, Creator creator)
@@ -145,14 +178,14 @@ namespace Streamarr.Core.Content.Commands
                 }
             }
 
-            // Past retention with no special condition — delete the file and mark Expired
+            // Past retention, still on platform, unmodified — delete the file and mark Available
             var contentFile = _contentFileService.GetContentFile(content.ContentFileId);
             var fullPath = Path.Combine(creator.Path, contentFile.RelativePath);
 
             try
             {
                 _diskProvider.DeleteFile(fullPath);
-                _logger.Info("Deleted expired content file '{0}'", fullPath);
+                _logger.Info("Deleted retained content file '{0}'", fullPath);
             }
             catch (Exception ex)
             {
@@ -162,7 +195,7 @@ namespace Streamarr.Core.Content.Commands
 
             _contentFileService.DeleteContentFile(contentFile.Id);
 
-            content.Status = ContentStatus.Expired;
+            content.Status = ContentStatus.Available;
             content.ContentFileId = 0;
             _contentService.UpdateContent(content);
         }

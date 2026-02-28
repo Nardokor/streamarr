@@ -15,13 +15,28 @@ public class ChannelResource : RestResource
     public bool Monitored { get; set; }
     public ChannelStatusType Status { get; set; }
     public DateTime? LastInfoSync { get; set; }
+
+    // Wanted — content types
     public bool DownloadVideos { get; set; } = true;
     public bool DownloadShorts { get; set; } = true;
-    public bool DownloadLivestreams { get; set; } = true;
-    public bool RecordLiveOnly { get; set; }
-    public string TitleFilter { get; set; } = string.Empty;
-    public string PriorityFilter { get; set; } = string.Empty;
+    public bool DownloadVods { get; set; } = true;
+    public bool DownloadLive { get; set; }
+
+    // Wanted — word filters
+    public string WatchedWords { get; set; } = string.Empty;
+    public string IgnoredWords { get; set; } = string.Empty;
+    public bool WatchedDefeatsIgnored { get; set; } = true;
+
+    // Download mode
+    public bool AutoDownload { get; set; } = true;
+
+    // Retention
     public int? RetentionDays { get; set; }
+    public bool RetentionVideos { get; set; }
+    public bool RetentionShorts { get; set; }
+    public bool RetentionVods { get; set; }
+    public bool RetentionLive { get; set; }
+    public string RetentionExceptionWords { get; set; } = string.Empty;
 }
 
 public static class ChannelResourceMapper
@@ -43,11 +58,18 @@ public static class ChannelResourceMapper
             LastInfoSync = model.LastInfoSync,
             DownloadVideos = model.DownloadVideos,
             DownloadShorts = model.DownloadShorts,
-            DownloadLivestreams = model.DownloadLivestreams,
-            RecordLiveOnly = model.RecordLiveOnly,
-            TitleFilter = model.TitleFilter,
-            PriorityFilter = model.PriorityFilter,
-            RetentionDays = model.RetentionDays
+            DownloadVods = model.DownloadVods,
+            DownloadLive = model.DownloadLive,
+            WatchedWords = model.WatchedWords,
+            IgnoredWords = model.IgnoredWords,
+            WatchedDefeatsIgnored = model.WatchedDefeatsIgnored,
+            AutoDownload = model.AutoDownload,
+            RetentionDays = model.RetentionDays,
+            RetentionVideos = model.RetentionVideos,
+            RetentionShorts = model.RetentionShorts,
+            RetentionVods = model.RetentionVods,
+            RetentionLive = model.RetentionLive,
+            RetentionExceptionWords = model.RetentionExceptionWords
         };
     }
 
@@ -67,11 +89,18 @@ public static class ChannelResourceMapper
             Status = resource.Status,
             DownloadVideos = resource.DownloadVideos,
             DownloadShorts = resource.DownloadShorts,
-            DownloadLivestreams = resource.DownloadLivestreams,
-            RecordLiveOnly = resource.RecordLiveOnly,
-            TitleFilter = resource.TitleFilter,
-            PriorityFilter = resource.PriorityFilter,
-            RetentionDays = resource.RetentionDays
+            DownloadVods = resource.DownloadVods,
+            DownloadLive = resource.DownloadLive,
+            WatchedWords = resource.WatchedWords,
+            IgnoredWords = resource.IgnoredWords,
+            WatchedDefeatsIgnored = resource.WatchedDefeatsIgnored,
+            AutoDownload = resource.AutoDownload,
+            RetentionDays = resource.RetentionDays,
+            RetentionVideos = resource.RetentionVideos,
+            RetentionShorts = resource.RetentionShorts,
+            RetentionVods = resource.RetentionVods,
+            RetentionLive = resource.RetentionLive,
+            RetentionExceptionWords = resource.RetentionExceptionWords
         };
     }
 

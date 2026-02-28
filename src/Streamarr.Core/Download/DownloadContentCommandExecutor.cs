@@ -50,12 +50,12 @@ namespace Streamarr.Core.Download
 
             _logger.ProgressInfo("Downloading '{0}' from {1}", content.Title, channel.Platform);
 
-            content.Status = ContentStatus.Downloading;
+            var isLive = content.ContentType == ContentType.Live;
+            content.Status = isLive ? ContentStatus.Recording : ContentStatus.Downloading;
             _contentService.UpdateContent(content);
 
             try
             {
-                var isLive = content.ContentType == ContentType.Livestream;
                 var result = _ytDlpClient.Download(url, creator.Path, isLive, progress =>
                 {
                     if (progress.PercentComplete.HasValue)

@@ -7,8 +7,10 @@ namespace Streamarr.Core.Content
         Downloading = 2,
         Downloaded = 3,
         Deleted = 4,
-        Live = 5,
+        Recording = 5,   // Actively capturing a live stream
         Expired = 6,
-        Modified = 7
+        Modified = 7,
+        Unwanted = 8,    // Filtered out / not wanted
+        Processing = 9   // Post-download processing in progress
     }
 }

@@ -131,7 +131,7 @@ namespace Streamarr.Core.Creators.Commands
                         {
                             ContentType.Video      => channel.DownloadVideos,
                             ContentType.Short      => channel.DownloadShorts,
-                            ContentType.Livestream => channel.DownloadLivestreams,
+                            ContentType.VoD        => channel.DownloadLivestreams,
                             _                      => true
                         };
 

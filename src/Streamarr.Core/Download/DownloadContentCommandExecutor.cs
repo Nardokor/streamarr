@@ -55,7 +55,8 @@ namespace Streamarr.Core.Download
 
             try
             {
-                var result = _ytDlpClient.Download(url, creator.Path, progress =>
+                var isLive = content.ContentType == ContentType.Livestream;
+                var result = _ytDlpClient.Download(url, creator.Path, isLive, progress =>
                 {
                     if (progress.PercentComplete.HasValue)
                     {

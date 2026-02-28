@@ -8,7 +8,6 @@ namespace Streamarr.Core.Download
 
         public override bool SendUpdatesToClient => true;
         public override bool IsLongRunning => true;
-        public override bool RequiresDiskAccess => true;
         public override string CompletionMessage => "Content downloaded";
     }
 }

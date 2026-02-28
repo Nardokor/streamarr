@@ -37,27 +37,29 @@ namespace Streamarr.Core.Creators
         {
             var existing = _contentService.GetByChannelId(channel.Id);
 
-            var upcoming = existing
-                .Where(c => c.ContentType == ContentType.Livestream &&
+            var livestreamContent = existing
+                .Where(c => (c.ContentType == ContentType.VoD ||
+                             c.ContentType == ContentType.Live ||
+                             c.ContentType == ContentType.Upcoming) &&
                             c.Status != ContentStatus.Downloaded &&
                             c.Status != ContentStatus.Deleted)
                 .ToList();
 
-            if (!upcoming.Any())
+            if (!livestreamContent.Any())
             {
                 return;
             }
 
             _logger.Debug(
-                "Re-fetching air dates for {0} upcoming/live livestream(s) in '{1}'",
-                upcoming.Count,
+                "Re-fetching statuses for {0} stream item(s) in '{1}'",
+                livestreamContent.Count,
                 channel.Title);
 
-            var videoDetails = _youTubeApiClient.GetVideoDetails(upcoming.Select(c => c.PlatformContentId));
+            var videoDetails = _youTubeApiClient.GetVideoDetails(livestreamContent.Select(c => c.PlatformContentId));
 
             foreach (var video in videoDetails)
             {
-                var content = upcoming.FirstOrDefault(c => c.PlatformContentId == video.Id);
+                var content = livestreamContent.FirstOrDefault(c => c.PlatformContentId == video.Id);
                 if (content == null)
                 {
                     continue;
@@ -70,21 +72,24 @@ namespace Streamarr.Core.Creators
                 }
 
                 DateTime? newAirDate = null;
+                ContentType? newContentType = null;
                 ContentStatus? newStatus = null;
 
                 if (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow)
                 {
-                    // Still upcoming
+                    // Still upcoming — not yet started
                     newAirDate = lsd.ScheduledStartTime.Value;
+                    newContentType = ContentType.Upcoming;
                 }
                 else if (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue)
                 {
-                    // Stream has started but not ended — currently live
+                    // Currently live
                     newAirDate = lsd.ActualStartTime.Value;
-                    newStatus = ContentStatus.Live;
+                    newContentType = ContentType.Live;
+                    newStatus = ContentStatus.Recording;
 
                     // If RecordLiveOnly: queue a download to capture the stream as it airs
-                    if (channel.RecordLiveOnly && content.Status != ContentStatus.Live)
+                    if (channel.RecordLiveOnly && content.Status != ContentStatus.Recording)
                     {
                         _logger.Debug(
                             "Queuing live recording for '{0}' (RecordLiveOnly)",
@@ -95,19 +100,20 @@ namespace Streamarr.Core.Creators
                 }
                 else if (lsd.ActualStartTime.HasValue)
                 {
-                    // Stream has ended
+                    // Stream has ended — now an archived VoD
                     newAirDate = lsd.ActualStartTime.Value;
+                    newContentType = ContentType.VoD;
 
                     if (channel.RecordLiveOnly)
                     {
-                        // RecordLiveOnly: don't transition to Missing — the archive VOD is ignored
+                        // RecordLiveOnly: don't queue the archive download
                         _logger.Debug(
                             "Stream '{0}' ended; skipping archive download (RecordLiveOnly)",
                             content.Title);
                     }
-                    else if (content.Status == ContentStatus.Live)
+                    else if (content.Status == ContentStatus.Recording)
                     {
-                        // Normal mode: revert to Missing so the archive VOD can be downloaded
+                        // Normal mode: revert to Missing so the archive VoD can be downloaded
                         newStatus = ContentStatus.Missing;
                     }
                 }
@@ -117,6 +123,12 @@ namespace Streamarr.Core.Creators
                 if (newAirDate.HasValue && newAirDate != content.AirDateUtc)
                 {
                     content.AirDateUtc = newAirDate;
+                    changed = true;
+                }
+
+                if (newContentType.HasValue && newContentType != content.ContentType)
+                {
+                    content.ContentType = newContentType.Value;
                     changed = true;
                 }
 
@@ -130,8 +142,9 @@ namespace Streamarr.Core.Creators
                 {
                     _contentService.UpdateContent(content);
                     _logger.Debug(
-                        "Updated livestream '{0}': AirDateUtc={1}, Status={2}",
+                        "Updated stream '{0}': ContentType={1}, AirDateUtc={2}, Status={3}",
                         content.Title,
+                        content.ContentType,
                         content.AirDateUtc,
                         content.Status);
                 }

@@ -4,7 +4,9 @@ export function getContentTypeLabel(contentType: ContentType): string {
   switch (contentType) {
     case 'video': return 'Video';
     case 'short': return 'Short';
-    case 'livestream': return 'Live';
+    case 'vod': return 'VoD';
+    case 'live': return 'Live';
+    case 'upcoming': return 'Upcoming';
     default: return '';
   }
 }
@@ -36,22 +38,30 @@ export function formatDate(dateStr: string | null | undefined): string {
 
 export interface StatusLabel {
   text: string;
-  kind: 'downloaded' | 'downloading' | 'missing' | 'unmonitored' | 'notAired' | 'onAir' | 'expired' | 'modified';
+  kind: 'downloaded' | 'downloading' | 'recording' | 'missing' | 'unmonitored' | 'notAired' | 'onAir' | 'expired' | 'modified' | 'unwanted' | 'processing';
 }
 
 export function getStatusLabel(content: Content): StatusLabel {
-  // Currently live
-  if (content.status === 'live') {
+  // Currently live — type indicates it
+  if (content.contentType === 'live') {
     return { text: 'On Air', kind: 'onAir' };
   }
 
-  // Future air date = upcoming live stream or premiere, not available yet
-  if (content.airDateUtc && new Date(content.airDateUtc) > new Date()) {
+  // Upcoming — scheduled but not yet started
+  if (content.contentType === 'upcoming') {
     return { text: 'Not Aired', kind: 'notAired' };
+  }
+
+  if (content.status === 'recording') {
+    return { text: 'Recording', kind: 'recording' };
   }
 
   if (content.status === 'downloading') {
     return { text: 'Downloading', kind: 'downloading' };
+  }
+
+  if (content.status === 'processing') {
+    return { text: 'Processing', kind: 'processing' };
   }
 
   if (content.status === 'expired') {
@@ -64,6 +74,10 @@ export function getStatusLabel(content: Content): StatusLabel {
 
   if (content.status === 'downloaded' || content.contentFileId > 0) {
     return { text: 'Downloaded', kind: 'downloaded' };
+  }
+
+  if (content.status === 'unwanted') {
+    return { text: 'Unwanted', kind: 'unwanted' };
   }
 
   if (content.monitored) {
@@ -90,12 +104,7 @@ export function buildPlatformUrl(
 export function getNextLiveDate(content: Content[]): Date | null {
   const now = new Date();
   const upcoming = content
-    .filter(
-      (c) =>
-        c.contentType === 'livestream' &&
-        c.airDateUtc &&
-        new Date(c.airDateUtc) > now
-    )
+    .filter((c) => c.contentType === 'upcoming' && c.airDateUtc && new Date(c.airDateUtc) > now)
     .map((c) => new Date(c.airDateUtc!))
     .sort((a, b) => a.getTime() - b.getTime());
   return upcoming.length > 0 ? upcoming[0] : null;

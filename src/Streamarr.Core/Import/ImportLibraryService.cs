@@ -330,9 +330,20 @@ namespace Streamarr.Core.Import
 
         private static ContentType DetermineContentType(MetadataSource.YouTube.YoutubeVideo video)
         {
-            if (video.LiveStreamingDetails != null)
+            var lsd = video.LiveStreamingDetails;
+            if (lsd != null)
             {
-                return ContentType.Livestream;
+                if (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue)
+                {
+                    return ContentType.Live;
+                }
+
+                if (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow)
+                {
+                    return ContentType.Upcoming;
+                }
+
+                return ContentType.VoD;
             }
 
             var duration = ParseDuration(video.ContentDetails?.Duration);

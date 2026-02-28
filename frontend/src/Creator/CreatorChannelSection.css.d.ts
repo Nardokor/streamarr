@@ -36,12 +36,15 @@ interface CssExports {
   'statusModified': string;
   'statusNotAired': string;
   'statusOnAir': string;
+  'statusRecording': string;
   'statusUnmonitored': string;
   'titleLink': string;
   'typeBadge': string;
   'typeLive': string;
   'typeShort': string;
+  'typeUpcoming': string;
   'typeVideo': string;
+  'typeVod': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

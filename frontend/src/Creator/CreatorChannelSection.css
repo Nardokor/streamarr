@@ -261,6 +261,16 @@
   color: white;
 }
 
+.typeVod {
+  background: var(--colorGray, #7f8c8d);
+  color: white;
+}
+
+.typeUpcoming {
+  background: var(--colorWarning, #f39c12);
+  color: white;
+}
+
 .statusBadge {
   display: inline-block;
   min-width: 120px;
@@ -285,6 +295,11 @@
 
 .statusDownloading {
   background: var(--colorPrimary, #3498db);
+  color: white;
+}
+
+.statusRecording {
+  background: var(--colorWarning, #f39c12);
   color: white;
 }
 

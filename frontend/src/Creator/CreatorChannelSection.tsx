@@ -48,18 +48,23 @@ function platformLabel(platform: string): string {
 function statusClass(kind: string): string {
   if (kind === 'downloaded') return styles.statusDownloaded;
   if (kind === 'downloading') return styles.statusDownloading;
+  if (kind === 'recording') return styles.statusRecording;
+  if (kind === 'processing') return styles.statusDownloading;
   if (kind === 'missing') return styles.statusMissing;
   if (kind === 'notAired') return styles.statusNotAired;
   if (kind === 'onAir') return styles.statusOnAir;
   if (kind === 'expired') return styles.statusExpired;
   if (kind === 'modified') return styles.statusModified;
+  if (kind === 'unwanted') return styles.statusUnmonitored;
   return styles.statusUnmonitored;
 }
 
 function typeClass(label: string): string {
   if (label === 'Video') return styles.typeVideo;
   if (label === 'Short') return styles.typeShort;
+  if (label === 'VoD') return styles.typeVod;
   if (label === 'Live') return styles.typeLive;
+  if (label === 'Upcoming') return styles.typeUpcoming;
   return '';
 }
 

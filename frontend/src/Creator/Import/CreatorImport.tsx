@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
+import useRootFolders from 'RootFolder/useRootFolders';
 import { ImportLibraryResult, useGetImportableFolders, useImportLibrary } from 'Settings/Import/useImport';
 import styles from './CreatorImport.css';
 
@@ -47,23 +48,20 @@ function ResultSummary({ result }: { result: ImportLibraryResult }) {
 }
 
 function CreatorImport() {
-  const [rootPath, setRootPath] = useState('');
+  const [selectedRoot, setSelectedRoot] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
+  const { data: rootFolders, isLoading: isLoadingRoots } = useRootFolders();
   const { scanFolders, isScanning, folders, scanError } = useGetImportableFolders();
   const { importLibrary, isImporting, result, importError } = useImportLibrary();
 
-  const handleScan = useCallback(() => {
-    if (!rootPath.trim()) return;
-    setSelected(new Set());
-    scanFolders({ rootPath: rootPath.trim() });
-  }, [rootPath, scanFolders]);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') handleScan();
+  const handleSelectRoot = useCallback(
+    (path: string) => {
+      setSelectedRoot(path);
+      setSelected(new Set());
+      scanFolders({ rootPath: path });
     },
-    [handleScan]
+    [scanFolders]
   );
 
   const handleToggle = useCallback((folderName: string) => {
@@ -87,39 +85,53 @@ function CreatorImport() {
   }, []);
 
   const handleImport = useCallback(() => {
-    if (selected.size === 0) return;
-    importLibrary({ rootPath: rootPath.trim(), folderNames: Array.from(selected) });
-  }, [rootPath, selected, importLibrary]);
+    if (selected.size === 0 || !selectedRoot) return;
+    importLibrary({ rootPath: selectedRoot, folderNames: Array.from(selected) });
+  }, [selectedRoot, selected, importLibrary]);
+
+  // Reset folder selection when scan results change
+  useEffect(() => {
+    setSelected(new Set());
+  }, [folders]);
 
   const hasFolders = folders.length > 0;
-  const hasScanned = hasFolders || scanError != null;
+  const hasScanned = selectedRoot !== null && !isScanning && (hasFolders || scanError != null);
 
   return (
     <PageContent title="Import Library">
       <PageContentBody>
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Step 1 — Select root folder</h2>
+          <h2 className={styles.sectionTitle}>Step 1 — Choose a root folder</h2>
 
-          <div className={styles.pathRow}>
-            <input
-              className={styles.pathInput}
-              type="text"
-              value={rootPath}
-              onChange={(e) => setRootPath(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="/path/to/your/media/library"
-              disabled={isScanning}
-            />
-
-            <button
-              className={styles.actionButton}
-              type="button"
-              disabled={!rootPath.trim() || isScanning}
-              onClick={handleScan}
-            >
-              {isScanning ? 'Scanning…' : 'Scan'}
-            </button>
-          </div>
+          {isLoadingRoots ? (
+            <p className={styles.empty}>Loading root folders…</p>
+          ) : rootFolders.length === 0 ? (
+            <p className={styles.empty}>
+              No root folders configured. Add one under Settings &rsaquo; Media Management first.
+            </p>
+          ) : (
+            <ul className={styles.rootList}>
+              {rootFolders.map((rf) => (
+                <li key={rf.id}>
+                  <button
+                    type="button"
+                    className={
+                      selectedRoot === rf.path
+                        ? `${styles.rootItem} ${styles.rootItemActive}`
+                        : styles.rootItem
+                    }
+                    onClick={() => handleSelectRoot(rf.path)}
+                    disabled={isScanning}
+                  >
+                    <span className={styles.rootItemPath}>{rf.path}</span>
+                    {selectedRoot === rf.path && isScanning ? (
+                      <span className={styles.rootItemStatus}>Scanning…</span>
+                    ) : null}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
 
           {scanError ? (
             <p className={styles.error}>Could not scan that path. Check that it exists and is readable.</p>

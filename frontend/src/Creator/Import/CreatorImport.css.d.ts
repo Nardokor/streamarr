@@ -12,12 +12,15 @@ interface CssExports {
   'folderPath': string;
   'importActions': string;
   'linkButton': string;
-  'pathInput': string;
-  'pathRow': string;
   'result': string;
   'resultTable': string;
   'resultTitle': string;
   'resultValue': string;
+  'rootItem': string;
+  'rootItemActive': string;
+  'rootItemPath': string;
+  'rootItemStatus': string;
+  'rootList': string;
   'section': string;
   'sectionTitle': string;
   'selectedCount': string;

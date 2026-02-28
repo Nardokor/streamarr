@@ -14,7 +14,7 @@ namespace Streamarr.Core.Download.YtDlp
 {
     public interface IYtDlpClient
     {
-        YtDlpDownloadResult Download(string url, string outputPath, Action<YtDlpProgress> onProgress = null);
+        YtDlpDownloadResult Download(string url, string outputPath, bool isLive = false, Action<YtDlpProgress> onProgress = null);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null);
         YtDlpVideoInfo GetVideoInfo(string videoUrl);
@@ -232,11 +232,11 @@ namespace Streamarr.Core.Download.YtDlp
             return videos;
         }
 
-        public YtDlpDownloadResult Download(string url, string outputPath, Action<YtDlpProgress> onProgress = null)
+        public YtDlpDownloadResult Download(string url, string outputPath, bool isLive = false, Action<YtDlpProgress> onProgress = null)
         {
             _diskProvider.EnsureFolder(outputPath);
 
-            var args = BuildDownloadArgs(url, outputPath);
+            var args = BuildDownloadArgs(url, outputPath, isLive);
             var outputFile = string.Empty;
             var errors = new List<string>();
 
@@ -324,7 +324,7 @@ namespace Streamarr.Core.Download.YtDlp
             return $"--dump-json --skip-download --socket-timeout 15 {Quote(url)}";
         }
 
-        private string BuildDownloadArgs(string url, string outputPath)
+        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false)
         {
             var args = new List<string>
             {
@@ -333,6 +333,13 @@ namespace Streamarr.Core.Download.YtDlp
                 "-f", Quote(Settings.PreferredFormat),
                 "-o", Quote(Path.Combine(outputPath, "%(title)s [%(id)s].%(ext)s"))
             };
+
+            if (isLive)
+            {
+                args.Add("--live-from-start");
+                args.Add("--hls-use-mpegts");
+                args.Add("--wait-for-video 5-30");
+            }
 
             if (Settings.EmbedMetadata)
             {

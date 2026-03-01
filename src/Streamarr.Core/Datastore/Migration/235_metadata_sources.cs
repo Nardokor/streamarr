@@ -18,32 +18,8 @@ namespace Streamarr.Core.Datastore.Migration
                   .WithColumn("Tags").AsString().NotNullable().WithDefaultValue("[]")
                   .WithColumn("Platform").AsInt32().NotNullable().WithDefaultValue(0);
 
-            // Migrate existing YouTube settings from Config table into a MetadataSources row
-            Execute.Sql(@"
-                INSERT INTO MetadataSources (Name, Implementation, ConfigContract, Settings, Enable, Tags, Platform)
-                SELECT
-                    'YouTube',
-                    'YouTube',
-                    'YouTubeSettings',
-                    json_object(
-                        'apiKey',                      COALESCE((SELECT Value FROM Config WHERE Key='YouTubeApiKey'), ''),
-                        'refreshIntervalHours',         COALESCE(CAST((SELECT Value FROM Config WHERE Key='YouTubeFullRefreshIntervalHours') AS INTEGER), 24),
-                        'liveCheckIntervalMinutes',     COALESCE(CAST((SELECT Value FROM Config WHERE Key='YouTubeLiveCheckIntervalMinutes') AS INTEGER), 60),
-                        'defaultDownloadVideos',        json(IIF(COALESCE(CAST((SELECT Value FROM Config WHERE Key='YouTubeDefaultDownloadVideos') AS INTEGER), 1), 'true', 'false')),
-                        'defaultDownloadShorts',        json(IIF(COALESCE(CAST((SELECT Value FROM Config WHERE Key='YouTubeDefaultDownloadShorts') AS INTEGER), 1), 'true', 'false')),
-                        'defaultDownloadVods',          json(IIF(COALESCE(CAST((SELECT Value FROM Config WHERE Key='YouTubeDefaultDownloadVods') AS INTEGER), 1), 'true', 'false')),
-                        'defaultDownloadLive',          json(IIF(COALESCE(CAST((SELECT Value FROM Config WHERE Key='YouTubeDefaultDownloadLive') AS INTEGER), 0), 'true', 'false')),
-                        'defaultWatchedWords',          COALESCE((SELECT Value FROM Config WHERE Key='YouTubeDefaultWatchedWords'), ''),
-                        'defaultIgnoredWords',          COALESCE((SELECT Value FROM Config WHERE Key='YouTubeDefaultIgnoredWords'), ''),
-                        'defaultWatchedDefeatsIgnored', json(IIF(COALESCE(CAST((SELECT Value FROM Config WHERE Key='YouTubeDefaultWatchedDefeatsIgnored') AS INTEGER), 1), 'true', 'false')),
-                        'defaultAutoDownload',          json(IIF(COALESCE(CAST((SELECT Value FROM Config WHERE Key='YouTubeDefaultAutoDownload') AS INTEGER), 1), 'true', 'false'))
-                    ),
-                    1,
-                    '[]',
-                    1
-            ");
-
-            // Remove the now-migrated YouTube config keys
+            // Remove legacy YouTube config keys (settings are now managed via the MetadataSources UI)
+            // Sources are not auto-seeded; users add them manually through the Sources settings page.
             Execute.Sql(@"
                 DELETE FROM Config WHERE Key IN (
                     'YouTubeApiKey',

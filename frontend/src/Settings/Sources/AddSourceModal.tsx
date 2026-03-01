@@ -5,24 +5,30 @@ import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
+import {
+  MetadataSourceResource,
+  useMetadataSourceSchemas,
+} from './useMetadataSources';
 import styles from './Sources.css';
-
-const ALL_SOURCES = [{ id: 'youtube', name: 'YouTube' }];
 
 interface AddSourceModalProps {
   isOpen: boolean;
-  configuredSources: string[];
-  onSelect: (source: string) => void;
+  configuredImplementations: string[];
+  onSelect: (template: MetadataSourceResource) => void;
   onModalClose: () => void;
 }
 
 function AddSourceModal({
   isOpen,
-  configuredSources,
+  configuredImplementations,
   onSelect,
   onModalClose,
 }: AddSourceModalProps) {
-  const available = ALL_SOURCES.filter((s) => !configuredSources.includes(s.id));
+  const { data: schemas } = useMetadataSourceSchemas();
+
+  const available = (schemas ?? []).filter(
+    (s) => !configuredImplementations.includes(s.implementation)
+  );
 
   return (
     <Modal isOpen={isOpen} size="small" onModalClose={onModalClose}>
@@ -33,9 +39,9 @@ function AddSourceModal({
           <div className={styles.platformGrid}>
             {available.map((s) => (
               <div
-                key={s.id}
+                key={s.implementation}
                 className={styles.platformCard}
-                onClick={() => onSelect(s.id)}
+                onClick={() => onSelect(s)}
               >
                 {s.name}
               </div>

@@ -23,7 +23,7 @@ function SourcesPage() {
   const [addingSource, setAddingSource] = useState(false);
 
   const { data: sources } = useMetadataSources();
-  const configuredNames = (sources ?? []).map((s) => s.name.toLowerCase());
+  const configuredImplementations = (sources ?? []).map((s) => s.implementation);
 
   return (
     <PageContent title="Sources">
@@ -44,8 +44,11 @@ function SourcesPage() {
 
       <AddSourceModal
         isOpen={addingSource}
-        configuredSources={configuredNames}
-        onSelect={() => setAddingSource(false)}
+        configuredImplementations={configuredImplementations}
+        onSelect={(template) => {
+          setEditingSource({ ...template, enable: true });
+          setAddingSource(false);
+        }}
         onModalClose={() => setAddingSource(false)}
       />
 

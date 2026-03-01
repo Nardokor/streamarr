@@ -22,15 +22,14 @@ export const useMetadataSources = () =>
 export const useUpdateMetadataSource = (id: number) => {
   const queryClient = useQueryClient();
 
-  return useApiMutation<MetadataSourceResource, MetadataSourceResource>({
+  return useApiMutation<number, MetadataSourceResource>({
     path: `${PATH}/${id}`,
     method: 'PUT',
     mutationOptions: {
-      onSuccess: (updated) => {
-        queryClient.setQueryData<MetadataSourceResource[]>(
-          [PATH],
-          (old = []) => old.map((s) => (s.id === updated.id ? updated : s))
-        );
+      onSuccess: async () => {
+        // PUT returns 202 with just the ID, not the full resource.
+        // Invalidate so the list is refetched with fresh field values.
+        await queryClient.invalidateQueries({ queryKey: [PATH] });
       },
     },
   });

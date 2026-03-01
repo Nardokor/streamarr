@@ -18,7 +18,7 @@ namespace Streamarr.Core.Content.Commands
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
         private readonly IContentFileService _contentFileService;
-        private readonly MetadataSourceFactory _metadataSourceFactory;
+        private readonly IMetadataSourceFactory _metadataSourceFactory;
         private readonly IDiskProvider _diskProvider;
         private readonly IConfigService _configService;
         private readonly Logger _logger;
@@ -28,7 +28,7 @@ namespace Streamarr.Core.Content.Commands
             IChannelService channelService,
             IContentService contentService,
             IContentFileService contentFileService,
-            MetadataSourceFactory metadataSourceFactory,
+            IMetadataSourceFactory metadataSourceFactory,
             IDiskProvider diskProvider,
             IConfigService configService,
             Logger logger)

@@ -46,7 +46,7 @@ function SourcesPage() {
         isOpen={addingSource}
         configuredImplementations={configuredImplementations}
         onSelect={(template) => {
-          setEditingSource({ ...template, enable: true });
+          setEditingSource(template);
           setAddingSource(false);
         }}
         onModalClose={() => setAddingSource(false)}

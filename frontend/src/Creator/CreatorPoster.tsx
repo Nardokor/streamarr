@@ -16,8 +16,8 @@ function CreatorPoster({ creator, channelCount }: CreatorPosterProps) {
   const { updateCreator, isUpdating } = useUpdateCreator(id);
 
   const handlePress = useCallback(() => {
-    history.push(`/creator/${id}`);
-  }, [history, id]);
+    history.push(`/creator/${creator.titleSlug}`);
+  }, [history, creator.titleSlug]);
 
   const handleMonitorToggle = useCallback(
     (value: boolean) => {

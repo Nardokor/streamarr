@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Creators;
 using Streamarr.Http.REST;
@@ -17,6 +18,7 @@ public class CreatorChannelResource
 public class CreatorResource : RestResource
 {
     public string Title { get; set; } = string.Empty;
+    public string TitleSlug { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string ThumbnailUrl { get; set; } = string.Empty;
     public string Path { get; set; } = string.Empty;
@@ -34,12 +36,21 @@ public class CreatorResource : RestResource
 
 public static class CreatorResourceMapper
 {
+    public static string Slugify(string title)
+    {
+        var s = title.Trim().ToLowerInvariant();
+        s = Regex.Replace(s, @"[^a-z0-9\s-]", "");
+        s = Regex.Replace(s, @"\s+", "-");
+        return Regex.Replace(s, @"-+", "-").Trim('-');
+    }
+
     public static CreatorResource ToResource(this Creator model)
     {
         return new CreatorResource
         {
             Id = model.Id,
             Title = model.Title,
+            TitleSlug = Slugify(model.Title),
             Description = model.Description,
             ThumbnailUrl = model.ThumbnailUrl,
             Path = model.Path,

@@ -58,8 +58,8 @@ function WantedMissing() {
   }, [channels]);
 
   const creatorMap = useMemo(() => {
-    const m = new Map<number, { title: string; id: number }>();
-    creators.forEach((cr) => m.set(cr.id, { title: cr.title, id: cr.id }));
+    const m = new Map<number, { title: string; id: number; titleSlug: string }>();
+    creators.forEach((cr) => m.set(cr.id, { title: cr.title, id: cr.id, titleSlug: cr.titleSlug }));
     return m;
   }, [creators]);
 
@@ -95,7 +95,7 @@ function WantedMissing() {
 
                     <TableRowCell>
                       {creator ? (
-                        <Link to={`/creator/${creator.id}`}>
+                        <Link to={`/creator/${creator.titleSlug}`}>
                           {creator.title}
                         </Link>
                       ) : (

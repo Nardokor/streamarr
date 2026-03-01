@@ -4,6 +4,7 @@ export type CreatorStatusType = 0 | 1 | 2;
 
 interface Creator extends ModelBase {
   title: string;
+  titleSlug: string;
   description: string;
   thumbnailUrl: string;
   path: string;

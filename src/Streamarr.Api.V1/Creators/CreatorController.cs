@@ -48,6 +48,20 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
         return _creatorService.GetAllCreators().ToResource();
     }
 
+    [HttpGet("slug/{slug}")]
+    [Produces("application/json")]
+    public ActionResult<CreatorResource> GetBySlug(string slug)
+    {
+        var creator = _creatorService.GetAllCreators()
+            .FirstOrDefault(c => CreatorResourceMapper.Slugify(c.Title) == slug);
+        if (creator == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(creator.ToResource());
+    }
+
     [RestPostById]
     [Consumes("application/json")]
     public ActionResult<CreatorResource> Create([FromBody] CreatorResource resource)

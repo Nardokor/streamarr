@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
@@ -13,16 +14,16 @@ namespace Streamarr.Core.MetadataSource
         public abstract PlatformType Platform { get; }
 
         public Type ConfigContract => typeof(TSettings);
-        public virtual ProviderMessage Message => null;
+        public virtual ProviderMessage Message => null!;
         public virtual IEnumerable<ProviderDefinition> DefaultDefinitions => new List<ProviderDefinition>();
-        public ProviderDefinition Definition { get; set; }
+        public ProviderDefinition Definition { get; set; } = null!;
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 
         public abstract CreatorMetadataResult SearchCreator(string query);
         public abstract ChannelMetadataResult GetChannelMetadata(string platformUrl);
         public abstract IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since);
-        public abstract ContentMetadataResult GetContentMetadata(string platformContentId);
+        public abstract ContentMetadataResult? GetContentMetadata(string platformContentId);
         public abstract IEnumerable<ContentMetadataResult> GetContentMetadataBatch(IEnumerable<string> platformContentIds);
         public abstract IEnumerable<ContentStatusUpdate> GetLivestreamStatusUpdates(IEnumerable<string> platformContentIds);
 
@@ -33,7 +34,7 @@ namespace Streamarr.Core.MetadataSource
 
         public virtual object RequestAction(string stage, IDictionary<string, string> query)
         {
-            return null;
+            return null!;
         }
     }
 }

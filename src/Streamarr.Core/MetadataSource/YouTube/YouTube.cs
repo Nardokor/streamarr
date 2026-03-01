@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -221,7 +222,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         // ── Single / batch lookup ──────────────────────────────────────────────
 
-        public override ContentMetadataResult GetContentMetadata(string platformContentId)
+        public override ContentMetadataResult? GetContentMetadata(string platformContentId)
         {
             var results = GetVideoDetails(new[] { platformContentId });
             return results.FirstOrDefault();
@@ -263,10 +264,10 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
             return videos
                 .Select(MapToStatusUpdate)
-                .Where(u => u != null);
+                .OfType<ContentStatusUpdate>();
         }
 
-        private static ContentStatusUpdate MapToStatusUpdate(YoutubeVideo video)
+        private static ContentStatusUpdate? MapToStatusUpdate(YoutubeVideo video)
         {
             var lsd = video.LiveStreamingDetails;
             if (lsd == null)
@@ -395,7 +396,8 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
             var thumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(
                 video.Snippet?.Thumbnails?.Medium?.Url
-                ?? video.Snippet?.Thumbnails?.High?.Url);
+                ?? video.Snippet?.Thumbnails?.High?.Url
+                ?? string.Empty);
 
             return new ContentMetadataResult
             {
@@ -403,8 +405,8 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 PlatformChannelId = video.Snippet?.ChannelId ?? string.Empty,
                 PlatformChannelTitle = video.Snippet?.ChannelTitle ?? string.Empty,
                 ContentType = DetermineContentType(video, duration),
-                Title = video.Snippet?.Title,
-                Description = video.Snippet?.Description,
+                Title = video.Snippet?.Title ?? string.Empty,
+                Description = video.Snippet?.Description ?? string.Empty,
                 ThumbnailUrl = thumbnailUrl,
                 Duration = duration,
                 AirDateUtc = DetermineAirDate(video, publishedAt)

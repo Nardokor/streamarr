@@ -8,9 +8,9 @@ namespace Streamarr.Core.HealthCheck.Checks
 {
     public class YouTubeApiKeyHealthCheck : HealthCheckBase
     {
-        private readonly MetadataSourceFactory _metadataSourceFactory;
+        private readonly IMetadataSourceFactory _metadataSourceFactory;
 
-        public YouTubeApiKeyHealthCheck(MetadataSourceFactory metadataSourceFactory,
+        public YouTubeApiKeyHealthCheck(IMetadataSourceFactory metadataSourceFactory,
                                         ILocalizationService localizationService)
             : base(localizationService)
         {

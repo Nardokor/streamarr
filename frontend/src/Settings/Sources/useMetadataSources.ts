@@ -35,6 +35,23 @@ export const useUpdateMetadataSource = (id: number) => {
   });
 };
 
+export const useMetadataSourceSchemas = () =>
+  useApiQuery<MetadataSourceResource[]>({ path: `${PATH}/schema` });
+
+export const useCreateMetadataSource = () => {
+  const queryClient = useQueryClient();
+
+  return useApiMutation<MetadataSourceResource, MetadataSourceResource>({
+    path: PATH,
+    method: 'POST',
+    mutationOptions: {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: [PATH] });
+      },
+    },
+  });
+};
+
 export const useTestMetadataSource = () =>
   useApiMutation<void, MetadataSourceResource>({
     path: `${PATH}/test`,

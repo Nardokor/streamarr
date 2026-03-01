@@ -247,12 +247,24 @@ function YouTubeSourceForm({
     const apiKey = getFieldValue<string>(updated.fields, 'apiKey', '');
     const save = isNew ? create : update;
 
+    const doSave = () => {
+      save(updated, {
+        onSuccess: () => onModalClose(),
+        onError: (err) => {
+          setTestResult('failure');
+          setTestMessage(
+            err.statusBody?.message ?? err.statusText ?? 'Save failed'
+          );
+        },
+      });
+    };
+
     if (apiKey) {
       runTest(updated, {
         onSuccess: () => {
           setTestResult('success');
           setTestMessage('Connection successful');
-          save(updated, { onSuccess: () => onModalClose() });
+          doSave();
         },
         onError: (err) => {
           setTestResult('failure');
@@ -262,7 +274,7 @@ function YouTubeSourceForm({
         },
       });
     } else {
-      save(updated, { onSuccess: () => onModalClose() });
+      doSave();
     }
   }, [buildUpdatedSource, isNew, create, update, runTest, onModalClose]);
 
@@ -376,19 +388,27 @@ function TwitchSourceForm({
   const handleSave = useCallback(() => {
     const updated = buildUpdatedSource();
     const clientId = getFieldValue<string>(updated.fields, 'clientId', '');
-    const clientSecret = getFieldValue<string>(
-      updated.fields,
-      'clientSecret',
-      ''
-    );
+    const clientSecret = getFieldValue<string>(updated.fields, 'clientSecret', '');
     const save = isNew ? create : update;
+
+    const doSave = () => {
+      save(updated, {
+        onSuccess: () => onModalClose(),
+        onError: (err) => {
+          setTestResult('failure');
+          setTestMessage(
+            err.statusBody?.message ?? err.statusText ?? 'Save failed'
+          );
+        },
+      });
+    };
 
     if (clientId && clientSecret) {
       runTest(updated, {
         onSuccess: () => {
           setTestResult('success');
           setTestMessage('Connection successful');
-          save(updated, { onSuccess: () => onModalClose() });
+          doSave();
         },
         onError: (err) => {
           setTestResult('failure');
@@ -398,7 +418,7 @@ function TwitchSourceForm({
         },
       });
     } else {
-      save(updated, { onSuccess: () => onModalClose() });
+      doSave();
     }
   }, [buildUpdatedSource, isNew, create, update, runTest, onModalClose]);
 

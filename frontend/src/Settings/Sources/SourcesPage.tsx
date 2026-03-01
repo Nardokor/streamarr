@@ -3,10 +3,10 @@ import Icon from 'Components/Icon';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import { icons } from 'Helpers/Props';
-import { useYouTubeSettings } from 'Settings/YouTube/useYouTubeSettings';
 import AddSourceModal from './AddSourceModal';
 import EditSourceModal from './EditSourceModal';
 import SourceCard from './SourceCard';
+import { MetadataSourceResource, useMetadataSources } from './useMetadataSources';
 import styles from './Sources.css';
 
 function AddSourceCard({ onPress }: { onPress: () => void }) {
@@ -18,23 +18,25 @@ function AddSourceCard({ onPress }: { onPress: () => void }) {
 }
 
 function SourcesPage() {
-  const [editingSource, setEditingSource] = useState<string | null>(null);
+  const [editingSource, setEditingSource] =
+    useState<MetadataSourceResource | null>(null);
   const [addingSource, setAddingSource] = useState(false);
-  const { data: ytSettings } = useYouTubeSettings();
 
-  const isYouTubeConfigured = !!ytSettings?.youTubeApiKey;
+  const { data: sources } = useMetadataSources();
+  const configuredNames = (sources ?? []).map((s) => s.name.toLowerCase());
 
   return (
     <PageContent title="Sources">
       <PageContentBody>
         <div className={styles.cards}>
-          {isYouTubeConfigured && (
+          {(sources ?? []).map((source) => (
             <SourceCard
-              name="YouTube"
-              isConfigured={true}
-              onPress={() => setEditingSource('youtube')}
+              key={source.id}
+              name={source.name}
+              isConfigured={source.enable}
+              onPress={() => setEditingSource(source)}
             />
-          )}
+          ))}
 
           <AddSourceCard onPress={() => setAddingSource(true)} />
         </div>
@@ -42,11 +44,8 @@ function SourcesPage() {
 
       <AddSourceModal
         isOpen={addingSource}
-        configuredSources={isYouTubeConfigured ? ['youtube'] : []}
-        onSelect={(source) => {
-          setAddingSource(false);
-          setEditingSource(source);
-        }}
+        configuredSources={configuredNames}
+        onSelect={() => setAddingSource(false)}
         onModalClose={() => setAddingSource(false)}
       />
 

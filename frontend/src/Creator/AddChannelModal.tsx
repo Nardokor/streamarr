@@ -8,7 +8,10 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
-import { useYouTubeSettings } from 'Settings/YouTube/useYouTubeSettings';
+import {
+  getFieldValue,
+  useMetadataSources,
+} from 'Settings/Sources/useMetadataSources';
 import { CreatorLookupChannel } from 'typings/Creator';
 import { useAddChannel, useCreatorLookup } from './useCreators';
 import styles from './AddChannelModal.css';
@@ -32,10 +35,13 @@ function AddChannelModal({
   creatorId,
   onModalClose,
 }: AddChannelModalProps) {
-  const { data: ytSettings } = useYouTubeSettings();
+  const { data: sources } = useMetadataSources();
+  const youtubeSource = (sources ?? []).find(
+    (s) => s.implementation === 'YouTube' && s.enable
+  );
 
   const configuredPlatforms = PLATFORMS.filter(
-    (p) => p.id === 'youtube' && !!ytSettings?.youTubeApiKey
+    (p) => p.id === 'youtube' && !!youtubeSource
   );
 
   const [selectedPlatformId, setSelectedPlatformId] = useState<string | null>(
@@ -79,14 +85,14 @@ function AddChannelModal({
         description: selected.description,
         thumbnailUrl: selected.thumbnailUrl,
         monitored: true,
-        downloadVideos: ytSettings?.youTubeDefaultDownloadVideos ?? true,
-        downloadShorts: ytSettings?.youTubeDefaultDownloadShorts ?? true,
-        downloadVods: ytSettings?.youTubeDefaultDownloadVods ?? true,
-        downloadLive: ytSettings?.youTubeDefaultDownloadLive ?? false,
-        watchedWords: ytSettings?.youTubeDefaultWatchedWords ?? '',
-        ignoredWords: ytSettings?.youTubeDefaultIgnoredWords ?? '',
-        watchedDefeatsIgnored: ytSettings?.youTubeDefaultWatchedDefeatsIgnored ?? true,
-        autoDownload: ytSettings?.youTubeDefaultAutoDownload ?? true,
+        downloadVideos: getFieldValue(youtubeSource?.fields ?? [], 'defaultDownloadVideos', true),
+        downloadShorts: getFieldValue(youtubeSource?.fields ?? [], 'defaultDownloadShorts', true),
+        downloadVods: getFieldValue(youtubeSource?.fields ?? [], 'defaultDownloadVods', true),
+        downloadLive: getFieldValue(youtubeSource?.fields ?? [], 'defaultDownloadLive', false),
+        watchedWords: getFieldValue(youtubeSource?.fields ?? [], 'defaultWatchedWords', ''),
+        ignoredWords: getFieldValue(youtubeSource?.fields ?? [], 'defaultIgnoredWords', ''),
+        watchedDefeatsIgnored: getFieldValue(youtubeSource?.fields ?? [], 'defaultWatchedDefeatsIgnored', true),
+        autoDownload: getFieldValue(youtubeSource?.fields ?? [], 'defaultAutoDownload', true),
       },
       {
         onSuccess: () => {
@@ -97,7 +103,7 @@ function AddChannelModal({
         },
       }
     );
-  }, [selected, creatorId, addChannel, onModalClose]);
+  }, [selected, creatorId, youtubeSource, addChannel, onModalClose]);
 
   const handleClose = useCallback(() => {
     setInputValue('');

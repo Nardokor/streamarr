@@ -6,7 +6,7 @@ namespace Streamarr.Core.Datastore.Migration
     [Migration(235)]
     public class Migration235MetadataSources : StreamarrMigrationBase
     {
-        public override void Up()
+        protected override void MainDbUpgrade()
         {
             // Create MetadataSources table
             Create.TableForModel("MetadataSources")

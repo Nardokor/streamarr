@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using Streamarr.Core.Channels;
@@ -18,7 +19,7 @@ namespace Streamarr.Core.MetadataSource
         IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since);
 
         // Single-item and batch lookup (null = deleted from platform)
-        ContentMetadataResult GetContentMetadata(string platformContentId);
+        ContentMetadataResult? GetContentMetadata(string platformContentId);
         IEnumerable<ContentMetadataResult> GetContentMetadataBatch(IEnumerable<string> platformContentIds);
 
         // Livestream tracking — returns empty enumerable on platforms without live support

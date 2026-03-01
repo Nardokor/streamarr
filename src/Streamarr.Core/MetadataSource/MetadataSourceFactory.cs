@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Streamarr.Core.MetadataSource
         {
         }
 
-        public IMetadataSource GetByPlatform(PlatformType platform)
+        public IMetadataSource? GetByPlatform(PlatformType platform)
         {
             var def = All().FirstOrDefault(d => d.Platform == platform && d.Enable);
             return def != null ? GetInstance(def) : null;

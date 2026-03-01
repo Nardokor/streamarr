@@ -28,6 +28,11 @@ const PLATFORMS = [
     label: 'YouTube',
     placeholder: 'YouTube @handle, channel URL, or name',
   },
+  {
+    id: 'twitch',
+    label: 'Twitch',
+    placeholder: 'Twitch username or channel URL',
+  },
 ] as const;
 
 function AddChannelModal({
@@ -39,10 +44,15 @@ function AddChannelModal({
   const youtubeSource = (sources ?? []).find(
     (s) => s.implementation === 'YouTube' && s.enable
   );
-
-  const configuredPlatforms = PLATFORMS.filter(
-    (p) => p.id === 'youtube' && !!youtubeSource
+  const twitchSource = (sources ?? []).find(
+    (s) => s.implementation === 'Twitch' && s.enable
   );
+
+  const configuredPlatforms = PLATFORMS.filter((p) => {
+    if (p.id === 'youtube') return !!youtubeSource;
+    if (p.id === 'twitch') return !!twitchSource;
+    return false;
+  });
 
   const [selectedPlatformId, setSelectedPlatformId] = useState<string | null>(
     null
@@ -53,10 +63,13 @@ function AddChannelModal({
 
   const activePlatform =
     configuredPlatforms.find((p) => p.id === selectedPlatformId) ??
-    (configuredPlatforms.length === 1 ? configuredPlatforms[0] : null);
+    (configuredPlatforms.length > 0 ? configuredPlatforms[0] : null);
+
+  const activeSource =
+    activePlatform?.id === 'twitch' ? twitchSource : youtubeSource;
 
   const { data: lookupResult, isFetching: isSearching } =
-    useCreatorLookup(searchTerm);
+    useCreatorLookup(searchTerm, activePlatform?.id);
 
   const { addChannel, isAdding } = useAddChannel(creatorId);
 
@@ -85,14 +98,14 @@ function AddChannelModal({
         description: selected.description,
         thumbnailUrl: selected.thumbnailUrl,
         monitored: true,
-        downloadVideos: getFieldValue(youtubeSource?.fields ?? [], 'defaultDownloadVideos', true),
-        downloadShorts: getFieldValue(youtubeSource?.fields ?? [], 'defaultDownloadShorts', true),
-        downloadVods: getFieldValue(youtubeSource?.fields ?? [], 'defaultDownloadVods', true),
-        downloadLive: getFieldValue(youtubeSource?.fields ?? [], 'defaultDownloadLive', false),
-        watchedWords: getFieldValue(youtubeSource?.fields ?? [], 'defaultWatchedWords', ''),
-        ignoredWords: getFieldValue(youtubeSource?.fields ?? [], 'defaultIgnoredWords', ''),
-        watchedDefeatsIgnored: getFieldValue(youtubeSource?.fields ?? [], 'defaultWatchedDefeatsIgnored', true),
-        autoDownload: getFieldValue(youtubeSource?.fields ?? [], 'defaultAutoDownload', true),
+        downloadVideos: getFieldValue(activeSource?.fields ?? [], 'defaultDownloadVideos', true),
+        downloadShorts: getFieldValue(activeSource?.fields ?? [], 'defaultDownloadShorts', true),
+        downloadVods: getFieldValue(activeSource?.fields ?? [], 'defaultDownloadVods', true),
+        downloadLive: getFieldValue(activeSource?.fields ?? [], 'defaultDownloadLive', false),
+        watchedWords: getFieldValue(activeSource?.fields ?? [], 'defaultWatchedWords', ''),
+        ignoredWords: getFieldValue(activeSource?.fields ?? [], 'defaultIgnoredWords', ''),
+        watchedDefeatsIgnored: getFieldValue(activeSource?.fields ?? [], 'defaultWatchedDefeatsIgnored', true),
+        autoDownload: getFieldValue(activeSource?.fields ?? [], 'defaultAutoDownload', true),
       },
       {
         onSuccess: () => {
@@ -103,7 +116,7 @@ function AddChannelModal({
         },
       }
     );
-  }, [selected, creatorId, youtubeSource, addChannel, onModalClose]);
+  }, [selected, creatorId, activeSource, addChannel, onModalClose]);
 
   const handleClose = useCallback(() => {
     setInputValue('');

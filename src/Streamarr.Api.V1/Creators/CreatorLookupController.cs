@@ -20,19 +20,41 @@ public class CreatorLookupController : Controller
 
     [HttpGet]
     [Produces("application/json")]
-    public ActionResult<CreatorMetadataResult> Lookup([FromQuery] string term)
+    public ActionResult<CreatorMetadataResult> Lookup([FromQuery] string term, [FromQuery] string? platform = null)
     {
         if (string.IsNullOrWhiteSpace(term))
         {
             return BadRequest("term is required");
         }
 
-        // Try each enabled source and return the first successful result
-        foreach (var definition in _metadataSourceFactory.All().Where(d => d.Enable))
+        IEnumerable<IMetadataSource> sources;
+
+        if (platform != null)
+        {
+            if (!Enum.TryParse<PlatformType>(platform, ignoreCase: true, out var platformType) || platformType == PlatformType.Unknown)
+            {
+                return BadRequest($"Unknown platform: {platform}");
+            }
+
+            var platformSource = _metadataSourceFactory.GetByPlatform(platformType);
+            if (platformSource == null)
+            {
+                return NotFound($"No enabled source for platform: {platform}");
+            }
+
+            sources = new[] { platformSource };
+        }
+        else
+        {
+            sources = _metadataSourceFactory.All()
+                .Where(d => d.Enable)
+                .Select(d => _metadataSourceFactory.GetInstance(d));
+        }
+
+        foreach (var source in sources)
         {
             try
             {
-                var source = _metadataSourceFactory.GetInstance(definition);
                 var result = source.SearchCreator(term);
 
                 var existingChannel = result.Channels
@@ -44,7 +66,10 @@ public class CreatorLookupController : Controller
                     result.ExistingCreatorId = existingChannel.CreatorId;
                 }
 
-                return Ok(result);
+                if (result.Channels?.Count > 0)
+                {
+                    return Ok(result);
+                }
             }
             catch
             {

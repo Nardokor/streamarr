@@ -30,6 +30,13 @@ export const useCreator = (id: number) => {
   });
 };
 
+export const useCreatorBySlug = (slug: string) => {
+  return useApiQuery<Creator>({
+    path: `${CREATORS_PATH}/slug/${slug}`,
+    queryOptions: { enabled: slug.length > 0 },
+  });
+};
+
 export const useCreatorChannels = (creatorId: number) => {
   const result = useApiQuery<Channel[]>({
     path: `/channel/creator/${creatorId}`,
@@ -63,10 +70,10 @@ export const useCreatorContent = (creatorId: number) => {
   };
 };
 
-export const useCreatorLookup = (term: string) => {
+export const useCreatorLookup = (term: string, platform?: string) => {
   const result = useApiQuery<CreatorLookupResult>({
     path: '/creator/lookup',
-    queryParams: { term },
+    queryParams: { term, ...(platform ? { platform } : {}) },
     queryOptions: {
       enabled: term.length > 0,
     },

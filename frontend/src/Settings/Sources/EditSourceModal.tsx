@@ -10,49 +10,86 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
-import useApiMutation from 'Helpers/Hooks/useApiMutation';
 import { inputTypes } from 'Helpers/Props';
-import { useManageYouTubeSettings } from 'Settings/YouTube/useYouTubeSettings';
 import { InputChanged } from 'typings/inputs';
+import {
+  MetadataSourceResource,
+  applyFieldChanges,
+  getFieldValue,
+  useTestMetadataSource,
+  useUpdateMetadataSource,
+} from './useMetadataSources';
 
 interface EditSourceModalProps {
-  source: string | null;
+  source: MetadataSourceResource | null;
   isOpen: boolean;
   onModalClose: () => void;
 }
 
-function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
-  const { settings, isSaving, saveSettings, updateSetting } =
-    useManageYouTubeSettings();
-
+function YouTubeSourceForm({
+  source,
+  onModalClose,
+}: {
+  source: MetadataSourceResource;
+  onModalClose: () => void;
+}) {
+  const [pending, setPending] = useState<Record<string, unknown>>({});
   const [testResult, setTestResult] = useState<'success' | 'failure' | null>(
     null
   );
   const [testMessage, setTestMessage] = useState('');
 
-  const { mutate: runTest, isPending: isTesting } = useApiMutation<
-    void,
-    { youTubeApiKey: string }
-  >({
-    path: '/settings/youtube/test',
-    method: 'POST',
-  });
+  const { mutate: save, isPending: isSaving } = useUpdateMetadataSource(
+    source.id
+  );
+  const { mutate: runTest, isPending: isTesting } = useTestMetadataSource();
 
-  const handleInputChange = useCallback(
-    (change: InputChanged) => {
-      // @ts-expect-error name needs to be keyof YouTubeSettingsModel
-      updateSetting(change.name, change.value);
+  const getVal = useCallback(
+    <T,>(name: string, fallback: T): T => {
+      if (name in pending) return pending[name] as T;
+
+      return getFieldValue<T>(source.fields, name, fallback);
     },
-    [updateSetting]
+    [pending, source.fields]
+  );
+
+  const handleInputChange = useCallback((change: InputChanged) => {
+    setPending((prev) => ({ ...prev, [change.name]: change.value }));
+  }, []);
+
+  const buildUpdatedSource = useCallback(
+    (): MetadataSourceResource => ({
+      ...source,
+      fields: applyFieldChanges(source.fields, pending),
+    }),
+    [source, pending]
   );
 
   const handleTest = useCallback(() => {
-    runTest(
-      { youTubeApiKey: settings.youTubeApiKey.value ?? '' },
-      {
+    runTest(buildUpdatedSource(), {
+      onSuccess: () => {
+        setTestResult('success');
+        setTestMessage('Connection successful');
+      },
+      onError: (err) => {
+        setTestResult('failure');
+        setTestMessage(
+          err.statusBody?.message ?? err.statusText ?? 'Connection failed'
+        );
+      },
+    });
+  }, [runTest, buildUpdatedSource]);
+
+  const handleSave = useCallback(() => {
+    const updated = buildUpdatedSource();
+    const apiKey = getFieldValue<string>(updated.fields, 'apiKey', '');
+
+    if (apiKey) {
+      runTest(updated, {
         onSuccess: () => {
           setTestResult('success');
           setTestMessage('Connection successful');
+          save(updated, { onSuccess: () => onModalClose() });
         },
         onError: (err) => {
           setTestResult('failure');
@@ -60,36 +97,11 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
             err.statusBody?.message ?? err.statusText ?? 'Connection failed'
           );
         },
-      }
-    );
-  }, [runTest, settings.youTubeApiKey.value]);
-
-  const handleSave = useCallback(() => {
-    const apiKey = settings.youTubeApiKey.value ?? '';
-
-    if (apiKey) {
-      runTest(
-        { youTubeApiKey: apiKey },
-        {
-          onSuccess: () => {
-            setTestResult('success');
-            setTestMessage('Connection successful');
-            saveSettings();
-            onModalClose();
-          },
-          onError: (err) => {
-            setTestResult('failure');
-            setTestMessage(
-              err.statusBody?.message ?? err.statusText ?? 'Connection failed'
-            );
-          },
-        }
-      );
+      });
     } else {
-      saveSettings();
-      onModalClose();
+      save(updated, { onSuccess: () => onModalClose() });
     }
-  }, [settings.youTubeApiKey.value, runTest, saveSettings, onModalClose]);
+  }, [buildUpdatedSource, runTest, save, onModalClose]);
 
   return (
     <>
@@ -98,41 +110,44 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
       <ModalBody>
         <FormGroup>
           <FormLabel>API Key</FormLabel>
-
           <FormInputGroup
             type={inputTypes.PASSWORD}
-            name="youTubeApiKey"
+            name="apiKey"
             helpText="YouTube Data API v3 key from Google Cloud Console."
+            value={getVal('apiKey', '')}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeApiKey}
           />
         </FormGroup>
 
         <FormGroup>
           <FormLabel>Full Refresh Interval (hours)</FormLabel>
-
           <FormInputGroup
             type={inputTypes.NUMBER}
-            name="youTubeFullRefreshIntervalHours"
+            name="refreshIntervalHours"
             helpText="How often to scan for new videos (min 1, max 168)"
             min={1}
             max={168}
+            value={getVal('refreshIntervalHours', 24)}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeFullRefreshIntervalHours}
           />
         </FormGroup>
 
         <FormGroup>
           <FormLabel>Live Check Interval (minutes)</FormLabel>
-
           <FormInputGroup
             type={inputTypes.NUMBER}
-            name="youTubeLiveCheckIntervalMinutes"
+            name="liveCheckIntervalMinutes"
             helpText="How often to check livestream status (min 5, max 1440)"
             min={5}
             max={1440}
+            value={getVal('liveCheckIntervalMinutes', 60)}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeLiveCheckIntervalMinutes}
           />
         </FormGroup>
 
@@ -140,10 +155,12 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
           <FormLabel>Default: Download Videos</FormLabel>
           <FormInputGroup
             type={inputTypes.CHECK}
-            name="youTubeDefaultDownloadVideos"
+            name="defaultDownloadVideos"
             helpText="Include regular videos by default for new channels"
+            value={getVal('defaultDownloadVideos', true)}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeDefaultDownloadVideos}
           />
         </FormGroup>
 
@@ -151,10 +168,12 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
           <FormLabel>Default: Download Shorts</FormLabel>
           <FormInputGroup
             type={inputTypes.CHECK}
-            name="youTubeDefaultDownloadShorts"
+            name="defaultDownloadShorts"
             helpText="Include shorts by default for new channels"
+            value={getVal('defaultDownloadShorts', true)}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeDefaultDownloadShorts}
           />
         </FormGroup>
 
@@ -162,10 +181,12 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
           <FormLabel>Default: Download VoDs</FormLabel>
           <FormInputGroup
             type={inputTypes.CHECK}
-            name="youTubeDefaultDownloadVods"
+            name="defaultDownloadVods"
             helpText="Include past livestreams by default for new channels"
+            value={getVal('defaultDownloadVods', true)}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeDefaultDownloadVods}
           />
         </FormGroup>
 
@@ -173,10 +194,12 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
           <FormLabel>Default: Download Live</FormLabel>
           <FormInputGroup
             type={inputTypes.CHECK}
-            name="youTubeDefaultDownloadLive"
+            name="defaultDownloadLive"
             helpText="Record active livestreams by default for new channels"
+            value={getVal('defaultDownloadLive', false)}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeDefaultDownloadLive}
           />
         </FormGroup>
 
@@ -184,10 +207,12 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
           <FormLabel>Default: Watched Words</FormLabel>
           <FormInputGroup
             type={inputTypes.TEXT}
-            name="youTubeDefaultWatchedWords"
+            name="defaultWatchedWords"
             helpText="word1, word2 … — only matching content is wanted (blank = all)"
+            value={getVal('defaultWatchedWords', '')}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeDefaultWatchedWords}
           />
         </FormGroup>
 
@@ -195,10 +220,12 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
           <FormLabel>Default: Ignored Words</FormLabel>
           <FormInputGroup
             type={inputTypes.TEXT}
-            name="youTubeDefaultIgnoredWords"
+            name="defaultIgnoredWords"
             helpText="word1, word2 … — matching content is unwanted (blank = none)"
+            value={getVal('defaultIgnoredWords', '')}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeDefaultIgnoredWords}
           />
         </FormGroup>
 
@@ -206,10 +233,12 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
           <FormLabel>Default: Watched Defeats Ignored</FormLabel>
           <FormInputGroup
             type={inputTypes.CHECK}
-            name="youTubeDefaultWatchedDefeatsIgnored"
+            name="defaultWatchedDefeatsIgnored"
             helpText="Watched words take priority over ignored words"
+            value={getVal('defaultWatchedDefeatsIgnored', true)}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeDefaultWatchedDefeatsIgnored}
           />
         </FormGroup>
 
@@ -217,10 +246,12 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
           <FormLabel>Default: Auto Download</FormLabel>
           <FormInputGroup
             type={inputTypes.CHECK}
-            name="youTubeDefaultAutoDownload"
+            name="defaultAutoDownload"
             helpText="Automatically queue missing content for download"
+            value={getVal('defaultAutoDownload', true)}
+            errors={[]}
+            warnings={[]}
             onChange={handleInputChange}
-            {...settings.youTubeDefaultAutoDownload}
           />
         </FormGroup>
 
@@ -246,12 +277,16 @@ function YouTubeSourceForm({ onModalClose }: { onModalClose: () => void }) {
   );
 }
 
-function EditSourceModal({ source, isOpen, onModalClose }: EditSourceModalProps) {
+function EditSourceModal({
+  source,
+  isOpen,
+  onModalClose,
+}: EditSourceModalProps) {
   return (
     <Modal isOpen={isOpen} size="medium" onModalClose={onModalClose}>
       <ModalContent onModalClose={onModalClose}>
-        {source === 'youtube' ? (
-          <YouTubeSourceForm onModalClose={onModalClose} />
+        {source?.implementation === 'YouTube' ? (
+          <YouTubeSourceForm source={source} onModalClose={onModalClose} />
         ) : null}
       </ModalContent>
     </Modal>

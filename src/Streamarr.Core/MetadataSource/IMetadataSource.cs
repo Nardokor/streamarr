@@ -2,15 +2,30 @@ using System;
 using System.Collections.Generic;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
+using Streamarr.Core.ThingiProvider;
 
 namespace Streamarr.Core.MetadataSource
 {
-    public interface ICreatorMetadataService
+    public interface IMetadataSource : IProvider
     {
+        PlatformType Platform { get; }
+
+        // Creator / channel discovery
         CreatorMetadataResult SearchCreator(string query);
         ChannelMetadataResult GetChannelMetadata(string platformUrl);
-        List<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since = null);
+
+        // Content sync
+        IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since);
+
+        // Single-item and batch lookup (null = deleted from platform)
+        ContentMetadataResult GetContentMetadata(string platformContentId);
+        IEnumerable<ContentMetadataResult> GetContentMetadataBatch(IEnumerable<string> platformContentIds);
+
+        // Livestream tracking — returns empty enumerable on platforms without live support
+        IEnumerable<ContentStatusUpdate> GetLivestreamStatusUpdates(IEnumerable<string> platformContentIds);
     }
+
+    // ── Result DTOs ──────────────────────────────────────────────────────────
 
     public class CreatorMetadataResult
     {
@@ -34,11 +49,22 @@ namespace Streamarr.Core.MetadataSource
     public class ContentMetadataResult
     {
         public string PlatformContentId { get; set; } = string.Empty;
+        public string PlatformChannelId { get; set; } = string.Empty;
+        public string PlatformChannelTitle { get; set; } = string.Empty;
         public ContentType ContentType { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string ThumbnailUrl { get; set; } = string.Empty;
         public TimeSpan? Duration { get; set; }
         public DateTime? AirDateUtc { get; set; }
+    }
+
+    public class ContentStatusUpdate
+    {
+        public string PlatformContentId { get; set; } = string.Empty;
+        public ContentType NewContentType { get; set; }
+        public DateTime? NewAirDateUtc { get; set; }
+        public bool ExistsOnPlatform { get; set; } = true;
+        public bool ShouldTriggerDownload { get; set; }
     }
 }

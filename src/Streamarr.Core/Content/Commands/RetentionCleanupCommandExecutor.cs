@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
@@ -9,7 +8,7 @@ using Streamarr.Core.Configuration;
 using Streamarr.Core.ContentFiles;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Messaging.Commands;
-using Streamarr.Core.MetadataSource.YouTube;
+using Streamarr.Core.MetadataSource;
 
 namespace Streamarr.Core.Content.Commands
 {
@@ -19,7 +18,7 @@ namespace Streamarr.Core.Content.Commands
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
         private readonly IContentFileService _contentFileService;
-        private readonly IYouTubeApiClient _youTubeApiClient;
+        private readonly MetadataSourceFactory _metadataSourceFactory;
         private readonly IDiskProvider _diskProvider;
         private readonly IConfigService _configService;
         private readonly Logger _logger;
@@ -29,7 +28,7 @@ namespace Streamarr.Core.Content.Commands
             IChannelService channelService,
             IContentService contentService,
             IContentFileService contentFileService,
-            IYouTubeApiClient youTubeApiClient,
+            MetadataSourceFactory metadataSourceFactory,
             IDiskProvider diskProvider,
             IConfigService configService,
             Logger logger)
@@ -38,7 +37,7 @@ namespace Streamarr.Core.Content.Commands
             _channelService = channelService;
             _contentService = contentService;
             _contentFileService = contentFileService;
-            _youTubeApiClient = youTubeApiClient;
+            _metadataSourceFactory = metadataSourceFactory;
             _diskProvider = diskProvider;
             _configService = configService;
             _logger = logger;
@@ -70,7 +69,6 @@ namespace Streamarr.Core.Content.Commands
                         continue;
                     }
 
-                    // Only apply retention to content types configured for deletion
                     var typeEligible = content.ContentType switch
                     {
                         ContentType.Video => channel.RetentionVideos,
@@ -126,59 +124,50 @@ namespace Streamarr.Core.Content.Commands
                 return;
             }
 
-            // Check current state on the platform (YouTube only for now)
-            if (channel.Platform == PlatformType.YouTube)
+            // Check current state on the platform
+            var source = _metadataSourceFactory.GetByPlatform(channel.Platform);
+            if (source != null)
             {
-                List<YoutubeVideo> details;
+                ContentMetadataResult meta;
                 try
                 {
-                    details = _youTubeApiClient.GetVideoDetails(new[] { content.PlatformContentId });
+                    meta = source.GetContentMetadata(content.PlatformContentId);
                 }
                 catch (Exception ex)
                 {
-                    _logger.Warn(ex, "Failed to check YouTube for content '{0}', skipping", content.Title);
+                    _logger.Warn(ex, "Failed to check platform for content '{0}', skipping", content.Title);
                     return;
                 }
 
-                var video = details.FirstOrDefault();
-
-                if (video == null)
+                if (meta == null)
                 {
-                    // Video gone from YouTube — preserve the file, mark as Deleted
-                    _logger.Info("Content '{0}' is no longer on YouTube; keeping local file", content.Title);
+                    // Content gone from platform — preserve the file, mark as Deleted
+                    _logger.Info("Content '{0}' is no longer on platform; keeping local file", content.Title);
                     content.Status = ContentStatus.Deleted;
                     _contentService.UpdateContent(content);
                     return;
                 }
 
                 // Check if duration shrank significantly (>5%) — indicates edited/re-uploaded content
-                if (content.Duration.HasValue && !string.IsNullOrEmpty(video.ContentDetails?.Duration))
+                if (content.Duration.HasValue && meta.Duration.HasValue)
                 {
-                    try
-                    {
-                        var apiDuration = System.Xml.XmlConvert.ToTimeSpan(video.ContentDetails.Duration);
-                        var localSeconds = content.Duration.Value.TotalSeconds;
+                    var localSeconds = content.Duration.Value.TotalSeconds;
 
-                        if (localSeconds > 0)
-                        {
-                            var shrinkRatio = (localSeconds - apiDuration.TotalSeconds) / localSeconds;
-                            if (shrinkRatio > 0.05)
-                            {
-                                _logger.Info("Content '{0}' duration shrank by {1:P0}; marking as Modified", content.Title, shrinkRatio);
-                                content.Status = ContentStatus.Modified;
-                                _contentService.UpdateContent(content);
-                                return;
-                            }
-                        }
-                    }
-                    catch (Exception ex)
+                    if (localSeconds > 0)
                     {
-                        _logger.Warn(ex, "Failed to parse API duration for content '{0}'", content.Title);
+                        var shrinkRatio = (localSeconds - meta.Duration.Value.TotalSeconds) / localSeconds;
+                        if (shrinkRatio > 0.05)
+                        {
+                            _logger.Info("Content '{0}' duration shrank by {1:P0}; marking as Modified", content.Title, shrinkRatio);
+                            content.Status = ContentStatus.Modified;
+                            _contentService.UpdateContent(content);
+                            return;
+                        }
                     }
                 }
             }
 
-            // Past retention, still on platform, unmodified — delete the file and mark Available
+            // Past retention, still on platform (or no source configured), unmodified — delete and mark Available
             var contentFile = _contentFileService.GetContentFile(content.ContentFileId);
             var fullPath = Path.Combine(creator.Path, contentFile.RelativePath);
 

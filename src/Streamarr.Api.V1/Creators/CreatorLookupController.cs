@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Streamarr.Core.Channels;
 using Streamarr.Core.MetadataSource;
-using Streamarr.Core.MetadataSource.YouTube;
 using Streamarr.Http;
 
 namespace Streamarr.Api.V1.Creators;
@@ -9,13 +8,13 @@ namespace Streamarr.Api.V1.Creators;
 [V1ApiController("creator/lookup")]
 public class CreatorLookupController : Controller
 {
-    private readonly YouTubeMetadataService _metadataService;
+    private readonly MetadataSourceFactory _metadataSourceFactory;
     private readonly IChannelService _channelService;
 
-    public CreatorLookupController(YouTubeMetadataService metadataService,
+    public CreatorLookupController(MetadataSourceFactory metadataSourceFactory,
                                    IChannelService channelService)
     {
-        _metadataService = metadataService;
+        _metadataSourceFactory = metadataSourceFactory;
         _channelService = channelService;
     }
 
@@ -28,18 +27,31 @@ public class CreatorLookupController : Controller
             return BadRequest("term is required");
         }
 
-        var result = _metadataService.SearchCreator(term);
-
-        // Check whether any returned channel already exists in the library.
-        var existingChannel = result.Channels
-            .Select(ch => _channelService.FindByPlatformId(ch.Platform, ch.PlatformId))
-            .FirstOrDefault(ch => ch != null);
-
-        if (existingChannel != null)
+        // Try each enabled source and return the first successful result
+        foreach (var definition in _metadataSourceFactory.All().Where(d => d.Enable))
         {
-            result.ExistingCreatorId = existingChannel.CreatorId;
+            try
+            {
+                var source = _metadataSourceFactory.GetInstance(definition);
+                var result = source.SearchCreator(term);
+
+                var existingChannel = result.Channels
+                    .Select(ch => _channelService.FindByPlatformId(ch.Platform, ch.PlatformId))
+                    .FirstOrDefault(ch => ch != null);
+
+                if (existingChannel != null)
+                {
+                    result.ExistingCreatorId = existingChannel.CreatorId;
+                }
+
+                return Ok(result);
+            }
+            catch
+            {
+                // Try next source
+            }
         }
 
-        return Ok(result);
+        return NotFound("No results found");
     }
 }

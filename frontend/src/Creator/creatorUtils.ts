@@ -38,15 +38,10 @@ export function formatDate(dateStr: string | null | undefined): string {
 
 export interface StatusLabel {
   text: string;
-  kind: 'downloaded' | 'downloading' | 'recording' | 'missing' | 'unmonitored' | 'notAired' | 'onAir' | 'expired' | 'modified' | 'unwanted' | 'processing';
+  kind: 'downloaded' | 'downloading' | 'recording' | 'missing' | 'unmonitored' | 'notAired' | 'expired' | 'modified' | 'unwanted' | 'processing' | 'available';
 }
 
 export function getStatusLabel(content: Content): StatusLabel {
-  // Currently live — type indicates it
-  if (content.contentType === 'live') {
-    return { text: 'On Air', kind: 'onAir' };
-  }
-
   // Upcoming — scheduled but not yet started
   if (content.contentType === 'upcoming') {
     return { text: 'Not Aired', kind: 'notAired' };
@@ -78,6 +73,10 @@ export function getStatusLabel(content: Content): StatusLabel {
 
   if (content.status === 'unwanted') {
     return { text: 'Unwanted', kind: 'unwanted' };
+  }
+
+  if (content.status === 'available') {
+    return { text: 'Available', kind: 'available' };
   }
 
   if (content.monitored) {

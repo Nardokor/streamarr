@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using NLog;
 using Streamarr.Common;
+using Streamarr.Core.Configuration;
 using Streamarr.Core.Lifecycle;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.ProgressMessaging;
@@ -11,24 +12,25 @@ namespace Streamarr.Core.Messaging.Commands
     public class CommandExecutor : IHandle<ApplicationStartedEvent>,
                                    IHandle<ApplicationShutdownRequested>
     {
-        private const int THREAD_LIMIT = 5;
-
         private readonly Logger _logger;
         private readonly IServiceFactory _serviceFactory;
         private readonly IManageCommandQueue _commandQueueManager;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IConfigService _configService;
 
         private static CancellationTokenSource _cancellationTokenSource;
 
         public CommandExecutor(IServiceFactory serviceFactory,
                                IManageCommandQueue commandQueueManager,
                                IEventAggregator eventAggregator,
+                               IConfigService configService,
                                Logger logger)
         {
             _logger = logger;
             _serviceFactory = serviceFactory;
             _commandQueueManager = commandQueueManager;
             _eventAggregator = eventAggregator;
+            _configService = configService;
         }
 
         private void ExecuteCommands()
@@ -127,7 +129,10 @@ namespace Streamarr.Core.Messaging.Commands
         {
             _cancellationTokenSource = new CancellationTokenSource();
 
-            for (var i = 0; i < THREAD_LIMIT; i++)
+            var threadCount = Math.Max(3, _configService.YtDlpMaxConcurrentDownloads + 2);
+            _logger.Debug("Starting {0} command execution threads", threadCount);
+
+            for (var i = 0; i < threadCount; i++)
             {
                 var thread = new Thread(ExecuteCommands);
                 thread.Start();

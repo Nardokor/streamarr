@@ -247,27 +247,27 @@
 }
 
 .typeVideo {
-  background: var(--colorPrimary, #3498db);
+  background: #2471a3;
   color: white;
 }
 
 .typeShort {
-  background: var(--colorImportant, #e74c3c);
+  background: #7d3c98;
   color: white;
 }
 
 .typeLive {
-  background: var(--colorWarning, #f39c12);
+  background: #c0392b;
   color: white;
 }
 
 .typeVod {
-  background: var(--colorGray, #7f8c8d);
+  background: #117a65;
   color: white;
 }
 
 .typeUpcoming {
-  background: var(--colorWarning, #f39c12);
+  background: #566573;
   color: white;
 }
 
@@ -284,48 +284,61 @@
 }
 
 .statusMissing {
-  background: var(--colorDanger, #e74c3c);
+  background: #e74c3c;
   color: white;
 }
 
 .statusDownloaded {
-  background: var(--colorSuccess, #2ecc71);
+  background: #27ae60;
   color: white;
 }
 
 .statusDownloading {
-  background: var(--colorPrimary, #3498db);
+  background: #2980b9;
   color: white;
 }
 
 .statusRecording {
-  background: var(--colorWarning, #f39c12);
+  background: #d68910;
   color: white;
 }
 
 .statusNotAired {
-  background: var(--colorWarning, #f39c12);
-  color: white;
-}
-
-.statusOnAir {
-  background: var(--colorPrimary, #3498db);
+  background: #7f8c8d;
   color: white;
 }
 
 .statusUnmonitored {
-  background: var(--colorWarning, #f39c12);
+  background: #616a6b;
   color: white;
 }
 
 .statusExpired {
-  background: var(--textSecondary, #666);
+  background: #424949;
   color: white;
 }
 
 .statusModified {
   background: #e67e22;
   color: white;
+}
+
+.statusAvailable {
+  background: #1a5276;
+  color: white;
+}
+
+.settingsSection {
+  margin-bottom: 12px;
+}
+
+.settingsSectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--textSecondary, #888);
+  margin-bottom: 6px;
 }
 
 .titleLink {

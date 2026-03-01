@@ -29,3 +29,22 @@
   color: var(--textSecondary);
   text-align: center;
 }
+
+.cancelCell {
+  width: 36px;
+  text-align: center;
+}
+
+.cancelBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--textSecondary);
+  padding: 4px;
+  border-radius: 3px;
+  line-height: 1;
+}
+
+.cancelBtn:hover {
+  color: var(--colorDanger, #e74c3c);
+}

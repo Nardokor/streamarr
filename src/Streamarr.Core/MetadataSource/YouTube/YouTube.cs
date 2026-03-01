@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using FluentValidation.Results;
 using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
 using Streamarr.Core.Download.YtDlp;
+using Streamarr.Core.ThingiProvider;
 
 namespace Streamarr.Core.MetadataSource.YouTube
 {
-    public class YouTubeMetadataService : ICreatorMetadataService
+    public class YouTube : MetadataSourceBase<YouTubeSettings>
     {
         // Full YouTube URL (youtube.com or youtu.be)
         private static readonly Regex YouTubeUrlRegex = new Regex(
@@ -36,14 +38,56 @@ namespace Streamarr.Core.MetadataSource.YouTube
         private readonly IYouTubeApiClient _youTubeApiClient;
         private readonly Logger _logger;
 
-        public YouTubeMetadataService(IYtDlpClient ytDlpClient, IYouTubeApiClient youTubeApiClient, Logger logger)
+        public YouTube(IYtDlpClient ytDlpClient, IYouTubeApiClient youTubeApiClient, Logger logger)
         {
             _ytDlpClient = ytDlpClient;
             _youTubeApiClient = youTubeApiClient;
             _logger = logger;
         }
 
-        public CreatorMetadataResult SearchCreator(string query)
+        public override string Name => "YouTube";
+        public override PlatformType Platform => PlatformType.YouTube;
+
+        public override IEnumerable<ProviderDefinition> DefaultDefinitions =>
+            new List<ProviderDefinition>
+            {
+                new MetadataSourceDefinition
+                {
+                    Name = "YouTube",
+                    Implementation = nameof(YouTube),
+                    ConfigContract = nameof(YouTubeSettings),
+                    Platform = PlatformType.YouTube,
+                    Enable = true,
+                    Settings = new YouTubeSettings()
+                }
+            };
+
+        public override ValidationResult Test()
+        {
+            var apiKey = Settings.ApiKey;
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                return new ValidationResult();
+            }
+
+            try
+            {
+                _youTubeApiClient.TestApiKey(apiKey);
+            }
+            catch (Exception ex)
+            {
+                return new ValidationResult(new[]
+                {
+                    new ValidationFailure("ApiKey", $"API key test failed: {ex.Message}")
+                });
+            }
+
+            return new ValidationResult();
+        }
+
+        // ── Discovery ──────────────────────────────────────────────────────────
+
+        public override CreatorMetadataResult SearchCreator(string query)
         {
             query = query.Trim();
 
@@ -92,7 +136,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             var channelId = result.Channels.FirstOrDefault()?.PlatformId;
             if (!string.IsNullOrWhiteSpace(channelId))
             {
-                var apiThumbnail = _youTubeApiClient.GetChannelThumbnailUrl(channelId);
+                var apiThumbnail = _youTubeApiClient.GetChannelThumbnailUrl(Settings.ApiKey, channelId);
                 if (!string.IsNullOrEmpty(apiThumbnail))
                 {
                     result.ThumbnailUrl = apiThumbnail;
@@ -106,7 +150,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             return result;
         }
 
-        public ChannelMetadataResult GetChannelMetadata(string platformUrl)
+        public override ChannelMetadataResult GetChannelMetadata(string platformUrl)
         {
             var channelInfo = _ytDlpClient.GetChannelInfo(platformUrl);
 
@@ -125,7 +169,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             var thumbnailUrl = channelInfo.Thumbnail;
             if (!string.IsNullOrWhiteSpace(channelId))
             {
-                var apiThumbnail = _youTubeApiClient.GetChannelThumbnailUrl(channelId);
+                var apiThumbnail = _youTubeApiClient.GetChannelThumbnailUrl(Settings.ApiKey, channelId);
                 if (!string.IsNullOrEmpty(apiThumbnail))
                 {
                     thumbnailUrl = apiThumbnail;
@@ -143,7 +187,9 @@ namespace Streamarr.Core.MetadataSource.YouTube
             };
         }
 
-        public List<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since = null)
+        // ── Content sync ───────────────────────────────────────────────────────
+
+        public override IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since)
         {
             // Derive uploads playlist ID: "UC..." → "UU..."
             if (string.IsNullOrWhiteSpace(platformId) || !platformId.StartsWith("UC"))
@@ -156,28 +202,119 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
             _logger.Info("Fetching playlist {0} via YouTube API (since: {1})", uploadsPlaylistId, since?.ToString("u") ?? "beginning");
 
-            var playlistItems = _youTubeApiClient.GetPlaylistItems(uploadsPlaylistId, since);
+            var playlistItems = _youTubeApiClient.GetPlaylistItems(Settings.ApiKey, uploadsPlaylistId, since);
 
             if (!playlistItems.Any())
             {
                 _logger.Info("No new items found for playlist {0}", uploadsPlaylistId);
-                return new List<ContentMetadataResult>();
+                return Enumerable.Empty<ContentMetadataResult>();
             }
 
             _logger.Info("Found {0} new items, fetching details", playlistItems.Count);
 
-            var videoDetails = _youTubeApiClient.GetVideoDetails(playlistItems.Select(p => p.VideoId));
+            var videoDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, playlistItems.Select(p => p.VideoId));
 
-            // Build a lookup so we can attach exact publish dates
             var publishedAtById = playlistItems.ToDictionary(p => p.VideoId, p => p.PublishedAt);
 
-            return videoDetails
-                .Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id)))
-                .ToList();
+            return videoDetails.Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id)));
         }
 
-        // Use ytsearch1: to find a video from the named creator, extract its
-        // channel_url, then fetch the full channel metadata from that URL.
+        // ── Single / batch lookup ──────────────────────────────────────────────
+
+        public override ContentMetadataResult GetContentMetadata(string platformContentId)
+        {
+            var results = GetVideoDetails(new[] { platformContentId });
+            return results.FirstOrDefault();
+        }
+
+        public override IEnumerable<ContentMetadataResult> GetContentMetadataBatch(IEnumerable<string> platformContentIds)
+        {
+            return GetVideoDetails(platformContentIds);
+        }
+
+        private IEnumerable<ContentMetadataResult> GetVideoDetails(IEnumerable<string> platformContentIds)
+        {
+            var ids = platformContentIds.ToList();
+            if (!ids.Any())
+            {
+                return Enumerable.Empty<ContentMetadataResult>();
+            }
+
+            if (string.IsNullOrWhiteSpace(Settings.ApiKey))
+            {
+                return Enumerable.Empty<ContentMetadataResult>();
+            }
+
+            var videos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, ids);
+            return videos.Select(v => MapToContentMetadata(v, null));
+        }
+
+        // ── Livestream status ──────────────────────────────────────────────────
+
+        public override IEnumerable<ContentStatusUpdate> GetLivestreamStatusUpdates(IEnumerable<string> platformContentIds)
+        {
+            var ids = platformContentIds.ToList();
+            if (!ids.Any() || string.IsNullOrWhiteSpace(Settings.ApiKey))
+            {
+                return Enumerable.Empty<ContentStatusUpdate>();
+            }
+
+            var videos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, ids);
+
+            return videos
+                .Select(MapToStatusUpdate)
+                .Where(u => u != null);
+        }
+
+        private static ContentStatusUpdate MapToStatusUpdate(YoutubeVideo video)
+        {
+            var lsd = video.LiveStreamingDetails;
+            if (lsd == null)
+            {
+                return null;
+            }
+
+            if (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow)
+            {
+                return new ContentStatusUpdate
+                {
+                    PlatformContentId = video.Id,
+                    NewContentType = ContentType.Upcoming,
+                    NewAirDateUtc = lsd.ScheduledStartTime.Value,
+                    ExistsOnPlatform = true,
+                    ShouldTriggerDownload = false
+                };
+            }
+
+            if (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue)
+            {
+                return new ContentStatusUpdate
+                {
+                    PlatformContentId = video.Id,
+                    NewContentType = ContentType.Live,
+                    NewAirDateUtc = lsd.ActualStartTime.Value,
+                    ExistsOnPlatform = true,
+                    ShouldTriggerDownload = true
+                };
+            }
+
+            if (lsd.ActualStartTime.HasValue)
+            {
+                return new ContentStatusUpdate
+                {
+                    PlatformContentId = video.Id,
+                    NewContentType = ContentType.Vod,
+                    NewAirDateUtc = lsd.ActualStartTime.Value,
+                    ExistsOnPlatform = true,
+                    ShouldTriggerDownload = false
+                };
+            }
+
+            return null;
+        }
+
+        // ── Helpers ────────────────────────────────────────────────────────────
+
         private YtDlpChannelInfo SearchAndResolveChannel(string query)
         {
             var searchUrl = $"ytsearch1:{query}";
@@ -219,11 +356,13 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 ? channelInfo.ChannelUrl
                 : channelInfo.UploaderUrl;
 
+            var thumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(channelInfo.Thumbnail);
+
             return new CreatorMetadataResult
             {
                 Name = channelName,
                 Description = channelInfo.Description,
-                ThumbnailUrl = channelInfo.Thumbnail,
+                ThumbnailUrl = thumbnailUrl,
                 Channels = new List<ChannelMetadataResult>
                 {
                     new ChannelMetadataResult
@@ -233,7 +372,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
                         PlatformUrl = channelPageUrl,
                         Title = channelName,
                         Description = channelInfo.Description,
-                        ThumbnailUrl = channelInfo.Thumbnail
+                        ThumbnailUrl = thumbnailUrl
                     }
                 }
             };
@@ -254,12 +393,15 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 }
             }
 
-            var thumbnailUrl = video.Snippet?.Thumbnails?.Medium?.Url
-                ?? video.Snippet?.Thumbnails?.High?.Url;
+            var thumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(
+                video.Snippet?.Thumbnails?.Medium?.Url
+                ?? video.Snippet?.Thumbnails?.High?.Url);
 
             return new ContentMetadataResult
             {
                 PlatformContentId = video.Id,
+                PlatformChannelId = video.Snippet?.ChannelId ?? string.Empty,
+                PlatformChannelTitle = video.Snippet?.ChannelTitle ?? string.Empty,
                 ContentType = DetermineContentType(video, duration),
                 Title = video.Snippet?.Title,
                 Description = video.Snippet?.Description,
@@ -274,13 +416,11 @@ namespace Streamarr.Core.MetadataSource.YouTube
             var lsd = video.LiveStreamingDetails;
             if (lsd != null)
             {
-                // Upcoming stream/premiere: use the scheduled start time
                 if (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow)
                 {
                     return lsd.ScheduledStartTime.Value;
                 }
 
-                // Completed stream: use actual start time as the air date
                 if (lsd.ActualStartTime.HasValue)
                 {
                     return lsd.ActualStartTime.Value;
@@ -305,7 +445,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
                     return ContentType.Upcoming;
                 }
 
-                return ContentType.VoD;
+                return ContentType.Vod;
             }
 
             if (duration.HasValue && duration.Value.TotalSeconds <= 60)

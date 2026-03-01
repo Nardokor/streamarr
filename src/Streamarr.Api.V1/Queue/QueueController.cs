@@ -3,6 +3,7 @@ using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Download;
+using Streamarr.Core.Download.YtDlp;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Http;
 
@@ -15,16 +16,19 @@ public class QueueController : Controller
     private readonly IContentService _contentService;
     private readonly IChannelService _channelService;
     private readonly ICreatorService _creatorService;
+    private readonly IYtDlpClient _ytDlpClient;
 
     public QueueController(IManageCommandQueue commandQueueManager,
                            IContentService contentService,
                            IChannelService channelService,
-                           ICreatorService creatorService)
+                           ICreatorService creatorService,
+                           IYtDlpClient ytDlpClient)
     {
         _commandQueueManager = commandQueueManager;
         _contentService = contentService;
         _channelService = channelService;
         _creatorService = creatorService;
+        _ytDlpClient = ytDlpClient;
     }
 
     [HttpGet]
@@ -70,5 +74,12 @@ public class QueueController : Controller
         }
 
         return resources;
+    }
+
+    [HttpDelete("{contentId:int}")]
+    public IActionResult CancelDownload(int contentId)
+    {
+        _ytDlpClient.CancelDownload(contentId);
+        return Ok();
     }
 }

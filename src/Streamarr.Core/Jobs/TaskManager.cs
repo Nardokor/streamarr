@@ -13,6 +13,8 @@ using Streamarr.Core.Housekeeping;
 using Streamarr.Core.Lifecycle;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.MetadataSource;
+using Streamarr.Core.ThingiProvider.Events;
 using Streamarr.Core.Update.Commands;
 
 namespace Streamarr.Core.Jobs
@@ -24,17 +26,27 @@ namespace Streamarr.Core.Jobs
         DateTime GetNextExecution(Type type);
     }
 
-    public class TaskManager : ITaskManager, IHandle<ApplicationStartedEvent>, IHandle<CommandExecutedEvent>, IHandleAsync<ConfigSavedEvent>
+    public class TaskManager : ITaskManager,
+                               IHandle<ApplicationStartedEvent>,
+                               IHandle<CommandExecutedEvent>,
+                               IHandleAsync<ConfigSavedEvent>,
+                               IHandle<ProviderUpdatedEvent<IMetadataSource>>
     {
         private readonly IScheduledTaskRepository _scheduledTaskRepository;
         private readonly IConfigService _configService;
+        private readonly MetadataSourceFactory _metadataSourceFactory;
         private readonly Logger _logger;
         private readonly ICached<ScheduledTask> _cache;
 
-        public TaskManager(IScheduledTaskRepository scheduledTaskRepository, IConfigService configService, ICacheManager cacheManager, Logger logger)
+        public TaskManager(IScheduledTaskRepository scheduledTaskRepository,
+                           IConfigService configService,
+                           MetadataSourceFactory metadataSourceFactory,
+                           ICacheManager cacheManager,
+                           Logger logger)
         {
             _scheduledTaskRepository = scheduledTaskRepository;
             _configService = configService;
+            _metadataSourceFactory = metadataSourceFactory;
             _cache = cacheManager.GetCache<ScheduledTask>(GetType());
             _logger = logger;
         }
@@ -159,11 +171,25 @@ namespace Streamarr.Core.Jobs
             return intervalMinutes * 60 * 24;
         }
 
-        private int GetFullRefreshInterval() =>
-            Math.Max(60, _configService.YouTubeFullRefreshIntervalHours * 60);
+        private int GetFullRefreshInterval()
+        {
+            var settings = GetMetadataSettings();
+            return Math.Max(60, (settings?.RefreshIntervalHours ?? 24) * 60);
+        }
 
-        private int GetLiveCheckInterval() =>
-            Math.Max(5, _configService.YouTubeLiveCheckIntervalMinutes);
+        private int GetLiveCheckInterval()
+        {
+            var settings = GetMetadataSettings();
+            return Math.Max(5, settings?.LiveCheckIntervalMinutes ?? 60);
+        }
+
+        private MetadataSourceSettingsBase GetMetadataSettings()
+        {
+            // Use the first enabled source's settings for scheduling intervals.
+            // In practice this will be YouTube until other sources are added.
+            var def = _metadataSourceFactory.All().FirstOrDefault(d => d.Enable);
+            return def?.Settings as MetadataSourceSettingsBase;
+        }
 
         public void Handle(CommandExecutedEvent message)
         {
@@ -190,15 +216,26 @@ namespace Streamarr.Core.Jobs
             var backup = _scheduledTaskRepository.GetDefinition(typeof(BackupCommand));
             backup.Interval = GetBackupInterval();
 
+            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { backup });
+
+            _cache.Find(backup.TypeName).Interval = backup.Interval;
+        }
+
+        public void Handle(ProviderUpdatedEvent<IMetadataSource> message)
+        {
+            UpdateScheduledIntervals();
+        }
+
+        private void UpdateScheduledIntervals()
+        {
             var refresh = _scheduledTaskRepository.GetDefinition(typeof(RefreshCreatorCommand));
             refresh.Interval = GetFullRefreshInterval();
 
             var liveCheck = _scheduledTaskRepository.GetDefinition(typeof(CheckLiveStreamsCommand));
             liveCheck.Interval = GetLiveCheckInterval();
 
-            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { backup, refresh, liveCheck });
+            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { refresh, liveCheck });
 
-            _cache.Find(backup.TypeName).Interval = backup.Interval;
             _cache.Find(refresh.TypeName).Interval = refresh.Interval;
             _cache.Find(liveCheck.TypeName).Interval = liveCheck.Interval;
         }

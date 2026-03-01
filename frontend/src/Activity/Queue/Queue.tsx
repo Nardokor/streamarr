@@ -35,6 +35,11 @@ const columns: Column[] = [
     label: 'Status',
     isVisible: true,
   },
+  {
+    name: 'actions',
+    label: '',
+    isVisible: true,
+  },
 ];
 
 function Queue() {

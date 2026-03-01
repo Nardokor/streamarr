@@ -31,6 +31,14 @@ namespace Streamarr.Core.Creators.Commands
 
         public void Execute(DownloadMissingContentCommand message)
         {
+            // If ChannelId is set, only process that specific channel (manual trigger)
+            if (message.ChannelId.HasValue)
+            {
+                var channel = _channelService.GetChannel(message.ChannelId.Value);
+                QueueMissingDownloadsForChannel(channel, forceManual: true);
+                return;
+            }
+
             var creators = message.CreatorId.HasValue
                 ? new List<Creator> { _creatorService.GetCreator(message.CreatorId.Value) }
                 : _creatorService.GetMonitoredCreators();
@@ -48,11 +56,10 @@ namespace Streamarr.Core.Creators.Commands
             var channels = _channelService.GetByCreatorId(creator.Id);
             var downloadCommands = new List<DownloadContentCommand>();
 
-            foreach (var channel in channels.Where(c => c.Monitored))
+            foreach (var channel in channels.Where(c => c.Monitored && c.AutoDownload))
             {
                 var missing = _contentService.GetMissingContent(channel.Id)
                     .Where(c => c.Monitored)
-                    .Where(c => !channel.RecordLiveOnly || c.ContentType != ContentType.VoD)
                     .Select(c => new DownloadContentCommand { ContentId = c.Id });
 
                 downloadCommands.AddRange(missing);
@@ -66,6 +73,26 @@ namespace Streamarr.Core.Creators.Commands
             else
             {
                 _logger.Debug("No missing content to download for creator '{0}'", creator.Title);
+            }
+        }
+
+        private void QueueMissingDownloadsForChannel(Channel channel, bool forceManual)
+        {
+            _logger.Info("Queuing missing downloads for channel '{0}' (manual)", channel.Title);
+
+            var downloadCommands = _contentService.GetMissingContent(channel.Id)
+                .Where(c => c.Monitored)
+                .Select(c => new DownloadContentCommand { ContentId = c.Id })
+                .ToList();
+
+            if (downloadCommands.Any())
+            {
+                _logger.Info("Queuing {0} download(s) for channel '{1}'", downloadCommands.Count, channel.Title);
+                _commandQueueManager.PushMany(downloadCommands);
+            }
+            else
+            {
+                _logger.Debug("No missing content to download for channel '{0}'", channel.Title);
             }
         }
     }

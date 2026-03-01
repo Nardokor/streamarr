@@ -1,29 +1,33 @@
-using System;
-using Streamarr.Core.Configuration;
-using Streamarr.Core.Configuration.Events;
+using System.Linq;
+using Streamarr.Core.Channels;
 using Streamarr.Core.Localization;
+using Streamarr.Core.MetadataSource;
 using Streamarr.Core.MetadataSource.YouTube;
 
 namespace Streamarr.Core.HealthCheck.Checks
 {
-    [CheckOn(typeof(ConfigSavedEvent))]
     public class YouTubeApiKeyHealthCheck : HealthCheckBase
     {
-        private readonly IConfigService _configService;
-        private readonly IYouTubeApiClient _youTubeApiClient;
+        private readonly MetadataSourceFactory _metadataSourceFactory;
 
-        public YouTubeApiKeyHealthCheck(IConfigService configService,
-                                        IYouTubeApiClient youTubeApiClient,
+        public YouTubeApiKeyHealthCheck(MetadataSourceFactory metadataSourceFactory,
                                         ILocalizationService localizationService)
             : base(localizationService)
         {
-            _configService = configService;
-            _youTubeApiClient = youTubeApiClient;
+            _metadataSourceFactory = metadataSourceFactory;
         }
 
         public override HealthCheck Check()
         {
-            var apiKey = _configService.YouTubeApiKey;
+            var source = _metadataSourceFactory.GetByPlatform(PlatformType.YouTube);
+
+            if (source == null)
+            {
+                return new HealthCheck(GetType());
+            }
+
+            var settings = source.Definition.Settings as YouTubeSettings;
+            var apiKey = settings?.ApiKey ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(apiKey))
             {
@@ -34,17 +38,16 @@ namespace Streamarr.Core.HealthCheck.Checks
                     "YouTube API key is not configured. Some metadata features may be unavailable.");
             }
 
-            try
+            var result = source.Test();
+
+            if (!result.IsValid)
             {
-                _youTubeApiClient.TestApiKey(apiKey);
-            }
-            catch (Exception ex)
-            {
+                var firstError = result.Errors.FirstOrDefault()?.ErrorMessage ?? "Unknown error";
                 return new HealthCheck(
                     GetType(),
                     HealthCheckResult.Error,
                     HealthCheckReason.YouTubeApiKeyInvalid,
-                    $"YouTube API key is invalid or could not be verified: {ex.Message}");
+                    $"YouTube API key is invalid or could not be verified: {firstError}");
             }
 
             return new HealthCheck(GetType());

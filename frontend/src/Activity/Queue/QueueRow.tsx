@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Icon from 'Components/Icon';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
+import useApiMutation from 'Helpers/Hooks/useApiMutation';
 import { icons } from 'Helpers/Props';
 import { QueueItem } from './useQueue';
 import styles from './Queue.css';
@@ -20,6 +21,7 @@ function getStatusIcon(status: QueueItem['status']) {
 
 export default function QueueRow({ item }: QueueRowProps) {
   const {
+    contentId,
     contentTitle,
     thumbnailUrl,
     creatorName,
@@ -27,6 +29,15 @@ export default function QueueRow({ item }: QueueRowProps) {
     status,
     message,
   } = item;
+
+  const { mutate: cancelDownload } = useApiMutation<void, void>({
+    path: `/queue/${contentId}`,
+    method: 'DELETE',
+  });
+
+  const handleCancel = useCallback(() => {
+    cancelDownload(undefined);
+  }, [cancelDownload]);
 
   return (
     <TableRow>
@@ -51,6 +62,17 @@ export default function QueueRow({ item }: QueueRowProps) {
         {message ? (
           <span className={styles.message}> {message}</span>
         ) : null}
+      </TableRowCell>
+
+      <TableRowCell className={styles.cancelCell}>
+        <button
+          className={styles.cancelBtn}
+          onClick={handleCancel}
+          title="Cancel download"
+          type="button"
+        >
+          <Icon name={icons.REMOVE} size={14} />
+        </button>
       </TableRowCell>
     </TableRow>
   );

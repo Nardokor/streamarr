@@ -4,16 +4,15 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using NLog;
-using Streamarr.Core.Configuration;
 
 namespace Streamarr.Core.MetadataSource.YouTube
 {
     public interface IYouTubeApiClient
     {
-        List<(string VideoId, DateTime PublishedAt)> GetPlaylistItems(string uploadsPlaylistId, DateTime? since = null);
-        List<YoutubeVideo> GetVideoDetails(IEnumerable<string> videoIds);
+        List<(string VideoId, DateTime PublishedAt)> GetPlaylistItems(string apiKey, string uploadsPlaylistId, DateTime? since = null);
+        List<YoutubeVideo> GetVideoDetails(string apiKey, IEnumerable<string> videoIds);
         void TestApiKey(string apiKey);
-        string GetChannelThumbnailUrl(string channelId);
+        string GetChannelThumbnailUrl(string apiKey, string channelId);
     }
 
     public class YouTubeApiClient : IYouTubeApiClient
@@ -26,21 +25,18 @@ namespace Streamarr.Core.MetadataSource.YouTube
             PropertyNameCaseInsensitive = true
         };
 
-        private readonly IConfigService _config;
         private readonly Logger _logger;
 
-        public YouTubeApiClient(IConfigService config, Logger logger)
+        public YouTubeApiClient(Logger logger)
         {
-            _config = config;
             _logger = logger;
         }
 
-        public List<(string VideoId, DateTime PublishedAt)> GetPlaylistItems(string uploadsPlaylistId, DateTime? since = null)
+        public List<(string VideoId, DateTime PublishedAt)> GetPlaylistItems(string apiKey, string uploadsPlaylistId, DateTime? since = null)
         {
-            var apiKey = _config.YouTubeApiKey;
             if (string.IsNullOrWhiteSpace(apiKey))
             {
-                throw new InvalidOperationException("YouTube API key is not configured. Set it in Settings → YouTube.");
+                throw new InvalidOperationException("YouTube API key is not configured. Set it in Settings → Sources → YouTube.");
             }
 
             var results = new List<(string, DateTime)>();
@@ -60,7 +56,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
                     break;
                 }
 
-                var reachedSince = false;
+                var foundNewInPage = false;
 
                 foreach (var item in response.Items)
                 {
@@ -81,14 +77,18 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
                     if (since.HasValue && publishedAt <= since.Value)
                     {
-                        reachedSince = true;
-                        break;
+                        // Skip this item — it's older than our cutoff.
+                        // Don't break: the playlist isn't guaranteed to be strictly ordered,
+                        // so a single old item doesn't mean all subsequent items are also old.
+                        continue;
                     }
 
                     results.Add((videoId, publishedAt));
+                    foundNewInPage = true;
                 }
 
-                if (reachedSince)
+                // Only stop paginating when an entire page contained nothing new.
+                if (!foundNewInPage && since.HasValue)
                 {
                     break;
                 }
@@ -101,12 +101,11 @@ namespace Streamarr.Core.MetadataSource.YouTube
             return results;
         }
 
-        public List<YoutubeVideo> GetVideoDetails(IEnumerable<string> videoIds)
+        public List<YoutubeVideo> GetVideoDetails(string apiKey, IEnumerable<string> videoIds)
         {
-            var apiKey = _config.YouTubeApiKey;
             if (string.IsNullOrWhiteSpace(apiKey))
             {
-                throw new InvalidOperationException("YouTube API key is not configured. Set it in Settings → YouTube.");
+                throw new InvalidOperationException("YouTube API key is not configured. Set it in Settings → Sources → YouTube.");
             }
 
             var idList = videoIds.ToList();
@@ -133,9 +132,8 @@ namespace Streamarr.Core.MetadataSource.YouTube
             Fetch<YoutubeVideosResponse>(url);
         }
 
-        public string GetChannelThumbnailUrl(string channelId)
+        public string GetChannelThumbnailUrl(string apiKey, string channelId)
         {
-            var apiKey = _config.YouTubeApiKey;
             if (string.IsNullOrWhiteSpace(apiKey))
             {
                 return string.Empty;
@@ -145,10 +143,28 @@ namespace Streamarr.Core.MetadataSource.YouTube
             var response = Fetch<YoutubeChannelsResponse>(url);
             var thumbnails = response?.Items?.FirstOrDefault()?.Snippet?.Thumbnails;
 
-            return thumbnails?.High?.Url
+            var raw = thumbnails?.High?.Url
                 ?? thumbnails?.Medium?.Url
                 ?? thumbnails?.Default?.Url
                 ?? string.Empty;
+
+            return NormalizeThumbnailUrl(raw);
+        }
+
+        public static string NormalizeThumbnailUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return url;
+            }
+
+            // yt3.ggpht.com is a legacy alias that 429s more aggressively; use the canonical host
+            url = url.Replace("yt3.ggpht.com", "yt3.googleusercontent.com", StringComparison.OrdinalIgnoreCase);
+
+            // Clamp the Google image-serving size parameter to something reasonable
+            url = System.Text.RegularExpressions.Regex.Replace(url, @"=s\d+", "=s160");
+
+            return url;
         }
 
         private T Fetch<T>(string url)

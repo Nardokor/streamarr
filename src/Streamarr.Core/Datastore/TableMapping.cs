@@ -14,6 +14,7 @@ using Streamarr.Core.Instrumentation;
 using Streamarr.Core.Jobs;
 using Streamarr.Core.Languages;
 using Streamarr.Core.Messaging.Commands;
+using Streamarr.Core.MetadataSource;
 using Streamarr.Core.Notifications;
 using Streamarr.Core.Organizer;
 using Streamarr.Core.Profiles.Qualities;
@@ -92,6 +93,10 @@ namespace Streamarr.Core.Datastore
                   .Ignore(d => d.ImplementationName)
                   .Ignore(d => d.Message)
                   .Ignore(d => d.SupportsOnDownload);
+
+            Mapper.Entity<MetadataSourceDefinition>("MetadataSources").RegisterModel()
+                  .Ignore(d => d.ImplementationName)
+                  .Ignore(d => d.Message);
         }
 
         private static void RegisterMappers()

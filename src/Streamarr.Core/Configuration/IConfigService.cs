@@ -39,11 +39,6 @@ namespace Streamarr.Core.Configuration
         string GlobalPriorityKeywords { get; set; }
         int DefaultRetentionDays { get; set; }
 
-        // YouTube
-        string YouTubeApiKey { get; set; }
-        int YouTubeFullRefreshIntervalHours { get; set; }
-        int YouTubeLiveCheckIntervalMinutes { get; set; }
-
         // Download Client (yt-dlp)
         string YtDlpBinaryPath { get; set; }
         string YtDlpTempDownloadFolder { get; set; }

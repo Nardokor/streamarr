@@ -9,6 +9,16 @@ export interface YouTubeSettingsModel {
   youTubeApiKey: string;
   youTubeFullRefreshIntervalHours: number;
   youTubeLiveCheckIntervalMinutes: number;
+
+  // Default channel filter settings
+  youTubeDefaultDownloadVideos: boolean;
+  youTubeDefaultDownloadShorts: boolean;
+  youTubeDefaultDownloadVods: boolean;
+  youTubeDefaultDownloadLive: boolean;
+  youTubeDefaultWatchedWords: string;
+  youTubeDefaultIgnoredWords: string;
+  youTubeDefaultWatchedDefeatsIgnored: boolean;
+  youTubeDefaultAutoDownload: boolean;
 }
 
 const PATH = '/settings/youtube';

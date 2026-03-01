@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -9,7 +8,7 @@ using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
 using Streamarr.Core.ContentFiles;
 using Streamarr.Core.Creators;
-using Streamarr.Core.MetadataSource.YouTube;
+using Streamarr.Core.MetadataSource;
 using Streamarr.Core.Profiles.Qualities;
 
 namespace Streamarr.Core.Import
@@ -43,6 +42,7 @@ namespace Streamarr.Core.Import
             ".mp4", ".mkv", ".webm", ".avi", ".mov", ".m4v", ".ts", ".flv"
         };
 
+        // Matches the 11-char YouTube ID in brackets: [xxxxxxxxxxx]
         private static readonly Regex YouTubeIdRegex =
             new Regex(@"\[([a-zA-Z0-9_-]{11})\]", RegexOptions.Compiled);
 
@@ -51,7 +51,7 @@ namespace Streamarr.Core.Import
         private readonly IContentService _contentService;
         private readonly IContentFileService _contentFileService;
         private readonly IQualityProfileService _qualityProfileService;
-        private readonly IYouTubeApiClient _youTubeApiClient;
+        private readonly MetadataSourceFactory _metadataSourceFactory;
         private readonly Logger _logger;
 
         public ImportLibraryService(
@@ -60,7 +60,7 @@ namespace Streamarr.Core.Import
             IContentService contentService,
             IContentFileService contentFileService,
             IQualityProfileService qualityProfileService,
-            IYouTubeApiClient youTubeApiClient,
+            MetadataSourceFactory metadataSourceFactory,
             Logger logger)
         {
             _creatorService = creatorService;
@@ -68,7 +68,7 @@ namespace Streamarr.Core.Import
             _contentService = contentService;
             _contentFileService = contentFileService;
             _qualityProfileService = qualityProfileService;
-            _youTubeApiClient = youTubeApiClient;
+            _metadataSourceFactory = metadataSourceFactory;
             _logger = logger;
         }
 
@@ -174,19 +174,28 @@ namespace Streamarr.Core.Import
                 return;
             }
 
-            var videos = _youTubeApiClient.GetVideoDetails(idToFile.Keys);
-            var matchedIds = new HashSet<string>(videos.Select(v => v.Id));
+            // For now, import is YouTube-only (files contain YouTube IDs in their names)
+            var source = _metadataSourceFactory.GetByPlatform(PlatformType.YouTube);
+            if (source == null)
+            {
+                _logger.Warn("No YouTube metadata source configured; cannot import files in '{0}'", dirPath);
+                result.FilesNotMatched += idToFile.Count;
+                return;
+            }
+
+            var metas = source.GetContentMetadataBatch(idToFile.Keys).ToList();
+            var matchedIds = new HashSet<string>(metas.Select(m => m.PlatformContentId));
 
             result.FilesNotMatched += idToFile.Keys.Count(id => !matchedIds.Contains(id));
 
-            foreach (var video in videos)
+            foreach (var meta in metas)
             {
-                if (!idToFile.TryGetValue(video.Id, out var filePath))
+                if (!idToFile.TryGetValue(meta.PlatformContentId, out var filePath))
                 {
                     continue;
                 }
 
-                ImportVideo(creator, video, filePath, result);
+                ImportVideo(creator, meta, filePath, result);
             }
         }
 
@@ -220,24 +229,19 @@ namespace Streamarr.Core.Import
 
         private void ImportVideo(
             Creator creator,
-            MetadataSource.YouTube.YoutubeVideo video,
+            ContentMetadataResult meta,
             string filePath,
             ImportLibraryResult result)
         {
-            var channelId = video.Snippet?.ChannelId;
-            var channelTitle = video.Snippet?.ChannelTitle;
-
-            if (string.IsNullOrWhiteSpace(channelId))
+            if (string.IsNullOrWhiteSpace(meta.PlatformChannelId))
             {
-                _logger.Warn(
-                    "Video '{0}' has no channel ID in snippet; skipping",
-                    video.Id);
+                _logger.Warn("Content '{0}' has no channel ID; skipping", meta.PlatformContentId);
                 result.FilesNotMatched++;
                 return;
             }
 
-            var channel = FindOrCreateChannel(creator, channelId, channelTitle, result);
-            var content = FindOrCreateContent(channel, video);
+            var channel = FindOrCreateChannel(creator, meta.PlatformChannelId, meta.PlatformChannelTitle, result);
+            var content = FindOrCreateContent(channel, meta);
 
             if (content.ContentFileId > 0)
             {
@@ -273,7 +277,6 @@ namespace Streamarr.Core.Import
 
             if (channel != null && channel.CreatorId != creator.Id)
             {
-                // Channel belongs to a different creator — find one for this creator instead
                 channel = _channelService
                     .GetByCreatorId(creator.Id)
                     .FirstOrDefault(c => c.PlatformId == platformChannelId);
@@ -294,7 +297,7 @@ namespace Streamarr.Core.Import
                 Monitored = true,
                 DownloadVideos = true,
                 DownloadShorts = true,
-                DownloadLivestreams = true,
+                DownloadVods = true,
             });
 
             result.ChannelsCreated++;
@@ -302,93 +305,28 @@ namespace Streamarr.Core.Import
             return channel;
         }
 
-        private Content.Content FindOrCreateContent(Channel channel, MetadataSource.YouTube.YoutubeVideo video)
+        private Content.Content FindOrCreateContent(Channel channel, ContentMetadataResult meta)
         {
-            var existing = _contentService.FindByPlatformContentId(channel.Id, video.Id);
+            var existing = _contentService.FindByPlatformContentId(channel.Id, meta.PlatformContentId);
             if (existing != null)
             {
                 return existing;
             }
 
-            var content = _contentService.AddContent(new Content.Content
+            return _contentService.AddContent(new Content.Content
             {
                 ChannelId = channel.Id,
-                PlatformContentId = video.Id,
-                ContentType = DetermineContentType(video),
-                Title = video.Snippet?.Title ?? video.Id,
-                Description = video.Snippet?.Description ?? string.Empty,
-                ThumbnailUrl = video.Snippet?.Thumbnails?.Medium?.Url ?? string.Empty,
-                Duration = ParseDuration(video.ContentDetails?.Duration),
-                AirDateUtc = ParsePublishedAt(video.Snippet?.PublishedAt),
+                PlatformContentId = meta.PlatformContentId,
+                ContentType = meta.ContentType,
+                Title = meta.Title ?? meta.PlatformContentId,
+                Description = meta.Description ?? string.Empty,
+                ThumbnailUrl = meta.ThumbnailUrl ?? string.Empty,
+                Duration = meta.Duration,
+                AirDateUtc = meta.AirDateUtc,
                 DateAdded = DateTime.UtcNow,
                 Monitored = true,
                 Status = ContentStatus.Missing,
             });
-
-            return content;
-        }
-
-        private static ContentType DetermineContentType(MetadataSource.YouTube.YoutubeVideo video)
-        {
-            var lsd = video.LiveStreamingDetails;
-            if (lsd != null)
-            {
-                if (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue)
-                {
-                    return ContentType.Live;
-                }
-
-                if (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow)
-                {
-                    return ContentType.Upcoming;
-                }
-
-                return ContentType.VoD;
-            }
-
-            var duration = ParseDuration(video.ContentDetails?.Duration);
-            if (duration.HasValue && duration.Value.TotalMinutes < 3)
-            {
-                return ContentType.Short;
-            }
-
-            return ContentType.Video;
-        }
-
-        private static TimeSpan? ParseDuration(string isoDuration)
-        {
-            if (string.IsNullOrWhiteSpace(isoDuration))
-            {
-                return null;
-            }
-
-            try
-            {
-                return System.Xml.XmlConvert.ToTimeSpan(isoDuration);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private static DateTime? ParsePublishedAt(string publishedAt)
-        {
-            if (string.IsNullOrWhiteSpace(publishedAt))
-            {
-                return null;
-            }
-
-            if (DateTime.TryParse(
-                    publishedAt,
-                    null,
-                    DateTimeStyles.RoundtripKind,
-                    out var dt))
-            {
-                return dt.ToUniversalTime();
-            }
-
-            return null;
         }
     }
 }

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using Streamarr.Core.Channels;
-using Streamarr.Core.Configuration;
 using Streamarr.Core.Content;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.MetadataSource;
-using Streamarr.Core.MetadataSource.YouTube;
 
 namespace Streamarr.Core.Creators.Commands
 {
@@ -16,32 +14,29 @@ namespace Streamarr.Core.Creators.Commands
         private readonly ICreatorService _creatorService;
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
-        private readonly YouTubeMetadataService _youTubeMetadataService;
-        private readonly IYouTubeApiClient _youTubeApiClient;
+        private readonly IContentFilterService _contentFilterService;
+        private readonly MetadataSourceFactory _metadataSourceFactory;
         private readonly ICreatorAvatarService _creatorAvatarService;
         private readonly ILivestreamStatusService _livestreamStatusService;
-        private readonly IConfigService _configService;
         private readonly Logger _logger;
 
         public RefreshCreatorCommandExecutor(
             ICreatorService creatorService,
             IChannelService channelService,
             IContentService contentService,
-            YouTubeMetadataService youTubeMetadataService,
-            IYouTubeApiClient youTubeApiClient,
+            IContentFilterService contentFilterService,
+            MetadataSourceFactory metadataSourceFactory,
             ICreatorAvatarService creatorAvatarService,
             ILivestreamStatusService livestreamStatusService,
-            IConfigService configService,
             Logger logger)
         {
             _creatorService = creatorService;
             _channelService = channelService;
             _contentService = contentService;
-            _youTubeMetadataService = youTubeMetadataService;
-            _youTubeApiClient = youTubeApiClient;
+            _contentFilterService = contentFilterService;
+            _metadataSourceFactory = metadataSourceFactory;
             _creatorAvatarService = creatorAvatarService;
             _livestreamStatusService = livestreamStatusService;
-            _configService = configService;
             _logger = logger;
         }
 
@@ -73,24 +68,30 @@ namespace Streamarr.Core.Creators.Commands
 
         private void RefreshAvatar(Creator creator, List<Channel> channels)
         {
-            var youTubeChannel = channels.FirstOrDefault(c => c.Platform == PlatformType.YouTube);
-            if (youTubeChannel == null)
+            // Use the first channel for which we have a configured source
+            foreach (var channel in channels)
             {
-                return;
-            }
-
-            try
-            {
-                var thumbnailUrl = _youTubeApiClient.GetChannelThumbnailUrl(youTubeChannel.PlatformId);
-                if (!string.IsNullOrEmpty(thumbnailUrl))
+                var source = _metadataSourceFactory.GetByPlatform(channel.Platform);
+                if (source == null)
                 {
-                    creator.ThumbnailUrl = thumbnailUrl;
-                    _creatorAvatarService.DownloadAvatar(creator);
+                    continue;
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn(ex, "Failed to refresh avatar for creator '{0}'", creator.Title);
+
+                try
+                {
+                    var channelMeta = source.GetChannelMetadata(channel.PlatformUrl);
+                    if (!string.IsNullOrEmpty(channelMeta.ThumbnailUrl))
+                    {
+                        creator.ThumbnailUrl = channelMeta.ThumbnailUrl;
+                        _creatorAvatarService.DownloadAvatar(creator);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Failed to refresh avatar for creator '{0}'", creator.Title);
+                }
+
+                break; // Only need one channel for avatar
             }
         }
 
@@ -98,20 +99,16 @@ namespace Streamarr.Core.Creators.Commands
         {
             _logger.Info("Syncing channel '{0}' ({1})", channel.Title, channel.Platform);
 
+            var source = _metadataSourceFactory.GetByPlatform(channel.Platform);
+            if (source == null)
+            {
+                _logger.Debug("Skipping unsupported platform: {0}", channel.Platform);
+                return;
+            }
+
             try
             {
-                List<ContentMetadataResult> newItems;
-
-                if (channel.Platform == PlatformType.YouTube)
-                {
-                    newItems = _youTubeMetadataService.GetNewContent(channel.PlatformUrl, channel.PlatformId, channel.LastInfoSync);
-                }
-                else
-                {
-                    _logger.Debug("Skipping unsupported platform: {0}", channel.Platform);
-                    return;
-                }
-
+                var newItems = source.GetNewContent(channel.PlatformUrl, channel.PlatformId, channel.LastInfoSync);
                 var added = new List<Content.Content>();
 
                 foreach (var item in newItems)
@@ -121,38 +118,7 @@ namespace Streamarr.Core.Creators.Commands
                         continue;
                     }
 
-                    // Priority keyword bypass: if title matches a priority keyword, skip all filters
-                    var isPriority = MatchesPriorityKeywords(item.Title, channel);
-
-                    if (!isPriority)
-                    {
-                        // Content type filter
-                        var typeAllowed = item.ContentType switch
-                        {
-                            ContentType.Video      => channel.DownloadVideos,
-                            ContentType.Short      => channel.DownloadShorts,
-                            ContentType.VoD        => channel.DownloadLivestreams,
-                            _                      => true
-                        };
-
-                        if (!typeAllowed)
-                        {
-                            continue;
-                        }
-
-                        // Title keyword filter (OR logic, case-insensitive)
-                        if (!string.IsNullOrWhiteSpace(channel.TitleFilter))
-                        {
-                            var terms = channel.TitleFilter.Split(
-                                new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                            var lower = (item.Title ?? string.Empty).ToLowerInvariant();
-
-                            if (!terms.Any(t => lower.Contains(t.ToLowerInvariant())))
-                            {
-                                continue;
-                            }
-                        }
-                    }
+                    var passes = _contentFilterService.PassesFilter(item.Title, item.ContentType, channel);
 
                     added.Add(new Content.Content
                     {
@@ -166,7 +132,7 @@ namespace Streamarr.Core.Creators.Commands
                         AirDateUtc = item.AirDateUtc,
                         DateAdded = DateTime.UtcNow,
                         Monitored = true,
-                        Status = ContentStatus.Missing
+                        Status = passes ? ContentStatus.Missing : ContentStatus.Unwanted
                     });
                 }
 
@@ -175,6 +141,9 @@ namespace Streamarr.Core.Creators.Commands
                     _logger.Info("Found {0} new item(s) for channel '{1}'", added.Count, channel.Title);
                     _contentService.AddContents(added);
                 }
+
+                // Re-evaluate filter for existing Missing/Unwanted items in case channel settings changed
+                _contentFilterService.ReapplyFilterForChannel(channel);
 
                 channel.LastInfoSync = DateTime.UtcNow;
                 _channelService.UpdateChannel(channel);
@@ -185,34 +154,14 @@ namespace Streamarr.Core.Creators.Commands
             }
 
             // Live check runs independently so a playlist scan failure doesn't block it.
-            if (channel.Platform == PlatformType.YouTube)
+            try
             {
-                try
-                {
-                    _livestreamStatusService.RefreshLivestreamStatuses(channel);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, "Failed to check livestream status for channel '{0}'", channel.Title);
-                }
+                _livestreamStatusService.RefreshLivestreamStatuses(channel);
             }
-        }
-
-        private bool MatchesPriorityKeywords(string title, Channel channel)
-        {
-            var globalKeywords = _configService.GlobalPriorityKeywords ?? string.Empty;
-            var channelKeywords = channel.PriorityFilter ?? string.Empty;
-
-            var combined = string.Join(",", globalKeywords, channelKeywords);
-            var terms = combined.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            if (terms.Length == 0)
+            catch (Exception ex)
             {
-                return false;
+                _logger.Warn(ex, "Failed to check livestream status for channel '{0}'", channel.Title);
             }
-
-            var lower = (title ?? string.Empty).ToLowerInvariant();
-            return terms.Any(t => lower.Contains(t.ToLowerInvariant()));
         }
     }
 }

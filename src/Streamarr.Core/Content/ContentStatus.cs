@@ -11,6 +11,7 @@ namespace Streamarr.Core.Content
         Expired = 6,
         Modified = 7,
         Unwanted = 8,    // Filtered out / not wanted
-        Processing = 9   // Post-download processing in progress
+        Processing = 9,  // Post-download processing in progress
+        Available = 10   // File deleted by retention; content still on platform (re-downloadable)
     }
 }

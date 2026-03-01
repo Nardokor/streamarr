@@ -79,10 +79,14 @@ function AddChannelModal({
         description: selected.description,
         thumbnailUrl: selected.thumbnailUrl,
         monitored: true,
-        downloadVideos: true,
-        downloadShorts: true,
-        downloadLivestreams: true,
-        titleFilter: '',
+        downloadVideos: ytSettings?.youTubeDefaultDownloadVideos ?? true,
+        downloadShorts: ytSettings?.youTubeDefaultDownloadShorts ?? true,
+        downloadVods: ytSettings?.youTubeDefaultDownloadVods ?? true,
+        downloadLive: ytSettings?.youTubeDefaultDownloadLive ?? false,
+        watchedWords: ytSettings?.youTubeDefaultWatchedWords ?? '',
+        ignoredWords: ytSettings?.youTubeDefaultIgnoredWords ?? '',
+        watchedDefeatsIgnored: ytSettings?.youTubeDefaultWatchedDefeatsIgnored ?? true,
+        autoDownload: ytSettings?.youTubeDefaultAutoDownload ?? true,
       },
       {
         onSuccess: () => {

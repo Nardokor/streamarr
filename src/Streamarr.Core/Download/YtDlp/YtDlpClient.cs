@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,7 +16,8 @@ namespace Streamarr.Core.Download.YtDlp
 {
     public interface IYtDlpClient
     {
-        YtDlpDownloadResult Download(string url, string outputPath, bool isLive = false, Action<YtDlpProgress> onProgress = null);
+        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, Action<YtDlpProgress> onProgress = null);
+        void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null);
         YtDlpVideoInfo GetVideoInfo(string videoUrl);
@@ -46,6 +49,8 @@ namespace Streamarr.Core.Download.YtDlp
         {
             PropertyNameCaseInsensitive = true
         };
+
+        private readonly ConcurrentDictionary<int, Process> _activeDownloads = new();
 
         private readonly IProcessProvider _processProvider;
         private readonly IDiskProvider _diskProvider;
@@ -232,7 +237,7 @@ namespace Streamarr.Core.Download.YtDlp
             return videos;
         }
 
-        public YtDlpDownloadResult Download(string url, string outputPath, bool isLive = false, Action<YtDlpProgress> onProgress = null)
+        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, Action<YtDlpProgress> onProgress = null)
         {
             _diskProvider.EnsureFolder(outputPath);
 
@@ -298,7 +303,15 @@ namespace Streamarr.Core.Download.YtDlp
                     }
                 });
 
-            _processProvider.WaitForExit(process);
+            _activeDownloads[contentId] = process;
+            try
+            {
+                _processProvider.WaitForExit(process);
+            }
+            finally
+            {
+                _activeDownloads.TryRemove(contentId, out _);
+            }
 
             // Determine the final output file: merged > already-downloaded > last fragment
             var outputFile = !string.IsNullOrEmpty(mergedFile) ? mergedFile
@@ -334,6 +347,27 @@ namespace Streamarr.Core.Download.YtDlp
                 ExitCode = exitCode,
                 ErrorMessage = success ? string.Empty : string.Join(Environment.NewLine, errors)
             };
+        }
+
+        public void CancelDownload(int contentId)
+        {
+            if (_activeDownloads.TryGetValue(contentId, out var process))
+            {
+                _logger.Info("Cancelling download for content {0} (PID {1})", contentId, process.Id);
+
+                try
+                {
+                    _processProvider.Kill(process.Id);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Failed to kill yt-dlp process for content {0}", contentId);
+                }
+            }
+            else
+            {
+                _logger.Debug("No active download found for content {0}", contentId);
+            }
         }
 
         private void CleanUpLiveFragments(string mergedFile, List<string> fragmentFiles, long mergedSize)

@@ -207,12 +207,6 @@ namespace Streamarr.Core.Configuration
             set { SetValue("DefaultRetentionDays", value); }
         }
 
-        public string YouTubeApiKey
-        {
-            get { return GetValue("YouTubeApiKey", string.Empty); }
-            set { SetValue("YouTubeApiKey", value); }
-        }
-
         public string YtDlpBinaryPath
         {
             get { return GetValue("YtDlpBinaryPath", "yt-dlp"); }
@@ -251,20 +245,8 @@ namespace Streamarr.Core.Configuration
 
         public int YtDlpMaxConcurrentDownloads
         {
-            get { return GetValueInt("YtDlpMaxConcurrentDownloads", 1); }
+            get { return GetValueInt("YtDlpMaxConcurrentDownloads", 3); }
             set { SetValue("YtDlpMaxConcurrentDownloads", value); }
-        }
-
-        public int YouTubeFullRefreshIntervalHours
-        {
-            get { return GetValueInt("YouTubeFullRefreshIntervalHours", 24); }
-            set { SetValue("YouTubeFullRefreshIntervalHours", value); }
-        }
-
-        public int YouTubeLiveCheckIntervalMinutes
-        {
-            get { return GetValueInt("YouTubeLiveCheckIntervalMinutes", 60); }
-            set { SetValue("YouTubeLiveCheckIntervalMinutes", value); }
         }
 
         public bool CleanupMetadataImages

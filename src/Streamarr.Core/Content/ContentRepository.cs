@@ -35,7 +35,7 @@ namespace Streamarr.Core.Content
 
         public List<Content> GetWithoutFiles(int channelId)
         {
-            return Query(c => c.ChannelId == channelId && c.ContentFileId == 0);
+            return Query(c => c.ChannelId == channelId && c.ContentFileId == 0 && c.Status == ContentStatus.Missing);
         }
 
         public List<Content> GetAllMissing()

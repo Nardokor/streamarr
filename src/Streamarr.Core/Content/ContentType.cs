@@ -5,7 +5,7 @@ namespace Streamarr.Core.Content
         Unknown = 0,
         Video = 1,
         Short = 2,
-        VoD = 3,      // Archived/completed livestream
+        Vod = 3,      // Archived/completed livestream
         Live = 4,     // Currently airing
         Upcoming = 5  // Scheduled, not yet started
     }

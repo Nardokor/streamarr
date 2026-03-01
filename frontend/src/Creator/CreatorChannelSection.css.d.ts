@@ -28,6 +28,9 @@ interface CssExports {
   'settingsActions': string;
   'settingsLabel': string;
   'settingsRow': string;
+  'settingsSection': string;
+  'settingsSectionTitle': string;
+  'statusAvailable': string;
   'statusBadge': string;
   'statusDownloaded': string;
   'statusDownloading': string;
@@ -35,7 +38,6 @@ interface CssExports {
   'statusMissing': string;
   'statusModified': string;
   'statusNotAired': string;
-  'statusOnAir': string;
   'statusRecording': string;
   'statusUnmonitored': string;
   'titleLink': string;

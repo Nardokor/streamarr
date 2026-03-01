@@ -190,8 +190,9 @@ function YouTubeSourceForm({
   source: MetadataSourceResource;
   onModalClose: () => void;
 }) {
-  const isNew = source.id === 0;
+  const isNew = !source.id;
 
+  const [enabled, setEnabled] = useState(source.enable ?? true);
   const [pending, setPending] = useState<Record<string, unknown>>({});
   const [testResult, setTestResult] = useState<'success' | 'failure' | null>(
     null
@@ -200,7 +201,7 @@ function YouTubeSourceForm({
 
   const { mutate: create, isPending: isCreating } = useCreateMetadataSource();
   const { mutate: update, isPending: isUpdating } = useUpdateMetadataSource(
-    source.id
+    source.id ?? 0
   );
   const isSaving = isCreating || isUpdating;
 
@@ -222,9 +223,10 @@ function YouTubeSourceForm({
   const buildUpdatedSource = useCallback(
     (): MetadataSourceResource => ({
       ...source,
+      enable: enabled,
       fields: applyFieldChanges(source.fields, pending),
     }),
-    [source, pending]
+    [source, enabled, pending]
   );
 
   const handleTest = useCallback(() => {
@@ -259,7 +261,7 @@ function YouTubeSourceForm({
       });
     };
 
-    if (apiKey) {
+    if (apiKey && updated.enable) {
       runTest(updated, {
         onSuccess: () => {
           setTestResult('success');
@@ -283,6 +285,21 @@ function YouTubeSourceForm({
       <ModalHeader>YouTube</ModalHeader>
 
       <ModalBody>
+        <FormGroup>
+          <FormLabel>Enable</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="enable"
+            helpText="Enable this source for content syncing and channel searches."
+            value={enabled}
+            errors={[]}
+            warnings={[]}
+            onChange={(change: InputChanged) =>
+              setEnabled(change.value as boolean)
+            }
+          />
+        </FormGroup>
+
         <FormGroup>
           <FormLabel>API Key</FormLabel>
           <FormInputGroup
@@ -333,8 +350,9 @@ function TwitchSourceForm({
   source: MetadataSourceResource;
   onModalClose: () => void;
 }) {
-  const isNew = source.id === 0;
+  const isNew = !source.id;
 
+  const [enabled, setEnabled] = useState(source.enable ?? true);
   const [pending, setPending] = useState<Record<string, unknown>>({});
   const [testResult, setTestResult] = useState<'success' | 'failure' | null>(
     null
@@ -343,7 +361,7 @@ function TwitchSourceForm({
 
   const { mutate: create, isPending: isCreating } = useCreateMetadataSource();
   const { mutate: update, isPending: isUpdating } = useUpdateMetadataSource(
-    source.id
+    source.id ?? 0
   );
   const isSaving = isCreating || isUpdating;
 
@@ -365,9 +383,10 @@ function TwitchSourceForm({
   const buildUpdatedSource = useCallback(
     (): MetadataSourceResource => ({
       ...source,
+      enable: enabled,
       fields: applyFieldChanges(source.fields, pending),
     }),
-    [source, pending]
+    [source, enabled, pending]
   );
 
   const handleTest = useCallback(() => {
@@ -403,7 +422,7 @@ function TwitchSourceForm({
       });
     };
 
-    if (clientId && clientSecret) {
+    if (clientId && clientSecret && updated.enable) {
       runTest(updated, {
         onSuccess: () => {
           setTestResult('success');
@@ -427,6 +446,21 @@ function TwitchSourceForm({
       <ModalHeader>Twitch</ModalHeader>
 
       <ModalBody>
+        <FormGroup>
+          <FormLabel>Enable</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="enable"
+            helpText="Enable this source for content syncing and channel searches."
+            value={enabled}
+            errors={[]}
+            warnings={[]}
+            onChange={(change: InputChanged) =>
+              setEnabled(change.value as boolean)
+            }
+          />
+        </FormGroup>
+
         <FormGroup>
           <FormLabel>Client ID</FormLabel>
           <FormInputGroup

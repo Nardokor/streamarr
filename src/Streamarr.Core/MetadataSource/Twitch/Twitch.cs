@@ -45,7 +45,7 @@ namespace Streamarr.Core.MetadataSource.Twitch
                     Implementation = nameof(Twitch),
                     ConfigContract = nameof(TwitchSettings),
                     Platform = PlatformType.Twitch,
-                    Enable = false,  // requires credentials — user must configure before enabling
+                    Enable = true,
                     Settings = new TwitchSettings()
                 }
             };

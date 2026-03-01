@@ -29,6 +29,7 @@ namespace Streamarr.Core.ThingiProvider
             };
 
             serializerSettings.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, true));
+            serializerSettings.Converters.Add(new STJBooleanConverter());
             serializerSettings.Converters.Add(new STJTimeSpanConverter());
             serializerSettings.Converters.Add(new STJUtcConverter());
 

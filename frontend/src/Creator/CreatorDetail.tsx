@@ -16,7 +16,7 @@ import AddChannelModal from './AddChannelModal';
 import CreatorChannelSection from './CreatorChannelSection';
 import { formatDate } from './creatorUtils';
 import {
-  useCreator,
+  useCreatorBySlug,
   useCreatorChannels,
   useCreatorContent,
   useDeleteCreator,
@@ -24,16 +24,17 @@ import {
 import styles from './CreatorDetail.css';
 
 interface RouteParams {
-  id: string;
+  slug: string;
 }
 
 type Props = RouteComponentProps<RouteParams>;
 
 function CreatorDetail({ match }: Props) {
-  const creatorId = parseInt(match.params.id, 10);
+  const { slug } = match.params;
   const history = useHistory();
 
-  const { data: creator, isLoading: creatorLoading } = useCreator(creatorId);
+  const { data: creator, isLoading: creatorLoading } = useCreatorBySlug(slug);
+  const creatorId = creator?.id ?? 0;
   const { data: channels, isLoading: channelsLoading } =
     useCreatorChannels(creatorId);
   const { data: content, isLoading: contentLoading } =

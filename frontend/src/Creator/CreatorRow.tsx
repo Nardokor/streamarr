@@ -71,7 +71,7 @@ function CreatorRow({ creator }: CreatorRowProps) {
       </TableRowCell>
 
       <TableRowCell>
-        <Link className={styles.title} to={`/creator/${id}`}>
+        <Link className={styles.title} to={`/creator/${creator.titleSlug}`}>
           {title}
         </Link>
       </TableRowCell>

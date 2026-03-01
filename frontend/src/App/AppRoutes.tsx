@@ -56,7 +56,7 @@ function AppRoutes() {
 
       <Route exact={true} path="/creator/import" component={CreatorImport} />
 
-      <Route exact={true} path="/creator/:id(\d+)" component={CreatorDetail} />
+      <Route exact={true} path="/creator/:slug" component={CreatorDetail} />
 
       <Route path="/creator" component={CreatorIndex} />
 

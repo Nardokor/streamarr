@@ -15,7 +15,7 @@ namespace Streamarr.Core.Creators.Commands
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
         private readonly IContentFilterService _contentFilterService;
-        private readonly MetadataSourceFactory _metadataSourceFactory;
+        private readonly IMetadataSourceFactory _metadataSourceFactory;
         private readonly ICreatorAvatarService _creatorAvatarService;
         private readonly ILivestreamStatusService _livestreamStatusService;
         private readonly Logger _logger;
@@ -25,7 +25,7 @@ namespace Streamarr.Core.Creators.Commands
             IChannelService channelService,
             IContentService contentService,
             IContentFilterService contentFilterService,
-            MetadataSourceFactory metadataSourceFactory,
+            IMetadataSourceFactory metadataSourceFactory,
             ICreatorAvatarService creatorAvatarService,
             ILivestreamStatusService livestreamStatusService,
             Logger logger)

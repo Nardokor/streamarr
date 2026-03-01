@@ -118,6 +118,8 @@ namespace Streamarr.Core.HealthCheck
         UpdateUiNotWritable,
         YtDlpNotAvailable,
         YouTubeApiKeyNotConfigured,
-        YouTubeApiKeyInvalid
+        YouTubeApiKeyInvalid,
+        TwitchCredentialsMissing,
+        TwitchCredentialsInvalid
     }
 }

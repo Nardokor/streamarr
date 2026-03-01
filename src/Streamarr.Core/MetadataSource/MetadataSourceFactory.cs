@@ -9,7 +9,7 @@ using Streamarr.Core.ThingiProvider;
 
 namespace Streamarr.Core.MetadataSource
 {
-    public class MetadataSourceFactory : ProviderFactory<IMetadataSource, MetadataSourceDefinition>
+    public class MetadataSourceFactory : ProviderFactory<IMetadataSource, MetadataSourceDefinition>, IMetadataSourceFactory
     {
         public MetadataSourceFactory(MetadataSourceRepository repository,
                                      IEnumerable<IMetadataSource> providers,

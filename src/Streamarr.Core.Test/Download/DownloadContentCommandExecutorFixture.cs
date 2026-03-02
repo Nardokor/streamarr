@@ -1,0 +1,195 @@
+using System;
+using Moq;
+using NUnit.Framework;
+using Streamarr.Core.Channels;
+using Streamarr.Core.Content;
+using Streamarr.Core.ContentFiles;
+using Streamarr.Core.Creators;
+using Streamarr.Core.Download;
+using Streamarr.Core.Download.YtDlp;
+using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
+using ContentEntity = Streamarr.Core.Content.Content;
+
+namespace Streamarr.Core.Test.Download
+{
+    [TestFixture]
+    public class DownloadContentCommandExecutorFixture : CoreTest<DownloadContentCommandExecutor>
+    {
+        private Creator _creator;
+        private Channel _channel;
+        private ContentEntity _content;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _creator = new Creator { Id = 1, Title = "Test Creator", Path = "/media/test" };
+
+            _channel = new Channel
+            {
+                Id = 10,
+                CreatorId = 1,
+                Title = "Test Channel",
+                Platform = PlatformType.YouTube
+            };
+
+            _content = new ContentEntity
+            {
+                Id = 100,
+                ChannelId = 10,
+                Title = "Test Video",
+                PlatformContentId = "dQw4w9WgXcQ",
+                ContentType = ContentType.Video,
+                Status = ContentStatus.Missing
+            };
+
+            Mocker.GetMock<IContentService>()
+                  .Setup(s => s.GetContent(_content.Id))
+                  .Returns(_content);
+
+            Mocker.GetMock<IChannelService>()
+                  .Setup(s => s.GetChannel(_channel.Id))
+                  .Returns(_channel);
+
+            Mocker.GetMock<ICreatorService>()
+                  .Setup(s => s.GetCreator(_creator.Id))
+                  .Returns(_creator);
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Action<YtDlpProgress>>()))
+                  .Returns(new YtDlpDownloadResult { Success = true, FilePath = "/media/test/video.mp4", FileSize = 1024 });
+
+            Mocker.GetMock<IContentFileService>()
+                  .Setup(s => s.AddContentFile(It.IsAny<ContentFile>()))
+                  .Returns(new ContentFile { Id = 1 });
+        }
+
+        private void Execute()
+        {
+            Subject.Execute(new DownloadContentCommand { ContentId = _content.Id });
+        }
+
+        // ── Download URL building ─────────────────────────────────────────────
+
+        [Test]
+        public void should_build_youtube_watch_url()
+        {
+            _channel.Platform = PlatformType.YouTube;
+            _content.PlatformContentId = "dQw4w9WgXcQ";
+
+            Execute();
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Verify(c => c.Download(
+                      _content.Id,
+                      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                      It.IsAny<string>(),
+                      It.IsAny<bool>(),
+                      It.IsAny<Action<YtDlpProgress>>()),
+                  Times.Once);
+        }
+
+        [Test]
+        public void should_build_twitch_vod_url_for_numeric_content_id()
+        {
+            _channel.Platform = PlatformType.Twitch;
+            _content.PlatformContentId = "1234567890";
+
+            Execute();
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Verify(c => c.Download(
+                      _content.Id,
+                      "https://www.twitch.tv/videos/1234567890",
+                      It.IsAny<string>(),
+                      It.IsAny<bool>(),
+                      It.IsAny<Action<YtDlpProgress>>()),
+                  Times.Once);
+        }
+
+        [Test]
+        public void should_build_twitch_channel_url_for_live_prefixed_content_id()
+        {
+            _channel.Platform = PlatformType.Twitch;
+            _content.PlatformContentId = "live:shroud";
+            _content.ContentType = ContentType.Live;
+
+            Execute();
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Verify(c => c.Download(
+                      _content.Id,
+                      "https://www.twitch.tv/shroud",
+                      It.IsAny<string>(),
+                      It.IsAny<bool>(),
+                      It.IsAny<Action<YtDlpProgress>>()),
+                  Times.Once);
+        }
+
+        // ── isLive flag ───────────────────────────────────────────────────────
+
+        [Test]
+        public void should_pass_is_live_true_for_live_content_type()
+        {
+            _content.ContentType = ContentType.Live;
+
+            Execute();
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Verify(c => c.Download(
+                      It.IsAny<int>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>(),
+                      true,
+                      It.IsAny<Action<YtDlpProgress>>()),
+                  Times.Once);
+        }
+
+        [Test]
+        public void should_pass_is_live_false_for_regular_video()
+        {
+            _content.ContentType = ContentType.Video;
+
+            Execute();
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Verify(c => c.Download(
+                      It.IsAny<int>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>(),
+                      false,
+                      It.IsAny<Action<YtDlpProgress>>()),
+                  Times.Once);
+        }
+
+        // ── Status transitions ────────────────────────────────────────────────
+
+        [Test]
+        public void should_set_status_to_downloaded_on_success()
+        {
+            Execute();
+
+            Mocker.GetMock<IContentService>()
+                  .Verify(s => s.UpdateContent(It.Is<ContentEntity>(c =>
+                      c.Id == _content.Id && c.Status == ContentStatus.Downloaded)),
+                  Times.AtLeastOnce);
+        }
+
+        [Test]
+        public void should_set_status_to_missing_on_failure()
+        {
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Action<YtDlpProgress>>()))
+                  .Returns(new YtDlpDownloadResult { Success = false, ErrorMessage = "yt-dlp failed" });
+
+            Execute();
+
+            ExceptionVerification.IgnoreErrors();
+
+            Mocker.GetMock<IContentService>()
+                  .Verify(s => s.UpdateContent(It.Is<ContentEntity>(c =>
+                      c.Id == _content.Id && c.Status == ContentStatus.Missing)),
+                  Times.AtLeastOnce);
+        }
+    }
+}

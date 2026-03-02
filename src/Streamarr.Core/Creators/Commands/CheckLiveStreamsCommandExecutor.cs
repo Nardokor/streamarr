@@ -34,7 +34,7 @@ namespace Streamarr.Core.Creators.Commands
 
                 foreach (var channel in channels)
                 {
-                    if (!channel.Monitored || channel.Platform != PlatformType.YouTube)
+                    if (!channel.Monitored)
                     {
                         continue;
                     }

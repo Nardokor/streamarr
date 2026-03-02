@@ -10,6 +10,7 @@ using Streamarr.Core.ContentFiles;
 using Streamarr.Core.Creators;
 using Streamarr.Core.CustomFilters;
 using Streamarr.Core.Datastore.Converters;
+using Streamarr.Core.History;
 using Streamarr.Core.Instrumentation;
 using Streamarr.Core.Jobs;
 using Streamarr.Core.Languages;
@@ -88,6 +89,8 @@ namespace Streamarr.Core.Datastore
 
             Mapper.Entity<ContentFile>("ContentFiles").RegisterModel()
                   .Ignore(cf => cf.Content);
+
+            Mapper.Entity<DownloadHistory>("DownloadHistory").RegisterModel();
 
             Mapper.Entity<NotificationDefinition>("Notifications").RegisterModel()
                   .Ignore(d => d.ImplementationName)

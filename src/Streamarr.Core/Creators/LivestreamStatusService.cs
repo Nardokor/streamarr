@@ -109,14 +109,26 @@ namespace Streamarr.Core.Creators
                     }
                     else if (content.Status == ContentStatus.Missing || content.Status == ContentStatus.Unwanted)
                     {
-                        var passes = _contentFilterService.PassesFilter(content.Title, ContentType.Vod, channel);
-                        newStatus = passes ? ContentStatus.Missing : ContentStatus.Unwanted;
-
-                        if (!channel.DownloadVods)
+                        // If this is a live sentinel (no real VOD ID yet), keep it Unwanted.
+                        // The archived VOD will appear as a separate item with a real ID on the next sync.
+                        if (content.PlatformContentId.StartsWith("live:"))
                         {
+                            newStatus = ContentStatus.Unwanted;
                             _logger.Debug(
-                                "Stream '{0}' ended; skipping archive download (DownloadVods=false)",
+                                "Stream '{0}' ended without being recorded; archived VOD will appear on next sync",
                                 content.Title);
+                        }
+                        else
+                        {
+                            var passes = _contentFilterService.PassesFilter(content.Title, ContentType.Vod, channel);
+                            newStatus = passes ? ContentStatus.Missing : ContentStatus.Unwanted;
+
+                            if (!channel.DownloadVods)
+                            {
+                                _logger.Debug(
+                                    "Stream '{0}' ended; skipping archive download (DownloadVods=false)",
+                                    content.Title);
+                            }
                         }
                     }
                 }

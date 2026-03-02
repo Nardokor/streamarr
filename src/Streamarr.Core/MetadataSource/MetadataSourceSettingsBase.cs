@@ -22,12 +22,6 @@ namespace Streamarr.Core.MetadataSource
         public int LiveCheckIntervalMinutes { get; set; } = 60;
 
         // Default channel filter settings applied when a new channel is added from this source
-        [FieldDefinition(100, Label = "Download Videos", Type = FieldType.Checkbox, HelpText = "Download regular video uploads by default for new channels.")]
-        public bool DefaultDownloadVideos { get; set; }
-
-        [FieldDefinition(101, Label = "Download Shorts", Type = FieldType.Checkbox, HelpText = "Download short-form content by default for new channels.")]
-        public bool DefaultDownloadShorts { get; set; }
-
         [FieldDefinition(102, Label = "Download VODs", Type = FieldType.Checkbox, HelpText = "Download archived livestreams by default for new channels.")]
         public bool DefaultDownloadVods { get; set; }
 
@@ -49,12 +43,6 @@ namespace Streamarr.Core.MetadataSource
         // Default retention settings applied when a new channel is added from this source
         [FieldDefinition(110, Label = "Retention Days", Type = FieldType.Number, Unit = "days", HelpText = "Delete downloaded content older than this many days by default for new channels. 0 = disabled.")]
         public int DefaultRetentionDays { get; set; }
-
-        [FieldDefinition(111, Label = "Retention: Videos", Type = FieldType.Checkbox, HelpText = "Apply retention to Videos by default for new channels.")]
-        public bool DefaultRetentionVideos { get; set; }
-
-        [FieldDefinition(112, Label = "Retention: Shorts", Type = FieldType.Checkbox, HelpText = "Apply retention to Shorts by default for new channels.")]
-        public bool DefaultRetentionShorts { get; set; }
 
         [FieldDefinition(113, Label = "Retention: VODs", Type = FieldType.Checkbox, HelpText = "Apply retention to VODs by default for new channels.")]
         public bool DefaultRetentionVods { get; set; }

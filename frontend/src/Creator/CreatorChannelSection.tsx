@@ -360,14 +360,18 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
 
             <div className={styles.settingsRow}>
               <span className={styles.settingsLabel}>Content types:</span>
-              <label className={styles.checkLabel}>
-                <input type="checkbox" checked={dlVideos} onChange={(e) => setDlVideos(e.target.checked)} />
-                {' '}Videos
-              </label>
-              <label className={styles.checkLabel}>
-                <input type="checkbox" checked={dlShorts} onChange={(e) => setDlShorts(e.target.checked)} />
-                {' '}Shorts
-              </label>
+              {channel.platform === 'youTube' && (
+                <>
+                  <label className={styles.checkLabel}>
+                    <input type="checkbox" checked={dlVideos} onChange={(e) => setDlVideos(e.target.checked)} />
+                    {' '}Videos
+                  </label>
+                  <label className={styles.checkLabel}>
+                    <input type="checkbox" checked={dlShorts} onChange={(e) => setDlShorts(e.target.checked)} />
+                    {' '}Shorts
+                  </label>
+                </>
+              )}
               <label className={styles.checkLabel}>
                 <input type="checkbox" checked={dlVods} onChange={(e) => setDlVods(e.target.checked)} />
                 {' '}VoDs
@@ -458,14 +462,18 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
 
             <div className={styles.settingsRow}>
               <span className={styles.settingsLabel}>Apply to:</span>
-              <label className={styles.checkLabel}>
-                <input type="checkbox" checked={retentionVideos} onChange={(e) => setRetentionVideos(e.target.checked)} />
-                {' '}Videos
-              </label>
-              <label className={styles.checkLabel}>
-                <input type="checkbox" checked={retentionShorts} onChange={(e) => setRetentionShorts(e.target.checked)} />
-                {' '}Shorts
-              </label>
+              {channel.platform === 'youTube' && (
+                <>
+                  <label className={styles.checkLabel}>
+                    <input type="checkbox" checked={retentionVideos} onChange={(e) => setRetentionVideos(e.target.checked)} />
+                    {' '}Videos
+                  </label>
+                  <label className={styles.checkLabel}>
+                    <input type="checkbox" checked={retentionShorts} onChange={(e) => setRetentionShorts(e.target.checked)} />
+                    {' '}Shorts
+                  </label>
+                </>
+              )}
               <label className={styles.checkLabel}>
                 <input type="checkbox" checked={retentionVods} onChange={(e) => setRetentionVods(e.target.checked)} />
                 {' '}VoDs

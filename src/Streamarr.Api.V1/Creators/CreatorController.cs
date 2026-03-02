@@ -70,17 +70,19 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
 
         foreach (var ch in resource.Channels)
         {
-            _channelService.AddChannel(new Channel
-            {
-                CreatorId = creator.Id,
-                Platform = ch.Platform,
-                PlatformId = ch.PlatformId,
-                PlatformUrl = ch.PlatformUrl,
-                Title = ch.Title,
-                Description = ch.Description,
-                ThumbnailUrl = ch.ThumbnailUrl,
-                Monitored = true,
-            });
+            _channelService.AddChannel(
+                new Channel
+                {
+                    CreatorId = creator.Id,
+                    Platform = ch.Platform,
+                    PlatformId = ch.PlatformId,
+                    PlatformUrl = ch.PlatformUrl,
+                    Title = ch.Title,
+                    Description = ch.Description,
+                    ThumbnailUrl = ch.ThumbnailUrl,
+                    Monitored = true,
+                },
+                creator.Title);
         }
 
         if (!string.IsNullOrEmpty(resource.ThumbnailUrl))

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.Notifications;
 
 namespace Streamarr.Core.Channels
 {
@@ -11,7 +12,7 @@ namespace Streamarr.Core.Channels
         Channel FindByPlatformId(PlatformType platform, string platformId);
         List<Channel> GetByCreatorId(int creatorId);
         List<Channel> GetAllChannels();
-        Channel AddChannel(Channel channel);
+        Channel AddChannel(Channel channel, string creatorTitle = "");
         Channel UpdateChannel(Channel channel);
         void DeleteChannel(int channelId);
         void DeleteByCreatorId(int creatorId);
@@ -52,10 +53,22 @@ namespace Streamarr.Core.Channels
             return _repo.All().ToList();
         }
 
-        public Channel AddChannel(Channel channel)
+        public Channel AddChannel(Channel channel, string creatorTitle = "")
         {
             _logger.Info("Adding channel '{0}' ({1}: {2})", channel.Title, channel.Platform, channel.PlatformId);
-            return _repo.Insert(channel);
+            var inserted = _repo.Insert(channel);
+
+            _eventAggregator.PublishEvent(new ChannelAddedEvent
+            {
+                Message = new ChannelAddedMessage
+                {
+                    ChannelTitle = inserted.Title,
+                    CreatorName = creatorTitle,
+                    Platform = inserted.Platform,
+                }
+            });
+
+            return inserted;
         }
 
         public Channel UpdateChannel(Channel channel)

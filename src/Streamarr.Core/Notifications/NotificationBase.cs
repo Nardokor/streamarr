@@ -20,11 +20,35 @@ namespace Streamarr.Core.Notifications
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 
+        public virtual void OnGrab(ContentGrabbedMessage message)
+        {
+        }
+
+        public virtual bool SupportsOnGrab => true;
+
         public virtual void OnDownload(ContentDownloadedMessage message)
         {
         }
 
         public virtual bool SupportsOnDownload => true;
+
+        public virtual void OnLiveStreamStart(LiveStreamStartedMessage message)
+        {
+        }
+
+        public virtual bool SupportsOnLiveStreamStart => true;
+
+        public virtual void OnLiveStreamEnd(LiveStreamEndedMessage message)
+        {
+        }
+
+        public virtual bool SupportsOnLiveStreamEnd => true;
+
+        public virtual void OnChannelAdded(ChannelAddedMessage message)
+        {
+        }
+
+        public virtual bool SupportsOnChannelAdded => true;
 
         public virtual ValidationResult Test()
         {

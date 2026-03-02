@@ -287,18 +287,20 @@ namespace Streamarr.Core.Import
                 return channel;
             }
 
-            channel = _channelService.AddChannel(new Channel
-            {
-                CreatorId = creator.Id,
-                Platform = PlatformType.YouTube,
-                PlatformId = platformChannelId,
-                PlatformUrl = $"https://www.youtube.com/channel/{platformChannelId}",
-                Title = channelTitle ?? creator.Title,
-                Monitored = true,
-                DownloadVideos = true,
-                DownloadShorts = true,
-                DownloadVods = true,
-            });
+            channel = _channelService.AddChannel(
+                new Channel
+                {
+                    CreatorId = creator.Id,
+                    Platform = PlatformType.YouTube,
+                    PlatformId = platformChannelId,
+                    PlatformUrl = $"https://www.youtube.com/channel/{platformChannelId}",
+                    Title = channelTitle ?? creator.Title,
+                    Monitored = true,
+                    DownloadVideos = true,
+                    DownloadShorts = true,
+                    DownloadVods = true,
+                },
+                creator.Title);
 
             result.ChannelsCreated++;
             _logger.Debug("Created channel '{0}' (YouTube/{1})", channel.Title, platformChannelId);

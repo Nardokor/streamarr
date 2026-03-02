@@ -151,6 +151,8 @@ namespace Streamarr.Core.Download
             return platform switch
             {
                 PlatformType.YouTube => $"https://www.youtube.com/watch?v={platformContentId}",
+                PlatformType.Twitch when platformContentId.StartsWith("live:") =>
+                    $"https://www.twitch.tv/{platformContentId["live:".Length..]}",
                 PlatformType.Twitch => $"https://www.twitch.tv/videos/{platformContentId}",
                 _ => throw new ArgumentException($"Unsupported platform: {platform}")
             };

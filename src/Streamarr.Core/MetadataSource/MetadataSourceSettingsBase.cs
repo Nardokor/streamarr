@@ -32,7 +32,7 @@ namespace Streamarr.Core.MetadataSource
         public bool DefaultDownloadVods { get; set; } = true;
 
         [FieldDefinition(103, Label = "Download Live", Type = FieldType.Checkbox, HelpText = "Record active livestreams by default for new channels.")]
-        public bool DefaultDownloadLive { get; set; }
+        public bool DefaultDownloadLive { get; set; } = true;
 
         [FieldDefinition(104, Label = "Watched Words", HelpText = "Comma-separated words that must appear in the title. Empty = watch everything.")]
         public string DefaultWatchedWords { get; set; } = string.Empty;
@@ -44,6 +44,6 @@ namespace Streamarr.Core.MetadataSource
         public bool DefaultWatchedDefeatsIgnored { get; set; } = true;
 
         [FieldDefinition(107, Label = "Auto Download", Type = FieldType.Checkbox, HelpText = "Automatically queue matched content for download.")]
-        public bool DefaultAutoDownload { get; set; } = true;
+        public bool DefaultAutoDownload { get; set; }
     }
 }

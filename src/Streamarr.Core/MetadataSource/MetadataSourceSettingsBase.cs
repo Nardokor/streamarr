@@ -23,13 +23,13 @@ namespace Streamarr.Core.MetadataSource
 
         // Default channel filter settings applied when a new channel is added from this source
         [FieldDefinition(100, Label = "Download Videos", Type = FieldType.Checkbox, HelpText = "Download regular video uploads by default for new channels.")]
-        public bool DefaultDownloadVideos { get; set; } = true;
+        public bool DefaultDownloadVideos { get; set; }
 
         [FieldDefinition(101, Label = "Download Shorts", Type = FieldType.Checkbox, HelpText = "Download short-form content by default for new channels.")]
-        public bool DefaultDownloadShorts { get; set; } = true;
+        public bool DefaultDownloadShorts { get; set; }
 
         [FieldDefinition(102, Label = "Download VODs", Type = FieldType.Checkbox, HelpText = "Download archived livestreams by default for new channels.")]
-        public bool DefaultDownloadVods { get; set; } = true;
+        public bool DefaultDownloadVods { get; set; }
 
         [FieldDefinition(103, Label = "Download Live", Type = FieldType.Checkbox, HelpText = "Record active livestreams by default for new channels.")]
         public bool DefaultDownloadLive { get; set; } = true;

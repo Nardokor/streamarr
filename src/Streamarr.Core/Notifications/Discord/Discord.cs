@@ -24,6 +24,16 @@ namespace Streamarr.Core.Notifications.Discord
 
         public override string Name => "Discord";
 
+        public override void OnGrab(ContentGrabbedMessage message)
+        {
+            var username = !string.IsNullOrWhiteSpace(Settings.Username)
+                ? Settings.Username
+                : "Streamarr";
+
+            var content = $"\ud83d\udccc Queued **{message.ContentTitle}** by {message.CreatorName} ({message.ChannelName})";
+            SendMessage(content, username);
+        }
+
         public override void OnDownload(ContentDownloadedMessage message)
         {
             var username = !string.IsNullOrWhiteSpace(Settings.Username)
@@ -31,6 +41,36 @@ namespace Streamarr.Core.Notifications.Discord
                 : "Streamarr";
 
             var content = $"\u2b07\ufe0f Downloaded **{message.ContentTitle}** by {message.CreatorName} ({message.ChannelName})";
+            SendMessage(content, username);
+        }
+
+        public override void OnLiveStreamStart(LiveStreamStartedMessage message)
+        {
+            var username = !string.IsNullOrWhiteSpace(Settings.Username)
+                ? Settings.Username
+                : "Streamarr";
+
+            var content = $"\ud83d\udd34 Live stream started: **{message.ContentTitle}** on {message.ChannelName} by {message.CreatorName}";
+            SendMessage(content, username);
+        }
+
+        public override void OnLiveStreamEnd(LiveStreamEndedMessage message)
+        {
+            var username = !string.IsNullOrWhiteSpace(Settings.Username)
+                ? Settings.Username
+                : "Streamarr";
+
+            var content = $"\u23f9\ufe0f Live stream ended: **{message.ContentTitle}** by {message.CreatorName} ({message.ChannelName})";
+            SendMessage(content, username);
+        }
+
+        public override void OnChannelAdded(ChannelAddedMessage message)
+        {
+            var username = !string.IsNullOrWhiteSpace(Settings.Username)
+                ? Settings.Username
+                : "Streamarr";
+
+            var content = $"\u2795 Added channel **{message.ChannelTitle}** ({message.Platform}) by {message.CreatorName}";
             SendMessage(content, username);
         }
 

@@ -59,6 +59,32 @@ namespace Streamarr.Core.Download
             content.Status = isLive ? ContentStatus.Recording : ContentStatus.Downloading;
             _contentService.UpdateContent(content);
 
+            if (isLive)
+            {
+                _eventAggregator.PublishEvent(new LiveStreamStartedEvent
+                {
+                    Message = new LiveStreamStartedMessage
+                    {
+                        ContentTitle = content.Title,
+                        CreatorName = creator.Title,
+                        ChannelName = channel.Title,
+                    }
+                });
+            }
+            else
+            {
+                _eventAggregator.PublishEvent(new ContentGrabbedEvent
+                {
+                    Message = new ContentGrabbedMessage
+                    {
+                        ContentTitle = content.Title,
+                        CreatorName = creator.Title,
+                        ChannelName = channel.Title,
+                        ContentType = content.ContentType,
+                    }
+                });
+            }
+
             try
             {
                 var result = _ytDlpClient.Download(content.Id, url, creator.Path, isLive, progress =>
@@ -107,6 +133,20 @@ namespace Streamarr.Core.Download
                             FileSize = result.FileSize
                         }
                     });
+
+                    if (isLive)
+                    {
+                        _eventAggregator.PublishEvent(new LiveStreamEndedEvent
+                        {
+                            Message = new LiveStreamEndedMessage
+                            {
+                                ContentTitle = content.Title,
+                                CreatorName = creator.Title,
+                                ChannelName = channel.Title,
+                                FileSize = result.FileSize,
+                            }
+                        });
+                    }
 
                     _logger.Info("Successfully downloaded '{0}' ({1} bytes)", content.Title, result.FileSize);
                 }

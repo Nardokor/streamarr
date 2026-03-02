@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
+using Streamarr.Core.Creators;
 using Streamarr.Http;
 using Streamarr.Http.REST;
 using Streamarr.Http.REST.Attributes;
@@ -14,14 +15,17 @@ public class ChannelController : RestControllerWithSignalR<ChannelResource, Chan
 {
     private readonly IChannelService _channelService;
     private readonly IContentFilterService _contentFilterService;
+    private readonly ICreatorService _creatorService;
 
     public ChannelController(IChannelService channelService,
                              IContentFilterService contentFilterService,
+                             ICreatorService creatorService,
                              IBroadcastSignalRMessage signalRBroadcaster)
         : base(signalRBroadcaster)
     {
         _channelService = channelService;
         _contentFilterService = contentFilterService;
+        _creatorService = creatorService;
 
         SharedValidator.RuleFor(c => c.CreatorId).GreaterThan(0);
         SharedValidator.RuleFor(c => c.PlatformId).NotEmpty();
@@ -51,7 +55,9 @@ public class ChannelController : RestControllerWithSignalR<ChannelResource, Chan
     [Consumes("application/json")]
     public ActionResult<ChannelResource> Create([FromBody] ChannelResource resource)
     {
-        var channel = _channelService.AddChannel(resource.ToModel());
+        var model = resource.ToModel();
+        var creator = _creatorService.GetCreator(model.CreatorId);
+        var channel = _channelService.AddChannel(model, creator?.Title ?? string.Empty);
         return Created(channel.Id);
     }
 

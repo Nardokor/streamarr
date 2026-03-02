@@ -24,9 +24,33 @@ namespace Streamarr.Core.Notifications.Telegram
 
         public override string Name => "Telegram";
 
+        public override void OnGrab(ContentGrabbedMessage message)
+        {
+            var text = $"\ud83d\udccc Queued *{Escape(message.ContentTitle)}* by {Escape(message.CreatorName)} \\({Escape(message.ChannelName)}\\)";
+            SendMessage(text);
+        }
+
         public override void OnDownload(ContentDownloadedMessage message)
         {
             var text = $"\u2b07\ufe0f Downloaded *{Escape(message.ContentTitle)}* by {Escape(message.CreatorName)} \\({Escape(message.ChannelName)}\\)";
+            SendMessage(text);
+        }
+
+        public override void OnLiveStreamStart(LiveStreamStartedMessage message)
+        {
+            var text = $"\ud83d\udd34 Live stream started: *{Escape(message.ContentTitle)}* on {Escape(message.ChannelName)} by {Escape(message.CreatorName)}";
+            SendMessage(text);
+        }
+
+        public override void OnLiveStreamEnd(LiveStreamEndedMessage message)
+        {
+            var text = $"\u23f9\ufe0f Live stream ended: *{Escape(message.ContentTitle)}* by {Escape(message.CreatorName)} \\({Escape(message.ChannelName)}\\)";
+            SendMessage(text);
+        }
+
+        public override void OnChannelAdded(ChannelAddedMessage message)
+        {
+            var text = $"\u2795 Added channel *{Escape(message.ChannelTitle)}* \\({message.Platform}\\) by {Escape(message.CreatorName)}";
             SendMessage(text);
         }
 

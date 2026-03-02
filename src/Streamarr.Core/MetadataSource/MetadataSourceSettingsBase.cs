@@ -45,5 +45,24 @@ namespace Streamarr.Core.MetadataSource
 
         [FieldDefinition(107, Label = "Auto Download", Type = FieldType.Checkbox, HelpText = "Automatically queue matched content for download.")]
         public bool DefaultAutoDownload { get; set; }
+
+        // Default retention settings applied when a new channel is added from this source
+        [FieldDefinition(110, Label = "Retention Days", Type = FieldType.Number, Unit = "days", HelpText = "Delete downloaded content older than this many days by default for new channels. 0 = disabled.")]
+        public int DefaultRetentionDays { get; set; }
+
+        [FieldDefinition(111, Label = "Retention: Videos", Type = FieldType.Checkbox, HelpText = "Apply retention to Videos by default for new channels.")]
+        public bool DefaultRetentionVideos { get; set; }
+
+        [FieldDefinition(112, Label = "Retention: Shorts", Type = FieldType.Checkbox, HelpText = "Apply retention to Shorts by default for new channels.")]
+        public bool DefaultRetentionShorts { get; set; }
+
+        [FieldDefinition(113, Label = "Retention: VODs", Type = FieldType.Checkbox, HelpText = "Apply retention to VODs by default for new channels.")]
+        public bool DefaultRetentionVods { get; set; }
+
+        [FieldDefinition(114, Label = "Retention: Live", Type = FieldType.Checkbox, HelpText = "Apply retention to recorded livestreams by default for new channels.")]
+        public bool DefaultRetentionLive { get; set; }
+
+        [FieldDefinition(115, Label = "Retention Exception Words", HelpText = "Comma-separated words — matching titles are never deleted. Applied by default for new channels.")]
+        public string DefaultRetentionExceptionWords { get; set; } = string.Empty;
     }
 }

@@ -25,10 +25,10 @@ namespace Streamarr.Core.Channels
         public DateTime? LastInfoSync { get; set; }
 
         // Wanted filter — content types
-        public bool DownloadVideos { get; set; } = true;
-        public bool DownloadShorts { get; set; } = true;
-        public bool DownloadVods { get; set; } = true;
-        public bool DownloadLive { get; set; }
+        public bool DownloadVideos { get; set; }
+        public bool DownloadShorts { get; set; }
+        public bool DownloadVods { get; set; }
+        public bool DownloadLive { get; set; } = true;
 
         // Wanted filter — word filters
         public string WatchedWords { get; set; } = string.Empty;
@@ -36,7 +36,7 @@ namespace Streamarr.Core.Channels
         public bool WatchedDefeatsIgnored { get; set; } = true;
 
         // Download mode
-        public bool AutoDownload { get; set; } = true;
+        public bool AutoDownload { get; set; }
 
         // Retention
         public int? RetentionDays { get; set; }

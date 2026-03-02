@@ -86,7 +86,7 @@ namespace Streamarr.Core.Creators
                                 "Stream '{0}' is live but filtered (Unwanted); skipping recording",
                                 content.Title);
                         }
-                        else
+                        else if (channel.AutoDownload)
                         {
                             newStatus = ContentStatus.Recording;
 
@@ -98,6 +98,12 @@ namespace Streamarr.Core.Creators
 
                                 _commandQueueManager.Push(new DownloadContentCommand { ContentId = content.Id });
                             }
+                        }
+                        else
+                        {
+                            _logger.Debug(
+                                "Stream '{0}' is live but AutoDownload=false; recording suppressed",
+                                content.Title);
                         }
                     }
                 }

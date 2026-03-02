@@ -21,7 +21,27 @@ import {
   getStatusLabel,
 } from './creatorUtils';
 import { useDeleteChannel, useUpdateChannel } from './useCreators';
+import {
+  useMetadataSources,
+  MetadataSourceResource,
+} from 'Settings/Sources/useMetadataSources';
 import styles from './CreatorChannelSection.css';
+
+// Maps the camelCase platform value on Channel to the implementation name on
+// MetadataSourceResource so we can look up the source's field schema.
+const PLATFORM_IMPLEMENTATION: Record<string, string> = {
+  youTube: 'YouTube',
+  twitch: 'Twitch',
+};
+
+function getSourceFields(
+  sources: MetadataSourceResource[] | undefined,
+  platform: string
+): Set<string> {
+  const impl = PLATFORM_IMPLEMENTATION[platform];
+  const source = (sources ?? []).find((s) => s.implementation === impl && s.enable);
+  return new Set((source?.fields ?? []).map((f) => f.name));
+}
 
 interface CreatorChannelSectionProps {
   channel: Channel;
@@ -115,6 +135,10 @@ function DownloadCell({ contentId, statusKind, monitored, onDownload }: Download
 }
 
 function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps) {
+  const { data: sources } = useMetadataSources();
+  const sourceFields = getSourceFields(sources, channel.platform);
+  const hasField = (name: string) => sourceFields.has(name);
+
   const [expanded, setExpanded] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
@@ -360,17 +384,17 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
 
             <div className={styles.settingsRow}>
               <span className={styles.settingsLabel}>Content types:</span>
-              {channel.platform === 'youTube' && (
-                <>
-                  <label className={styles.checkLabel}>
-                    <input type="checkbox" checked={dlVideos} onChange={(e) => setDlVideos(e.target.checked)} />
-                    {' '}Videos
-                  </label>
-                  <label className={styles.checkLabel}>
-                    <input type="checkbox" checked={dlShorts} onChange={(e) => setDlShorts(e.target.checked)} />
-                    {' '}Shorts
-                  </label>
-                </>
+              {hasField('defaultDownloadVideos') && (
+                <label className={styles.checkLabel}>
+                  <input type="checkbox" checked={dlVideos} onChange={(e) => setDlVideos(e.target.checked)} />
+                  {' '}Videos
+                </label>
+              )}
+              {hasField('defaultDownloadShorts') && (
+                <label className={styles.checkLabel}>
+                  <input type="checkbox" checked={dlShorts} onChange={(e) => setDlShorts(e.target.checked)} />
+                  {' '}Shorts
+                </label>
               )}
               <label className={styles.checkLabel}>
                 <input type="checkbox" checked={dlVods} onChange={(e) => setDlVods(e.target.checked)} />
@@ -462,17 +486,17 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
 
             <div className={styles.settingsRow}>
               <span className={styles.settingsLabel}>Apply to:</span>
-              {channel.platform === 'youTube' && (
-                <>
-                  <label className={styles.checkLabel}>
-                    <input type="checkbox" checked={retentionVideos} onChange={(e) => setRetentionVideos(e.target.checked)} />
-                    {' '}Videos
-                  </label>
-                  <label className={styles.checkLabel}>
-                    <input type="checkbox" checked={retentionShorts} onChange={(e) => setRetentionShorts(e.target.checked)} />
-                    {' '}Shorts
-                  </label>
-                </>
+              {hasField('defaultRetentionVideos') && (
+                <label className={styles.checkLabel}>
+                  <input type="checkbox" checked={retentionVideos} onChange={(e) => setRetentionVideos(e.target.checked)} />
+                  {' '}Videos
+                </label>
+              )}
+              {hasField('defaultRetentionShorts') && (
+                <label className={styles.checkLabel}>
+                  <input type="checkbox" checked={retentionShorts} onChange={(e) => setRetentionShorts(e.target.checked)} />
+                  {' '}Shorts
+                </label>
               )}
               <label className={styles.checkLabel}>
                 <input type="checkbox" checked={retentionVods} onChange={(e) => setRetentionVods(e.target.checked)} />

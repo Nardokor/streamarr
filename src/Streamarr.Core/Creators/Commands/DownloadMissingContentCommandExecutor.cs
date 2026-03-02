@@ -59,7 +59,7 @@ namespace Streamarr.Core.Creators.Commands
             foreach (var channel in channels.Where(c => c.Monitored && c.AutoDownload))
             {
                 var missing = _contentService.GetMissingContent(channel.Id)
-                    .Where(c => c.Monitored && c.ContentType != ContentType.Live && c.ContentType != ContentType.Upcoming)
+                    .Where(c => c.Monitored && c.ContentType != ContentType.Live && c.ContentType != ContentType.Upcoming && !c.PlatformContentId.StartsWith("live:"))
                     .Select(c => new DownloadContentCommand { ContentId = c.Id });
 
                 downloadCommands.AddRange(missing);
@@ -81,7 +81,7 @@ namespace Streamarr.Core.Creators.Commands
             _logger.Info("Queuing missing downloads for channel '{0}' (manual)", channel.Title);
 
             var downloadCommands = _contentService.GetMissingContent(channel.Id)
-                .Where(c => c.Monitored && c.ContentType != ContentType.Live && c.ContentType != ContentType.Upcoming)
+                .Where(c => c.Monitored && c.ContentType != ContentType.Live && c.ContentType != ContentType.Upcoming && !c.PlatformContentId.StartsWith("live:"))
                 .Select(c => new DownloadContentCommand { ContentId = c.Id })
                 .ToList();
 

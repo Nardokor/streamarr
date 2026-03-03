@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -192,6 +193,17 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         public override IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since)
         {
+            if (_ytDlpClient.HasCookies)
+            {
+                _logger.Info("Cookie file configured — using yt-dlp listing to include members-only content");
+                return GetNewContentHybrid(platformUrl, since);
+            }
+
+            return GetNewContentViaApi(platformId, since);
+        }
+
+        private IEnumerable<ContentMetadataResult> GetNewContentViaApi(string platformId, DateTime? since)
+        {
             // Derive uploads playlist ID: "UC..." → "UU..."
             if (string.IsNullOrWhiteSpace(platformId) || !platformId.StartsWith("UC"))
             {
@@ -218,6 +230,44 @@ namespace Streamarr.Core.MetadataSource.YouTube
             var publishedAtById = playlistItems.ToDictionary(p => p.VideoId, p => p.PublishedAt);
 
             return videoDetails.Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id)));
+        }
+
+        private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, DateTime? since)
+        {
+            // 1. Use yt-dlp to list all video IDs (public + members-only)
+            var dateAfter = since?.ToString("yyyyMMdd");
+            var ytDlpVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
+
+            if (!ytDlpVideos.Any())
+            {
+                _logger.Info("yt-dlp found no new content at {0}", platformUrl);
+                return Enumerable.Empty<ContentMetadataResult>();
+            }
+
+            _logger.Info("yt-dlp found {0} items; enriching public videos via YouTube API", ytDlpVideos.Count);
+
+            // 2. Try YouTube API enrichment for public videos (exact timestamps + liveStreamingDetails)
+            var apiById = new Dictionary<string, YoutubeVideo>();
+            if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
+            {
+                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, ytDlpVideos.Select(v => v.Id));
+                foreach (var v in apiVideos)
+                {
+                    apiById[v.Id] = v;
+                }
+            }
+
+            var membersOnlyCount = ytDlpVideos.Count - apiById.Count;
+            if (membersOnlyCount > 0)
+            {
+                _logger.Info("{0} members-only video(s) not returned by YouTube API — using yt-dlp metadata", membersOnlyCount);
+            }
+
+            // 3. Map: API result for public videos, yt-dlp result for members-only
+            return ytDlpVideos.Select(v =>
+                apiById.TryGetValue(v.Id, out var apiVideo)
+                    ? MapToContentMetadata(apiVideo, publishedAt: null)
+                    : MapYtDlpToContentMetadata(v));
         }
 
         // ── Single / batch lookup ──────────────────────────────────────────────
@@ -312,6 +362,55 @@ namespace Streamarr.Core.MetadataSource.YouTube
             }
 
             return null;
+        }
+
+        // ── Mapping ────────────────────────────────────────────────────────────
+
+        private static ContentMetadataResult MapYtDlpToContentMetadata(YtDlpVideoInfo video)
+        {
+            // Prefer unix timestamp (second precision) over upload_date (day precision)
+            DateTime? airDate = null;
+            if (video.Timestamp.HasValue)
+            {
+                airDate = DateTimeOffset.FromUnixTimeSeconds((long)video.Timestamp.Value).UtcDateTime;
+            }
+            else if (video.UploadDate?.Length == 8 &&
+                     DateTime.TryParseExact(
+                         video.UploadDate,
+                         "yyyyMMdd",
+                         CultureInfo.InvariantCulture,
+                         DateTimeStyles.AssumeUniversal,
+                         out var parsed))
+            {
+                airDate = parsed.ToUniversalTime();
+            }
+
+            var contentType = ContentType.Video;
+            if (video.IsLive == true)
+            {
+                contentType = ContentType.Live;
+            }
+            else if (video.WasLive == true)
+            {
+                contentType = ContentType.Vod;
+            }
+            else if (video.Duration is <= 60)
+            {
+                contentType = ContentType.Short;
+            }
+
+            return new ContentMetadataResult
+            {
+                PlatformContentId = video.Id,
+                PlatformChannelId = video.ChannelId,
+                PlatformChannelTitle = video.Channel,
+                ContentType = contentType,
+                Title = video.Title,
+                Description = video.Description,
+                ThumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(video.Thumbnail),
+                Duration = video.Duration.HasValue ? TimeSpan.FromSeconds(video.Duration.Value) : null,
+                AirDateUtc = airDate,
+            };
         }
 
         // ── Helpers ────────────────────────────────────────────────────────────

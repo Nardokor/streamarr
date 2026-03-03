@@ -24,6 +24,9 @@ namespace Streamarr.Core.MetadataSource
 
         // Livestream tracking — returns empty enumerable on platforms without live support
         IEnumerable<ContentStatusUpdate> GetLivestreamStatusUpdates(IEnumerable<string> platformContentIds);
+
+        // Probe whether authenticated user can access a given piece of content (e.g. members-only)
+        bool ProbeContentAccessibility(string platformContentId);
     }
 
     // ── Result DTOs ──────────────────────────────────────────────────────────
@@ -58,6 +61,8 @@ namespace Streamarr.Core.MetadataSource
         public string ThumbnailUrl { get; set; } = string.Empty;
         public TimeSpan? Duration { get; set; }
         public DateTime? AirDateUtc { get; set; }
+        public bool IsMembers { get; set; }
+        public bool IsAccessible { get; set; } = true;
     }
 
     public class ContentStatusUpdate

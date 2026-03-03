@@ -75,6 +75,8 @@ import {
   faLanguage as fasLanguage,
   faLaptop as fasLaptop,
   faLevelUpAlt as fasLevelUpAlt,
+  faLock as fasLock,
+  faLockOpen as fasLockOpen,
   faListCheck as fasListCheck,
   faMedkit as fasMedkit,
   faMinus as fasMinus,
@@ -177,6 +179,8 @@ export const INFO = fasInfoCircle;
 export const INTERACTIVE = fasUser;
 export const KEYBOARD = farKeyboard;
 export const LANGUAGE = fasLanguage;
+export const LOCK = fasLock;
+export const LOCK_OPEN = fasLockOpen;
 export const LOGOUT = fasSignOutAlt;
 export const MANAGE = fasListCheck;
 export const MEDIA_INFO = farFileInvoice;

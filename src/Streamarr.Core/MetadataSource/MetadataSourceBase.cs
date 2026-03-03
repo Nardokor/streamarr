@@ -27,6 +27,11 @@ namespace Streamarr.Core.MetadataSource
         public abstract IEnumerable<ContentMetadataResult> GetContentMetadataBatch(IEnumerable<string> platformContentIds);
         public abstract IEnumerable<ContentStatusUpdate> GetLivestreamStatusUpdates(IEnumerable<string> platformContentIds);
 
+        public virtual bool ProbeContentAccessibility(string platformContentId)
+        {
+            return true;
+        }
+
         public virtual ValidationResult Test()
         {
             return new ValidationResult();

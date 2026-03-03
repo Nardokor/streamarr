@@ -27,6 +27,8 @@ namespace Streamarr.Core.Content
 
         // State
         public bool Monitored { get; set; }
+        public bool IsMembers { get; set; }
+        public bool IsAccessible { get; set; } = true;
         public ContentStatus Status { get; set; }
 
         // Navigation

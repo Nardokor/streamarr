@@ -267,7 +267,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             return ytDlpVideos.Select(v =>
                 apiById.TryGetValue(v.Id, out var apiVideo)
                     ? MapToContentMetadata(apiVideo, publishedAt: null)
-                    : MapYtDlpToContentMetadata(v));
+                    : MapYtDlpToContentMetadata(v, isMembers: true));
         }
 
         // ── Single / batch lookup ──────────────────────────────────────────────
@@ -364,9 +364,26 @@ namespace Streamarr.Core.MetadataSource.YouTube
             return null;
         }
 
+        // ── Accessibility probe ────────────────────────────────────────────────
+
+        public override bool ProbeContentAccessibility(string platformContentId)
+        {
+            try
+            {
+                var url = $"https://www.youtube.com/watch?v={platformContentId}";
+                _ytDlpClient.GetVideoInfo(url);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex, "Members video {0} is not accessible with current cookies", platformContentId);
+                return false;
+            }
+        }
+
         // ── Mapping ────────────────────────────────────────────────────────────
 
-        private static ContentMetadataResult MapYtDlpToContentMetadata(YtDlpVideoInfo video)
+        private static ContentMetadataResult MapYtDlpToContentMetadata(YtDlpVideoInfo video, bool isMembers = false)
         {
             // Prefer unix timestamp (second precision) over upload_date (day precision)
             DateTime? airDate = null;
@@ -410,6 +427,8 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 ThumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(video.Thumbnail),
                 Duration = video.Duration.HasValue ? TimeSpan.FromSeconds(video.Duration.Value) : null,
                 AirDateUtc = airDate,
+                IsMembers = isMembers,
+                IsAccessible = true,
             };
         }
 

@@ -355,3 +355,16 @@
   width: 32px;
   text-align: center;
 }
+
+.membersCell {
+  width: 24px;
+  text-align: center;
+}
+
+.membersAccessible {
+  color: #22c55e;
+}
+
+.membersLocked {
+  color: #6b7280;
+}

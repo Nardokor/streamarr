@@ -52,6 +52,7 @@ const columns: Column[] = [
   { name: 'thumbnail', label: '', isVisible: true },
   { name: 'title', label: 'Title', isVisible: true },
   { name: 'type', label: 'Type', isVisible: true },
+  { name: 'members', label: '', isVisible: true },
   { name: 'airDate', label: 'Date', isVisible: true },
   { name: 'duration', label: 'Duration', isVisible: true },
   { name: 'status', label: 'Status', isVisible: true },
@@ -143,12 +144,14 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [selectedContentId, setSelectedContentId] = useState<number | null>(null);
+  const [filterMembers, setFilterMembers] = useState(false);
 
   // Wanted — content types
   const [dlVideos, setDlVideos] = useState(channel.downloadVideos);
   const [dlShorts, setDlShorts] = useState(channel.downloadShorts);
   const [dlVods, setDlVods] = useState(channel.downloadVods);
   const [dlLive, setDlLive] = useState(channel.downloadLive);
+  const [dlMembers, setDlMembers] = useState(channel.downloadMembers);
 
   // Wanted — word filters
   const [watchedWords, setWatchedWords] = useState(channel.watchedWords);
@@ -173,6 +176,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     setDlShorts(channel.downloadShorts);
     setDlVods(channel.downloadVods);
     setDlLive(channel.downloadLive);
+    setDlMembers(channel.downloadMembers);
     setWatchedWords(channel.watchedWords);
     setIgnoredWords(channel.ignoredWords);
     setWatchedDefeatsIgnored(channel.watchedDefeatsIgnored);
@@ -188,6 +192,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     channel.downloadShorts,
     channel.downloadVods,
     channel.downloadLive,
+    channel.downloadMembers,
     channel.watchedWords,
     channel.ignoredWords,
     channel.watchedDefeatsIgnored,
@@ -257,6 +262,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
         downloadShorts: dlShorts,
         downloadVods: dlVods,
         downloadLive: dlLive,
+        downloadMembers: dlMembers,
         watchedWords,
         ignoredWords,
         watchedDefeatsIgnored,
@@ -278,6 +284,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     dlShorts,
     dlVods,
     dlLive,
+    dlMembers,
     watchedWords,
     ignoredWords,
     watchedDefeatsIgnored,
@@ -297,6 +304,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     setDlShorts(channel.downloadShorts);
     setDlVods(channel.downloadVods);
     setDlLive(channel.downloadLive);
+    setDlMembers(channel.downloadMembers);
     setWatchedWords(channel.watchedWords);
     setIgnoredWords(channel.ignoredWords);
     setWatchedDefeatsIgnored(channel.watchedDefeatsIgnored);
@@ -311,6 +319,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
   }, [channel]);
 
   const platform = platformLabel(channel.platform);
+  const displayContent = filterMembers ? content.filter((item) => item.isMembers) : content;
 
   return (
     <div className={styles.section}>
@@ -337,6 +346,15 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
             type="button"
           >
             <Icon name={icons.DOWNLOAD} size={12} />
+          </button>
+
+          <button
+            className={`${styles.iconBtn} ${filterMembers ? styles.iconBtnActive : ''}`}
+            onClick={(e) => { e.stopPropagation(); setFilterMembers((p) => !p); }}
+            title={filterMembers ? 'Show all content' : 'Show members content only'}
+            type="button"
+          >
+            <Icon name={icons.LOCK} size={12} />
           </button>
 
           {deleteConfirm ? (
@@ -403,6 +421,10 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
               <label className={styles.checkLabel}>
                 <input type="checkbox" checked={dlLive} onChange={(e) => setDlLive(e.target.checked)} />
                 {' '}Live
+              </label>
+              <label className={styles.checkLabel}>
+                <input type="checkbox" checked={dlMembers} onChange={(e) => setDlMembers(e.target.checked)} />
+                {' '}Members
               </label>
             </div>
 
@@ -543,14 +565,14 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
 
       {expanded ? (
         <div className={styles.body}>
-          {content.length === 0 ? (
+          {displayContent.length === 0 ? (
             <div className={styles.emptyNote}>
-              No content synced yet for this channel.
+              {filterMembers ? 'No members content in this channel.' : 'No content synced yet for this channel.'}
             </div>
           ) : (
             <Table columns={columns}>
               <TableBody>
-                {[...content]
+                {[...displayContent]
                   .sort((a, b) => {
                     if (!a.airDateUtc && !b.airDateUtc) return 0;
                     if (!a.airDateUtc) return 1;
@@ -594,6 +616,17 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                             <span className={`${styles.typeBadge} ${typeClass(typeLabel)}`}>
                               {typeLabel}
                             </span>
+                          ) : null}
+                        </TableRowCell>
+
+                        <TableRowCell className={styles.membersCell}>
+                          {item.isMembers ? (
+                            <Icon
+                              name={item.isAccessible ? icons.LOCK_OPEN : icons.LOCK}
+                              className={item.isAccessible ? styles.membersAccessible : styles.membersLocked}
+                              size={12}
+                              title={item.isAccessible ? 'Members (accessible)' : 'Members (inaccessible)'}
+                            />
                           ) : null}
                         </TableRowCell>
 

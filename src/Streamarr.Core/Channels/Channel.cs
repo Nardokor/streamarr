@@ -29,6 +29,7 @@ namespace Streamarr.Core.Channels
         public bool DownloadShorts { get; set; }
         public bool DownloadVods { get; set; }
         public bool DownloadLive { get; set; } = true;
+        public bool DownloadMembers { get; set; }
 
         // Wanted filter — word filters
         public string WatchedWords { get; set; } = string.Empty;

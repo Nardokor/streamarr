@@ -21,6 +21,7 @@ public class ChannelResource : RestResource
     public bool DownloadShorts { get; set; } = true;
     public bool DownloadVods { get; set; } = true;
     public bool DownloadLive { get; set; }
+    public bool DownloadMembers { get; set; }
 
     // Wanted — word filters
     public string WatchedWords { get; set; } = string.Empty;
@@ -60,6 +61,7 @@ public static class ChannelResourceMapper
             DownloadShorts = model.DownloadShorts,
             DownloadVods = model.DownloadVods,
             DownloadLive = model.DownloadLive,
+            DownloadMembers = model.DownloadMembers,
             WatchedWords = model.WatchedWords,
             IgnoredWords = model.IgnoredWords,
             WatchedDefeatsIgnored = model.WatchedDefeatsIgnored,
@@ -91,6 +93,7 @@ public static class ChannelResourceMapper
             DownloadShorts = resource.DownloadShorts,
             DownloadVods = resource.DownloadVods,
             DownloadLive = resource.DownloadLive,
+            DownloadMembers = resource.DownloadMembers,
             WatchedWords = resource.WatchedWords,
             IgnoredWords = resource.IgnoredWords,
             WatchedDefeatsIgnored = resource.WatchedDefeatsIgnored,

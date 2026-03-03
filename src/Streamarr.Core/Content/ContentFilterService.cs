@@ -8,7 +8,7 @@ namespace Streamarr.Core.Content
 {
     public interface IContentFilterService
     {
-        bool PassesFilter(string title, ContentType contentType, Channel channel);
+        bool PassesFilter(string title, ContentType contentType, Channel channel, bool isMembers = false, bool isAccessible = true);
         void ReapplyFilterForChannel(Channel channel);
     }
 
@@ -23,8 +23,20 @@ namespace Streamarr.Core.Content
             _logger = logger;
         }
 
-        public bool PassesFilter(string title, ContentType contentType, Channel channel)
+        public bool PassesFilter(string title, ContentType contentType, Channel channel, bool isMembers = false, bool isAccessible = true)
         {
+            // Members gate: inaccessible members content is always unwanted;
+            // accessible members content requires DownloadMembers to be enabled.
+            if (isMembers && !isAccessible)
+            {
+                return false;
+            }
+
+            if (isMembers && !channel.DownloadMembers)
+            {
+                return false;
+            }
+
             // 1. Content type gate
             var typeAllowed = contentType switch
             {
@@ -66,7 +78,7 @@ namespace Streamarr.Core.Content
                     continue;
                 }
 
-                var passes = PassesFilter(content.Title, content.ContentType, channel);
+                var passes = PassesFilter(content.Title, content.ContentType, channel, content.IsMembers, content.IsAccessible);
 
                 if (passes && content.Status == ContentStatus.Unwanted)
                 {

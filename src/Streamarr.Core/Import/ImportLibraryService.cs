@@ -51,7 +51,7 @@ namespace Streamarr.Core.Import
         private readonly IContentService _contentService;
         private readonly IContentFileService _contentFileService;
         private readonly IQualityProfileService _qualityProfileService;
-        private readonly MetadataSourceFactory _metadataSourceFactory;
+        private readonly IMetadataSourceFactory _metadataSourceFactory;
         private readonly Logger _logger;
 
         public ImportLibraryService(
@@ -60,7 +60,7 @@ namespace Streamarr.Core.Import
             IContentService contentService,
             IContentFileService contentFileService,
             IQualityProfileService qualityProfileService,
-            MetadataSourceFactory metadataSourceFactory,
+            IMetadataSourceFactory metadataSourceFactory,
             Logger logger)
         {
             _creatorService = creatorService;

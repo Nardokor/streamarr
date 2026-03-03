@@ -21,6 +21,9 @@ interface CssExports {
   'headerActions': string;
   'iconBtn': string;
   'iconBtnActive': string;
+  'membersAccessible': string;
+  'membersCell': string;
+  'membersLocked': string;
   'platformBadge': string;
   'saveBtn': string;
   'section': string;

@@ -16,6 +16,8 @@ public class ContentResource : RestResource
     public DateTime? AirDateUtc { get; set; }
     public DateTime DateAdded { get; set; }
     public bool Monitored { get; set; }
+    public bool IsMembers { get; set; }
+    public bool IsAccessible { get; set; }
     public ContentStatus Status { get; set; }
 
     // Populated only on single-item requests (no N+1 for lists)
@@ -41,6 +43,8 @@ public static class ContentResourceMapper
             AirDateUtc = model.AirDateUtc,
             DateAdded = model.DateAdded,
             Monitored = model.Monitored,
+            IsMembers = model.IsMembers,
+            IsAccessible = model.IsAccessible,
             Status = model.Status
         };
     }

@@ -118,7 +118,17 @@ namespace Streamarr.Core.Creators.Commands
                         continue;
                     }
 
-                    var passes = _contentFilterService.PassesFilter(item.Title, item.ContentType, channel);
+                    // For newly discovered members-only content, probe accessibility once.
+                    if (item.IsMembers)
+                    {
+                        item.IsAccessible = source.ProbeContentAccessibility(item.PlatformContentId);
+                        _logger.Debug(
+                            "Members video '{0}' accessibility: {1}",
+                            item.PlatformContentId,
+                            item.IsAccessible ? "accessible" : "inaccessible");
+                    }
+
+                    var passes = _contentFilterService.PassesFilter(item.Title, item.ContentType, channel, item.IsMembers, item.IsAccessible);
 
                     added.Add(new Content.Content
                     {
@@ -132,6 +142,8 @@ namespace Streamarr.Core.Creators.Commands
                         AirDateUtc = item.AirDateUtc,
                         DateAdded = DateTime.UtcNow,
                         Monitored = true,
+                        IsMembers = item.IsMembers,
+                        IsAccessible = item.IsAccessible,
                         Status = passes ? ContentStatus.Missing : ContentStatus.Unwanted
                     });
                 }

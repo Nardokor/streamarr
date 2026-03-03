@@ -15,6 +15,8 @@ interface Content extends ModelBase {
   airDateUtc: string | null;
   dateAdded: string;
   monitored: boolean;
+  isMembers: boolean;
+  isAccessible: boolean;
   status: ContentStatus;
   // Populated only on single-item fetch
   fileRelativePath?: string | null;

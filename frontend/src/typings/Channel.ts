@@ -19,6 +19,7 @@ interface Channel extends ModelBase {
   downloadShorts: boolean;
   downloadVods: boolean;
   downloadLive: boolean;
+  downloadMembers: boolean;
 
   // Wanted — word filters
   watchedWords: string;

@@ -23,6 +23,7 @@ namespace Streamarr.Core.Download.YtDlp
         YtDlpVideoInfo GetVideoInfo(string videoUrl);
         string GetVersion();
         bool IsAvailable();
+        bool HasCookies { get; }
     }
 
     public class YtDlpClient : IYtDlpClient
@@ -56,6 +57,12 @@ namespace Streamarr.Core.Download.YtDlp
         private readonly IDiskProvider _diskProvider;
         private readonly IConfigService _configService;
         private readonly Logger _logger;
+
+        public bool HasCookies => !string.IsNullOrWhiteSpace(Settings.CookieFilePath);
+
+        private string CookieArg => !string.IsNullOrWhiteSpace(Settings.CookieFilePath)
+            ? $" --cookies {Quote(Settings.CookieFilePath)}"
+            : string.Empty;
 
         private YtDlpSettings Settings => new YtDlpSettings
         {
@@ -126,7 +133,7 @@ namespace Streamarr.Core.Download.YtDlp
         {
             _logger.Debug("Getting channel info: {0}", channelUrl);
 
-            var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1 {Quote(channelUrl)}";
+            var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1{CookieArg} {Quote(channelUrl)}";
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, args);
 
             if (output.ExitCode != 0)
@@ -195,6 +202,11 @@ namespace Streamarr.Core.Download.YtDlp
             if (!string.IsNullOrWhiteSpace(dateAfter))
             {
                 argParts.Add($"--dateafter {dateAfter}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(Settings.CookieFilePath))
+            {
+                argParts.Add($"--cookies {Quote(Settings.CookieFilePath)}");
             }
 
             argParts.Add(Quote(url));
@@ -410,9 +422,9 @@ namespace Streamarr.Core.Download.YtDlp
             }
         }
 
-        private static string BuildMetadataArgs(string url)
+        private string BuildMetadataArgs(string url)
         {
-            return $"--dump-json --skip-download --socket-timeout 15 {Quote(url)}";
+            return $"--dump-json --skip-download --socket-timeout 15{CookieArg} {Quote(url)}";
         }
 
         private string BuildDownloadArgs(string url, string outputPath, bool isLive = false)

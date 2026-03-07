@@ -404,33 +404,10 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         public override bool ProbeContentAccessibility(string platformContentId)
         {
-            try
-            {
-                var url = $"https://www.youtube.com/watch?v={platformContentId}";
-                _ytDlpClient.GetVideoInfo(url);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var msg = ex.Message ?? string.Empty;
-
-                // Deno/signature failures mean we CAN access the video but can't decode stream URLs
-                // due to a missing JavaScript runtime. Treat as accessible so the video can be
-                // queued; the download will fail (or succeed once deno is installed).
-                if (msg.IndexOf("deno", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    msg.IndexOf("Signature solving", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    msg.IndexOf("n challenge", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    msg.IndexOf("format is not available", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    msg.IndexOf("challenge request", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    _logger.Debug("Members video {0} is accessible but has deno/format issue: {1}", platformContentId, msg.Split('\n')[0]);
-                    return true;
-                }
-
-                // Membership/access errors — cookies don't unlock this video
-                _logger.Debug("Members video {0} is not accessible with current cookies: {1}", platformContentId, msg.Split('\n')[0]);
-                return false;
-            }
+            // Uses --print availability (metadata-only fetch) to avoid triggering
+            // deno/JS-challenge format resolution — inaccessible videos fail before
+            // format extraction with a clear membership error.
+            return _ytDlpClient.IsVideoAccessible(platformContentId);
         }
 
         // ── Mapping ────────────────────────────────────────────────────────────

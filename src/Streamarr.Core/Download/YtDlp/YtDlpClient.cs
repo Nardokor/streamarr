@@ -22,6 +22,14 @@ namespace Streamarr.Core.Download.YtDlp
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null);
         List<YtDlpVideoInfo> GetMembershipTabVideos(string channelUrl);
         YtDlpVideoInfo GetVideoInfo(string videoUrl);
+
+        /// <summary>
+        /// Lightweight accessibility check using --print (no format resolution, no deno).
+        /// Returns true if the video is accessible with current cookies; false if it requires
+        /// a membership level the cookies don't satisfy.
+        /// </summary>
+        bool IsVideoAccessible(string videoId);
+
         string GetVersion();
         bool IsAvailable();
         bool HasCookies { get; }
@@ -128,6 +136,23 @@ namespace Streamarr.Core.Download.YtDlp
             var json = string.Join(string.Empty, output.Standard.Select(l => l.Content));
 
             return JsonSerializer.Deserialize<YtDlpVideoInfo>(json, JsonOptions);
+        }
+
+        public bool IsVideoAccessible(string videoId)
+        {
+            var url = $"https://www.youtube.com/watch?v={videoId}";
+            var args = $"--print availability --no-playlist --socket-timeout 15{CookieArg} {Quote(url)}";
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args);
+
+            if (output.ExitCode != 0)
+            {
+                var error = string.Join(" ", output.Error.Select(l => l.Content));
+                _logger.Debug("IsVideoAccessible({0}) → inaccessible: {1}", videoId, error.Split('\n')[0].Trim());
+                return false;
+            }
+
+            _logger.Debug("IsVideoAccessible({0}) → accessible", videoId);
+            return true;
         }
 
         public YtDlpChannelInfo GetChannelInfo(string channelUrl)

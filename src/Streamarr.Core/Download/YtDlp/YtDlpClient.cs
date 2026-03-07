@@ -16,10 +16,11 @@ namespace Streamarr.Core.Download.YtDlp
 {
     public interface IYtDlpClient
     {
-        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, Action<YtDlpProgress> onProgress = null);
+        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, bool needsCookies = false, Action<YtDlpProgress> onProgress = null);
         void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null);
+        List<YtDlpVideoInfo> GetMembershipTabVideos(string channelUrl);
         YtDlpVideoInfo GetVideoInfo(string videoUrl);
         string GetVersion();
         bool IsAvailable();
@@ -183,6 +184,22 @@ namespace Streamarr.Core.Download.YtDlp
             return allVideos;
         }
 
+        public List<YtDlpVideoInfo> GetMembershipTabVideos(string channelUrl)
+        {
+            var baseUrl = channelUrl.TrimEnd('/');
+            foreach (var knownTab in new[] { "/videos", "/shorts", "/streams", "/live", "/membership" })
+            {
+                if (baseUrl.EndsWith(knownTab, StringComparison.OrdinalIgnoreCase))
+                {
+                    baseUrl = baseUrl[..^knownTab.Length];
+                    break;
+                }
+            }
+
+            // Fetch all (no dateAfter) so historical members content can be backfilled
+            return FetchFromTab($"{baseUrl}/membership", limit: null, dateAfter: null);
+        }
+
         private List<YtDlpVideoInfo> FetchFromTab(string url, int? limit, string dateAfter)
         {
             _logger.Debug("Fetching tab: {0}", url);
@@ -249,11 +266,11 @@ namespace Streamarr.Core.Download.YtDlp
             return videos;
         }
 
-        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, Action<YtDlpProgress> onProgress = null)
+        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, bool needsCookies = false, Action<YtDlpProgress> onProgress = null)
         {
             _diskProvider.EnsureFolder(outputPath);
 
-            var args = BuildDownloadArgs(url, outputPath, isLive);
+            var args = BuildDownloadArgs(url, outputPath, isLive, needsCookies);
             var mergedFile = string.Empty;
             var fragmentFiles = new List<string>();
             var alreadyDownloadedFile = string.Empty;
@@ -427,7 +444,7 @@ namespace Streamarr.Core.Download.YtDlp
             return $"--dump-json --skip-download --socket-timeout 15{CookieArg} {Quote(url)}";
         }
 
-        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false)
+        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, bool needsCookies = false)
         {
             var args = new List<string>
             {
@@ -455,7 +472,7 @@ namespace Streamarr.Core.Download.YtDlp
                 args.Add("--embed-thumbnail");
             }
 
-            if (!string.IsNullOrWhiteSpace(Settings.CookieFilePath))
+            if (needsCookies && !string.IsNullOrWhiteSpace(Settings.CookieFilePath))
             {
                 args.Add("--cookies");
                 args.Add(Quote(Settings.CookieFilePath));

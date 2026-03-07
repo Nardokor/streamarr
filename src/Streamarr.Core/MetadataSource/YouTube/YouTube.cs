@@ -234,40 +234,61 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, DateTime? since)
         {
-            // 1. Use yt-dlp to list all video IDs (public + members-only)
+            // 1. Regular tabs: videos, shorts, streams (date-filtered for efficiency)
             var dateAfter = since?.ToString("yyyyMMdd");
-            var ytDlpVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
+            var regularVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
 
-            if (!ytDlpVideos.Any())
+            // 2. Membership tab: always fetch all so historical members content is backfilled
+            var membershipVideos = _ytDlpClient.GetMembershipTabVideos(platformUrl);
+            var membershipIds = new HashSet<string>(
+                membershipVideos.Select(v => v.Id).Where(id => !string.IsNullOrWhiteSpace(id)),
+                StringComparer.OrdinalIgnoreCase);
+
+            if (membershipIds.Count > 0)
+            {
+                _logger.Info("{0} video(s) found in membership tab", membershipIds.Count);
+            }
+
+            // 3. Merge: regular + membership-exclusive videos (union by ID)
+            var seen = new HashSet<string>(
+                regularVideos.Select(v => v.Id).Where(id => !string.IsNullOrWhiteSpace(id)),
+                StringComparer.OrdinalIgnoreCase);
+            var allVideos = regularVideos.ToList();
+            foreach (var v in membershipVideos)
+            {
+                if (!string.IsNullOrWhiteSpace(v.Id) && seen.Add(v.Id))
+                {
+                    allVideos.Add(v);
+                }
+            }
+
+            if (!allVideos.Any())
             {
                 _logger.Info("yt-dlp found no new content at {0}", platformUrl);
                 return Enumerable.Empty<ContentMetadataResult>();
             }
 
-            _logger.Info("yt-dlp found {0} items; enriching public videos via YouTube API", ytDlpVideos.Count);
+            _logger.Info("yt-dlp found {0} items ({1} from membership tab) for {2}", allVideos.Count, membershipIds.Count, platformUrl);
 
-            // 2. Try YouTube API enrichment for public videos (exact timestamps + liveStreamingDetails)
+            // 4. YouTube API enrichment for richer metadata (timestamps, liveStreamingDetails)
             var apiById = new Dictionary<string, YoutubeVideo>();
             if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
             {
-                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, ytDlpVideos.Select(v => v.Id));
+                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, allVideos.Select(v => v.Id));
                 foreach (var v in apiVideos)
                 {
                     apiById[v.Id] = v;
                 }
             }
 
-            var membersOnlyCount = ytDlpVideos.Count - apiById.Count;
-            if (membersOnlyCount > 0)
+            // 5. Map: IsMembers is determined solely by membership tab presence
+            return allVideos.Select(v =>
             {
-                _logger.Info("{0} members-only video(s) not returned by YouTube API — using yt-dlp metadata", membersOnlyCount);
-            }
-
-            // 3. Map: API result for public videos, yt-dlp result for members-only
-            return ytDlpVideos.Select(v =>
-                apiById.TryGetValue(v.Id, out var apiVideo)
-                    ? MapToContentMetadata(apiVideo, publishedAt: null)
-                    : MapYtDlpToContentMetadata(v, isMembers: true));
+                var isMembers = membershipIds.Contains(v.Id);
+                return apiById.TryGetValue(v.Id, out var apiVideo)
+                    ? MapToContentMetadata(apiVideo, publishedAt: null, isMembers: isMembers)
+                    : MapYtDlpToContentMetadata(v, isMembers: isMembers);
+            });
         }
 
         // ── Single / batch lookup ──────────────────────────────────────────────
@@ -497,7 +518,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             };
         }
 
-        private static ContentMetadataResult MapToContentMetadata(YoutubeVideo video, DateTime? publishedAt)
+        private static ContentMetadataResult MapToContentMetadata(YoutubeVideo video, DateTime? publishedAt, bool isMembers = false)
         {
             TimeSpan? duration = null;
             if (!string.IsNullOrWhiteSpace(video.ContentDetails?.Duration))
@@ -527,7 +548,9 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 Description = video.Snippet?.Description ?? string.Empty,
                 ThumbnailUrl = thumbnailUrl,
                 Duration = duration,
-                AirDateUtc = DetermineAirDate(video, publishedAt)
+                AirDateUtc = DetermineAirDate(video, publishedAt),
+                IsMembers = isMembers,
+                IsAccessible = true,
             };
         }
 

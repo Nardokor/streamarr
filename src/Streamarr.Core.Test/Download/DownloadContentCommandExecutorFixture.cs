@@ -56,7 +56,7 @@ namespace Streamarr.Core.Test.Download
                   .Returns(_creator);
 
             Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Action<YtDlpProgress>>()))
+                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<Action<YtDlpProgress>>()))
                   .Returns(new YtDlpDownloadResult { Success = true, FilePath = "/media/test/video.mp4", FileSize = 1024 });
 
             Mocker.GetMock<IContentFileService>()
@@ -85,6 +85,7 @@ namespace Streamarr.Core.Test.Download
                       "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
+                      It.IsAny<bool>(),
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
@@ -102,6 +103,7 @@ namespace Streamarr.Core.Test.Download
                       _content.Id,
                       "https://www.twitch.tv/videos/1234567890",
                       It.IsAny<string>(),
+                      It.IsAny<bool>(),
                       It.IsAny<bool>(),
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
@@ -122,6 +124,7 @@ namespace Streamarr.Core.Test.Download
                       "https://www.twitch.tv/shroud",
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
+                      It.IsAny<bool>(),
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
@@ -141,6 +144,7 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<string>(),
                       true,
+                      It.IsAny<bool>(),
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
@@ -157,6 +161,45 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<int>(),
                       It.IsAny<string>(),
                       It.IsAny<string>(),
+                      false,
+                      It.IsAny<bool>(),
+                      It.IsAny<Action<YtDlpProgress>>()),
+                  Times.Once);
+        }
+
+        // ── needsCookies flag ─────────────────────────────────────────────────
+
+        [Test]
+        public void should_pass_needs_cookies_true_for_members_content()
+        {
+            _content.IsMembers = true;
+
+            Execute();
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Verify(c => c.Download(
+                      It.IsAny<int>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>(),
+                      It.IsAny<bool>(),
+                      true,
+                      It.IsAny<Action<YtDlpProgress>>()),
+                  Times.Once);
+        }
+
+        [Test]
+        public void should_pass_needs_cookies_false_for_public_content()
+        {
+            _content.IsMembers = false;
+
+            Execute();
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Verify(c => c.Download(
+                      It.IsAny<int>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>(),
+                      It.IsAny<bool>(),
                       false,
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
@@ -179,7 +222,7 @@ namespace Streamarr.Core.Test.Download
         public void should_set_status_to_missing_on_failure()
         {
             Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Action<YtDlpProgress>>()))
+                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<Action<YtDlpProgress>>()))
                   .Returns(new YtDlpDownloadResult { Success = false, ErrorMessage = "yt-dlp failed" });
 
             Execute();

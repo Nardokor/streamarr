@@ -113,8 +113,21 @@ namespace Streamarr.Core.Creators.Commands
 
                 foreach (var item in newItems)
                 {
-                    if (_contentService.FindByPlatformContentId(channel.Id, item.PlatformContentId) != null)
+                    var existing = _contentService.FindByPlatformContentId(channel.Id, item.PlatformContentId);
+                    if (existing != null)
                     {
+                        // Backfill IsMembers for content that predates the members flag (e.g. migration 240).
+                        if (item.IsMembers && !existing.IsMembers)
+                        {
+                            existing.IsMembers = true;
+                            existing.IsAccessible = source.ProbeContentAccessibility(item.PlatformContentId);
+                            _logger.Debug(
+                                "Backfilling members flag for '{0}' (accessible: {1})",
+                                item.PlatformContentId,
+                                existing.IsAccessible);
+                            _contentService.UpdateContent(existing);
+                        }
+
                         continue;
                     }
 

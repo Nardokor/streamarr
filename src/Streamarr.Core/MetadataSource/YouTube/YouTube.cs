@@ -412,7 +412,23 @@ namespace Streamarr.Core.MetadataSource.YouTube
             }
             catch (Exception ex)
             {
-                _logger.Debug(ex, "Members video {0} is not accessible with current cookies", platformContentId);
+                var msg = ex.Message ?? string.Empty;
+
+                // Deno/signature failures mean we CAN access the video but can't decode stream URLs
+                // due to a missing JavaScript runtime. Treat as accessible so the video can be
+                // queued; the download will fail (or succeed once deno is installed).
+                if (msg.IndexOf("deno", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    msg.IndexOf("Signature solving", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    msg.IndexOf("n challenge", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    msg.IndexOf("format is not available", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    msg.IndexOf("challenge request", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    _logger.Debug("Members video {0} is accessible but has deno/format issue: {1}", platformContentId, msg.Split('\n')[0]);
+                    return true;
+                }
+
+                // Membership/access errors — cookies don't unlock this video
+                _logger.Debug("Members video {0} is not accessible with current cookies: {1}", platformContentId, msg.Split('\n')[0]);
                 return false;
             }
         }

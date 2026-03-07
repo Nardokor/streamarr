@@ -49,5 +49,9 @@ namespace Streamarr.Core.Download.YtDlp
 
         [JsonPropertyName("was_live")]
         public bool? WasLive { get; set; }
+
+        // "subscriber_only" for members-only content; "public", "unlisted", etc. otherwise
+        [JsonPropertyName("availability")]
+        public string Availability { get; set; } = string.Empty;
     }
 }

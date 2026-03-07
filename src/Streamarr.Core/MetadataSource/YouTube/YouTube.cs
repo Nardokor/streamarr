@@ -281,14 +281,29 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 }
             }
 
-            // 5. Map: IsMembers is determined solely by membership tab presence
-            return allVideos.Select(v =>
+            // 5. Map: IsMembers = membership tab presence OR yt-dlp availability == "subscriber_only"
+            //    (channels without a /membership tab use availability on regular tab videos instead)
+            var membersOnlyCount = 0;
+            var result = allVideos.Select(v =>
             {
-                var isMembers = membershipIds.Contains(v.Id);
+                var isMembers = membershipIds.Contains(v.Id)
+                    || string.Equals(v.Availability, "subscriber_only", StringComparison.OrdinalIgnoreCase);
+                if (isMembers)
+                {
+                    membersOnlyCount++;
+                }
+
                 return apiById.TryGetValue(v.Id, out var apiVideo)
                     ? MapToContentMetadata(apiVideo, publishedAt: null, isMembers: isMembers)
                     : MapYtDlpToContentMetadata(v, isMembers: isMembers);
-            });
+            }).ToList();
+
+            if (membersOnlyCount > 0)
+            {
+                _logger.Info("{0} members-only video(s) identified", membersOnlyCount);
+            }
+
+            return result;
         }
 
         // ── Single / batch lookup ──────────────────────────────────────────────

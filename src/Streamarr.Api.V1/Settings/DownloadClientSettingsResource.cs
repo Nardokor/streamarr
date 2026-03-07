@@ -12,6 +12,7 @@ public class DownloadClientSettingsResource : RestResource
     public bool YtDlpEmbedThumbnail { get; set; }
     public string YtDlpPreferredFormat { get; set; } = string.Empty;
     public int YtDlpMaxConcurrentDownloads { get; set; }
+    public string YtDlpDenoBinaryPath { get; set; } = string.Empty;
 }
 
 public static class DownloadClientSettingsMapper
@@ -28,6 +29,7 @@ public static class DownloadClientSettingsMapper
             YtDlpEmbedThumbnail = config.YtDlpEmbedThumbnail,
             YtDlpPreferredFormat = config.YtDlpPreferredFormat,
             YtDlpMaxConcurrentDownloads = config.YtDlpMaxConcurrentDownloads,
+            YtDlpDenoBinaryPath = config.YtDlpDenoBinaryPath,
         };
     }
 
@@ -40,5 +42,6 @@ public static class DownloadClientSettingsMapper
         config.YtDlpEmbedThumbnail = resource.YtDlpEmbedThumbnail;
         config.YtDlpPreferredFormat = resource.YtDlpPreferredFormat;
         config.YtDlpMaxConcurrentDownloads = resource.YtDlpMaxConcurrentDownloads;
+        config.YtDlpDenoBinaryPath = resource.YtDlpDenoBinaryPath;
     }
 }

@@ -47,6 +47,7 @@ namespace Streamarr.Core.Configuration
         bool YtDlpEmbedThumbnail { get; set; }
         string YtDlpPreferredFormat { get; set; }
         int YtDlpMaxConcurrentDownloads { get; set; }
+        string YtDlpDenoBinaryPath { get; set; }
 
         // Internal
         bool CleanupMetadataImages { get; set; }

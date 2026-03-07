@@ -9,5 +9,6 @@ namespace Streamarr.Core.Download.YtDlp
         public bool EmbedThumbnail { get; set; } = true;
         public string PreferredFormat { get; set; } = "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best";
         public int MaxConcurrentDownloads { get; set; } = 1;
+        public string DenoBinaryPath { get; set; } = "deno";
     }
 }

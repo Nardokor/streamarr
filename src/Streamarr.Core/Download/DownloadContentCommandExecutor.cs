@@ -7,6 +7,7 @@ using Streamarr.Core.Content;
 using Streamarr.Core.ContentFiles;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Download.YtDlp;
+using Streamarr.Core.Extras;
 using Streamarr.Core.History;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Messaging.Events;
@@ -22,6 +23,7 @@ namespace Streamarr.Core.Download
         private readonly ICreatorService _creatorService;
         private readonly IContentFileService _contentFileService;
         private readonly IYtDlpClient _ytDlpClient;
+        private readonly INfoWriterService _nfoWriter;
         private readonly IDownloadHistoryService _historyService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
@@ -31,6 +33,7 @@ namespace Streamarr.Core.Download
                                               ICreatorService creatorService,
                                               IContentFileService contentFileService,
                                               IYtDlpClient ytDlpClient,
+                                              INfoWriterService nfoWriter,
                                               IDownloadHistoryService historyService,
                                               IEventAggregator eventAggregator,
                                               Logger logger)
@@ -40,6 +43,7 @@ namespace Streamarr.Core.Download
             _creatorService = creatorService;
             _contentFileService = contentFileService;
             _ytDlpClient = ytDlpClient;
+            _nfoWriter = nfoWriter;
             _historyService = historyService;
             _eventAggregator = eventAggregator;
             _logger = logger;
@@ -113,6 +117,9 @@ namespace Streamarr.Core.Download
                     content.ContentFileId = contentFile.Id;
                     content.Status = ContentStatus.Downloaded;
                     _contentService.UpdateContent(content);
+
+                    _nfoWriter.WriteCreatorNfo(creator);
+                    _nfoWriter.WriteContentNfo(content, result.FilePath, channel);
 
                     _historyService.Record(
                         content.Id,

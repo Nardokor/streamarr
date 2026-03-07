@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
@@ -110,7 +111,9 @@ namespace Streamarr.Core.Creators.Commands
             {
                 var newItems = source.GetNewContent(channel.PlatformUrl, channel.PlatformId, channel.LastInfoSync);
                 var added = new List<Content.Content>();
+                var backfillItems = new List<Content.Content>();
 
+                // First pass: DB lookups only — no probing yet
                 foreach (var item in newItems)
                 {
                     var existing = _contentService.FindByPlatformContentId(channel.Id, item.PlatformContentId);
@@ -120,21 +123,14 @@ namespace Streamarr.Core.Creators.Commands
                         if (item.IsMembers && !existing.IsMembers)
                         {
                             existing.IsMembers = true;
-                            existing.IsAccessible = source.ProbeContentAccessibility(item.PlatformContentId);
-                            _logger.Debug("Backfilling members flag for '{0}' (accessible: {1})", item.PlatformContentId, existing.IsAccessible);
-                            _contentService.UpdateContent(existing);
+                            existing.IsAccessible = true; // resolved below
+                            backfillItems.Add(existing);
                         }
 
                         continue;
                     }
 
-                    // Probe accessibility for newly discovered members content once.
-                    if (item.IsMembers)
-                    {
-                        item.IsAccessible = source.ProbeContentAccessibility(item.PlatformContentId);
-                        _logger.Debug("Members video '{0}' accessibility: {1}", item.PlatformContentId, item.IsAccessible ? "accessible" : "inaccessible");
-                    }
-
+                    // IsAccessible defaults to true; resolved in parallel below for members content
                     var passes = _contentFilterService.PassesFilter(item.Title, item.ContentType, channel, item.IsMembers, item.IsAccessible);
 
                     added.Add(new Content.Content
@@ -153,6 +149,43 @@ namespace Streamarr.Core.Creators.Commands
                         IsAccessible = item.IsAccessible,
                         Status = passes ? ContentStatus.Missing : ContentStatus.Unwanted
                     });
+                }
+
+                // Parallel accessibility probes for new members content
+                var newMembersContent = added.Where(c => c.IsMembers).ToList();
+                if (newMembersContent.Any())
+                {
+                    _logger.Info("Probing accessibility for {0} new members video(s) (parallel)...", newMembersContent.Count);
+                    Parallel.ForEach(
+                        newMembersContent,
+                        new ParallelOptions { MaxDegreeOfParallelism = 4 },
+                        content =>
+                        {
+                            content.IsAccessible = source.ProbeContentAccessibility(content.PlatformContentId);
+                            _logger.Debug("Members video '{0}': {1}", content.PlatformContentId, content.IsAccessible ? "accessible" : "inaccessible");
+                            if (!content.IsAccessible)
+                            {
+                                content.Status = ContentStatus.Unwanted;
+                            }
+                        });
+                }
+
+                // Parallel probes for backfill items then persist
+                if (backfillItems.Any())
+                {
+                    Parallel.ForEach(
+                        backfillItems,
+                        new ParallelOptions { MaxDegreeOfParallelism = 4 },
+                        existing =>
+                        {
+                            existing.IsAccessible = source.ProbeContentAccessibility(existing.PlatformContentId);
+                            _logger.Debug("Backfilling members flag for '{0}' (accessible: {1})", existing.PlatformContentId, existing.IsAccessible);
+                        });
+
+                    foreach (var existing in backfillItems)
+                    {
+                        _contentService.UpdateContent(existing);
+                    }
                 }
 
                 if (added.Any())

@@ -78,6 +78,7 @@ function statusClass(kind: string): string {
   if (kind === 'modified') return styles.statusModified;
   if (kind === 'unwanted') return styles.statusUnmonitored;
   if (kind === 'available') return styles.statusAvailable;
+  if (kind === 'unavailable') return styles.statusUnmonitored;
   return styles.statusUnmonitored;
 }
 
@@ -119,7 +120,8 @@ function DownloadCell({ contentId, statusKind, monitored, onDownload }: Download
   const canDownload =
     monitored &&
     statusKind !== 'downloaded' &&
-    statusKind !== 'notAired';
+    statusKind !== 'notAired' &&
+    statusKind !== 'unavailable';
 
   if (canDownload) {
     return (

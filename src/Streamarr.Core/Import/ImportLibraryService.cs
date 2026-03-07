@@ -8,6 +8,7 @@ using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
 using Streamarr.Core.ContentFiles;
 using Streamarr.Core.Creators;
+using Streamarr.Core.Extras;
 using Streamarr.Core.MetadataSource;
 using Streamarr.Core.Profiles.Qualities;
 
@@ -52,6 +53,7 @@ namespace Streamarr.Core.Import
         private readonly IContentFileService _contentFileService;
         private readonly IQualityProfileService _qualityProfileService;
         private readonly IMetadataSourceFactory _metadataSourceFactory;
+        private readonly INfoWriterService _nfoWriter;
         private readonly Logger _logger;
 
         public ImportLibraryService(
@@ -61,6 +63,7 @@ namespace Streamarr.Core.Import
             IContentFileService contentFileService,
             IQualityProfileService qualityProfileService,
             IMetadataSourceFactory metadataSourceFactory,
+            INfoWriterService nfoWriter,
             Logger logger)
         {
             _creatorService = creatorService;
@@ -69,6 +72,7 @@ namespace Streamarr.Core.Import
             _contentFileService = contentFileService;
             _qualityProfileService = qualityProfileService;
             _metadataSourceFactory = metadataSourceFactory;
+            _nfoWriter = nfoWriter;
             _logger = logger;
         }
 
@@ -167,6 +171,8 @@ namespace Streamarr.Core.Import
                 _logger.Debug("Matched existing creator '{0}'", creator.Title);
             }
 
+            _nfoWriter.WriteCreatorNfo(creator);
+
             var idToFile = ScanVideoFiles(dirPath);
 
             if (idToFile.Count == 0)
@@ -262,6 +268,8 @@ namespace Streamarr.Core.Import
             content.ContentFileId = contentFile.Id;
             content.Status = ContentStatus.Downloaded;
             _contentService.UpdateContent(content);
+
+            _nfoWriter.WriteContentNfo(content, filePath, channel);
 
             result.ContentLinked++;
             _logger.Debug("Linked file '{0}' → content '{1}'", filePath, content.Title);

@@ -117,29 +117,21 @@ namespace Streamarr.Core.Creators.Commands
                     if (existing != null)
                     {
                         // Backfill IsMembers for content that predates the members flag (e.g. migration 240).
+                        // If yt-dlp listed it as members-only, the cookies already proved accessibility.
                         if (item.IsMembers && !existing.IsMembers)
                         {
                             existing.IsMembers = true;
-                            existing.IsAccessible = source.ProbeContentAccessibility(item.PlatformContentId);
-                            _logger.Debug(
-                                "Backfilling members flag for '{0}' (accessible: {1})",
-                                item.PlatformContentId,
-                                existing.IsAccessible);
+                            existing.IsAccessible = true;
+                            _logger.Debug("Backfilling members flag for '{0}'", item.PlatformContentId);
                             _contentService.UpdateContent(existing);
                         }
 
                         continue;
                     }
 
-                    // For newly discovered members-only content, probe accessibility once.
-                    if (item.IsMembers)
-                    {
-                        item.IsAccessible = source.ProbeContentAccessibility(item.PlatformContentId);
-                        _logger.Debug(
-                            "Members video '{0}' accessibility: {1}",
-                            item.PlatformContentId,
-                            item.IsAccessible ? "accessible" : "inaccessible");
-                    }
+                    // Members videos discovered via yt-dlp listing are accessible by definition —
+                    // the flat-playlist fetch already proved the cookies have the right tier.
+                    // IsAccessible defaults to true in ContentMetadataResult.
 
                     var passes = _contentFilterService.PassesFilter(item.Title, item.ContentType, channel, item.IsMembers, item.IsAccessible);
 

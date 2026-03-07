@@ -114,6 +114,11 @@
     <EmbedAllSources>true</EmbedAllSources>
   </PropertyGroup>
 
+  <!-- Suppress MimeKit vulnerability advisory: no patched version available yet (transitive via MailKit) -->
+  <ItemGroup>
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-g7hc-96xr-gvvx" />
+  </ItemGroup>
+
   <!-- Standard testing packages -->
   <ItemGroup Condition="'$(TestProject)'=='true'">
     <PackageReference Include="coverlet.collector" Version="6.0.4" />

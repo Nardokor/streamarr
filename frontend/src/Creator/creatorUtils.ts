@@ -38,10 +38,15 @@ export function formatDate(dateStr: string | null | undefined): string {
 
 export interface StatusLabel {
   text: string;
-  kind: 'downloaded' | 'downloading' | 'recording' | 'missing' | 'unmonitored' | 'notAired' | 'expired' | 'modified' | 'unwanted' | 'processing' | 'available';
+  kind: 'downloaded' | 'downloading' | 'recording' | 'missing' | 'unmonitored' | 'notAired' | 'expired' | 'modified' | 'unwanted' | 'processing' | 'available' | 'unavailable';
 }
 
 export function getStatusLabel(content: Content): StatusLabel {
+  // Members content the current cookies cannot unlock
+  if (content.isMembers && !content.isAccessible) {
+    return { text: 'Unavailable', kind: 'unavailable' };
+  }
+
   // Upcoming — scheduled but not yet started
   if (content.contentType === 'upcoming') {
     return { text: 'Not Aired', kind: 'notAired' };

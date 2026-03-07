@@ -87,7 +87,7 @@ namespace Streamarr.Core.Download
 
             try
             {
-                var result = _ytDlpClient.Download(content.Id, url, creator.Path, isLive, progress =>
+                var result = _ytDlpClient.Download(content.Id, url, creator.Path, isLive, content.IsMembers, progress =>
                 {
                     if (progress.PercentComplete.HasValue)
                     {

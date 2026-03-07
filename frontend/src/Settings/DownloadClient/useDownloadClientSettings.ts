@@ -8,6 +8,7 @@ export interface DownloadClientSettingsModel {
   ytDlpEmbedThumbnail: boolean;
   ytDlpPreferredFormat: string;
   ytDlpMaxConcurrentDownloads: number;
+  ytDlpDenoBinaryPath: string;
 }
 
 export const useManageDownloadClientSettings = () =>

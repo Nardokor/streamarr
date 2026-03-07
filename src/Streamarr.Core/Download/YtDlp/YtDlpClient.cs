@@ -30,6 +30,8 @@ namespace Streamarr.Core.Download.YtDlp
         /// </summary>
         bool IsVideoAccessible(string videoId);
 
+        bool IsDenoAvailable();
+
         string GetVersion();
         bool IsAvailable();
         bool HasCookies { get; }
@@ -82,7 +84,33 @@ namespace Streamarr.Core.Download.YtDlp
             EmbedThumbnail = _configService.YtDlpEmbedThumbnail,
             PreferredFormat = _configService.YtDlpPreferredFormat,
             MaxConcurrentDownloads = _configService.YtDlpMaxConcurrentDownloads,
+            DenoBinaryPath = _configService.YtDlpDenoBinaryPath,
         };
+
+        /// <summary>
+        /// Returns an environment dictionary that prepends the deno binary's directory to PATH
+        /// so yt-dlp can discover it. Returns null when deno is expected to be in PATH already.
+        /// </summary>
+        private System.Collections.Specialized.StringDictionary BuildDenoEnvironment()
+        {
+            var denoPath = Settings.DenoBinaryPath;
+            if (string.IsNullOrWhiteSpace(denoPath) ||
+                string.Equals(denoPath, "deno", StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
+            var denoDir = Path.GetDirectoryName(denoPath);
+            if (string.IsNullOrWhiteSpace(denoDir))
+            {
+                return null;
+            }
+
+            var currentPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+            var env = new System.Collections.Specialized.StringDictionary();
+            env["PATH"] = $"{denoDir}{Path.PathSeparator}{currentPath}";
+            return env;
+        }
 
         public YtDlpClient(IProcessProvider processProvider,
                            IDiskProvider diskProvider,
@@ -108,6 +136,22 @@ namespace Streamarr.Core.Download.YtDlp
             }
         }
 
+        public bool IsDenoAvailable()
+        {
+            try
+            {
+                var denoPath = !string.IsNullOrWhiteSpace(Settings.DenoBinaryPath)
+                    ? Settings.DenoBinaryPath
+                    : "deno";
+                var output = _processProvider.StartAndCapture(denoPath, "--version");
+                return output.ExitCode == 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public string GetVersion()
         {
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, "--version");
@@ -125,7 +169,7 @@ namespace Streamarr.Core.Download.YtDlp
             _logger.Debug("Getting video info: {0}", videoUrl);
 
             var args = BuildMetadataArgs(videoUrl);
-            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args);
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
             if (output.ExitCode != 0)
             {
@@ -142,7 +186,7 @@ namespace Streamarr.Core.Download.YtDlp
         {
             var url = $"https://www.youtube.com/watch?v={videoId}";
             var args = $"--print availability --no-playlist --socket-timeout 15{CookieArg} {Quote(url)}";
-            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args);
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
             if (output.ExitCode != 0)
             {
@@ -160,7 +204,7 @@ namespace Streamarr.Core.Download.YtDlp
             _logger.Debug("Getting channel info: {0}", channelUrl);
 
             var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1{CookieArg} {Quote(channelUrl)}";
-            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args);
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
             if (output.ExitCode != 0)
             {
@@ -254,7 +298,7 @@ namespace Streamarr.Core.Download.YtDlp
             argParts.Add(Quote(url));
 
             var args = string.Join(" ", argParts);
-            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args);
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
             if (output.ExitCode != 0)
             {
@@ -307,7 +351,7 @@ namespace Streamarr.Core.Download.YtDlp
             var process = _processProvider.Start(
                 Settings.BinaryPath,
                 args,
-                null,
+                BuildDenoEnvironment(),
                 line =>
                 {
                     if (string.IsNullOrWhiteSpace(line))

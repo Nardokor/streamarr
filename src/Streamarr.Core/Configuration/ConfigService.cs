@@ -249,6 +249,12 @@ namespace Streamarr.Core.Configuration
             set { SetValue("YtDlpMaxConcurrentDownloads", value); }
         }
 
+        public string YtDlpDenoBinaryPath
+        {
+            get { return GetValue("YtDlpDenoBinaryPath", "deno"); }
+            set { SetValue("YtDlpDenoBinaryPath", value); }
+        }
+
         public bool CleanupMetadataImages
         {
             get { return GetValueBoolean("CleanupMetadataImages", true); }

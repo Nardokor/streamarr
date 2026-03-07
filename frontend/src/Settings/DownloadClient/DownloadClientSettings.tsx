@@ -75,6 +75,18 @@ function DownloadClientSettings() {
               </FormGroup>
 
               <FormGroup size={sizes.MEDIUM}>
+                <FormLabel>Deno Binary Path</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.TEXT}
+                  name="ytDlpDenoBinaryPath"
+                  helpText="Path to the deno binary used by yt-dlp for JavaScript challenge solving (required for members-only content). Defaults to 'deno' (must be on PATH)."
+                  onChange={handleInputChange}
+                  {...settings.ytDlpDenoBinaryPath}
+                />
+              </FormGroup>
+
+              <FormGroup size={sizes.MEDIUM}>
                 <FormLabel>Temp Download Folder</FormLabel>
 
                 <FormInputGroup

@@ -1,4 +1,5 @@
 import React from 'react';
+import AddProviderCard from 'Components/AddProviderCard';
 import Button from 'Components/Link/Button';
 import Modal from 'Components/Modal/Modal';
 import ModalBody from 'Components/Modal/ModalBody';
@@ -31,20 +32,18 @@ function AddSourceModal({
   );
 
   return (
-    <Modal isOpen={isOpen} size="small" onModalClose={onModalClose}>
+    <Modal isOpen={isOpen} onModalClose={onModalClose}>
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>Add Source</ModalHeader>
 
         <ModalBody>
-          <div className={styles.platformGrid}>
+          <div className={styles.providerGrid}>
             {available.map((s) => (
-              <div
+              <AddProviderCard
                 key={s.implementation}
-                className={styles.platformCard}
-                onClick={() => onSelect(s)}
-              >
-                {s.name}
-              </div>
+                implementationName={s.implementationName}
+                onPress={() => onSelect(s)}
+              />
             ))}
 
             {available.length === 0 && <p>All sources are configured.</p>}

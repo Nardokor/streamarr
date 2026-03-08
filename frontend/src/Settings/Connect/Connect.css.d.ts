@@ -6,8 +6,7 @@ interface CssExports {
   'cardType': string;
   'cards': string;
   'notificationCard': string;
-  'platformCard': string;
-  'platformGrid': string;
+  'providerGrid': string;
   'statusDisabled': string;
   'statusEnabled': string;
 }

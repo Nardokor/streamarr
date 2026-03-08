@@ -4,8 +4,7 @@ interface CssExports {
   'addCard': string;
   'cardName': string;
   'cards': string;
-  'platformCard': string;
-  'platformGrid': string;
+  'providerGrid': string;
   'sourceCard': string;
   'statusConfigured': string;
   'statusUnconfigured': string;

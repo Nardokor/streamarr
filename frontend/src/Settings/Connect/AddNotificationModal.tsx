@@ -1,4 +1,5 @@
 import React from 'react';
+import AddProviderCard from 'Components/AddProviderCard';
 import Button from 'Components/Link/Button';
 import Modal from 'Components/Modal/Modal';
 import ModalBody from 'Components/Modal/ModalBody';
@@ -23,23 +24,22 @@ function AddNotificationModal({
   const { data: schemas } = useNotificationSchema();
 
   return (
-    <Modal isOpen={isOpen} size="small" onModalClose={onModalClose}>
+    <Modal isOpen={isOpen} onModalClose={onModalClose}>
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>Add Notification</ModalHeader>
 
         <ModalBody>
-          <div className={styles.platformGrid}>
+          <div className={styles.providerGrid}>
             {(schemas ?? []).map((s) => (
-              <div
+              <AddProviderCard
                 key={s.implementation}
-                className={styles.platformCard}
-                onClick={() => {
+                implementationName={s.implementationName}
+                infoLink={s.infoLink}
+                onPress={() => {
                   onSelect(s);
                   onModalClose();
                 }}
-              >
-                {s.implementationName}
-              </div>
+              />
             ))}
           </div>
         </ModalBody>

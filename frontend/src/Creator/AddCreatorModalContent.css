@@ -2,10 +2,28 @@
   display: flex;
 }
 
+.poster {
+  flex: 0 0 120px;
+  margin-right: 20px;
+}
+
+.posterImage {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .info {
   flex-grow: 1;
 }
 
 .overview {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  color: var(--textSecondary);
+  font-size: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

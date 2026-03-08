@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Linq;
 using NLog;
 using Streamarr.Core.Channels;
+using Streamarr.Core.Configuration;
 using Streamarr.Core.Lifecycle;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.MetadataSource.Twitch;
@@ -14,12 +16,14 @@ namespace Streamarr.Core.MetadataSource
     {
         private readonly IMetadataSourceFactory _factory;
         private readonly IRootFolderService _rootFolderService;
+        private readonly IConfigService _configService;
         private readonly Logger _logger;
 
-        public MetadataSourceSeeder(IMetadataSourceFactory factory, IRootFolderService rootFolderService, Logger logger)
+        public MetadataSourceSeeder(IMetadataSourceFactory factory, IRootFolderService rootFolderService, IConfigService configService, Logger logger)
         {
             _factory = factory;
             _rootFolderService = rootFolderService;
+            _configService = configService;
             _logger = logger;
         }
 
@@ -52,6 +56,42 @@ namespace Streamarr.Core.MetadataSource
             {
                 _logger.Warn("Failed to seed root folder '{0}' from STREAMARR_ROOT_FOLDER: {1}", path, ex.Message);
             }
+
+            SeedCookieFile(path);
+        }
+
+        private void SeedCookieFile(string rootPath)
+        {
+            if (!string.IsNullOrWhiteSpace(_configService.YtDlpCookieFilePath))
+            {
+                return;
+            }
+
+            var cookieFile = FindCookieFile(rootPath);
+            if (cookieFile == null)
+            {
+                return;
+            }
+
+            _configService.YtDlpCookieFilePath = cookieFile;
+            _logger.Info("Auto-configured cookie file '{0}' from STREAMARR_ROOT_FOLDER", cookieFile);
+        }
+
+        private static string FindCookieFile(string rootPath)
+        {
+            // Check common cookie file names first, then fall back to any .txt in the root
+            var candidates = new[] { "cookies.txt", "youtube-cookies.txt", "yt-dlp-cookies.txt" };
+
+            foreach (var name in candidates)
+            {
+                var full = Path.Combine(rootPath, name);
+                if (File.Exists(full))
+                {
+                    return full;
+                }
+            }
+
+            return null;
         }
 
         private void SeedYouTube()

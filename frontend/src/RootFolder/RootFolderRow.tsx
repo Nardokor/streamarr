@@ -47,7 +47,7 @@ function RootFolderRow(props: RootFolderRowProps) {
           {isUnavailable ? (
             path
           ) : (
-            <Link className={styles.link} to={`/add/import/${id}`}>
+            <Link className={styles.link} to={`/creator/import/${id}`}>
               {path}
             </Link>
           )}

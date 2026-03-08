@@ -1,0 +1,82 @@
+.scanning {
+  color: var(--textSecondary);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.folderControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.selectedCount {
+  margin-left: 8px;
+  color: var(--textSecondary);
+  font-size: 13px;
+}
+
+.folderCell {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  flex: 0 1 250px;
+  min-width: 180px;
+  font-weight: 500;
+}
+
+.pathCell {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  flex: 1 0 200px;
+  color: var(--textSecondary);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.error {
+  color: var(--dangerColor);
+  font-size: 13px;
+}
+
+.empty {
+  color: var(--textSecondary);
+  font-size: 14px;
+}
+
+.result {
+  margin-top: 24px;
+  padding: 16px;
+  background: var(--tableBackground);
+  border-radius: 4px;
+}
+
+.resultTitle {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.resultTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.resultTable td {
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.resultValue {
+  text-align: right;
+  font-weight: 600;
+}

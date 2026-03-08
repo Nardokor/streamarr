@@ -1,8 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
+import Table from 'Components/Table/Table';
+import TableBody from 'Components/Table/TableBody';
+import TableHeader from 'Components/Table/TableHeader';
+import TableHeaderCell from 'Components/Table/TableHeaderCell';
+import TableRow from 'Components/Table/TableRow';
+import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
 import useRootFolders from 'RootFolder/useRootFolders';
 import { ImportLibraryResult, useGetImportableFolders, useImportLibrary } from 'Settings/Import/useImport';
+import { SelectStateInputProps } from 'typings/props';
 import styles from './CreatorImport.css';
 
 function ResultSummary({ result }: { result: ImportLibraryResult }) {
@@ -64,17 +72,20 @@ function CreatorImport() {
     [scanFolders]
   );
 
-  const handleToggle = useCallback((folderName: string) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(folderName)) {
-        next.delete(folderName);
-      } else {
-        next.add(folderName);
-      }
-      return next;
-    });
-  }, []);
+  const handleSelectedChange = useCallback(
+    ({ id, value }: SelectStateInputProps<string>) => {
+      setSelected((prev) => {
+        const next = new Set(prev);
+        if (value) {
+          next.add(id);
+        } else {
+          next.delete(id);
+        }
+        return next;
+      });
+    },
+    []
+  );
 
   const handleSelectAll = useCallback(() => {
     setSelected(new Set(folders.map((f) => f.folderName)));
@@ -89,13 +100,14 @@ function CreatorImport() {
     importLibrary({ rootPath: selectedRoot, folderNames: Array.from(selected) });
   }, [selectedRoot, selected, importLibrary]);
 
-  // Reset folder selection when scan results change
   useEffect(() => {
     setSelected(new Set());
   }, [folders]);
 
   const hasFolders = folders.length > 0;
   const hasScanned = selectedRoot !== null && !isScanning && (hasFolders || scanError != null);
+  const allSelected = hasFolders && selected.size === folders.length;
+  const allUnselected = selected.size === 0;
 
   return (
     <PageContent title="Import Library">
@@ -124,6 +136,7 @@ function CreatorImport() {
                     disabled={isScanning}
                   >
                     <span className={styles.rootItemPath}>{rf.path}</span>
+
                     {selectedRoot === rf.path && isScanning ? (
                       <span className={styles.rootItemStatus}>Scanning…</span>
                     ) : null}
@@ -160,22 +173,46 @@ function CreatorImport() {
                   </span>
                 </div>
 
-                <ul className={styles.folderList}>
-                  {folders.map((folder) => (
-                    <li key={folder.folderName} className={styles.folderItem}>
-                      <label className={styles.folderLabel}>
-                        <input
-                          type="checkbox"
-                          checked={selected.has(folder.folderName)}
-                          onChange={() => handleToggle(folder.folderName)}
+                <Table
+                  selectAll={true}
+                  allSelected={allSelected}
+                  allUnselected={allUnselected}
+                  onSelectAllChange={({ value }) => (value ? handleSelectAll() : handleSelectNone())}
+                  columns={[]}
+                >
+                  <TableHeader>
+                    <TableHeaderCell name="select" />
+                    <TableHeaderCell name="folder" label="Folder" />
+                    <TableHeaderCell name="path" label="Path" />
+                  </TableHeader>
+
+                  <TableBody>
+                    {folders.map((folder) => (
+                      <TableRow
+                        key={folder.folderName}
+                        className={
+                          selected.has(folder.folderName)
+                            ? styles.rowSelected
+                            : styles.row
+                        }
+                      >
+                        <TableSelectCell
+                          id={folder.folderName}
+                          isSelected={selected.has(folder.folderName)}
+                          onSelectedChange={handleSelectedChange}
                         />
 
-                        <span className={styles.folderName}>{folder.folderName}</span>
-                        <span className={styles.folderPath}>{folder.path}</span>
-                      </label>
-                    </li>
-                  ))}
-                </ul>
+                        <TableRowCell className={styles.folderCell}>
+                          {folder.folderName}
+                        </TableRowCell>
+
+                        <TableRowCell className={styles.pathCell}>
+                          {folder.path}
+                        </TableRowCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
 
                 <div className={styles.importActions}>
                   <button
@@ -184,7 +221,9 @@ function CreatorImport() {
                     disabled={selected.size === 0 || isImporting}
                     onClick={handleImport}
                   >
-                    {isImporting ? 'Importing…' : `Import ${selected.size > 0 ? `${selected.size} folder${selected.size !== 1 ? 's' : ''}` : ''}`}
+                    {isImporting
+                      ? 'Importing…'
+                      : `Import ${selected.size > 0 ? `${selected.size} folder${selected.size !== 1 ? 's' : ''}` : ''}`}
                   </button>
 
                   {importError ? (

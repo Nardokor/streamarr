@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.streamarr.agents.streamarr</string>
+    <key>CFBundleName</key>
+    <string>Streamarr</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    <key>PlexPluginClass</key>
+    <string>Agent</string>
+    <key>PlexPluginType</key>
+    <string>primary</string>
+    <key>PlexClientPlatforms</key>
+    <string>*</string>
+    <key>PlexFrameworkVersion</key>
+    <string>2</string>
+    <key>PlexPluginCodeVersion</key>
+    <integer>2</integer>
+</dict>
+</plist>

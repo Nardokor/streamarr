@@ -30,6 +30,7 @@ namespace Streamarr.Core.Content
         public bool IsMembers { get; set; }
         public bool IsAccessible { get; set; } = true;
         public ContentStatus Status { get; set; }
+        public ContentStatus? PreviousStatus { get; set; }
 
         // Navigation
         public LazyLoaded<Channel> Channel { get; set; }

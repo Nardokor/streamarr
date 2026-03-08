@@ -116,6 +116,7 @@ namespace Streamarr.Core.Download
 
                     content.ContentFileId = contentFile.Id;
                     content.Status = ContentStatus.Downloaded;
+                    content.PreviousStatus = null;
                     _contentService.UpdateContent(content);
 
                     _nfoWriter.WriteCreatorNfo(creator);
@@ -159,7 +160,8 @@ namespace Streamarr.Core.Download
                 }
                 else
                 {
-                    content.Status = ContentStatus.Missing;
+                    content.Status = content.PreviousStatus ?? ContentStatus.Missing;
+                    content.PreviousStatus = null;
                     _contentService.UpdateContent(content);
 
                     _historyService.Record(
@@ -176,7 +178,8 @@ namespace Streamarr.Core.Download
             }
             catch (Exception ex)
             {
-                content.Status = ContentStatus.Missing;
+                content.Status = content.PreviousStatus ?? ContentStatus.Missing;
+                content.PreviousStatus = null;
                 _contentService.UpdateContent(content);
 
                 _historyService.Record(

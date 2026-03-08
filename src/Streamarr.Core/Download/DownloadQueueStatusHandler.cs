@@ -31,6 +31,7 @@ namespace Streamarr.Core.Download
                     return;
                 }
 
+                content.PreviousStatus = content.Status;
                 content.Status = ContentStatus.Queued;
                 _contentService.UpdateContent(content);
 

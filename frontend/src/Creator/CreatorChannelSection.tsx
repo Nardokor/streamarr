@@ -9,6 +9,7 @@ import TableRow from 'Components/Table/TableRow';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import CommandNames from 'Commands/CommandNames';
 import { useCommandExecuting, useExecuteCommand } from 'Commands/useCommands';
+import useDownloadProgress from 'Commands/useDownloadProgress';
 import useApiMutation from 'Helpers/Hooks/useApiMutation';
 import { icons } from 'Helpers/Props';
 import Channel from 'typings/Channel';
@@ -70,6 +71,7 @@ function platformLabel(platform: string): string {
 function statusClass(kind: string): string {
   if (kind === 'downloaded') return styles.statusDownloaded;
   if (kind === 'downloading') return styles.statusDownloading;
+  if (kind === 'queued') return styles.statusQueued;
   if (kind === 'recording') return styles.statusRecording;
   if (kind === 'processing') return styles.statusDownloading;
   if (kind === 'missing') return styles.statusMissing;
@@ -104,7 +106,7 @@ function DownloadCell({ contentId, statusKind, monitored, onDownload }: Download
     method: 'DELETE',
   });
 
-  const isActive = statusKind === 'downloading' || statusKind === 'recording';
+  const isActive = statusKind === 'downloading' || statusKind === 'recording' || statusKind === 'queued';
 
   if (isActive) {
     return (
@@ -207,6 +209,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     channel.retentionExceptionWords,
   ]);
 
+  const downloadProgress = useDownloadProgress();
   const { updateChannel, isUpdating } = useUpdateChannel(channel.id, channel.creatorId);
   const { deleteChannel } = useDeleteChannel(channel.id, channel.creatorId);
   const executeCommand = useExecuteCommand();
@@ -582,7 +585,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                     return new Date(b.airDateUtc).getTime() - new Date(a.airDateUtc).getTime();
                   })
                   .map((item) => {
-                    const status = getStatusLabel(item);
+                    const status = getStatusLabel(item, downloadProgress.get(item.id));
                     const typeLabel = getContentTypeLabel(item.contentType);
                     const videoUrl = buildPlatformUrl(channel.platform, item.platformContentId);
 

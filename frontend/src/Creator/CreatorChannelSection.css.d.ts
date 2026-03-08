@@ -41,6 +41,7 @@ interface CssExports {
   'statusMissing': string;
   'statusModified': string;
   'statusNotAired': string;
+  'statusQueued': string;
   'statusRecording': string;
   'statusUnmonitored': string;
   'titleLink': string;

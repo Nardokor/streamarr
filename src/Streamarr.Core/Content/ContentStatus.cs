@@ -12,6 +12,7 @@ namespace Streamarr.Core.Content
         Modified = 7,
         Unwanted = 8,    // Filtered out / not wanted
         Processing = 9,  // Post-download processing in progress
-        Available = 10   // File deleted by retention; content still on platform (re-downloadable)
+        Available = 10,  // File deleted by retention; content still on platform (re-downloadable)
+        Queued = 11      // Download command is queued, waiting for a free download thread
     }
 }

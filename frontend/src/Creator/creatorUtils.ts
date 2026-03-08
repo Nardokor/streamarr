@@ -38,10 +38,10 @@ export function formatDate(dateStr: string | null | undefined): string {
 
 export interface StatusLabel {
   text: string;
-  kind: 'downloaded' | 'downloading' | 'recording' | 'missing' | 'unmonitored' | 'notAired' | 'expired' | 'modified' | 'unwanted' | 'processing' | 'available' | 'unavailable';
+  kind: 'downloaded' | 'downloading' | 'queued' | 'recording' | 'missing' | 'unmonitored' | 'notAired' | 'expired' | 'modified' | 'unwanted' | 'processing' | 'available' | 'unavailable';
 }
 
-export function getStatusLabel(content: Content): StatusLabel {
+export function getStatusLabel(content: Content, downloadPercent?: number): StatusLabel {
   // Members content the current cookies cannot unlock
   if (content.isMembers && !content.isAccessible) {
     return { text: 'Unavailable', kind: 'unavailable' };
@@ -56,8 +56,13 @@ export function getStatusLabel(content: Content): StatusLabel {
     return { text: 'Recording', kind: 'recording' };
   }
 
+  if (content.status === 'queued') {
+    return { text: 'Queued', kind: 'queued' };
+  }
+
   if (content.status === 'downloading') {
-    return { text: 'Downloading', kind: 'downloading' };
+    const text = downloadPercent != null ? `Downloading ${downloadPercent.toFixed(1)}%` : 'Downloading';
+    return { text, kind: 'downloading' };
   }
 
   if (content.status === 'processing') {

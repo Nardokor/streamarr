@@ -38,6 +38,7 @@ namespace Streamarr.Core.Messaging.Commands
     public class CommandQueueManager : IManageCommandQueue, IHandle<ApplicationStartedEvent>
     {
         private readonly ICommandRepository _repo;
+        private readonly IEventAggregator _eventAggregator;
         private readonly KnownTypes _knownTypes;
         private readonly Logger _logger;
 
@@ -45,10 +46,12 @@ namespace Streamarr.Core.Messaging.Commands
 
         public CommandQueueManager(ICommandRepository repo,
                                    IServiceFactory serviceFactory,
+                                   IEventAggregator eventAggregator,
                                    KnownTypes knownTypes,
                                    Logger logger)
         {
             _repo = repo;
+            _eventAggregator = eventAggregator;
             _knownTypes = knownTypes;
             _logger = logger;
 
@@ -59,6 +62,8 @@ namespace Streamarr.Core.Messaging.Commands
             where TCommand : Command
         {
             _logger.Trace("Publishing {0} commands", commands.Count);
+
+            List<CommandModel> addedModels;
 
             lock (_commandQueue)
             {
@@ -94,8 +99,16 @@ namespace Streamarr.Core.Messaging.Commands
                     _commandQueue.Add(commandModel);
                 }
 
-                return commandModels;
+                addedModels = commandModels;
             }
+
+            // Publish outside the lock to avoid re-entrancy issues in handlers
+            foreach (var commandModel in addedModels)
+            {
+                _eventAggregator.PublishEvent(new CommandQueuedEvent(commandModel));
+            }
+
+            return addedModels;
         }
 
         public CommandModel Push<TCommand>(TCommand command, CommandPriority priority = CommandPriority.Normal, CommandTrigger trigger = CommandTrigger.Unspecified)
@@ -107,6 +120,8 @@ namespace Streamarr.Core.Messaging.Commands
             _logger.Trace("Checking if command is queued or started: {0}", command.Name);
 
             command.Trigger = trigger;
+
+            CommandModel commandModel;
 
             lock (_commandQueue)
             {
@@ -120,7 +135,7 @@ namespace Streamarr.Core.Messaging.Commands
                     return existing;
                 }
 
-                var commandModel = new CommandModel
+                commandModel = new CommandModel
                 {
                     Name = command.Name,
                     Body = command,
@@ -134,9 +149,12 @@ namespace Streamarr.Core.Messaging.Commands
 
                 _repo.Insert(commandModel);
                 _commandQueue.Add(commandModel);
-
-                return commandModel;
             }
+
+            // Publish outside the lock to avoid re-entrancy issues in handlers
+            _eventAggregator.PublishEvent(new CommandQueuedEvent(commandModel));
+
+            return commandModel;
         }
 
         public CommandModel Push(string commandName, DateTime? lastExecutionTime, DateTime? lastStartTime, CommandPriority priority = CommandPriority.Normal, CommandTrigger trigger = CommandTrigger.Unspecified)

@@ -4,14 +4,11 @@ interface CssExports {
   'actionButton': string;
   'empty': string;
   'error': string;
+  'folderCell': string;
   'folderControls': string;
-  'folderItem': string;
-  'folderLabel': string;
-  'folderList': string;
-  'folderName': string;
-  'folderPath': string;
   'importActions': string;
   'linkButton': string;
+  'pathCell': string;
   'result': string;
   'resultTable': string;
   'resultTitle': string;
@@ -21,6 +18,8 @@ interface CssExports {
   'rootItemPath': string;
   'rootItemStatus': string;
   'rootList': string;
+  'row': string;
+  'rowSelected': string;
   'section': string;
   'sectionTitle': string;
   'selectedCount': string;

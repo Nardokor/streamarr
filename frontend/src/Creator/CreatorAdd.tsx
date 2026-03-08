@@ -1,12 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router';
-import Button from 'Components/Link/Button';
+import Form from 'Components/Form/Form';
+import FormGroup from 'Components/Form/FormGroup';
+import FormInputGroup from 'Components/Form/FormInputGroup';
+import FormLabel from 'Components/Form/FormLabel';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
-import { kinds } from 'Helpers/Props';
-import useRootFolders from 'RootFolder/useRootFolders';
+import { inputTypes, kinds } from 'Helpers/Props';
 import { useQualityProfilesData } from 'Settings/Profiles/Quality/useQualityProfiles';
+import { InputChanged } from 'typings/inputs';
 import { useAddCreator } from './useCreators';
 import styles from './AddCreatorModalContent.css';
 
@@ -17,26 +20,29 @@ function sanitize(name: string): string {
 function CreatorAdd() {
   const history = useHistory();
   const [name, setName] = useState('');
-  const [rootFolderId, setRootFolderId] = useState<number | undefined>();
+  const [rootFolderPath, setRootFolderPath] = useState('');
 
-  const { data: rootFolders } = useRootFolders();
   const qualityProfiles = useQualityProfilesData();
   const { addCreator, isAdding } = useAddCreator();
 
-  useEffect(() => {
-    if (rootFolders.length > 0 && rootFolderId === undefined) {
-      setRootFolderId(rootFolders[0].id);
-    }
-  }, [rootFolders, rootFolderId]);
-
-  const selectedFolder = rootFolders.find((f) => f.id === rootFolderId);
   const folderName = sanitize(name);
   const fullPath =
-    selectedFolder && folderName
-      ? `${selectedFolder.path.replace(/\/+$/, '')}/${folderName}`
+    rootFolderPath && folderName
+      ? `${rootFolderPath.replace(/\/+$/, '')}/${folderName}`
       : '';
 
-  const canAdd = !!folderName && rootFolderId !== undefined && !isAdding;
+  const canAdd = !!folderName && !!rootFolderPath && !isAdding;
+
+  const handleNameChange = useCallback(({ value }: InputChanged<string>) => {
+    setName(value);
+  }, []);
+
+  const handleRootFolderChange = useCallback(
+    ({ value }: InputChanged<string>) => {
+      setRootFolderPath(value);
+    },
+    []
+  );
 
   const handleAdd = useCallback(() => {
     if (!canAdd || !fullPath) {
@@ -63,62 +69,45 @@ function CreatorAdd() {
   return (
     <PageContent title="Add Creator">
       <PageContentBody>
-        <div className={styles.form}>
-          <div className={styles.formRow}>
-            <label className={styles.label} htmlFor="creator-name">
-              Name
-            </label>
+        <div className={styles.container}>
+          <div className={styles.info}>
+            <Form>
+              <FormGroup>
+                <FormLabel>Name</FormLabel>
 
-            <input
-              id="creator-name"
-              className={styles.input}
-              type="text"
-              placeholder="Creator name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && canAdd && handleAdd()}
-              autoFocus
-            />
-          </div>
+                <FormInputGroup
+                  type={inputTypes.TEXT}
+                  name="name"
+                  value={name}
+                  placeholder="Creator name"
+                  autoFocus={true}
+                  onChange={handleNameChange}
+                />
+              </FormGroup>
 
-          <div className={styles.formRow}>
-            <label className={styles.label} htmlFor="creator-root">
-              Root Folder
-            </label>
+              <FormGroup>
+                <FormLabel>Root Folder</FormLabel>
 
-            <div className={styles.field}>
-              <select
-                id="creator-root"
-                className={styles.select}
-                value={rootFolderId ?? ''}
-                onChange={(e) => setRootFolderId(Number(e.target.value))}
-              >
-                {rootFolders.map((f) => (
-                  <option key={f.id} value={f.id}>
-                    {f.path}
-                  </option>
-                ))}
-              </select>
+                <FormInputGroup
+                  type={inputTypes.ROOT_FOLDER_SELECT}
+                  name="rootFolderPath"
+                  value={rootFolderPath}
+                  helpText={fullPath || undefined}
+                  onChange={handleRootFolderChange}
+                />
+              </FormGroup>
 
-              {fullPath ? <div className={styles.hint}>{fullPath}</div> : null}
-            </div>
-          </div>
-
-          <div className={styles.formRow}>
-            <div className={styles.label} />
-
-            <div className={styles.field}>
-              <SpinnerButton
-                kind={kinds.PRIMARY}
-                isDisabled={!canAdd}
-                isSpinning={isAdding}
-                onPress={handleAdd}
-              >
-                Add Creator
-              </SpinnerButton>
-
-              <Button onPress={() => history.push('/creator')}>Cancel</Button>
-            </div>
+              <FormGroup>
+                <SpinnerButton
+                  kind={kinds.PRIMARY}
+                  isDisabled={!canAdd}
+                  isSpinning={isAdding}
+                  onPress={handleAdd}
+                >
+                  Add Creator
+                </SpinnerButton>
+              </FormGroup>
+            </Form>
           </div>
         </div>
       </PageContentBody>

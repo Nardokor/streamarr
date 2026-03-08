@@ -585,7 +585,8 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                     return new Date(b.airDateUtc).getTime() - new Date(a.airDateUtc).getTime();
                   })
                   .map((item) => {
-                    const status = getStatusLabel(item, downloadProgress.get(item.id));
+                    const status = getStatusLabel(item);
+                    const downloadPercent = downloadProgress.get(item.id);
                     const typeLabel = getContentTypeLabel(item.contentType);
                     const videoUrl = buildPlatformUrl(channel.platform, item.platformContentId);
 
@@ -640,7 +641,14 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                         <TableRowCell>{formatDuration(item.duration)}</TableRowCell>
 
                         <TableRowCell>
-                          <span className={`${styles.statusBadge} ${statusClass(status.kind)}`}>
+                          <span
+                            className={`${styles.statusBadge} ${statusClass(status.kind)}`}
+                            style={
+                              status.kind === 'downloading' && downloadPercent != null
+                                ? ({ '--download-pct': `${downloadPercent}%` } as React.CSSProperties)
+                                : undefined
+                            }
+                          >
                             {status.text}
                           </span>
                         </TableRowCell>

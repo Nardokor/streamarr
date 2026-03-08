@@ -41,7 +41,7 @@ export interface StatusLabel {
   kind: 'downloaded' | 'downloading' | 'queued' | 'recording' | 'missing' | 'unmonitored' | 'notAired' | 'expired' | 'modified' | 'unwanted' | 'processing' | 'available' | 'unavailable';
 }
 
-export function getStatusLabel(content: Content, downloadPercent?: number): StatusLabel {
+export function getStatusLabel(content: Content): StatusLabel {
   // Members content the current cookies cannot unlock
   if (content.isMembers && !content.isAccessible) {
     return { text: 'Unavailable', kind: 'unavailable' };
@@ -61,8 +61,7 @@ export function getStatusLabel(content: Content, downloadPercent?: number): Stat
   }
 
   if (content.status === 'downloading') {
-    const text = downloadPercent != null ? `Downloading ${downloadPercent.toFixed(1)}%` : 'Downloading';
-    return { text, kind: 'downloading' };
+    return { text: 'Downloading', kind: 'downloading' };
   }
 
   if (content.status === 'processing') {

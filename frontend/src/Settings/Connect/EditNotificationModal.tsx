@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Alert from 'Components/Alert';
 import Button from 'Components/Link/Button';
 import SpinnerButton from 'Components/Link/SpinnerButton';
@@ -21,6 +21,9 @@ import {
   useTestNotification,
 } from './useConnectSettings';
 
+const POLL_INTERVAL_MS = 2000;
+const POLL_TIMEOUT_MS = 5 * 60 * 1000;
+
 interface EditNotificationModalProps {
   notification: NotificationResource;
   isOpen: boolean;
@@ -33,6 +36,7 @@ function EditNotificationModal({
   onModalClose,
 }: EditNotificationModalProps) {
   const isNew = initialNotification.id === 0;
+  const isPlexServer = initialNotification.implementation === 'PlexServer';
 
   const [notification, setNotification] =
     useState<NotificationResource>(initialNotification);
@@ -40,6 +44,24 @@ function EditNotificationModal({
     null
   );
   const [testMessage, setTestMessage] = useState('');
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [authMessage, setAuthMessage] = useState('');
+
+  const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const stopPolling = useCallback(() => {
+    if (pollTimerRef.current) {
+      clearInterval(pollTimerRef.current);
+      pollTimerRef.current = null;
+    }
+    if (pollTimeoutRef.current) {
+      clearTimeout(pollTimeoutRef.current);
+      pollTimeoutRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => stopPolling, [stopPolling]);
 
   const { mutate: save, isPending: isSaving } = useSaveNotification(
     onModalClose
@@ -99,6 +121,63 @@ function EditNotificationModal({
     }
   }, [isNew, save, update, notification]);
 
+  const handlePlexAuth = useCallback(async () => {
+    setIsAuthenticating(true);
+    setAuthMessage('Opening Plex sign-in…');
+
+    try {
+      const startRes = await fetch('/api/v1/notification/action/startOAuth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(notification),
+      });
+
+      if (!startRes.ok) {
+        throw new Error('Failed to start Plex OAuth');
+      }
+
+      const { oAuthUrl, pinId } = await startRes.json();
+
+      window.open(oAuthUrl, '_blank', 'noopener,noreferrer');
+      setAuthMessage('Waiting for Plex sign-in…');
+
+      pollTimerRef.current = setInterval(async () => {
+        try {
+          const tokenRes = await fetch(
+            `/api/v1/notification/action/getOAuthToken?pinId=${pinId}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(notification),
+            }
+          );
+
+          if (!tokenRes.ok) return;
+
+          const { authToken } = await tokenRes.json();
+
+          if (authToken) {
+            stopPolling();
+            setIsAuthenticating(false);
+            setAuthMessage('');
+            handleFieldChange({ name: 'authToken', value: authToken });
+          }
+        } catch {
+          // Keep polling
+        }
+      }, POLL_INTERVAL_MS);
+
+      pollTimeoutRef.current = setTimeout(() => {
+        stopPolling();
+        setIsAuthenticating(false);
+        setAuthMessage('Authentication timed out — please try again.');
+      }, POLL_TIMEOUT_MS);
+    } catch {
+      setIsAuthenticating(false);
+      setAuthMessage('Failed to start Plex authentication — check server logs.');
+    }
+  }, [notification, handleFieldChange, stopPolling]);
+
   const isBusy = isSaving || isUpdating;
 
   return (
@@ -118,6 +197,20 @@ function EditNotificationModal({
               onChange={handleNameChange}
             />
           </FormGroup>
+
+          {isPlexServer && (
+            <FormGroup>
+              <FormLabel>Plex Account</FormLabel>
+              <SpinnerButton isSpinning={isAuthenticating} onPress={handlePlexAuth}>
+                Authenticate with Plex.tv
+              </SpinnerButton>
+              {authMessage && (
+                <span style={{ marginLeft: 12, fontSize: '0.85em', opacity: 0.8 }}>
+                  {authMessage}
+                </span>
+              )}
+            </FormGroup>
+          )}
 
           {notification.fields.map((field: Field) => (
             <ProviderFieldFormGroup

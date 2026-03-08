@@ -437,6 +437,11 @@ namespace Streamarr.Core.Download.YtDlp
                 success = false;
             }
 
+            if (!success)
+            {
+                CleanUpPartialFiles(fragmentFiles);
+            }
+
             return new YtDlpDownloadResult
             {
                 Success = success,
@@ -505,6 +510,28 @@ namespace Streamarr.Core.Download.YtDlp
                 _logger.Warn(
                     "Merged file is only {0:P0} of fragment total — possible failed merge; keeping fragments for manual inspection",
                     ratio);
+            }
+        }
+
+        private void CleanUpPartialFiles(List<string> fragmentFiles)
+        {
+            foreach (var file in fragmentFiles)
+            {
+                foreach (var candidate in new[] { file, file + ".part" })
+                {
+                    if (_diskProvider.FileExists(candidate))
+                    {
+                        try
+                        {
+                            _diskProvider.DeleteFile(candidate);
+                            _logger.Debug("Deleted partial file: {0}", candidate);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Warn(ex, "Failed to delete partial file: {0}", candidate);
+                        }
+                    }
+                }
             }
         }
 

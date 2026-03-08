@@ -5,6 +5,7 @@ import Switch from 'Components/Router/Switch';
 import CreatorAdd from 'Creator/CreatorAdd';
 import CreatorDetail from 'Creator/CreatorDetail';
 import CreatorImport from 'Creator/Import/CreatorImport';
+import CreatorImportTable from 'Creator/Import/CreatorImportTable';
 import CreatorIndex from 'Creator/CreatorIndex';
 import GeneralSettings from 'Settings/General/GeneralSettings';
 import MediaManagement from 'Settings/MediaManagement/MediaManagement';
@@ -55,6 +56,8 @@ function AppRoutes() {
       <Route exact={true} path="/creator/add" component={CreatorAdd} />
 
       <Route exact={true} path="/creator/import" component={CreatorImport} />
+
+      <Route exact={true} path="/creator/import/:rootFolderId" component={CreatorImportTable} />
 
       <Route exact={true} path="/creator/:slug" component={CreatorDetail} />
 

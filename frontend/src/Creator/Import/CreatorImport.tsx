@@ -1,246 +1,114 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import Alert from 'Components/Alert';
+import FieldSet from 'Components/FieldSet';
+import FileBrowserModal from 'Components/FileBrowser/FileBrowserModal';
+import Icon from 'Components/Icon';
+import Button from 'Components/Link/Button';
+import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
-import Table from 'Components/Table/Table';
-import TableBody from 'Components/Table/TableBody';
-import TableHeader from 'Components/Table/TableHeader';
-import TableHeaderCell from 'Components/Table/TableHeaderCell';
-import TableRow from 'Components/Table/TableRow';
-import TableRowCell from 'Components/Table/Cells/TableRowCell';
-import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
-import useRootFolders from 'RootFolder/useRootFolders';
-import { ImportLibraryResult, useGetImportableFolders, useImportLibrary } from 'Settings/Import/useImport';
-import { SelectStateInputProps } from 'typings/props';
+import { icons, kinds, sizes } from 'Helpers/Props';
+import RootFolders from 'RootFolder/RootFolders';
+import useRootFolders, { useAddRootFolder } from 'RootFolder/useRootFolders';
+import { InputChanged } from 'typings/inputs';
 import styles from './CreatorImport.css';
 
-function ResultSummary({ result }: { result: ImportLibraryResult }) {
-  return (
-    <div className={styles.result}>
-      <h3 className={styles.resultTitle}>Import Complete</h3>
-
-      <table className={styles.resultTable}>
-        <tbody>
-          <tr>
-            <td>Creators created</td>
-            <td className={styles.resultValue}>{result.creatorsCreated}</td>
-          </tr>
-
-          <tr>
-            <td>Creators matched (existing)</td>
-            <td className={styles.resultValue}>{result.creatorsMatched}</td>
-          </tr>
-
-          <tr>
-            <td>Channels created</td>
-            <td className={styles.resultValue}>{result.channelsCreated}</td>
-          </tr>
-
-          <tr>
-            <td>Content linked to files</td>
-            <td className={styles.resultValue}>{result.contentLinked}</td>
-          </tr>
-
-          <tr>
-            <td>Already linked (skipped)</td>
-            <td className={styles.resultValue}>{result.contentAlreadyLinked}</td>
-          </tr>
-
-          <tr>
-            <td>Files without a YouTube match</td>
-            <td className={styles.resultValue}>{result.filesNotMatched}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
 function CreatorImport() {
-  const [selectedRoot, setSelectedRoot] = useState<string | null>(null);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const { isFetching, isFetched, error } = useRootFolders();
+  const { addRootFolder, isAdding, addError } = useAddRootFolder();
+  const { data: rootFolders } = useRootFolders();
 
-  const { data: rootFolders, isLoading: isLoadingRoots } = useRootFolders();
-  const { scanFolders, isScanning, folders, scanError } = useGetImportableFolders();
-  const { importLibrary, isImporting, result, importError } = useImportLibrary();
+  const [isFileBrowserOpen, setIsFileBrowserOpen] = useState(false);
 
-  const handleSelectRoot = useCallback(
-    (path: string) => {
-      setSelectedRoot(path);
-      setSelected(new Set());
-      scanFolders({ rootPath: path });
-    },
-    [scanFolders]
-  );
+  const hasRootFolders = rootFolders.length > 0;
 
-  const handleSelectedChange = useCallback(
-    ({ id, value }: SelectStateInputProps<string>) => {
-      setSelected((prev) => {
-        const next = new Set(prev);
-        if (value) {
-          next.add(id);
-        } else {
-          next.delete(id);
-        }
-        return next;
-      });
-    },
-    []
-  );
-
-  const handleSelectAll = useCallback(() => {
-    setSelected(new Set(folders.map((f) => f.folderName)));
-  }, [folders]);
-
-  const handleSelectNone = useCallback(() => {
-    setSelected(new Set());
+  const handleChooseFolderPress = useCallback(() => {
+    setIsFileBrowserOpen(true);
   }, []);
 
-  const handleImport = useCallback(() => {
-    if (selected.size === 0 || !selectedRoot) return;
-    importLibrary({ rootPath: selectedRoot, folderNames: Array.from(selected) });
-  }, [selectedRoot, selected, importLibrary]);
+  const handleFileBrowserClose = useCallback(() => {
+    setIsFileBrowserOpen(false);
+  }, []);
 
-  useEffect(() => {
-    setSelected(new Set());
-  }, [folders]);
-
-  const hasFolders = folders.length > 0;
-  const hasScanned = selectedRoot !== null && !isScanning && (hasFolders || scanError != null);
-  const allSelected = hasFolders && selected.size === folders.length;
-  const allUnselected = selected.size === 0;
+  const handleNewRootFolderSelect = useCallback(
+    ({ value }: InputChanged<string>) => {
+      addRootFolder({ path: value });
+      setIsFileBrowserOpen(false);
+    },
+    [addRootFolder]
+  );
 
   return (
-    <PageContent title="Import Library">
+    <PageContent title="Library Import">
       <PageContentBody>
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Step 1 — Choose a root folder</h2>
+        {isFetching && !isFetched ? <LoadingIndicator /> : null}
 
-          {isLoadingRoots ? (
-            <p className={styles.empty}>Loading root folders…</p>
-          ) : rootFolders.length === 0 ? (
-            <p className={styles.empty}>
-              No root folders configured. Add one under Settings &rsaquo; Media Management first.
-            </p>
-          ) : (
-            <ul className={styles.rootList}>
-              {rootFolders.map((rf) => (
-                <li key={rf.id}>
-                  <button
-                    type="button"
-                    className={
-                      selectedRoot === rf.path
-                        ? `${styles.rootItem} ${styles.rootItemActive}`
-                        : styles.rootItem
-                    }
-                    onClick={() => handleSelectRoot(rf.path)}
-                    disabled={isScanning}
-                  >
-                    <span className={styles.rootItemPath}>{rf.path}</span>
+        {!isFetching && error ? (
+          <Alert kind={kinds.DANGER}>Unable to load root folders.</Alert>
+        ) : null}
 
-                    {selectedRoot === rf.path && isScanning ? (
-                      <span className={styles.rootItemStatus}>Scanning…</span>
-                    ) : null}
-                  </button>
+        {isFetched ? (
+          <div>
+            <div className={styles.header}>
+              Import creators you already have
+            </div>
+
+            <div className={styles.tips}>
+              Some tips to ensure the import goes smoothly:
+
+              <ul>
+                <li className={styles.tip}>
+                  Point Streamarr to the folder containing all of your creators, not a specific one.
+                  {' '}eg. <code className={styles.code}>/media/creators</code> and not{' '}
+                  <code className={styles.code}>/media/creators/MrBeast</code>
                 </li>
-              ))}
-            </ul>
-          )}
 
-          {scanError ? (
-            <p className={styles.error}>Could not scan that path. Check that it exists and is readable.</p>
-          ) : null}
-        </section>
+                <li className={styles.tip}>
+                  Each creator must be in their own subfolder within the root folder.
+                </li>
 
-        {hasScanned ? (
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>Step 2 — Select folders to import</h2>
+                <li className={styles.tip}>
+                  This is only for existing organized libraries, not unsorted files.
+                </li>
+              </ul>
+            </div>
 
-            {hasFolders ? (
-              <>
-                <div className={styles.folderControls}>
-                  <button className={styles.linkButton} type="button" onClick={handleSelectAll}>
-                    Select all
-                  </button>
+            {hasRootFolders ? (
+              <div className={styles.recentFolders}>
+                <FieldSet legend="Root Folders">
+                  <RootFolders />
+                </FieldSet>
+              </div>
+            ) : null}
 
-                  <span className={styles.separator}>/</span>
+            {!isAdding && addError ? (
+              <Alert className={styles.addErrorAlert} kind={kinds.DANGER}>
+                Unable to add root folder. Check that the path exists and is accessible.
+              </Alert>
+            ) : null}
 
-                  <button className={styles.linkButton} type="button" onClick={handleSelectNone}>
-                    Select none
-                  </button>
+            <div className={hasRootFolders ? undefined : styles.startImport}>
+              <Button
+                kind={kinds.PRIMARY}
+                size={sizes.LARGE}
+                onPress={handleChooseFolderPress}
+              >
+                <Icon className={styles.importButtonIcon} name={icons.DRIVE} />
 
-                  <span className={styles.selectedCount}>
-                    {selected.size} of {folders.length} selected
-                  </span>
-                </div>
-
-                <Table
-                  selectAll={true}
-                  allSelected={allSelected}
-                  allUnselected={allUnselected}
-                  onSelectAllChange={({ value }) => (value ? handleSelectAll() : handleSelectNone())}
-                  columns={[]}
-                >
-                  <TableHeader>
-                    <TableHeaderCell name="select" />
-                    <TableHeaderCell name="folder" label="Folder" />
-                    <TableHeaderCell name="path" label="Path" />
-                  </TableHeader>
-
-                  <TableBody>
-                    {folders.map((folder) => (
-                      <TableRow
-                        key={folder.folderName}
-                        className={
-                          selected.has(folder.folderName)
-                            ? styles.rowSelected
-                            : styles.row
-                        }
-                      >
-                        <TableSelectCell
-                          id={folder.folderName}
-                          isSelected={selected.has(folder.folderName)}
-                          onSelectedChange={handleSelectedChange}
-                        />
-
-                        <TableRowCell className={styles.folderCell}>
-                          {folder.folderName}
-                        </TableRowCell>
-
-                        <TableRowCell className={styles.pathCell}>
-                          {folder.path}
-                        </TableRowCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-
-                <div className={styles.importActions}>
-                  <button
-                    className={styles.actionButton}
-                    type="button"
-                    disabled={selected.size === 0 || isImporting}
-                    onClick={handleImport}
-                  >
-                    {isImporting
-                      ? 'Importing…'
-                      : `Import ${selected.size > 0 ? `${selected.size} folder${selected.size !== 1 ? 's' : ''}` : ''}`}
-                  </button>
-
-                  {importError ? (
-                    <span className={styles.error}>Import failed — check the logs for details.</span>
-                  ) : null}
-                </div>
-              </>
-            ) : (
-              <p className={styles.empty}>
-                No unimported folders found in that path. All subdirectories may already be creators.
-              </p>
-            )}
-
-            {result ? <ResultSummary result={result} /> : null}
-          </section>
+                {hasRootFolders ? 'Choose another folder' : 'Start import'}
+              </Button>
+            </div>
+          </div>
         ) : null}
       </PageContentBody>
+
+      <FileBrowserModal
+        isOpen={isFileBrowserOpen}
+        name="rootFolderPath"
+        value=""
+        onChange={handleNewRootFolderSelect}
+        onModalClose={handleFileBrowserClose}
+      />
     </PageContent>
   );
 }

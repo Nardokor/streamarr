@@ -60,24 +60,8 @@
   color: var(--colorPrimary);
 }
 
-.platformGrid {
+.providerGrid {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-}
-
-.platformCard {
-  display: flex;
-  align-items: center;
   justify-content: center;
-  width: 140px;
-  height: 80px;
-  border: 1px solid var(--borderColor);
-  border-radius: 3px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.platformCard:hover {
-  background-color: var(--tableRowHoverBackgroundColor);
 }

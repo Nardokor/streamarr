@@ -1,116 +1,200 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import Form from 'Components/Form/Form';
-import FormGroup from 'Components/Form/FormGroup';
-import FormInputGroup from 'Components/Form/FormInputGroup';
-import FormLabel from 'Components/Form/FormLabel';
-import SpinnerButton from 'Components/Link/SpinnerButton';
+import Alert from 'Components/Alert';
+import TextInput from 'Components/Form/TextInput';
+import Icon from 'Components/Icon';
+import Button from 'Components/Link/Button';
+import Link from 'Components/Link/Link';
+import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
-import { inputTypes, kinds } from 'Helpers/Props';
-import { useQualityProfilesData } from 'Settings/Profiles/Quality/useQualityProfiles';
+import useDebounce from 'Helpers/Hooks/useDebounce';
+import { icons, kinds } from 'Helpers/Props';
+import { CreatorLookupResult } from 'typings/Creator';
 import { InputChanged } from 'typings/inputs';
-import { useAddCreator } from './useCreators';
-import styles from './AddCreatorModalContent.css';
+import AddCreatorModal from './AddCreatorModal';
+import useCreators, { useCreatorLookup } from './useCreators';
+import styles from './CreatorAdd.css';
 
-function sanitize(name: string): string {
-  return name.trim().replace(/[\\/:*?"<>|]/g, '');
+interface SearchResultCardProps {
+  result: CreatorLookupResult;
+  onPress: () => void;
+}
+
+function SearchResultCard({ result, onPress }: SearchResultCardProps) {
+  const isExisting = result.existingCreatorId != null;
+
+  const linkProps = isExisting
+    ? { to: `/creator/${result.existingCreatorId}` }
+    : { onPress };
+
+  return (
+    <div className={styles.searchResult}>
+      <Link className={styles.underlay} {...linkProps} />
+
+      <div className={styles.overlay}>
+        {result.thumbnailUrl ? (
+          <img
+            className={styles.thumbnail}
+            src={result.thumbnailUrl}
+            alt={result.name}
+          />
+        ) : null}
+
+        <div className={styles.content}>
+          <div className={styles.titleRow}>
+            <div className={styles.title}>{result.name}</div>
+
+            <div className={styles.icons}>
+              {isExisting ? (
+                <Icon
+                  className={styles.alreadyExistsIcon}
+                  name={icons.CHECK_CIRCLE}
+                  size={36}
+                  title="Already in your library"
+                />
+              ) : null}
+            </div>
+          </div>
+
+          {result.channels.length > 0 ? (
+            <div className={styles.channels}>
+              {result.channels.map((ch) => (
+                <span key={ch.platformId} className={styles.channelTag}>
+                  {ch.platform}: {ch.title}
+                </span>
+              ))}
+            </div>
+          ) : null}
+
+          {result.description ? (
+            <div className={styles.overview}>{result.description}</div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function CreatorAdd() {
   const history = useHistory();
-  const [name, setName] = useState('');
-  const [rootFolderPath, setRootFolderPath] = useState('');
+  const [term, setTerm] = useState('');
+  const [isFetching, setIsFetching] = useState(false);
+  const [selected, setSelected] = useState<CreatorLookupResult | null>(null);
+  const query = useDebounce(term, term ? 300 : 0);
 
-  const qualityProfiles = useQualityProfilesData();
-  const { addCreator, isAdding } = useAddCreator();
+  const { data: creators } = useCreators();
+  const hasCreators = (creators ?? []).length > 0;
 
-  const folderName = sanitize(name);
-  const fullPath =
-    rootFolderPath && folderName
-      ? `${rootFolderPath.replace(/\/+$/, '')}/${folderName}`
-      : '';
+  const {
+    isFetching: isFetchingApi,
+    error,
+    data,
+  } = useCreatorLookup(query);
 
-  const canAdd = !!folderName && !!rootFolderPath && !isAdding;
+  useEffect(() => {
+    setIsFetching(isFetchingApi);
+  }, [isFetchingApi]);
 
-  const handleNameChange = useCallback(({ value }: InputChanged<string>) => {
-    setName(value);
+  const handleSearchChange = useCallback(({ value }: InputChanged<string>) => {
+    setTerm(value);
+    setIsFetching(!!value.trim());
   }, []);
 
-  const handleRootFolderChange = useCallback(
-    ({ value }: InputChanged<string>) => {
-      setRootFolderPath(value);
-    },
-    []
-  );
+  const handleClearPress = useCallback(() => {
+    setTerm('');
+    setIsFetching(false);
+  }, []);
 
-  const handleAdd = useCallback(() => {
-    if (!canAdd || !fullPath) {
-      return;
-    }
-
-    addCreator(
-      {
-        title: name.trim(),
-        path: fullPath,
-        qualityProfileId: qualityProfiles[0]?.id ?? 1,
-        monitored: true,
-        channels: [],
-        tags: [],
-      },
-      {
-        onSuccess: () => {
-          history.push('/creator');
-        },
-      }
-    );
-  }, [canAdd, fullPath, name, qualityProfiles, addCreator, history]);
+  const results = data ? [data] : [];
 
   return (
-    <PageContent title="Add Creator">
+    <PageContent title="Add New Creator">
       <PageContentBody>
-        <div className={styles.container}>
-          <div className={styles.info}>
-            <Form>
-              <FormGroup>
-                <FormLabel>Name</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.TEXT}
-                  name="name"
-                  value={name}
-                  placeholder="Creator name"
-                  autoFocus={true}
-                  onChange={handleNameChange}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <FormLabel>Root Folder</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.ROOT_FOLDER_SELECT}
-                  name="rootFolderPath"
-                  value={rootFolderPath}
-                  helpText={fullPath || undefined}
-                  onChange={handleRootFolderChange}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <SpinnerButton
-                  kind={kinds.PRIMARY}
-                  isDisabled={!canAdd}
-                  isSpinning={isAdding}
-                  onPress={handleAdd}
-                >
-                  Add Creator
-                </SpinnerButton>
-              </FormGroup>
-            </Form>
+        <div className={styles.searchContainer}>
+          <div className={styles.searchIconContainer}>
+            <Icon name={icons.SEARCH} size={20} />
           </div>
+
+          <TextInput
+            className={styles.searchInput}
+            name="creatorLookup"
+            value={term}
+            placeholder="eg. MrBeast, https://www.youtube.com/@MrBeast"
+            autoFocus={true}
+            onChange={handleSearchChange}
+          />
+
+          <Button
+            className={styles.clearLookupButton}
+            onPress={handleClearPress}
+          >
+            <Icon name={icons.REMOVE} size={20} />
+          </Button>
         </div>
+
+        {isFetching ? <LoadingIndicator /> : null}
+
+        {!isFetching && !!error ? (
+          <div className={styles.message}>
+            <div className={styles.helpText}>Creator not found</div>
+
+            <Alert kind={kinds.DANGER}>
+              No creator was found for that name or URL. Try a YouTube channel
+              URL like https://www.youtube.com/@ChannelName
+            </Alert>
+          </div>
+        ) : null}
+
+        {!isFetching && !error && results.length > 0 ? (
+          <div className={styles.searchResults}>
+            {results.map((result) => (
+              <SearchResultCard
+                key={result.channels[0]?.platformId ?? result.name}
+                result={result}
+                onPress={() => setSelected(result)}
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {!isFetching && !error && results.length === 0 && term ? (
+          <div className={styles.message}>
+            <div className={styles.noResults}>No results found for "{term}"</div>
+          </div>
+        ) : null}
+
+        {!term ? (
+          <div className={styles.message}>
+            <div className={styles.helpText}>
+              Start typing to search for a creator by name, channel handle, or URL
+            </div>
+          </div>
+        ) : null}
+
+        {!term && !hasCreators ? (
+          <div className={styles.message}>
+            <div className={styles.noCreatorsText}>
+              No creators have been added yet
+            </div>
+
+            <div>
+              <Button to="/add/import" kind={kinds.PRIMARY}>
+                Import Existing Library
+              </Button>
+            </div>
+          </div>
+        ) : null}
       </PageContentBody>
+
+      {selected ? (
+        <AddCreatorModal
+          isOpen={true}
+          creator={selected}
+          onModalClose={() => setSelected(null)}
+          onCreatorAdded={() => history.push('/creator')}
+        />
+      ) : null}
     </PageContent>
   );
 }

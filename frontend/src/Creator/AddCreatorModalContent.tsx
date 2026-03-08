@@ -11,6 +11,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
 import { useQualityProfilesData } from 'Settings/Profiles/Quality/useQualityProfiles';
+import { CreatorLookupResult } from 'typings/Creator';
 import { InputChanged } from 'typings/inputs';
 import { useAddCreator } from './useCreators';
 import styles from './AddCreatorModalContent.css';
@@ -20,18 +21,20 @@ function sanitize(name: string): string {
 }
 
 interface Props {
+  creator?: CreatorLookupResult;
   onModalClose: () => void;
   onCreatorAdded: () => void;
 }
 
-function AddCreatorModalContent({ onModalClose, onCreatorAdded }: Props) {
-  const [name, setName] = useState('');
+function AddCreatorModalContent({ creator, onModalClose, onCreatorAdded }: Props) {
+  const [manualName, setManualName] = useState('');
   const [rootFolderPath, setRootFolderPath] = useState('');
 
   const qualityProfiles = useQualityProfilesData();
   const { addCreator, isAdding } = useAddCreator();
 
-  const folderName = sanitize(name);
+  const creatorName = creator?.name ?? manualName;
+  const folderName = sanitize(creatorName);
   const fullPath =
     rootFolderPath && folderName
       ? `${rootFolderPath.replace(/\/+$/, '')}/${folderName}`
@@ -40,7 +43,7 @@ function AddCreatorModalContent({ onModalClose, onCreatorAdded }: Props) {
   const canAdd = !!folderName && !!rootFolderPath && !isAdding;
 
   const handleNameChange = useCallback(({ value }: InputChanged<string>) => {
-    setName(value);
+    setManualName(value);
   }, []);
 
   const handleRootFolderChange = useCallback(
@@ -57,11 +60,11 @@ function AddCreatorModalContent({ onModalClose, onCreatorAdded }: Props) {
 
     addCreator(
       {
-        title: name.trim(),
+        title: creatorName.trim(),
         path: fullPath,
         qualityProfileId: qualityProfiles[0]?.id ?? 1,
         monitored: true,
-        channels: [],
+        channels: creator?.channels ?? [],
         tags: [],
       },
       {
@@ -71,28 +74,44 @@ function AddCreatorModalContent({ onModalClose, onCreatorAdded }: Props) {
         },
       }
     );
-  }, [canAdd, fullPath, name, qualityProfiles, addCreator, onCreatorAdded, onModalClose]);
+  }, [canAdd, fullPath, creatorName, creator, qualityProfiles, addCreator, onCreatorAdded, onModalClose]);
 
   return (
     <ModalContent onModalClose={onModalClose}>
-      <ModalHeader>Add Creator</ModalHeader>
+      <ModalHeader>{creatorName || 'Add Creator'}</ModalHeader>
 
       <ModalBody>
         <div className={styles.container}>
-          <div className={styles.info}>
-            <Form>
-              <FormGroup>
-                <FormLabel>Name</FormLabel>
+          {creator?.thumbnailUrl ? (
+            <div className={styles.poster}>
+              <img
+                className={styles.posterImage}
+                src={creator.thumbnailUrl}
+                alt={creator.name}
+              />
+            </div>
+          ) : null}
 
-                <FormInputGroup
-                  type={inputTypes.TEXT}
-                  name="name"
-                  value={name}
-                  placeholder="Creator name"
-                  autoFocus={true}
-                  onChange={handleNameChange}
-                />
-              </FormGroup>
+          <div className={styles.info}>
+            {creator?.description ? (
+              <div className={styles.overview}>{creator.description}</div>
+            ) : null}
+
+            <Form>
+              {!creator ? (
+                <FormGroup>
+                  <FormLabel>Name</FormLabel>
+
+                  <FormInputGroup
+                    type={inputTypes.TEXT}
+                    name="name"
+                    value={manualName}
+                    placeholder="Creator name"
+                    autoFocus={true}
+                    onChange={handleNameChange}
+                  />
+                </FormGroup>
+              ) : null}
 
               <FormGroup>
                 <FormLabel>Root Folder</FormLabel>
@@ -119,7 +138,7 @@ function AddCreatorModalContent({ onModalClose, onCreatorAdded }: Props) {
           isSpinning={isAdding}
           onPress={handleAdd}
         >
-          Add Creator
+          Add {creatorName || 'Creator'}
         </SpinnerButton>
       </ModalFooter>
     </ModalContent>

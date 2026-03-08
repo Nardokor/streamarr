@@ -132,6 +132,10 @@ const LINKS: SidebarItem[] = [
         title: 'Download Client',
         to: '/settings/downloadclient',
       },
+      {
+        title: 'Connect',
+        to: '/settings/connect',
+      },
     ],
   },
 

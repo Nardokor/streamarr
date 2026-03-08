@@ -5,7 +5,6 @@ import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
-import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import NotificationResource from 'typings/Notification';
 import { useNotificationSchema } from './useConnectSettings';
 import styles from './Connect.css';
@@ -21,36 +20,32 @@ function AddNotificationModal({
   onSelect,
   onModalClose,
 }: AddNotificationModalProps) {
-  const { data: schema, isLoading } = useNotificationSchema();
+  const { data: schemas } = useNotificationSchema();
 
   return (
-    <Modal isOpen={isOpen} size="medium" onModalClose={onModalClose}>
+    <Modal isOpen={isOpen} size="small" onModalClose={onModalClose}>
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>Add Notification</ModalHeader>
 
         <ModalBody>
-          {isLoading ? (
-            <LoadingIndicator />
-          ) : (
-            <div className={styles.schemaList}>
-              {(schema ?? []).map((s) => (
-                <div
-                  key={s.implementation}
-                  className={styles.schemaItem}
-                  onClick={() => {
-                    onSelect(s);
-                    onModalClose();
-                  }}
-                >
-                  <div className={styles.schemaName}>{s.implementationName}</div>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className={styles.platformGrid}>
+            {(schemas ?? []).map((s) => (
+              <div
+                key={s.implementation}
+                className={styles.platformCard}
+                onClick={() => {
+                  onSelect(s);
+                  onModalClose();
+                }}
+              >
+                {s.implementationName}
+              </div>
+            ))}
+          </div>
         </ModalBody>
 
         <ModalFooter>
-          <Button onPress={onModalClose}>Cancel</Button>
+          <Button onPress={onModalClose}>Close</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

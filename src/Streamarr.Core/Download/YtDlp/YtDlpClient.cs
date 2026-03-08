@@ -45,7 +45,7 @@ namespace Streamarr.Core.Download.YtDlp
 
         // [download] Destination: /path/to/file.ext
         private static readonly Regex DownloadDestinationRegex = new Regex(
-            @"\[download\]\s+Destination:\s+(.+\.(?:mp4|mkv|webm|mov|avi|flv|m4a|mp3|opus|ogg|wav))",
+            @"\[download\]\s+Destination:\s+(.+\.(?:mp4|mkv|webm|mov|avi|flv|m4a|mp3|opus|ogg|wav|webp|jpg|jpeg|png))",
             RegexOptions.Compiled);
 
         // [Merger] Merging formats into "/path/to/file.ext"

@@ -602,7 +602,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                           ) : null}
                         </TableRowCell>
 
-                        <TableRowCell>
+                        <TableRowCell onClick={(e) => e.stopPropagation()}>
                           {videoUrl ? (
                             <a
                               className={styles.titleLink}
@@ -653,7 +653,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                           </span>
                         </TableRowCell>
 
-                        <TableRowCell className={styles.downloadCell}>
+                        <TableRowCell className={styles.downloadCell} onClick={(e) => e.stopPropagation()}>
                           <DownloadCell
                             contentId={item.id}
                             statusKind={status.kind}

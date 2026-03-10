@@ -44,13 +44,16 @@ namespace Streamarr.Core.MetadataSource
         [FieldDefinition(110, Label = "Retention Days", Type = FieldType.Number, Unit = "days", HelpText = "Delete downloaded content older than this many days by default for new channels. 0 = disabled.")]
         public int DefaultRetentionDays { get; set; }
 
-        [FieldDefinition(113, Label = "Retention: VODs", Type = FieldType.Checkbox, HelpText = "Apply retention to VODs by default for new channels.")]
-        public bool DefaultRetentionVods { get; set; }
+        [FieldDefinition(111, Label = "Always Keep: Videos", Type = FieldType.Checkbox, HelpText = "Never delete regular videos by default for new channels.")]
+        public bool DefaultKeepVideos { get; set; } = true;
 
-        [FieldDefinition(114, Label = "Retention: Live", Type = FieldType.Checkbox, HelpText = "Apply retention to recorded livestreams by default for new channels.")]
-        public bool DefaultRetentionLive { get; set; }
+        [FieldDefinition(112, Label = "Always Keep: Shorts", Type = FieldType.Checkbox, HelpText = "Never delete shorts by default for new channels.")]
+        public bool DefaultKeepShorts { get; set; } = true;
 
-        [FieldDefinition(115, Label = "Retention Exception Words", HelpText = "Comma-separated words — matching titles are never deleted. Applied by default for new channels.")]
-        public string DefaultRetentionExceptionWords { get; set; } = string.Empty;
+        [FieldDefinition(113, Label = "Always Keep: VODs", Type = FieldType.Checkbox, HelpText = "Never delete VODs by default for new channels.")]
+        public bool DefaultKeepVods { get; set; }
+
+        [FieldDefinition(114, Label = "Keep Words", HelpText = "Comma-separated words — matching titles are never deleted. Applied by default for new channels.")]
+        public string DefaultRetentionKeepWords { get; set; } = string.Empty;
     }
 }

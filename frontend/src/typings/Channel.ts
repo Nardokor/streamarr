@@ -10,9 +10,12 @@ interface Channel extends ModelBase {
   title: string;
   description: string;
   thumbnailUrl: string;
+  sortOrder: number;
   monitored: boolean;
   status: ChannelStatusType;
   lastInfoSync: string | null;
+  membershipStatus: 'unknown' | 'active' | 'none';
+  lastMembershipCheck: string | null;
 
   // Wanted — content types
   downloadVideos: boolean;
@@ -31,11 +34,11 @@ interface Channel extends ModelBase {
 
   // Retention
   retentionDays: number | null;
-  retentionVideos: boolean;
-  retentionShorts: boolean;
-  retentionVods: boolean;
-  retentionLive: boolean;
-  retentionExceptionWords: string;
+  keepVideos: boolean;
+  keepShorts: boolean;
+  keepVods: boolean;
+  keepMembers: boolean;
+  retentionKeepWords: string;
 }
 
 export default Channel;

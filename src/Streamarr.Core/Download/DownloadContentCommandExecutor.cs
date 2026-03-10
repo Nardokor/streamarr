@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using NLog;
 using Streamarr.Common.Instrumentation.Extensions;
 using Streamarr.Core.Channels;
@@ -18,6 +19,8 @@ namespace Streamarr.Core.Download
 {
     public class DownloadContentCommandExecutor : IExecute<DownloadContentCommand>
     {
+        private static readonly TimeSpan PostRecordingLiveCheckDelay = TimeSpan.FromMinutes(10);
+
         private readonly IContentService _contentService;
         private readonly IChannelService _channelService;
         private readonly ICreatorService _creatorService;
@@ -25,6 +28,7 @@ namespace Streamarr.Core.Download
         private readonly IYtDlpClient _ytDlpClient;
         private readonly INfoWriterService _nfoWriter;
         private readonly IDownloadHistoryService _historyService;
+        private readonly ILivestreamStatusService _livestreamStatusService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
@@ -35,6 +39,7 @@ namespace Streamarr.Core.Download
                                               IYtDlpClient ytDlpClient,
                                               INfoWriterService nfoWriter,
                                               IDownloadHistoryService historyService,
+                                              ILivestreamStatusService livestreamStatusService,
                                               IEventAggregator eventAggregator,
                                               Logger logger)
         {
@@ -45,6 +50,7 @@ namespace Streamarr.Core.Download
             _ytDlpClient = ytDlpClient;
             _nfoWriter = nfoWriter;
             _historyService = historyService;
+            _livestreamStatusService = livestreamStatusService;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -194,6 +200,33 @@ namespace Streamarr.Core.Download
                 _logger.Error(ex, "Exception downloading '{0}'", content.Title);
                 throw;
             }
+
+            if (isLive)
+            {
+                SchedulePostRecordingLiveCheck(channel);
+            }
+        }
+
+        private void SchedulePostRecordingLiveCheck(Channel channel)
+        {
+            _logger.Debug(
+                "Scheduling live re-check in {0} minutes for channel '{1}' after recording ended",
+                (int)PostRecordingLiveCheckDelay.TotalMinutes,
+                channel.Title);
+
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(PostRecordingLiveCheckDelay);
+                try
+                {
+                    _livestreamStatusService.RefreshLivestreamStatuses(channel);
+                    _logger.Debug("Post-recording live re-check completed for '{0}'", channel.Title);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Failed post-recording live re-check for '{0}'", channel.Title);
+                }
+            });
         }
 
         private static string BuildDownloadUrl(PlatformType platform, string platformContentId)

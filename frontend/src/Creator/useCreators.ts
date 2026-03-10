@@ -1,6 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import useApiMutation from 'Helpers/Hooks/useApiMutation';
 import useApiQuery from 'Helpers/Hooks/useApiQuery';
+import fetchJson from 'Utilities/Fetch/fetchJson';
+import getQueryPath from 'Utilities/Fetch/getQueryPath';
 import Channel from 'typings/Channel';
 import Content from 'typings/Content';
 import Creator, { CreatorLookupChannel, CreatorLookupResult } from 'typings/Creator';
@@ -184,4 +187,48 @@ export const useDeleteCreator = (id: number) => {
     isDeleting: isPending,
     deleteError: error,
   };
+};
+
+export interface CreatorStats {
+  creatorId: number;
+  downloadedCount: number;
+  wantedCount: number;
+  isLiveNow: boolean;
+  hasMissing: boolean;
+  hasActiveMembership: boolean;
+}
+
+export const useCreatorStats = () => {
+  const result = useApiQuery<CreatorStats[]>({
+    path: `${CREATORS_PATH}/stats`,
+  });
+
+  return {
+    ...result,
+    data: result.data ?? [],
+  };
+};
+
+export const useReorderChannels = (creatorId: number) => {
+  const queryClient = useQueryClient();
+
+  return useCallback(
+    async (channels: Channel[]) => {
+      await Promise.all(
+        channels.map((ch) =>
+          fetchJson<number, Partial<Channel>>({
+            path: getQueryPath(`/channel/${ch.id}`),
+            method: 'PUT',
+            body: ch,
+            headers: {
+              'X-Api-Key': window.Streamarr.apiKey,
+              'X-Streamarr-Client': 'Streamarr',
+            },
+          })
+        )
+      );
+      queryClient.invalidateQueries({ queryKey: [`/channel/creator/${creatorId}`] });
+    },
+    [creatorId, queryClient]
+  );
 };

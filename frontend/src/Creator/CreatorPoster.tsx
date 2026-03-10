@@ -2,15 +2,15 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import Creator from 'typings/Creator';
-import { useUpdateCreator } from './useCreators';
+import { CreatorStats, useUpdateCreator } from './useCreators';
 import styles from './CreatorPoster.css';
 
 interface CreatorPosterProps {
   creator: Creator;
-  channelCount: number;
+  stats?: CreatorStats;
 }
 
-function CreatorPoster({ creator, channelCount }: CreatorPosterProps) {
+function CreatorPoster({ creator, stats }: CreatorPosterProps) {
   const history = useHistory();
   const { id, title, thumbnailUrl, monitored } = creator;
   const { updateCreator, isUpdating } = useUpdateCreator(id);
@@ -33,6 +33,10 @@ function CreatorPoster({ creator, channelCount }: CreatorPosterProps) {
     []
   );
 
+  const downloaded = stats?.downloadedCount ?? 0;
+  const wanted = stats?.wantedCount ?? 0;
+  const progressPct = wanted > 0 ? Math.round((downloaded / wanted) * 100) : 0;
+
   return (
     <div
       className={styles.card}
@@ -43,7 +47,7 @@ function CreatorPoster({ creator, channelCount }: CreatorPosterProps) {
     >
       <div className={styles.thumbnailContainer}>
         {thumbnailUrl ? (
-          <img className={styles.thumbnail} src={thumbnailUrl} alt={title} />
+          <img className={styles.thumbnail} src={creator.customThumbnailUrl || thumbnailUrl} alt={title} />
         ) : (
           <div className={styles.thumbnailPlaceholder}>🎬</div>
         )}
@@ -54,17 +58,22 @@ function CreatorPoster({ creator, channelCount }: CreatorPosterProps) {
             onPress={handleMonitorToggle}
           />
         </div>
+        {stats?.isLiveNow ? (
+          <div className={styles.liveBadge}>LIVE</div>
+        ) : null}
       </div>
 
       <div className={styles.info}>
         <div className={styles.title}>{title}</div>
-        <div className={styles.meta}>
-          {channelCount > 0 ? (
-            <span>{channelCount} channel{channelCount !== 1 ? 's' : ''}</span>
-          ) : (
-            <span>No channels</span>
-          )}
-        </div>
+        {wanted > 0 ? (
+          <div className={styles.progressWrap}>
+            <div
+              className={styles.progressBar}
+              style={{ width: `${progressPct}%` }}
+            />
+            <span className={styles.progressLabel}>{downloaded} / {wanted}</span>
+          </div>
+        ) : null}
       </div>
     </div>
   );

@@ -74,3 +74,44 @@
   left: 4px;
   z-index: 2;
 }
+
+.liveBadge {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background: #e74c3c;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.progressWrap {
+  position: relative;
+  height: 4px;
+  background: var(--inputBackground, #333);
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.progressBar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--colorPrimary, #3498db);
+  border-radius: 2px;
+  transition: width 300ms ease;
+}
+
+.progressLabel {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.7rem;
+  color: var(--textSecondary, #888);
+  text-align: right;
+}

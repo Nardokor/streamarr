@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Streamarr.Core.Channels;
+using Streamarr.Core.Content;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Creators.Events;
 using Streamarr.Core.Datastore.Events;
@@ -20,16 +21,19 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
 {
     private readonly ICreatorService _creatorService;
     private readonly IChannelService _channelService;
+    private readonly IContentService _contentService;
     private readonly ICreatorAvatarService _creatorAvatarService;
 
     public CreatorController(ICreatorService creatorService,
                              IChannelService channelService,
+                             IContentService contentService,
                              ICreatorAvatarService creatorAvatarService,
                              IBroadcastSignalRMessage signalRBroadcaster)
         : base(signalRBroadcaster)
     {
         _creatorService = creatorService;
         _channelService = channelService;
+        _contentService = contentService;
         _creatorAvatarService = creatorAvatarService;
 
         SharedValidator.RuleFor(c => c.Title).NotEmpty();
@@ -46,6 +50,51 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
     public List<CreatorResource> GetAll()
     {
         return _creatorService.GetAllCreators().ToResource();
+    }
+
+    [HttpGet("stats")]
+    [Produces("application/json")]
+    public List<CreatorStatsResource> GetStats()
+    {
+        // Load all channels once — gives us creatorId → channels mapping
+        var allChannels = _channelService.GetAllChannels();
+        var channelById = allChannels.ToDictionary(c => c.Id);
+
+        // Load aggregate content sets — one query each
+        var downloaded = _contentService.GetAllDownloaded()
+                                        .Where(c => channelById.ContainsKey(c.ChannelId))
+                                        .GroupBy(c => channelById[c.ChannelId].CreatorId)
+                                        .ToDictionary(g => g.Key, g => g.Count());
+
+        var wanted = _contentService.GetAllWanted()
+                                    .Where(c => channelById.ContainsKey(c.ChannelId))
+                                    .GroupBy(c => channelById[c.ChannelId].CreatorId)
+                                    .ToDictionary(g => g.Key, g => g.Count());
+
+        var missing = _contentService.GetAllMissing()
+                                     .Where(c => channelById.ContainsKey(c.ChannelId))
+                                     .Select(c => channelById[c.ChannelId].CreatorId)
+                                     .ToHashSet();
+
+        var liveNow = _contentService.GetAllRecording()
+                                     .Where(c => channelById.ContainsKey(c.ChannelId))
+                                     .Select(c => channelById[c.ChannelId].CreatorId)
+                                     .ToHashSet();
+
+        var activeMembership = allChannels
+            .Where(c => c.MembershipStatus == MembershipStatus.Active)
+            .Select(c => c.CreatorId)
+            .ToHashSet();
+
+        return _creatorService.GetAllCreators().Select(creator => new CreatorStatsResource
+        {
+            CreatorId = creator.Id,
+            DownloadedCount = downloaded.GetValueOrDefault(creator.Id, 0),
+            WantedCount = wanted.GetValueOrDefault(creator.Id, 0),
+            IsLiveNow = liveNow.Contains(creator.Id),
+            HasMissing = missing.Contains(creator.Id),
+            HasActiveMembership = activeMembership.Contains(creator.Id),
+        }).ToList();
     }
 
     [HttpGet("slug/{slug}")]

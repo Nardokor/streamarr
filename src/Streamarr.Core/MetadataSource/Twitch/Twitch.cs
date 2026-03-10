@@ -197,7 +197,8 @@ namespace Streamarr.Core.MetadataSource.Twitch
         public override IEnumerable<ContentMetadataResult> GetNewContent(
             string platformUrl,
             string platformId,
-            DateTime? since)
+            DateTime? since,
+            bool checkMembership = false)
         {
             if (string.IsNullOrWhiteSpace(platformId))
             {

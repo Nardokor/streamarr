@@ -37,20 +37,24 @@ namespace Streamarr.Core.Content
                 return false;
             }
 
-            // 1. Content type gate
-            var typeAllowed = contentType switch
+            // 1. Content type gate — members content that passed the gate above is not
+            //    additionally blocked by the per-type toggles (DownloadMembers overrides them).
+            if (!isMembers)
             {
-                ContentType.Video    => channel.DownloadVideos,
-                ContentType.Short    => channel.DownloadShorts,
-                ContentType.Vod      => channel.DownloadVods,
-                ContentType.Live     => channel.DownloadLive,
-                ContentType.Upcoming => channel.DownloadLive,
-                _                    => true
-            };
+                var typeAllowed = contentType switch
+                {
+                    ContentType.Video    => channel.DownloadVideos,
+                    ContentType.Short    => channel.DownloadShorts,
+                    ContentType.Vod      => channel.DownloadVods,
+                    ContentType.Live     => channel.DownloadLive,
+                    ContentType.Upcoming => channel.DownloadLive,
+                    _                    => true
+                };
 
-            if (!typeAllowed)
-            {
-                return false;
+                if (!typeAllowed)
+                {
+                    return false;
+                }
             }
 
             // 2. Word filters (only for type-allowed items)

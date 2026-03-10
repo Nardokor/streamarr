@@ -69,6 +69,12 @@ namespace Streamarr.Core.Creators.Commands
 
         private void RefreshAvatar(Creator creator, List<Channel> channels)
         {
+            // User-set custom avatar always takes precedence over the platform thumbnail.
+            if (!string.IsNullOrEmpty(creator.CustomThumbnailUrl))
+            {
+                return;
+            }
+
             // Use the first channel for which we have a configured source
             foreach (var channel in channels)
             {
@@ -109,7 +115,34 @@ namespace Streamarr.Core.Creators.Commands
 
             try
             {
-                var newItems = source.GetNewContent(channel.PlatformUrl, channel.PlatformId, channel.LastInfoSync);
+                // Determine whether to probe the membership tab this sync.
+                // Active: always probe (new members content may exist).
+                // Unknown: always probe (first-time detection).
+                // None: only probe if the last check was > 7 days ago (or never run).
+                var membershipRecheckThreshold = TimeSpan.FromDays(7);
+                var shouldCheckMembership = channel.MembershipStatus switch
+                {
+                    MembershipStatus.Active  => true,
+                    MembershipStatus.Unknown => true,
+                    MembershipStatus.None    => channel.LastMembershipCheck == null ||
+                                               DateTime.UtcNow - channel.LastMembershipCheck.Value > membershipRecheckThreshold,
+                    _                        => false
+                };
+
+                _logger.Info(
+                    "Membership check decision for '{0}': status={1}, lastCheck={2}, shouldCheck={3}",
+                    channel.Title,
+                    channel.MembershipStatus,
+                    channel.LastMembershipCheck?.ToString("u") ?? "never",
+                    shouldCheckMembership);
+
+                var newItems = source.GetNewContent(channel.PlatformUrl, channel.PlatformId, channel.LastInfoSync, shouldCheckMembership).ToList();
+
+                _logger.Info(
+                    "GetNewContent returned {0} item(s) for '{1}' ({2} members item(s))",
+                    newItems.Count,
+                    channel.Title,
+                    newItems.Count(i => i.IsMembers));
                 var added = new List<Content.Content>();
                 var backfillItems = new List<Content.Content>();
 
@@ -125,6 +158,14 @@ namespace Streamarr.Core.Creators.Commands
                             existing.IsMembers = true;
                             existing.IsAccessible = true; // resolved below
                             backfillItems.Add(existing);
+                        }
+
+                        // A recorded live stream that has since been archived on the platform becomes a VOD.
+                        if (existing.ContentType == ContentType.Live && item.ContentType == ContentType.Vod)
+                        {
+                            existing.ContentType = ContentType.Vod;
+                            _contentService.UpdateContent(existing);
+                            _logger.Debug("Content '{0}' transitioned from Live to Vod after archiving", existing.Title);
                         }
 
                         continue;
@@ -196,6 +237,26 @@ namespace Streamarr.Core.Creators.Commands
 
                 // Re-evaluate filter for existing Missing/Unwanted items in case channel settings changed
                 _contentFilterService.ReapplyFilterForChannel(channel);
+
+                // Update membership status if we probed the tab this sync.
+                if (shouldCheckMembership)
+                {
+                    var accessibleMembersItems = newItems.Where(i => i.IsMembers && i.IsAccessible).ToList();
+                    var hasAccessibleMembersContent = accessibleMembersItems.Any();
+                    var newMembershipStatus = hasAccessibleMembersContent
+                        ? MembershipStatus.Active
+                        : MembershipStatus.None;
+
+                    _logger.Info(
+                        "Membership probe result for '{0}': {1} accessible members item(s) → status {2} → {3}",
+                        channel.Title,
+                        accessibleMembersItems.Count,
+                        channel.MembershipStatus,
+                        newMembershipStatus);
+
+                    channel.MembershipStatus = newMembershipStatus;
+                    channel.LastMembershipCheck = DateTime.UtcNow;
+                }
 
                 channel.LastInfoSync = DateTime.UtcNow;
                 _channelService.UpdateChannel(channel);

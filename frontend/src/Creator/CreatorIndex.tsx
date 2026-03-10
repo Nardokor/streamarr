@@ -21,12 +21,12 @@ import { SortDirection } from 'Helpers/Props/sortDirections';
 import Creator from 'typings/Creator';
 import CreatorPoster from './CreatorPoster';
 import CreatorRow from './CreatorRow';
-import useCreators from './useCreators';
+import useCreators, { CreatorStats, useCreatorStats } from './useCreators';
 import styles from './CreatorIndex.css';
 
 type ViewMode = 'poster' | 'table';
-type FilterKey = 'all' | 'monitored' | 'unmonitored';
-type SortKey = 'title' | 'added' | 'monitored';
+type FilterKey = 'all' | 'monitored' | 'unmonitored' | 'liveNow' | 'activeMembership' | 'missing';
+type SortKey = 'title' | 'added' | 'monitored' | 'downloaded' | 'wanted' | 'missing';
 
 const columns: Column[] = [
   { name: 'thumbnail', label: '', isVisible: true },
@@ -52,16 +52,27 @@ function readViewPref(): ViewMode {
 function sortCreators(
   list: Creator[],
   key: SortKey,
-  dir: SortDirection
+  dir: SortDirection,
+  statsById: Map<number, CreatorStats>
 ): Creator[] {
   return [...list].sort((a, b) => {
     let cmp = 0;
+    const sa = statsById.get(a.id);
+    const sb = statsById.get(b.id);
     if (key === 'title') {
       cmp = a.title.localeCompare(b.title);
     } else if (key === 'added') {
       cmp = new Date(a.added).getTime() - new Date(b.added).getTime();
     } else if (key === 'monitored') {
       cmp = (b.monitored ? 1 : 0) - (a.monitored ? 1 : 0);
+    } else if (key === 'downloaded') {
+      cmp = (sa?.downloadedCount ?? 0) - (sb?.downloadedCount ?? 0);
+    } else if (key === 'wanted') {
+      cmp = (sa?.wantedCount ?? 0) - (sb?.wantedCount ?? 0);
+    } else if (key === 'missing') {
+      const ma = (sa?.wantedCount ?? 0) - (sa?.downloadedCount ?? 0);
+      const mb = (sb?.wantedCount ?? 0) - (sb?.downloadedCount ?? 0);
+      cmp = ma - mb;
     }
     return dir === 'ascending' ? cmp : -cmp;
   });
@@ -69,6 +80,12 @@ function sortCreators(
 
 function CreatorIndex() {
   const { data: creators, isLoading, error } = useCreators();
+  const { data: stats } = useCreatorStats();
+
+  const statsById = useMemo(
+    () => new Map(stats.map((s) => [s.creatorId, s])),
+    [stats]
+  );
 
   const [view, setView] = useState<ViewMode>(readViewPref);
   const [sortKey, setSortKey] = useState<SortKey>('title');
@@ -92,7 +109,7 @@ function CreatorIndex() {
         setSortDirection((d) => (d === 'ascending' ? 'descending' : 'ascending'));
       } else {
         setSortKey(key as SortKey);
-        setSortDirection('ascending');
+        setSortDirection(key === 'title' ? 'ascending' : 'descending');
       }
     },
     [sortKey]
@@ -102,19 +119,27 @@ function CreatorIndex() {
     setFilterKey(key as FilterKey);
   }, []);
 
+  const hasActiveFilter = filterKey !== 'all';
+
   const displayed = useMemo(() => {
     let list = creators;
     if (filterKey === 'monitored') {
       list = list.filter((c) => c.monitored);
     } else if (filterKey === 'unmonitored') {
       list = list.filter((c) => !c.monitored);
+    } else if (filterKey === 'liveNow') {
+      list = list.filter((c) => statsById.get(c.id)?.isLiveNow === true);
+    } else if (filterKey === 'activeMembership') {
+      list = list.filter((c) => statsById.get(c.id)?.hasActiveMembership === true);
+    } else if (filterKey === 'missing') {
+      list = list.filter((c) => statsById.get(c.id)?.hasMissing === true);
     }
     if (searchQuery.trim()) {
       const q = searchQuery.trim().toLowerCase();
       list = list.filter((c) => c.title.toLowerCase().includes(q));
     }
-    return sortCreators(list, sortKey, sortDirection);
-  }, [creators, filterKey, searchQuery, sortKey, sortDirection]);
+    return sortCreators(list, sortKey, sortDirection, statsById);
+  }, [creators, filterKey, searchQuery, sortKey, sortDirection, statsById]);
 
   const noCreators = !creators.length && !isLoading && !error;
 
@@ -176,12 +201,28 @@ function CreatorIndex() {
               Date Added
             </SortMenuItem>
             <SortMenuItem
-              name="monitored"
+              name="downloaded"
               sortKey={sortKey}
               sortDirection={sortDirection}
               onPress={handleSortPress}
             >
-              Monitored
+              Downloaded
+            </SortMenuItem>
+            <SortMenuItem
+              name="wanted"
+              sortKey={sortKey}
+              sortDirection={sortDirection}
+              onPress={handleSortPress}
+            >
+              Wanted
+            </SortMenuItem>
+            <SortMenuItem
+              name="missing"
+              sortKey={sortKey}
+              sortDirection={sortDirection}
+              onPress={handleSortPress}
+            >
+              Missing
             </SortMenuItem>
           </SortMenu>
 
@@ -189,7 +230,7 @@ function CreatorIndex() {
             <ToolbarMenuButton
               iconName={icons.FILTER}
               text="Filter"
-              showIndicator={filterKey !== 'all'}
+              showIndicator={hasActiveFilter}
             />
             <MenuContent>
               <SelectedMenuItem
@@ -212,6 +253,27 @@ function CreatorIndex() {
                 onPress={handleFilterChange}
               >
                 Unmonitored
+              </SelectedMenuItem>
+              <SelectedMenuItem
+                name="liveNow"
+                isSelected={filterKey === 'liveNow'}
+                onPress={handleFilterChange}
+              >
+                Live Now
+              </SelectedMenuItem>
+              <SelectedMenuItem
+                name="activeMembership"
+                isSelected={filterKey === 'activeMembership'}
+                onPress={handleFilterChange}
+              >
+                Active Membership
+              </SelectedMenuItem>
+              <SelectedMenuItem
+                name="missing"
+                isSelected={filterKey === 'missing'}
+                onPress={handleFilterChange}
+              >
+                Missing Videos
               </SelectedMenuItem>
             </MenuContent>
           </Menu>
@@ -240,7 +302,7 @@ function CreatorIndex() {
               <CreatorPoster
                 key={creator.id}
                 creator={creator}
-                channelCount={0}
+                stats={statsById.get(creator.id)}
               />
             ))}
           </div>

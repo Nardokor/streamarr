@@ -36,7 +36,9 @@ function CreatorRow({ creator }: CreatorRowProps) {
   const downloaded = content.filter(
     (c) => c.contentFileId > 0 || c.status === 'downloaded'
   ).length;
-  const total = content.length;
+  const wanted = content.filter(
+    (c) => c.monitored && c.status !== 'unwanted'
+  ).length;
 
   const nextLive = getNextLiveDate(content);
 
@@ -81,8 +83,8 @@ function CreatorRow({ creator }: CreatorRowProps) {
       </TableRowCell>
 
       <TableRowCell className={styles.progress}>
-        <div className={`${styles.progressBar} ${total === 0 ? styles.progressEmpty : downloaded === total ? styles.progressComplete : styles.progressIncomplete}`}>
-          {downloaded} / {total}
+        <div className={`${styles.progressBar} ${wanted === 0 ? styles.progressEmpty : downloaded === wanted ? styles.progressComplete : styles.progressIncomplete}`}>
+          {downloaded} / {wanted}
         </div>
       </TableRowCell>
 

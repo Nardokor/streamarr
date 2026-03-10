@@ -13,6 +13,7 @@ namespace Streamarr.Core.Creators
         public string SortTitle { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string ThumbnailUrl { get; set; } = string.Empty;
+        public string CustomThumbnailUrl { get; set; } = string.Empty;
 
         // Organization
         public string Path { get; set; } = string.Empty;

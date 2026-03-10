@@ -3,8 +3,12 @@
 interface CssExports {
   'card': string;
   'info': string;
+  'liveBadge': string;
   'meta': string;
   'monitorToggle': string;
+  'progressBar': string;
+  'progressLabel': string;
+  'progressWrap': string;
   'thumbnail': string;
   'thumbnailContainer': string;
   'thumbnailPlaceholder': string;

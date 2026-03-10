@@ -15,8 +15,8 @@ namespace Streamarr.Core.MetadataSource
         CreatorMetadataResult SearchCreator(string query);
         ChannelMetadataResult GetChannelMetadata(string platformUrl);
 
-        // Content sync
-        IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since);
+        // Content sync — checkMembership=true fetches the membership/subscriber tab if the platform supports it
+        IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since, bool checkMembership = false);
 
         // Single-item and batch lookup (null = deleted from platform)
         ContentMetadataResult? GetContentMetadata(string platformContentId);

@@ -21,6 +21,7 @@ public class CreatorResource : RestResource
     public string TitleSlug { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string ThumbnailUrl { get; set; } = string.Empty;
+    public string CustomThumbnailUrl { get; set; } = string.Empty;
     public string Path { get; set; } = string.Empty;
     public string RootFolderPath { get; set; } = string.Empty;
     public int QualityProfileId { get; set; }
@@ -53,6 +54,7 @@ public static class CreatorResourceMapper
             TitleSlug = Slugify(model.Title),
             Description = model.Description,
             ThumbnailUrl = model.ThumbnailUrl,
+            CustomThumbnailUrl = model.CustomThumbnailUrl,
             Path = model.Path,
             RootFolderPath = model.RootFolderPath,
             QualityProfileId = model.QualityProfileId,
@@ -72,6 +74,7 @@ public static class CreatorResourceMapper
             Title = resource.Title,
             Description = resource.Description,
             ThumbnailUrl = resource.ThumbnailUrl,
+            CustomThumbnailUrl = resource.CustomThumbnailUrl,
             Path = resource.Path,
             QualityProfileId = resource.QualityProfileId,
             Tags = resource.Tags ?? new HashSet<int>(),

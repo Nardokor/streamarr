@@ -191,12 +191,12 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         // ── Content sync ───────────────────────────────────────────────────────
 
-        public override IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since)
+        public override IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since, bool checkMembership = false)
         {
             if (_ytDlpClient.HasCookies)
             {
-                _logger.Info("Cookie file configured — using yt-dlp listing to include members-only content");
-                return GetNewContentHybrid(platformUrl, since);
+                _logger.Info("Cookie file configured — using yt-dlp listing (checkMembership={0})", checkMembership);
+                return GetNewContentHybrid(platformUrl, since, checkMembership);
             }
 
             return GetNewContentViaApi(platformId, since);
@@ -232,21 +232,31 @@ namespace Streamarr.Core.MetadataSource.YouTube
             return videoDetails.Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id)));
         }
 
-        private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, DateTime? since)
+        private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, DateTime? since, bool checkMembership)
         {
             // 1. Regular tabs: videos, shorts, streams (date-filtered for efficiency)
             var dateAfter = since?.ToString("yyyyMMdd");
             var regularVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
 
-            // 2. Membership tab: always fetch all so historical members content is backfilled
-            var membershipVideos = _ytDlpClient.GetMembershipTabVideos(platformUrl);
-            var membershipIds = new HashSet<string>(
-                membershipVideos.Select(v => v.Id).Where(id => !string.IsNullOrWhiteSpace(id)),
-                StringComparer.OrdinalIgnoreCase);
-
-            if (membershipIds.Count > 0)
+            // 2. Membership tab: only fetched when the channel has a confirmed or unknown membership.
+            //    Skipped for channels marked MembershipStatus.None (re-checked weekly by the executor).
+            var membershipIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var membershipVideos = new List<YtDlpVideoInfo>();
+            if (checkMembership)
             {
-                _logger.Info("{0} video(s) found in membership tab", membershipIds.Count);
+                membershipVideos = _ytDlpClient.GetMembershipTabVideos(platformUrl);
+                foreach (var v in membershipVideos)
+                {
+                    if (!string.IsNullOrWhiteSpace(v.Id))
+                    {
+                        membershipIds.Add(v.Id);
+                    }
+                }
+
+                if (membershipIds.Count > 0)
+                {
+                    _logger.Info("{0} video(s) found in membership tab", membershipIds.Count);
+                }
             }
 
             // 3. Merge: regular + membership-exclusive videos (union by ID)
@@ -578,7 +588,19 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 }
             }
 
-            return publishedAt;
+            if (publishedAt.HasValue)
+            {
+                return publishedAt.Value;
+            }
+
+            // Hybrid path passes publishedAt=null — fall back to snippet date from the API
+            if (!string.IsNullOrWhiteSpace(video.Snippet?.PublishedAt) &&
+                DateTime.TryParse(video.Snippet.PublishedAt, null, DateTimeStyles.RoundtripKind, out var snippetDate))
+            {
+                return snippetDate.ToUniversalTime();
+            }
+
+            return null;
         }
 
         private static ContentType DetermineContentType(YoutubeVideo video, TimeSpan? duration)

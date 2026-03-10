@@ -12,9 +12,12 @@ public class ChannelResource : RestResource
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string ThumbnailUrl { get; set; } = string.Empty;
+    public int SortOrder { get; set; }
     public bool Monitored { get; set; }
     public ChannelStatusType Status { get; set; }
     public DateTime? LastInfoSync { get; set; }
+    public MembershipStatus MembershipStatus { get; set; }
+    public DateTime? LastMembershipCheck { get; set; }
 
     // Wanted — content types
     public bool DownloadVideos { get; set; } = true;
@@ -33,11 +36,11 @@ public class ChannelResource : RestResource
 
     // Retention
     public int? RetentionDays { get; set; }
-    public bool RetentionVideos { get; set; }
-    public bool RetentionShorts { get; set; }
-    public bool RetentionVods { get; set; }
-    public bool RetentionLive { get; set; }
-    public string RetentionExceptionWords { get; set; } = string.Empty;
+    public bool KeepVideos { get; set; } = true;
+    public bool KeepShorts { get; set; } = true;
+    public bool KeepVods { get; set; }
+    public bool KeepMembers { get; set; }
+    public string RetentionKeepWords { get; set; } = string.Empty;
 }
 
 public static class ChannelResourceMapper
@@ -54,9 +57,12 @@ public static class ChannelResourceMapper
             Title = model.Title,
             Description = model.Description,
             ThumbnailUrl = model.ThumbnailUrl,
+            SortOrder = model.SortOrder,
             Monitored = model.Monitored,
             Status = model.Status,
             LastInfoSync = model.LastInfoSync,
+            MembershipStatus = model.MembershipStatus,
+            LastMembershipCheck = model.LastMembershipCheck,
             DownloadVideos = model.DownloadVideos,
             DownloadShorts = model.DownloadShorts,
             DownloadVods = model.DownloadVods,
@@ -67,11 +73,11 @@ public static class ChannelResourceMapper
             WatchedDefeatsIgnored = model.WatchedDefeatsIgnored,
             AutoDownload = model.AutoDownload,
             RetentionDays = model.RetentionDays,
-            RetentionVideos = model.RetentionVideos,
-            RetentionShorts = model.RetentionShorts,
-            RetentionVods = model.RetentionVods,
-            RetentionLive = model.RetentionLive,
-            RetentionExceptionWords = model.RetentionExceptionWords
+            KeepVideos = model.KeepVideos,
+            KeepShorts = model.KeepShorts,
+            KeepVods = model.KeepVods,
+            KeepMembers = model.KeepMembers,
+            RetentionKeepWords = model.RetentionKeepWords
         };
     }
 
@@ -87,8 +93,12 @@ public static class ChannelResourceMapper
             Title = resource.Title,
             Description = resource.Description,
             ThumbnailUrl = resource.ThumbnailUrl,
+            SortOrder = resource.SortOrder,
             Monitored = resource.Monitored,
             Status = resource.Status,
+            LastInfoSync = resource.LastInfoSync,
+            MembershipStatus = resource.MembershipStatus,
+            LastMembershipCheck = resource.LastMembershipCheck,
             DownloadVideos = resource.DownloadVideos,
             DownloadShorts = resource.DownloadShorts,
             DownloadVods = resource.DownloadVods,
@@ -99,11 +109,11 @@ public static class ChannelResourceMapper
             WatchedDefeatsIgnored = resource.WatchedDefeatsIgnored,
             AutoDownload = resource.AutoDownload,
             RetentionDays = resource.RetentionDays,
-            RetentionVideos = resource.RetentionVideos,
-            RetentionShorts = resource.RetentionShorts,
-            RetentionVods = resource.RetentionVods,
-            RetentionLive = resource.RetentionLive,
-            RetentionExceptionWords = resource.RetentionExceptionWords
+            KeepVideos = resource.KeepVideos,
+            KeepShorts = resource.KeepShorts,
+            KeepVods = resource.KeepVods,
+            KeepMembers = resource.KeepMembers,
+            RetentionKeepWords = resource.RetentionKeepWords
         };
     }
 

@@ -15,6 +15,8 @@ import { inputTypes } from 'Helpers/Props';
 import NotificationResource from 'typings/Notification';
 import Field from 'typings/Field';
 import { InputChanged } from 'typings/inputs';
+import fetchJson from 'Utilities/Fetch/fetchJson';
+import getQueryPath from 'Utilities/Fetch/getQueryPath';
 import {
   useSaveNotification,
   useUpdateNotification,
@@ -125,36 +127,33 @@ function EditNotificationModal({
     setIsAuthenticating(true);
     setAuthMessage('Opening Plex sign-in…');
 
+    const apikey = encodeURIComponent(window.Streamarr.apiKey);
+
     try {
-      const startRes = await fetch('/api/v1/notification/action/startOAuth', {
+      const { oAuthUrl, pinId } = await fetchJson<
+        { oAuthUrl: string; pinId: number },
+        NotificationResource
+      >({
+        path: getQueryPath(`/notification/action/startOAuth?apikey=${apikey}`),
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(notification),
+        body: notification,
       });
-
-      if (!startRes.ok) {
-        throw new Error('Failed to start Plex OAuth');
-      }
-
-      const { oAuthUrl, pinId } = await startRes.json();
 
       window.open(oAuthUrl, '_blank', 'noopener,noreferrer');
       setAuthMessage('Waiting for Plex sign-in…');
 
       pollTimerRef.current = setInterval(async () => {
         try {
-          const tokenRes = await fetch(
-            `/api/v1/notification/action/getOAuthToken?pinId=${pinId}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(notification),
-            }
-          );
-
-          if (!tokenRes.ok) return;
-
-          const { authToken } = await tokenRes.json();
+          const { authToken } = await fetchJson<
+            { authToken: string | null },
+            NotificationResource
+          >({
+            path: getQueryPath(
+              `/notification/action/getOAuthToken?pinId=${pinId}&apikey=${apikey}`
+            ),
+            method: 'POST',
+            body: notification,
+          });
 
           if (authToken) {
             stopPolling();

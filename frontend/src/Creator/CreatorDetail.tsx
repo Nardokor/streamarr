@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Alert from 'Components/Alert';
 import Icon from 'Components/Icon';
@@ -20,6 +20,8 @@ import {
   useCreatorChannels,
   useCreatorContent,
   useDeleteCreator,
+  useReorderChannels,
+  useUpdateCreator,
 } from './useCreators';
 import styles from './CreatorDetail.css';
 
@@ -35,15 +37,79 @@ function CreatorDetail({ match }: Props) {
 
   const { data: creator, isLoading: creatorLoading } = useCreatorBySlug(slug);
   const creatorId = creator?.id ?? 0;
-  const { data: channels, isLoading: channelsLoading } =
+  const { data: channels, isLoading: channelsLoading, refetch: refetchChannels } =
     useCreatorChannels(creatorId);
   const { data: content, isLoading: contentLoading } =
     useCreatorContent(creatorId);
 
   const { deleteCreator, isDeleting } = useDeleteCreator(creatorId);
+  const { updateCreator } = useUpdateCreator(creatorId);
+  const reorderChannels = useReorderChannels(creatorId);
   const executeCommand = useExecuteCommand();
   const isRefreshing = useCommandExecuting(CommandNames.RefreshCreator);
   const isDownloading = useCommandExecuting(CommandNames.DownloadMissingContent);
+
+  // When any refresh command finishes, re-fetch channel data so server-side
+  // changes (e.g. membershipStatus) are reflected without relying on SignalR.
+  const prevRefreshingRef = useRef(false);
+  useEffect(() => {
+    if (prevRefreshingRef.current && !isRefreshing) {
+      refetchChannels();
+    }
+    prevRefreshingRef.current = isRefreshing;
+  }, [isRefreshing, refetchChannels]);
+
+  // Channel ordering — local ordered list derived from server data
+  const orderedChannels = useMemo(
+    () => [...channels].sort((a, b) => a.sortOrder - b.sortOrder),
+    [channels]
+  );
+
+  const handleMoveChannel = useCallback(
+    (idx: number, direction: -1 | 1) => {
+      const swapIdx = idx + direction;
+      if (swapIdx < 0 || swapIdx >= orderedChannels.length) return;
+
+      const updated = orderedChannels.map((ch, i) => {
+        if (i === idx) return { ...ch, sortOrder: orderedChannels[swapIdx].sortOrder };
+        if (i === swapIdx) return { ...ch, sortOrder: orderedChannels[idx].sortOrder };
+        return ch;
+      });
+
+      // If the two channels happen to have the same sortOrder, assign stable values
+      const a = updated[idx];
+      const b = updated[swapIdx];
+      if (a.sortOrder === b.sortOrder) {
+        updated[idx] = { ...a, sortOrder: swapIdx };
+        updated[swapIdx] = { ...b, sortOrder: idx };
+      }
+
+      reorderChannels([updated[idx], updated[swapIdx]]);
+    },
+    [orderedChannels, reorderChannels]
+  );
+
+  // Custom avatar edit state
+  const [avatarEditing, setAvatarEditing] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState('');
+
+  const handleAvatarEditOpen = useCallback(() => {
+    setAvatarUrl(creator?.customThumbnailUrl ?? '');
+    setAvatarEditing(true);
+  }, [creator]);
+
+  const handleAvatarSave = useCallback(() => {
+    if (!creator) return;
+    // Normalize URLs like "...icon.jpg/revision/latest?cb=..." to "...icon.jpg"
+    // by truncating at the end of the first recognized image extension.
+    const normalized = avatarUrl.replace(
+      /(\.(?:jpg|jpeg|png|gif|webp|svg))(?:\/[^?#]*)?(?:[?#].*)?$/i,
+      '$1'
+    );
+    updateCreator({ ...creator, customThumbnailUrl: normalized }, {
+      onSuccess: () => setAvatarEditing(false),
+    });
+  }, [creator, avatarUrl, updateCreator]);
 
   const [addChannelOpen, setAddChannelOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -125,13 +191,37 @@ function CreatorDetail({ match }: Props) {
       <PageContentBody>
         {/* Header */}
         <div className={styles.header}>
-          {creator.thumbnailUrl ? (
-            <img
-              className={styles.headerThumbnail}
-              src={creator.thumbnailUrl}
-              alt={creator.title}
-            />
-          ) : null}
+          <div className={styles.avatarWrap}>
+            {(creator.customThumbnailUrl || creator.thumbnailUrl) ? (
+              <img
+                className={styles.headerThumbnail}
+                src={creator.customThumbnailUrl || creator.thumbnailUrl}
+                alt={creator.title}
+              />
+            ) : null}
+            {avatarEditing ? (
+              <div className={styles.avatarEdit} onClick={(e) => e.stopPropagation()}>
+                <input
+                  className={styles.avatarInput}
+                  type="url"
+                  placeholder="Image URL (blank to clear)"
+                  value={avatarUrl}
+                  onChange={(e) => setAvatarUrl(e.target.value)}
+                  autoFocus
+                />
+                <button className={styles.avatarSaveBtn} type="button" onClick={handleAvatarSave}>
+                  Save
+                </button>
+                <button className={styles.avatarCancelBtn} type="button" onClick={() => setAvatarEditing(false)}>
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button className={styles.avatarEditBtn} type="button" onClick={handleAvatarEditOpen} title="Set custom avatar">
+                <Icon name={icons.EDIT} size={10} />
+              </button>
+            )}
+          </div>
 
           <div className={styles.headerInfo}>
             <div className={styles.headerTitle}>{creator.title}</div>
@@ -172,12 +262,37 @@ function CreatorDetail({ match }: Props) {
           </Alert>
         ) : null}
 
-        {channels.map((channel) => (
-          <CreatorChannelSection
-            key={channel.id}
-            channel={channel}
-            content={content.filter((c) => c.channelId === channel.id)}
-          />
+        {orderedChannels.map((channel, idx) => (
+          <div key={channel.id} className={styles.channelRow}>
+            {orderedChannels.length > 1 ? (
+              <div className={styles.reorderBtns}>
+                <button
+                  className={styles.reorderBtn}
+                  type="button"
+                  disabled={idx === 0}
+                  onClick={() => handleMoveChannel(idx, -1)}
+                  title="Move up"
+                >
+                  <Icon name={icons.SORT_ASCENDING} size={10} />
+                </button>
+                <button
+                  className={styles.reorderBtn}
+                  type="button"
+                  disabled={idx === orderedChannels.length - 1}
+                  onClick={() => handleMoveChannel(idx, 1)}
+                  title="Move down"
+                >
+                  <Icon name={icons.SORT_DESCENDING} size={10} />
+                </button>
+              </div>
+            ) : null}
+            <div className={styles.channelSectionWrap}>
+              <CreatorChannelSection
+                channel={channel}
+                content={content.filter((c) => c.channelId === channel.id)}
+              />
+            </div>
+          </div>
         ))}
 
         {channels.length > 0 && totalContent === 0 ? (

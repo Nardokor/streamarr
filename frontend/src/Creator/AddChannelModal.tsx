@@ -107,11 +107,11 @@ function AddChannelModal({
         watchedDefeatsIgnored: getFieldValue(activeSource?.fields ?? [], 'defaultWatchedDefeatsIgnored', true),
         autoDownload: getFieldValue(activeSource?.fields ?? [], 'defaultAutoDownload', false),
         retentionDays: getFieldValue(activeSource?.fields ?? [], 'defaultRetentionDays', 0) || null,
-        retentionVideos: getFieldValue(activeSource?.fields ?? [], 'defaultRetentionVideos', false),
-        retentionShorts: getFieldValue(activeSource?.fields ?? [], 'defaultRetentionShorts', false),
-        retentionVods: getFieldValue(activeSource?.fields ?? [], 'defaultRetentionVods', false),
-        retentionLive: getFieldValue(activeSource?.fields ?? [], 'defaultRetentionLive', false),
-        retentionExceptionWords: getFieldValue(activeSource?.fields ?? [], 'defaultRetentionExceptionWords', ''),
+        keepVideos: getFieldValue(activeSource?.fields ?? [], 'defaultKeepVideos', true),
+        keepShorts: getFieldValue(activeSource?.fields ?? [], 'defaultKeepShorts', true),
+        keepVods: getFieldValue(activeSource?.fields ?? [], 'defaultKeepVods', false),
+        keepMembers: false,
+        retentionKeepWords: getFieldValue(activeSource?.fields ?? [], 'defaultRetentionKeepWords', ''),
       },
       {
         onSuccess: () => {

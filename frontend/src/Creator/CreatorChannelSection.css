@@ -55,6 +55,15 @@
   white-space: nowrap;
 }
 
+.iconBtnMembershipActive {
+  color: #4ade80;
+}
+
+.iconBtnMembershipNone {
+  color: var(--colorDanger, #e74c3c);
+  opacity: 0.6;
+}
+
 .headerActions {
   display: flex;
   align-items: center;
@@ -134,26 +143,16 @@
 /* Settings panel */
 
 .settings {
-  padding: 12px 16px;
+  padding: 16px 16px 8px;
   background: var(--cardBackgroundColor, #222);
   border-bottom: 1px solid var(--borderColor);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
-.settingsRow {
+.checkboxGroup {
   display: flex;
-  align-items: center;
-  gap: 16px;
   flex-wrap: wrap;
-}
-
-.settingsLabel {
-  font-size: 0.8rem;
-  color: var(--textSecondary, #888);
-  width: 80px;
-  flex-shrink: 0;
+  gap: 12px;
+  padding-top: 6px;
 }
 
 .checkLabel {
@@ -168,6 +167,7 @@
 .filterInput {
   flex: 1;
   min-width: 200px;
+  max-width: 400px;
   padding: 5px 8px;
   background: var(--inputBackground, #2a2a2a);
   border: 1px solid var(--borderColor);
@@ -184,6 +184,7 @@
 .settingsActions {
   display: flex;
   gap: 8px;
+  padding: 4px 0 12px;
 }
 
 .saveBtn {
@@ -347,7 +348,13 @@
 }
 
 .settingsSection {
-  margin-bottom: 12px;
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--borderColor);
+}
+
+.settingsSection:last-of-type {
+  border-bottom: none;
 }
 
 .settingsSectionTitle {
@@ -355,8 +362,8 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--textSecondary, #888);
-  margin-bottom: 6px;
+  color: var(--textColor, #eee);
+  padding: 10px 0 4px;
 }
 
 .titleLink {
@@ -385,4 +392,61 @@
 
 .membersLocked {
   color: #6b7280;
+}
+
+.filterBar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--cardBackgroundColor, #222);
+  border-bottom: 1px solid var(--borderColor);
+}
+
+.searchInput {
+  padding: 3px 8px;
+  background: var(--inputBackground, #2a2a2a);
+  border: 1px solid var(--borderColor);
+  border-radius: 3px;
+  color: var(--textColor, #eee);
+  font-size: 0.8rem;
+  width: 160px;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--colorPrimary, #3498db);
+}
+
+.filterChips {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  background: transparent;
+  border: 1px solid var(--borderColor);
+  border-radius: 10px;
+  color: var(--textSecondary, #888);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filterChip:hover {
+  color: var(--textColor, #eee);
+  border-color: var(--textSecondary, #888);
+}
+
+.filterChipActive {
+  background: var(--colorPrimary, #3498db);
+  border-color: var(--colorPrimary, #3498db);
+  color: white;
 }

@@ -69,23 +69,23 @@ namespace Streamarr.Core.Content.Commands
                         continue;
                     }
 
-                    var typeEligible = content.ContentType switch
+                    var alwaysKeep = content.ContentType switch
                     {
-                        ContentType.Video => channel.RetentionVideos,
-                        ContentType.Short => channel.RetentionShorts,
-                        ContentType.Vod   => channel.RetentionVods,
-                        ContentType.Live  => channel.RetentionLive,
-                        _                 => false
+                        ContentType.Video => content.IsMembers ? channel.KeepMembers : channel.KeepVideos,
+                        ContentType.Short => content.IsMembers ? channel.KeepMembers : channel.KeepShorts,
+                        ContentType.Vod   => content.IsMembers ? channel.KeepMembers : channel.KeepVods,
+                        ContentType.Live  => content.IsMembers && channel.KeepMembers,
+                        _                 => true
                     };
 
-                    if (!typeEligible)
+                    if (alwaysKeep)
                     {
                         continue;
                     }
 
-                    if (IsExemptByTitle(content.Title, channel.RetentionExceptionWords))
+                    if (MatchesKeepWords(content.Title, channel.RetentionKeepWords))
                     {
-                        _logger.Debug("Content '{0}' is exempt from retention by exception words", content.Title);
+                        _logger.Debug("Content '{0}' is preserved from retention by keep words", content.Title);
                         continue;
                     }
 
@@ -101,16 +101,29 @@ namespace Streamarr.Core.Content.Commands
             }
         }
 
-        private static bool IsExemptByTitle(string title, string exceptionWords)
+        private static bool MatchesKeepWords(string title, string keepWords)
         {
-            if (string.IsNullOrWhiteSpace(exceptionWords))
+            var terms = ParseTerms(keepWords);
+            if (terms.Length == 0)
             {
                 return false;
             }
 
-            return exceptionWords
+            var lower = (title ?? string.Empty).ToLowerInvariant();
+            return terms.Any(w => lower.Contains(w));
+        }
+
+        private static string[] ParseTerms(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return Array.Empty<string>();
+            }
+
+            return input
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Any(w => title.Contains(w, StringComparison.OrdinalIgnoreCase));
+                .Where(t => t.Length > 0)
+                .ToArray();
         }
 
         private void ProcessExpiredContent(Content content, Channel channel, Creator creator)

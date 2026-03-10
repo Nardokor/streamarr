@@ -34,7 +34,7 @@ namespace Streamarr.Core.Test.Content
                 CreatorId = 1,
                 Platform = PlatformType.YouTube,
                 RetentionDays = 30,
-                RetentionVideos = true,
+                KeepVideos = false,
             };
             _content = new ContentEntity
             {
@@ -125,9 +125,9 @@ namespace Streamarr.Core.Test.Content
         }
 
         [Test]
-        public void should_skip_content_type_not_eligible_for_retention()
+        public void should_skip_content_type_marked_always_keep()
         {
-            _channel.RetentionVideos = false; // videos not subject to retention
+            _channel.KeepVideos = true; // videos always kept
 
             Execute();
 
@@ -135,9 +135,9 @@ namespace Streamarr.Core.Test.Content
         }
 
         [Test]
-        public void should_skip_content_matching_exception_words()
+        public void should_skip_content_matching_keep_words()
         {
-            _channel.RetentionExceptionWords = "keep, archive";
+            _channel.RetentionKeepWords = "keep, archive";
             _content.Title = "Archive of old stream";
 
             Execute();

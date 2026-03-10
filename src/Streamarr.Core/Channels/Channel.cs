@@ -4,6 +4,13 @@ using Streamarr.Core.Datastore;
 
 namespace Streamarr.Core.Channels
 {
+    public enum MembershipStatus
+    {
+        Unknown = 0,
+        Active  = 1,
+        None    = 2
+    }
+
     public class Channel : ModelBase
     {
         // Relationship
@@ -19,14 +26,19 @@ namespace Streamarr.Core.Channels
         public string Description { get; set; } = string.Empty;
         public string ThumbnailUrl { get; set; } = string.Empty;
 
+        // Display order (user-defined)
+        public int SortOrder { get; set; }
+
         // State
         public bool Monitored { get; set; }
         public ChannelStatusType Status { get; set; }
         public DateTime? LastInfoSync { get; set; }
+        public MembershipStatus MembershipStatus { get; set; }
+        public DateTime? LastMembershipCheck { get; set; }
 
         // Wanted filter — content types
-        public bool DownloadVideos { get; set; }
-        public bool DownloadShorts { get; set; }
+        public bool DownloadVideos { get; set; } = true;
+        public bool DownloadShorts { get; set; } = true;
         public bool DownloadVods { get; set; }
         public bool DownloadLive { get; set; } = true;
         public bool DownloadMembers { get; set; }
@@ -41,11 +53,11 @@ namespace Streamarr.Core.Channels
 
         // Retention
         public int? RetentionDays { get; set; }
-        public bool RetentionVideos { get; set; }
-        public bool RetentionShorts { get; set; }
-        public bool RetentionVods { get; set; }
-        public bool RetentionLive { get; set; }
-        public string RetentionExceptionWords { get; set; } = string.Empty;
+        public bool KeepVideos { get; set; } = true;
+        public bool KeepShorts { get; set; } = true;
+        public bool KeepVods { get; set; }
+        public bool KeepMembers { get; set; }
+        public string RetentionKeepWords { get; set; } = string.Empty;
 
         // Navigation
         public LazyLoaded<Creator> Creator { get; set; }

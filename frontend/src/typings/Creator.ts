@@ -7,6 +7,7 @@ interface Creator extends ModelBase {
   titleSlug: string;
   description: string;
   thumbnailUrl: string;
+  customThumbnailUrl: string;
   path: string;
   rootFolderPath: string;
   qualityProfileId: number;

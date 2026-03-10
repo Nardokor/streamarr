@@ -12,6 +12,8 @@ namespace Streamarr.Core.Content
         List<Content> GetWithoutFiles(int channelId);
         List<Content> GetAllMissing();
         List<Content> GetAllDownloaded();
+        List<Content> GetAllRecording();
+        List<Content> GetAllWanted();
     }
 
     public class ContentRepository : BasicRepository<Content>, IContentRepository
@@ -46,6 +48,16 @@ namespace Streamarr.Core.Content
         public List<Content> GetAllDownloaded()
         {
             return Query(c => c.Status == ContentStatus.Downloaded);
+        }
+
+        public List<Content> GetAllRecording()
+        {
+            return Query(c => c.Status == ContentStatus.Recording);
+        }
+
+        public List<Content> GetAllWanted()
+        {
+            return Query(c => c.Monitored && c.Status != ContentStatus.Unwanted);
         }
     }
 }

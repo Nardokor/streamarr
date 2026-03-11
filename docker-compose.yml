@@ -10,7 +10,7 @@ services:
       - PGID=1000
       - TZ=UTC
       # Override port or bind address if needed:
-      # - Streamarr__Server__Port=8989
+      # - Streamarr__Server__Port=8990
       # - Streamarr__Server__BindAddress=*
     volumes:
       - ./config:/config
@@ -18,5 +18,5 @@ services:
       # must match what you configure as a Root Folder in the Streamarr UI.
       - /path/to/downloads:/downloads
     ports:
-      - 8989:8989
+      - 8990:8990
     restart: unless-stopped

@@ -1,0 +1,14 @@
+services:
+  streamarr:
+    image: ghcr.io/nardokor/streamarr:latest
+    container_name: streamarr
+    environment:
+      - PUID=1000       # run: id -u
+      - PGID=1000       # run: id -g
+      - TZ=America/New_York
+    volumes:
+      - ./config:/config
+      - /path/to/your/downloads:/downloads
+    ports:
+      - 8990:8990
+    restart: unless-stopped

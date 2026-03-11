@@ -37,14 +37,19 @@ RUN apt-get update && \
         ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# Install yt-dlp binary
-RUN curl -fsSL https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
-        -o /usr/local/bin/yt-dlp && \
-    chmod +x /usr/local/bin/yt-dlp
-
 # Create app user (PUID/PGID can be remapped at runtime via entrypoint)
 RUN groupadd -g 1000 streamarr && \
     useradd -u 1000 -g streamarr -s /bin/bash -M streamarr
+
+# Install yt-dlp into a directory owned by the app user so the running
+# process can self-update (yt-dlp --update-to nightly) without root.
+RUN mkdir -p /opt/yt-dlp && \
+    curl -fsSL https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
+        -o /opt/yt-dlp/yt-dlp && \
+    chmod +x /opt/yt-dlp/yt-dlp && \
+    chown -R streamarr:streamarr /opt/yt-dlp
+
+ENV PATH="/opt/yt-dlp:${PATH}"
 
 # Copy published app and frontend UI
 COPY --from=backend-build /app /app

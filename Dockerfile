@@ -15,6 +15,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS backend-build
 WORKDIR /src
 
 COPY global.json ./
+COPY Logo/ Logo/
 COPY src/ src/
 
 RUN dotnet publish src/Streamarr.Console/Streamarr.Console.csproj \
@@ -23,6 +24,7 @@ RUN dotnet publish src/Streamarr.Console/Streamarr.Console.csproj \
         -r linux-x64 \
         --no-self-contained \
         /p:TreatWarningsAsErrors=false \
+        /p:RunAnalyzers=false \
         -o /app
 
 # ── Stage 3: Runtime ─────────────────────────────────────────────────────────

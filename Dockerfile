@@ -37,10 +37,20 @@ RUN apt-get update && \
         ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# Create app user (skip if UID/GID 1000 already exist in the base image)
-RUN groupadd -g 1000 streamarr 2>/dev/null || true && \
-    useradd -u 1000 -g streamarr -s /bin/bash -M streamarr 2>/dev/null || \
-    usermod -l streamarr -g streamarr $(getent passwd 1000 | cut -d: -f1)
+# Create streamarr group/user at 1000:1000, renaming existing entries if needed
+# (dotnet/aspnet base image ships with app:app at 1000:1000)
+RUN existing_group=$(getent group 1000 | cut -d: -f1); \
+    if [ -n "$existing_group" ]; then \
+        groupmod -n streamarr "$existing_group"; \
+    else \
+        groupadd -g 1000 streamarr; \
+    fi && \
+    existing_user=$(getent passwd 1000 | cut -d: -f1); \
+    if [ -n "$existing_user" ]; then \
+        usermod -l streamarr -g streamarr "$existing_user"; \
+    else \
+        useradd -u 1000 -g streamarr -s /bin/bash -M streamarr; \
+    fi
 
 # Install yt-dlp into a directory owned by the app user so the running
 # process can self-update (yt-dlp --update-to nightly) without root.

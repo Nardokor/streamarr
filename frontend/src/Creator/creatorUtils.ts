@@ -104,6 +104,14 @@ export function buildPlatformUrl(
       return `https://www.youtube.com/watch?v=${platformContentId}`;
     case 'twitch':
       return `https://www.twitch.tv/videos/${platformContentId}`;
+    case 'fansly':
+      return `https://fansly.com/post/${platformContentId}`;
+    case 'party':
+      return `https://party.gg/${platformContentId}`;
+    case 'patreon':
+      return `https://www.patreon.com/posts/${platformContentId}`;
+    case 'twitter':
+      return `https://x.com/i/status/${platformContentId}`;
     default:
       return null;
   }

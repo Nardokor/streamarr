@@ -141,7 +141,14 @@ function ContentDetailModal({ contentId, channelPlatform, onClose }: Props) {
               target="_blank"
               rel="noreferrer"
             >
-              Open on {channelPlatform === 'youTube' ? 'YouTube' : 'Twitch'}
+              Open on{' '}
+              {channelPlatform === 'youTube' ? 'YouTube'
+                : channelPlatform === 'twitch' ? 'Twitch'
+                : channelPlatform === 'fansly' ? 'Fansly'
+                : channelPlatform === 'party' ? 'Party'
+                : channelPlatform === 'patreon' ? 'Patreon'
+                : channelPlatform === 'twitter' ? 'Twitter/X'
+                : channelPlatform}
             </a>
           ) : null}
           <Button onPress={handleClose}>Close</Button>

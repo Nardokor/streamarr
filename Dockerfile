@@ -37,9 +37,10 @@ RUN apt-get update && \
         ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# Create app user (PUID/PGID can be remapped at runtime via entrypoint)
-RUN groupadd -g 1000 streamarr && \
-    useradd -u 1000 -g streamarr -s /bin/bash -M streamarr
+# Create app user (skip if UID/GID 1000 already exist in the base image)
+RUN groupadd -g 1000 streamarr 2>/dev/null || true && \
+    useradd -u 1000 -g streamarr -s /bin/bash -M streamarr 2>/dev/null || \
+    usermod -l streamarr -g streamarr $(getent passwd 1000 | cut -d: -f1)
 
 # Install yt-dlp into a directory owned by the app user so the running
 # process can self-update (yt-dlp --update-to nightly) without root.

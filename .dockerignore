@@ -30,7 +30,6 @@ docker-compose.yml
 
 # Docs and non-code
 *.md
-Logo/
 schemas/
 plex-agent/
 distribution/

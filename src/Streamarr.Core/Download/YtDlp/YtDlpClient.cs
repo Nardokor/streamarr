@@ -34,6 +34,7 @@ namespace Streamarr.Core.Download.YtDlp
 
         string GetVersion();
         bool IsAvailable();
+        string SelfUpdate();
         bool HasCookies { get; }
     }
 
@@ -162,6 +163,22 @@ namespace Streamarr.Core.Download.YtDlp
             }
 
             return output.Lines.Count > 0 ? output.Lines[0].Content.Trim() : string.Empty;
+        }
+
+        public string SelfUpdate()
+        {
+            // --update-to nightly pulls from the yt-dlp nightly release channel.
+            // If the binary is not writable (e.g. running as non-root in Docker),
+            // this will throw and the caller should handle gracefully.
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, "--update-to nightly");
+            var combined = string.Join('\n', System.Linq.Enumerable.Select(output.Lines, l => l.Content)).Trim();
+
+            if (output.ExitCode != 0)
+            {
+                throw new InvalidOperationException($"yt-dlp --update-to nightly failed: {combined}");
+            }
+
+            return combined;
         }
 
         public YtDlpVideoInfo GetVideoInfo(string videoUrl)

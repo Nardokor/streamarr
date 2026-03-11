@@ -25,4 +25,9 @@ usermod -o -u "$PUID" streamarr
 mkdir -p /config
 chown -R streamarr:streamarr /config
 
+# Pull latest yt-dlp nightly before handing off to the app.
+# Running as root here so we have write access to /usr/local/bin/yt-dlp.
+echo "Updating yt-dlp to latest nightly..."
+yt-dlp --update-to nightly || echo "yt-dlp update failed (no internet?), continuing with existing version"
+
 exec gosu streamarr /app/Streamarr --nobrowser --data=/config "$@"

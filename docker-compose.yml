@@ -1,0 +1,22 @@
+services:
+  streamarr:
+    image: streamarr:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: streamarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+      # Override port or bind address if needed:
+      # - Streamarr__Server__Port=8989
+      # - Streamarr__Server__BindAddress=*
+    volumes:
+      - ./config:/config
+      # Map one or more download destinations. The path inside the container
+      # must match what you configure as a Root Folder in the Streamarr UI.
+      - /path/to/downloads:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped

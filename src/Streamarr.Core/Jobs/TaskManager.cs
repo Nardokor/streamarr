@@ -8,6 +8,7 @@ using Streamarr.Core.Configuration;
 using Streamarr.Core.Configuration.Events;
 using Streamarr.Core.Content.Commands;
 using Streamarr.Core.Creators.Commands;
+using Streamarr.Core.Download.YtDlp.Commands;
 using Streamarr.Core.HealthCheck;
 using Streamarr.Core.Housekeeping;
 using Streamarr.Core.Lifecycle;
@@ -114,6 +115,12 @@ namespace Streamarr.Core.Jobs
                     {
                         Interval = 24 * 60,
                         TypeName = typeof(RetentionCleanupCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
+                        Interval = 24 * 60,
+                        TypeName = typeof(UpdateYtDlpCommand).FullName
                     },
 
                     new ScheduledTask

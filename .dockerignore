@@ -1,0 +1,55 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Build outputs
+_output/
+_temp/
+_tests/
+
+# Node modules (rebuilt in Docker)
+node_modules/
+
+# Frontend dev artifacts
+frontend/node_modules/
+**/*.js.map
+
+# Claude / IDE
+.claude/
+.vscode/
+.idea/
+
+# Docker files themselves
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Beads / project tracking
+.beads/
+
+# Docs and non-code
+*.md
+Logo/
+schemas/
+plex-agent/
+distribution/
+scripts/
+
+# Test artifacts
+docker/tests/
+
+# OS noise
+**/.DS_Store
+**/Thumbs.db
+
+# Large media files that may be present during dev
+*.mp4
+*.webm
+*.mkv
+*.m4a
+*.mp3
+
+# Secrets / local config
+**/.env
+**/appsettings.local.json

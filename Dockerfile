@@ -56,7 +56,7 @@ RUN chmod +x /entrypoint.sh
 
 VOLUME ["/config", "/downloads"]
 
-EXPOSE 8989
+EXPOSE 8990
 
 ENV TZ=UTC
 

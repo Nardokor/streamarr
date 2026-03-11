@@ -178,7 +178,7 @@ namespace Streamarr.Core.Configuration
             }
         }
 
-        public int Port => _serverOptions.Port ?? GetValueInt("Port", 8989);
+        public int Port => _serverOptions.Port ?? GetValueInt("Port", 8990);
 
         public int SslPort => _serverOptions.SslPort ?? GetValueInt("SslPort", 9898);
 

@@ -237,6 +237,10 @@ namespace Streamarr.Core.Download
                 PlatformType.Twitch when platformContentId.StartsWith("live:") =>
                     $"https://www.twitch.tv/{platformContentId["live:".Length..]}",
                 PlatformType.Twitch => $"https://www.twitch.tv/videos/{platformContentId}",
+                PlatformType.Fansly => $"https://fansly.com/post/{platformContentId}",
+                PlatformType.Party => $"https://party.gg/{platformContentId}",
+                PlatformType.Patreon => $"https://www.patreon.com/posts/{platformContentId}",
+                PlatformType.Twitter => $"https://x.com/i/status/{platformContentId}",
                 _ => throw new ArgumentException($"Unsupported platform: {platform}")
             };
         }

@@ -2,8 +2,6 @@
 
 ## Reporting a Vulnerability
 
-Please report (suspected) security vulnerabilities on Discord (preferred) to
-either markus101
-#2148 or Taloth#7357 or via email: security@sonarr.tv. You will receive a response from
-us within 72 hours. If the issue is confirmed, we will release a patch as soon
-as possible depending on complexity/severity.
+Please report security vulnerabilities by opening a [GitHub Security Advisory](https://github.com/nardokor/streamarr/security/advisories/new) rather than a public issue.
+
+You will receive a response within 72 hours. If the issue is confirmed, a patch will be released as soon as possible depending on complexity and severity.

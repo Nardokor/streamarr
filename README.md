@@ -67,6 +67,12 @@ yarn build
 
 The backend serves the frontend from `_output/UI` by default. For frontend hot-reload during development, run `yarn start` and proxy API calls to the backend port (8990).
 
+## Disclaimer
+
+Streamarr is an independent project with no affiliation with or endorsement from the [Servarr](https://github.com/Servarr) organisation or any of its projects (Sonarr, Radarr, Lidarr, etc.).
+
+This project was built with the assistance of [Claude Code](https://claude.ai/claude-code), an AI coding agent by Anthropic.
+
 ## License
 
 - [GNU GPL v3](http://www.gnu.org/licenses/gpl.html)

@@ -12,4 +12,10 @@
     <ProjectReference Include="..\Streamarr.Host\Streamarr.Host.csproj" />
     <ProjectReference Include="..\Streamarr.RuntimePatches\Streamarr.RuntimePatches.csproj" />
   </ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <ProjectReference Include="..\Streamarr.Windows\Streamarr.Windows.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!$([MSBuild]::IsOSPlatform('Windows'))">
+    <ProjectReference Include="..\Streamarr.Mono\Streamarr.Mono.csproj" />
+  </ItemGroup>
 </Project>

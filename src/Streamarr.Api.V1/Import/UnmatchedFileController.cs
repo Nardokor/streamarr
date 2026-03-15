@@ -28,10 +28,23 @@ public class UnmatchedFileController : Controller
         return _unmatchedFileService.GetByCreatorId(creatorId);
     }
 
+    [HttpPost("{id:int}/assign")]
+    [Produces("application/json")]
+    public IActionResult Assign(int id, [FromBody] AssignUnmatchedRequest request)
+    {
+        var content = _unmatchedFileService.Assign(id, request.ChannelId);
+        return Ok(content);
+    }
+
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {
         _unmatchedFileService.Delete(id);
         return Ok();
     }
+}
+
+public class AssignUnmatchedRequest
+{
+    public int ChannelId { get; set; }
 }

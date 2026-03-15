@@ -1,5 +1,6 @@
 using FluentValidation;
 using Streamarr.Core.Annotations;
+using Streamarr.Core.Channels;
 using Streamarr.Core.ThingiProvider;
 using Streamarr.Core.Validation;
 
@@ -22,6 +23,12 @@ namespace Streamarr.Core.MetadataSource
         public int LiveCheckIntervalMinutes { get; set; } = 60;
 
         // Default channel filter settings applied when a new channel is added from this source
+        [FieldDefinition(100, Label = "Download Videos", Type = FieldType.Checkbox, HelpText = "Download regular videos by default for new channels.")]
+        public bool DefaultDownloadVideos { get; set; } = true;
+
+        [FieldDefinition(101, Label = "Download Shorts", Type = FieldType.Checkbox, HelpText = "Download shorts by default for new channels.")]
+        public bool DefaultDownloadShorts { get; set; } = true;
+
         [FieldDefinition(102, Label = "Download VODs", Type = FieldType.Checkbox, HelpText = "Download archived livestreams by default for new channels.")]
         public bool DefaultDownloadVods { get; set; }
 
@@ -55,5 +62,22 @@ namespace Streamarr.Core.MetadataSource
 
         [FieldDefinition(114, Label = "Keep Words", HelpText = "Comma-separated words — matching titles are never deleted. Applied by default for new channels.")]
         public string DefaultRetentionKeepWords { get; set; } = string.Empty;
+
+        public void ApplyDefaultsTo(Channel channel)
+        {
+            channel.DownloadVideos = DefaultDownloadVideos;
+            channel.DownloadShorts = DefaultDownloadShorts;
+            channel.DownloadVods = DefaultDownloadVods;
+            channel.DownloadLive = DefaultDownloadLive;
+            channel.WatchedWords = DefaultWatchedWords;
+            channel.IgnoredWords = DefaultIgnoredWords;
+            channel.WatchedDefeatsIgnored = DefaultWatchedDefeatsIgnored;
+            channel.AutoDownload = DefaultAutoDownload;
+            channel.RetentionDays = DefaultRetentionDays == 0 ? null : (int?)DefaultRetentionDays;
+            channel.KeepVideos = DefaultKeepVideos;
+            channel.KeepShorts = DefaultKeepShorts;
+            channel.KeepVods = DefaultKeepVods;
+            channel.RetentionKeepWords = DefaultRetentionKeepWords;
+        }
     }
 }

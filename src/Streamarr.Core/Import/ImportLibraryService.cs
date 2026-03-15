@@ -203,6 +203,7 @@ namespace Streamarr.Core.Import
                 return;
             }
 
+            var defaults = (MetadataSourceSettingsBase)source.Definition.Settings;
             var metas = source.GetContentMetadataBatch(idToFile.Keys).ToList();
             var matchedIds = new HashSet<string>(metas.Select(m => m.PlatformContentId));
 
@@ -219,7 +220,7 @@ namespace Streamarr.Core.Import
                     continue;
                 }
 
-                ImportVideo(creator, meta, filePath, result);
+                ImportVideo(creator, meta, filePath, defaults, result);
             }
         }
 
@@ -260,6 +261,7 @@ namespace Streamarr.Core.Import
             Creator creator,
             ContentMetadataResult meta,
             string filePath,
+            MetadataSourceSettingsBase defaults,
             ImportLibraryResult result)
         {
             if (string.IsNullOrWhiteSpace(meta.PlatformChannelId))
@@ -270,7 +272,7 @@ namespace Streamarr.Core.Import
                 return;
             }
 
-            var channel = FindOrCreateChannel(creator, meta.PlatformChannelId, meta.PlatformChannelTitle, result);
+            var channel = FindOrCreateChannel(creator, meta.PlatformChannelId, meta.PlatformChannelTitle, defaults, result);
             var content = FindOrCreateContent(channel, meta);
 
             if (content.ContentFileId > 0)
@@ -303,6 +305,7 @@ namespace Streamarr.Core.Import
             Creator creator,
             string platformChannelId,
             string channelTitle,
+            MetadataSourceSettingsBase defaults,
             ImportLibraryResult result)
         {
             var channel = _channelService.FindByPlatformId(PlatformType.YouTube, platformChannelId);
@@ -319,20 +322,19 @@ namespace Streamarr.Core.Import
                 return channel;
             }
 
-            channel = _channelService.AddChannel(
-                new Channel
-                {
-                    CreatorId = creator.Id,
-                    Platform = PlatformType.YouTube,
-                    PlatformId = platformChannelId,
-                    PlatformUrl = $"https://www.youtube.com/channel/{platformChannelId}",
-                    Title = channelTitle ?? creator.Title,
-                    Monitored = true,
-                    DownloadVideos = true,
-                    DownloadShorts = true,
-                    DownloadVods = true,
-                },
-                creator.Title);
+            var newChannel = new Channel
+            {
+                CreatorId = creator.Id,
+                Platform = PlatformType.YouTube,
+                PlatformId = platformChannelId,
+                PlatformUrl = $"https://www.youtube.com/channel/{platformChannelId}",
+                Title = channelTitle ?? creator.Title,
+                Monitored = true,
+            };
+
+            defaults.ApplyDefaultsTo(newChannel);
+
+            channel = _channelService.AddChannel(newChannel, creator.Title);
 
             result.ChannelsCreated++;
             _logger.Debug("Created channel '{0}' (YouTube/{1})", channel.Title, platformChannelId);

@@ -342,13 +342,18 @@ namespace Streamarr.Core.Import
         private void RecordUnmatched(int creatorId, string filePath, UnmatchedFileReason reason)
         {
             var fileInfo = new FileInfo(filePath);
+
+            // Use LastWriteTimeUtc (mtime) so the date reflects the file's original age,
+            // not when the import ran. mtime is preserved by cp, rsync, and yt-dlp.
+            var fileDate = fileInfo.Exists ? fileInfo.LastWriteTimeUtc : DateTime.UtcNow;
+
             _unmatchedFileService.Add(new UnmatchedFile
             {
                 CreatorId = creatorId,
                 FilePath = filePath,
                 FileName = Path.GetFileName(filePath),
                 FileSize = fileInfo.Exists ? fileInfo.Length : 0,
-                DateFound = DateTime.UtcNow,
+                DateFound = fileDate,
                 Reason = reason,
             });
         }

@@ -5,6 +5,7 @@ using Streamarr.Common.Disk;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
 using Streamarr.Core.Creators.Events;
+using Streamarr.Core.Import;
 using Streamarr.Core.Messaging.Events;
 
 namespace Streamarr.Core.Creators
@@ -26,6 +27,7 @@ namespace Streamarr.Core.Creators
         private readonly ICreatorRepository _repo;
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
+        private readonly IUnmatchedFileRepository _unmatchedFileRepo;
         private readonly IDiskProvider _diskProvider;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
@@ -33,6 +35,7 @@ namespace Streamarr.Core.Creators
         public CreatorService(ICreatorRepository repo,
                               IChannelService channelService,
                               IContentService contentService,
+                              IUnmatchedFileRepository unmatchedFileRepo,
                               IDiskProvider diskProvider,
                               IEventAggregator eventAggregator,
                               Logger logger)
@@ -40,6 +43,7 @@ namespace Streamarr.Core.Creators
             _repo = repo;
             _channelService = channelService;
             _contentService = contentService;
+            _unmatchedFileRepo = unmatchedFileRepo;
             _diskProvider = diskProvider;
             _eventAggregator = eventAggregator;
             _logger = logger;
@@ -106,6 +110,7 @@ namespace Streamarr.Core.Creators
             }
 
             _channelService.DeleteByCreatorId(creatorId);
+            _unmatchedFileRepo.DeleteMany(_unmatchedFileRepo.GetByCreatorId(creatorId).Select(f => f.Id));
             _repo.Delete(creatorId);
             _eventAggregator.PublishEvent(new CreatorDeletedEvent(creator));
         }

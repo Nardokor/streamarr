@@ -1,0 +1,128 @@
+.section {
+  margin-top: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--tableBackground);
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.chevron {
+  font-size: 10px;
+  color: var(--textSecondary);
+  transition: transform 0.15s;
+}
+
+.chevronCollapsed {
+  transform: rotate(-90deg);
+}
+
+.sectionLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--textSecondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--textSecondary);
+}
+
+.body {
+  margin-top: 2px;
+}
+
+.empty {
+  padding: 12px;
+  font-size: 13px;
+  color: var(--textSecondary);
+}
+
+.error {
+  padding: 12px;
+  font-size: 13px;
+  color: var(--colorDanger);
+}
+
+.fileNameCell {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  flex: 1 0 200px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reasonCell {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  flex: 0 1 240px;
+  color: var(--textSecondary);
+  font-size: 13px;
+}
+
+.sizeCell {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  flex: 0 0 100px;
+  color: var(--textSecondary);
+  font-size: 13px;
+  text-align: right;
+}
+
+.dateCell {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  flex: 0 0 120px;
+  color: var(--textSecondary);
+  font-size: 13px;
+}
+
+.actionsCell {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  flex: 0 0 80px;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.channelPicker {
+  z-index: 1000;
+  background: var(--pageBackground);
+  border: 1px solid var(--borderColor);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  min-width: 180px;
+  overflow: hidden;
+}
+
+.channelOption {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: var(--textColor);
+  cursor: pointer;
+  font-size: 13px;
+  text-align: left;
+}
+
+.channelOption:hover {
+  background: var(--tableBackgroundHover);
+}

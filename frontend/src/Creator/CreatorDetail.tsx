@@ -14,6 +14,7 @@ import { useCommandExecuting, useExecuteCommand } from 'Commands/useCommands';
 import { icons, kinds } from 'Helpers/Props';
 import AddChannelModal from './AddChannelModal';
 import CreatorChannelSection from './CreatorChannelSection';
+import CreatorUnmatchedSection from './CreatorUnmatchedSection';
 import { formatDate } from './creatorUtils';
 import {
   useCreatorBySlug,
@@ -301,6 +302,8 @@ function CreatorDetail({ match }: Props) {
             one from System &rsaquo; Tasks.
           </Alert>
         ) : null}
+
+        <CreatorUnmatchedSection creatorId={creatorId} channels={channels} />
       </PageContentBody>
 
       <AddChannelModal

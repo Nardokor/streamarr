@@ -774,7 +774,9 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                     const status = getStatusLabel(item);
                     const downloadPercent = downloadProgress.get(item.id);
                     const typeLabel = getContentTypeLabel(item.contentType);
-                    const videoUrl = buildPlatformUrl(channel.platform, item.platformContentId);
+                    const videoUrl = !item.platformContentId.startsWith('local-')
+                      ? buildPlatformUrl(channel.platform, item.platformContentId)
+                      : null;
 
                     return (
                       <TableRow key={item.id} onClick={() => setSelectedContentId(item.id)} style={{ cursor: 'pointer' }}>

@@ -48,7 +48,7 @@ function ContentDetailModal({ contentId, channelPlatform, onClose }: Props) {
     onClose();
   }, [onClose]);
 
-  const videoUrl = content
+  const videoUrl = content && !content.platformContentId.startsWith('local-')
     ? buildPlatformUrl(channelPlatform, content.platformContentId)
     : null;
   const status = content ? getStatusLabel(content) : null;

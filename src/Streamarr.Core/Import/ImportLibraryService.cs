@@ -54,6 +54,7 @@ namespace Streamarr.Core.Import
         private readonly IQualityProfileService _qualityProfileService;
         private readonly IMetadataSourceFactory _metadataSourceFactory;
         private readonly INfoWriterService _nfoWriter;
+        private readonly IUnmatchedFileService _unmatchedFileService;
         private readonly Logger _logger;
 
         public ImportLibraryService(
@@ -64,6 +65,7 @@ namespace Streamarr.Core.Import
             IQualityProfileService qualityProfileService,
             IMetadataSourceFactory metadataSourceFactory,
             INfoWriterService nfoWriter,
+            IUnmatchedFileService unmatchedFileService,
             Logger logger)
         {
             _creatorService = creatorService;
@@ -73,6 +75,7 @@ namespace Streamarr.Core.Import
             _qualityProfileService = qualityProfileService;
             _metadataSourceFactory = metadataSourceFactory;
             _nfoWriter = nfoWriter;
+            _unmatchedFileService = unmatchedFileService;
             _logger = logger;
         }
 
@@ -173,7 +176,13 @@ namespace Streamarr.Core.Import
 
             _nfoWriter.WriteCreatorNfo(creator);
 
-            var idToFile = ScanVideoFiles(dirPath);
+            var (idToFile, noIdFiles) = ScanVideoFiles(dirPath);
+
+            foreach (var filePath in noIdFiles)
+            {
+                RecordUnmatched(creator.Id, filePath, UnmatchedFileReason.NoYouTubeId);
+                result.FilesNotMatched++;
+            }
 
             if (idToFile.Count == 0)
             {
@@ -185,6 +194,11 @@ namespace Streamarr.Core.Import
             if (source == null)
             {
                 _logger.Warn("No YouTube metadata source configured; cannot import files in '{0}'", dirPath);
+                foreach (var filePath in idToFile.Values)
+                {
+                    RecordUnmatched(creator.Id, filePath, UnmatchedFileReason.NoMetadataSource);
+                }
+
                 result.FilesNotMatched += idToFile.Count;
                 return;
             }
@@ -192,7 +206,11 @@ namespace Streamarr.Core.Import
             var metas = source.GetContentMetadataBatch(idToFile.Keys).ToList();
             var matchedIds = new HashSet<string>(metas.Select(m => m.PlatformContentId));
 
-            result.FilesNotMatched += idToFile.Keys.Count(id => !matchedIds.Contains(id));
+            foreach (var id in idToFile.Keys.Where(id => !matchedIds.Contains(id)))
+            {
+                RecordUnmatched(creator.Id, idToFile[id], UnmatchedFileReason.MetadataNotFound);
+                result.FilesNotMatched++;
+            }
 
             foreach (var meta in metas)
             {
@@ -205,9 +223,10 @@ namespace Streamarr.Core.Import
             }
         }
 
-        private static Dictionary<string, string> ScanVideoFiles(string dirPath)
+        private static (Dictionary<string, string> IdToFile, List<string> NoIdFiles) ScanVideoFiles(string dirPath)
         {
             var idToFile = new Dictionary<string, string>();
+            var noIdFiles = new List<string>();
 
             foreach (var file in Directory.GetFiles(dirPath))
             {
@@ -222,9 +241,13 @@ namespace Streamarr.Core.Import
                 {
                     idToFile[videoId] = file;
                 }
+                else if (videoId == null)
+                {
+                    noIdFiles.Add(file);
+                }
             }
 
-            return idToFile;
+            return (idToFile, noIdFiles);
         }
 
         private static string ExtractYouTubeId(string filename)
@@ -242,6 +265,7 @@ namespace Streamarr.Core.Import
             if (string.IsNullOrWhiteSpace(meta.PlatformChannelId))
             {
                 _logger.Warn("Content '{0}' has no channel ID; skipping", meta.PlatformContentId);
+                RecordUnmatched(creator.Id, filePath, UnmatchedFileReason.NoChannelId);
                 result.FilesNotMatched++;
                 return;
             }
@@ -313,6 +337,25 @@ namespace Streamarr.Core.Import
             result.ChannelsCreated++;
             _logger.Debug("Created channel '{0}' (YouTube/{1})", channel.Title, platformChannelId);
             return channel;
+        }
+
+        private void RecordUnmatched(int creatorId, string filePath, UnmatchedFileReason reason)
+        {
+            var fileInfo = new FileInfo(filePath);
+
+            // Use LastWriteTimeUtc (mtime) so the date reflects the file's original age,
+            // not when the import ran. mtime is preserved by cp, rsync, and yt-dlp.
+            var fileDate = fileInfo.Exists ? fileInfo.LastWriteTimeUtc : DateTime.UtcNow;
+
+            _unmatchedFileService.Add(new UnmatchedFile
+            {
+                CreatorId = creatorId,
+                FilePath = filePath,
+                FileName = Path.GetFileName(filePath),
+                FileSize = fileInfo.Exists ? fileInfo.Length : 0,
+                DateFound = fileDate,
+                Reason = reason,
+            });
         }
 
         private Content.Content FindOrCreateContent(Channel channel, ContentMetadataResult meta)

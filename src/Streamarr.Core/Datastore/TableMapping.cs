@@ -11,6 +11,7 @@ using Streamarr.Core.Creators;
 using Streamarr.Core.CustomFilters;
 using Streamarr.Core.Datastore.Converters;
 using Streamarr.Core.History;
+using Streamarr.Core.Import;
 using Streamarr.Core.Instrumentation;
 using Streamarr.Core.Jobs;
 using Streamarr.Core.Languages;
@@ -100,6 +101,8 @@ namespace Streamarr.Core.Datastore
             Mapper.Entity<MetadataSourceDefinition>("MetadataSources").RegisterModel()
                   .Ignore(d => d.ImplementationName)
                   .Ignore(d => d.Message);
+
+            Mapper.Entity<UnmatchedFile>("UnmatchedFiles").RegisterModel();
         }
 
         private static void RegisterMappers()

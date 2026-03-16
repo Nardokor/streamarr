@@ -277,16 +277,20 @@ namespace Streamarr.Core.Creators.Commands
                 // Update membership status if we probed the tab this sync.
                 if (shouldCheckMembership)
                 {
-                    var accessibleMembersItems = added.Where(c => c.IsMembers && c.IsAccessible).ToList();
-                    var hasAccessibleMembersContent = accessibleMembersItems.Any();
+                    // Re-query the full channel content so we account for both newly-added
+                    // items and previously-existing accessible members content. Using only
+                    // `added` misses the case where all members content was already in the
+                    // DB from a prior sync (added would be empty → status wrongly set to None).
+                    var allChannelContent = _contentService.GetByChannelId(channel.Id);
+                    var hasAccessibleMembersContent = allChannelContent.Any(c => c.IsMembers && c.IsAccessible);
                     var newMembershipStatus = hasAccessibleMembersContent
                         ? MembershipStatus.Active
                         : MembershipStatus.None;
 
                     _logger.Info(
-                        "Membership probe result for '{0}': {1} accessible members item(s) → status {2} → {3}",
+                        "Membership probe result for '{0}': accessible members content exists={1} → status {2} → {3}",
                         channel.Title,
-                        accessibleMembersItems.Count,
+                        hasAccessibleMembersContent,
                         channel.MembershipStatus,
                         newMembershipStatus);
 

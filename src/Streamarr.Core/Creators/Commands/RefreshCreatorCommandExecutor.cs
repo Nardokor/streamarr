@@ -241,7 +241,7 @@ namespace Streamarr.Core.Creators.Commands
                 // Update membership status if we probed the tab this sync.
                 if (shouldCheckMembership)
                 {
-                    var accessibleMembersItems = newItems.Where(i => i.IsMembers && i.IsAccessible).ToList();
+                    var accessibleMembersItems = added.Where(c => c.IsMembers && c.IsAccessible).ToList();
                     var hasAccessibleMembersContent = accessibleMembersItems.Any();
                     var newMembershipStatus = hasAccessibleMembersContent
                         ? MembershipStatus.Active

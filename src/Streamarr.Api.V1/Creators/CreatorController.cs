@@ -76,7 +76,7 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
                                      .Select(c => channelById[c.ChannelId].CreatorId)
                                      .ToHashSet();
 
-        var liveNow = _contentService.GetAllRecording()
+        var liveNow = _contentService.GetAllLiveNow()
                                      .Where(c => channelById.ContainsKey(c.ChannelId))
                                      .Select(c => channelById[c.ChannelId].CreatorId)
                                      .ToHashSet();

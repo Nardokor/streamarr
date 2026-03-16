@@ -165,6 +165,36 @@ namespace Streamarr.Core.Test.Content
             Subject.PassesFilter("Regular sponsored video", ContentType.Video, _channel).Should().BeFalse();
         }
 
+        // ── Substring / special-character matching ────────────────────────────
+
+        [Test]
+        public void should_match_watched_word_as_substring_of_title_word()
+        {
+            _channel.WatchedWords = "stream";
+
+            // "stream" is a substring of "Livestream" — should match
+            Subject.PassesFilter("Livestream Gaming Session", ContentType.Video, _channel).Should().BeTrue();
+        }
+
+        [Test]
+        public void should_match_watched_word_inside_special_character_brackets()
+        {
+            _channel.WatchedWords = "stream";
+
+            // Title wraps the word in special characters like [Stream] or 【Stream】
+            Subject.PassesFilter("[Stream] Tonight", ContentType.Video, _channel).Should().BeTrue();
+            Subject.PassesFilter("【Stream】 Gaming", ContentType.Video, _channel).Should().BeTrue();
+        }
+
+        [Test]
+        public void should_match_ignored_word_as_substring_of_title_word()
+        {
+            _channel.IgnoredWords = "sponsor";
+
+            // "sponsor" is a substring of "Sponsored"
+            Subject.PassesFilter("Sponsored cooking video", ContentType.Video, _channel).Should().BeFalse();
+        }
+
         // ── ReapplyFilterForChannel ────────────────────────────────────────────
 
         [Test]

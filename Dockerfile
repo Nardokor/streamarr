@@ -30,13 +30,15 @@ RUN dotnet publish src/Streamarr.Console/Streamarr.Console.csproj \
 # ── Stage 3: Runtime ─────────────────────────────────────────────────────────
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 
-# Install runtime dependencies: ffmpeg for yt-dlp muxing, gosu for PUID/PGID
+# Install runtime dependencies: ffmpeg for yt-dlp muxing, gosu for PUID/PGID,
+# unzip for Deno extraction
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         ffmpeg \
         curl \
         gosu \
-        ca-certificates && \
+        ca-certificates \
+        unzip && \
     rm -rf /var/lib/apt/lists/*
 
 # Create streamarr group/user at 1000:1000, renaming existing entries if needed
@@ -63,6 +65,16 @@ RUN mkdir -p /opt/yt-dlp && \
     chown -R streamarr:streamarr /opt/yt-dlp
 
 ENV PATH="/opt/yt-dlp:${PATH}"
+
+# Install Deno for yt-dlp JavaScript challenge solving (n-parameter solver).
+# yt-dlp auto-discovers Deno on PATH — no extra configuration needed.
+RUN curl -fsSL https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip \
+        -o /tmp/deno.zip && \
+    unzip -q /tmp/deno.zip -d /opt/deno && \
+    chmod +x /opt/deno/deno && \
+    rm /tmp/deno.zip
+
+ENV PATH="/opt/deno:${PATH}"
 
 # Copy published app and frontend UI
 COPY --from=backend-build /app /app

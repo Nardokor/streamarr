@@ -202,12 +202,34 @@ namespace Streamarr.Core.Download.YtDlp
         public bool IsVideoAccessible(string videoId)
         {
             var url = $"https://www.youtube.com/watch?v={videoId}";
-            var args = $"--print availability --no-playlist --socket-timeout 15{CookieArg} {Quote(url)}";
+
+            // --no-check-formats prevents yt-dlp from resolving format download URLs,
+            // which avoids triggering the n-challenge entirely. We only need the
+            // availability metadata field, not a downloadable stream.
+            var args = $"--print availability --no-playlist --no-check-formats --socket-timeout 15{CookieArg} {Quote(url)}";
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
             if (output.ExitCode != 0)
             {
                 var error = string.Join(" ", output.Error.Select(l => l.Content));
+
+                // A format/solver failure is not the same as an access denial.
+                // If the error is about formats/challenge but not membership, treat as accessible
+                // so a missing JS solver doesn't incorrectly lock out content the user can reach.
+                var lower = error.ToLowerInvariant();
+                var isAccessDenial = lower.Contains("members only") ||
+                                     lower.Contains("members-only") ||
+                                     lower.Contains("join this channel") ||
+                                     lower.Contains("requires subscription") ||
+                                     lower.Contains("private video") ||
+                                     lower.Contains("video unavailable");
+
+                if (!isAccessDenial)
+                {
+                    _logger.Warn("IsVideoAccessible({0}) — non-access error (treating as accessible): {1}", videoId, error.Split('\n')[0].Trim());
+                    return true;
+                }
+
                 _logger.Debug("IsVideoAccessible({0}) → inaccessible: {1}", videoId, error.Split('\n')[0].Trim());
                 return false;
             }

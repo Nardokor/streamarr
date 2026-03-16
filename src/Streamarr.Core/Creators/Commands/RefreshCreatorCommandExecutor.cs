@@ -229,6 +229,42 @@ namespace Streamarr.Core.Creators.Commands
                     }
                 }
 
+                // Re-probe existing inaccessible members items when checking membership.
+                // Handles the case where a user gains membership after content was first synced.
+                if (shouldCheckMembership)
+                {
+                    var existingInaccessible = _contentService.GetByChannelId(channel.Id)
+                        .Where(c => c.IsMembers && !c.IsAccessible)
+                        .ToList();
+
+                    if (existingInaccessible.Any())
+                    {
+                        _logger.Info(
+                            "Re-probing {0} previously inaccessible members video(s) for '{1}'",
+                            existingInaccessible.Count,
+                            channel.Title);
+
+                        Parallel.ForEach(
+                            existingInaccessible,
+                            new ParallelOptions { MaxDegreeOfParallelism = 4 },
+                            content =>
+                            {
+                                content.IsAccessible = source.ProbeContentAccessibility(content.PlatformContentId);
+                                _logger.Debug(
+                                    "Re-probe '{0}': {1}",
+                                    content.PlatformContentId,
+                                    content.IsAccessible ? "now accessible" : "still inaccessible");
+                            });
+
+                        foreach (var content in existingInaccessible.Where(c => c.IsAccessible))
+                        {
+                            var passes = _contentFilterService.PassesFilter(content.Title, content.ContentType, channel, isMembers: true, isAccessible: true);
+                            content.Status = passes ? ContentStatus.Missing : ContentStatus.Unwanted;
+                            _contentService.UpdateContent(content);
+                        }
+                    }
+                }
+
                 if (added.Any())
                 {
                     _logger.Info("Found {0} new item(s) for channel '{1}'", added.Count, channel.Title);

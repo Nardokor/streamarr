@@ -159,6 +159,8 @@ function SignalRListener() {
           typeof query.queryKey[0] === 'string' &&
           (query.queryKey[0] as string).startsWith('/content/creator/'),
       });
+      // Content status changes (e.g. IsAccessible, missing) affect creator stats
+      queryClient.invalidateQueries({ queryKey: ['/creator/stats'] });
       return;
     }
 
@@ -168,6 +170,8 @@ function SignalRListener() {
           typeof query.queryKey[0] === 'string' &&
           (query.queryKey[0] as string).startsWith('/channel/creator/'),
       });
+      // Channel changes (e.g. membershipStatus) affect creator stats
+      queryClient.invalidateQueries({ queryKey: ['/creator/stats'] });
       return;
     }
 

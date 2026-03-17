@@ -55,14 +55,6 @@
   white-space: nowrap;
 }
 
-.iconBtnMembershipActive {
-  color: #4ade80;
-}
-
-.iconBtnMembershipNone {
-  color: var(--colorDanger, #e74c3c);
-  opacity: 0.6;
-}
 
 .headerActions {
   display: flex;
@@ -95,6 +87,15 @@
 .iconBtnActive {
   color: var(--colorPrimary, #3498db);
   border-color: var(--colorPrimary, #3498db);
+}
+
+.iconBtnMembershipActive {
+  color: #4ade80;
+}
+
+.iconBtnMembershipNone {
+  color: var(--colorDanger, #e74c3c);
+  opacity: 0.6;
 }
 
 .deleteBtn:hover {

@@ -465,7 +465,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
             type="button"
             disabled={isRefreshing}
           >
-            <Icon name={icons.LOCK} size={12} />
+            <Icon name={channel.membershipStatus === 'active' ? icons.LOCK_OPEN : icons.LOCK} size={12} />
           </button>
 
           <button

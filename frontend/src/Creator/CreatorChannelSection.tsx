@@ -743,6 +743,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
             </div>
           ) : (
             <Table
+              className={styles.fixedTable}
               columns={columns}
               sortKey={sortKey}
               sortDirection={sortDir}
@@ -769,7 +770,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                           ) : null}
                         </TableRowCell>
 
-                        <TableRowCell onClick={(e) => e.stopPropagation()}>
+                        <TableRowCell className={styles.titleCell} onClick={(e) => e.stopPropagation()}>
                           {videoUrl ? (
                             <a
                               className={styles.titleLink}

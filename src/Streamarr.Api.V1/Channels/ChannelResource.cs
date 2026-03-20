@@ -12,6 +12,7 @@ public class ChannelResource : RestResource
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string ThumbnailUrl { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
     public int SortOrder { get; set; }
     public bool Monitored { get; set; }
     public ChannelStatusType Status { get; set; }
@@ -57,6 +58,7 @@ public static class ChannelResourceMapper
             Title = model.Title,
             Description = model.Description,
             ThumbnailUrl = model.ThumbnailUrl,
+            Category = model.Category,
             SortOrder = model.SortOrder,
             Monitored = model.Monitored,
             Status = model.Status,
@@ -93,6 +95,7 @@ public static class ChannelResourceMapper
             Title = resource.Title,
             Description = resource.Description,
             ThumbnailUrl = resource.ThumbnailUrl,
+            Category = resource.Category,
             SortOrder = resource.SortOrder,
             Monitored = resource.Monitored,
             Status = resource.Status,

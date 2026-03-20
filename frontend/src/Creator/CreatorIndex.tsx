@@ -312,7 +312,7 @@ function CreatorIndex() {
           <Table columns={columns}>
             <TableBody>
               {displayed.map((creator) => (
-                <CreatorRow key={creator.id} creator={creator} />
+                <CreatorRow key={creator.id} creator={creator} stats={statsById.get(creator.id)} />
               ))}
             </TableBody>
           </Table>

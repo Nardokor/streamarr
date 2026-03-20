@@ -48,10 +48,9 @@ namespace Streamarr.Core.Content
 
         public List<Content> GetAllLiveNow()
         {
-            return Query(c => c.ContentType == ContentType.Live &&
-                              c.Status != ContentStatus.Downloaded &&
-                              c.Status != ContentStatus.Unwanted &&
-                              c.Status != ContentStatus.Deleted);
+            // ContentType transitions from Live → Vod when a stream ends, so any
+            // remaining Live item is genuinely airing right now regardless of status.
+            return Query(c => c.ContentType == ContentType.Live);
         }
 
         public List<Content> GetAllDownloaded()

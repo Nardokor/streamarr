@@ -32,11 +32,17 @@ interface EditSourceModalProps {
 function BaseSettingsFields({
   getVal,
   onChange,
-  showVideoShorts,
+  showVideos,
+  showShorts,
+  videosLabel = 'Videos',
+  shortsLabel = 'Shorts',
 }: {
   getVal: <T>(name: string, fallback: T) => T;
   onChange: (change: InputChanged) => void;
-  showVideoShorts: boolean;
+  showVideos: boolean;
+  showShorts: boolean;
+  videosLabel?: string;
+  shortsLabel?: string;
 }) {
   return (
     <>
@@ -70,34 +76,34 @@ function BaseSettingsFields({
         />
       </FormGroup>
 
-      {showVideoShorts && (
-        <>
-          <FormGroup>
-            <FormLabel>Default: Download Videos</FormLabel>
-            <FormInputGroup
-              type={inputTypes.CHECK}
-              name="defaultDownloadVideos"
-              helpText="Include regular videos by default for new channels"
-              value={getVal('defaultDownloadVideos', true)}
-              errors={[]}
-              warnings={[]}
-              onChange={onChange}
-            />
-          </FormGroup>
+      {showVideos && (
+        <FormGroup>
+          <FormLabel>Default: Download {videosLabel}</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="defaultDownloadVideos"
+            helpText={`Include ${videosLabel.toLowerCase()} by default for new channels`}
+            value={getVal('defaultDownloadVideos', true)}
+            errors={[]}
+            warnings={[]}
+            onChange={onChange}
+          />
+        </FormGroup>
+      )}
 
-          <FormGroup>
-            <FormLabel>Default: Download Shorts</FormLabel>
-            <FormInputGroup
-              type={inputTypes.CHECK}
-              name="defaultDownloadShorts"
-              helpText="Include shorts by default for new channels"
-              value={getVal('defaultDownloadShorts', true)}
-              errors={[]}
-              warnings={[]}
-              onChange={onChange}
-            />
-          </FormGroup>
-        </>
+      {showShorts && (
+        <FormGroup>
+          <FormLabel>Default: Download {shortsLabel}</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="defaultDownloadShorts"
+            helpText={`Include ${shortsLabel.toLowerCase()} by default for new channels`}
+            value={getVal('defaultDownloadShorts', true)}
+            errors={[]}
+            warnings={[]}
+            onChange={onChange}
+          />
+        </FormGroup>
       )}
 
       <FormGroup>
@@ -316,7 +322,8 @@ function YouTubeSourceForm({
         <BaseSettingsFields
           getVal={getVal}
           onChange={handleInputChange}
-          showVideoShorts={true}
+          showVideos={true}
+          showShorts={true}
         />
 
         {testResult !== null && (
@@ -490,7 +497,10 @@ function TwitchSourceForm({
         <BaseSettingsFields
           getVal={getVal}
           onChange={handleInputChange}
-          showVideoShorts={false}
+          showVideos={true}
+          showShorts={true}
+          videosLabel="Highlights"
+          shortsLabel="Clips"
         />
 
         {testResult !== null && (

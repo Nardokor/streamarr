@@ -3,6 +3,7 @@
 interface CssExports {
   'body': string;
   'cancelBtn': string;
+  'categoryBadge': string;
   'channelTitle': string;
   'checkLabel': string;
   'checkboxGroup': string;
@@ -32,6 +33,7 @@ interface CssExports {
   'membersCell': string;
   'membersLocked': string;
   'platformBadge': string;
+  'platformBadgeTwitch': string;
   'saveBtn': string;
   'searchInput': string;
   'section': string;

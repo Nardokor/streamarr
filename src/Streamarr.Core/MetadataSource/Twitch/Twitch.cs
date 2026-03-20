@@ -181,6 +181,9 @@ namespace Streamarr.Core.MetadataSource.Twitch
                     $"Twitch user '{login}' not found.");
             }
 
+            var channelInfo = CallApi(token =>
+                _twitchApiClient.GetChannelInfo(Settings.ClientId, token, user.Id));
+
             return new ChannelMetadataResult
             {
                 Platform = PlatformType.Twitch,
@@ -188,7 +191,8 @@ namespace Streamarr.Core.MetadataSource.Twitch
                 PlatformUrl = $"https://www.twitch.tv/{user.Login}",
                 Title = user.DisplayName,
                 Description = user.Description ?? string.Empty,
-                ThumbnailUrl = user.ProfileImageUrl ?? string.Empty
+                ThumbnailUrl = user.ProfileImageUrl ?? string.Empty,
+                Category = channelInfo?.GameName ?? string.Empty
             };
         }
 
@@ -220,7 +224,16 @@ namespace Streamarr.Core.MetadataSource.Twitch
                 results.Add(MapVodToContent(video));
             }
 
-            // 2. Live stream — look up login from user ID to call /streams
+            // 2. Clips (Stories)
+            var clips = CallApi(token =>
+                _twitchApiClient.GetClips(Settings.ClientId, token, platformId, since));
+
+            foreach (var clip in clips)
+            {
+                results.Add(MapClipToContent(clip));
+            }
+
+            // 3. Live stream — look up login from user ID to call /streams
             var user = CallApi(token =>
                 _twitchApiClient.GetUserById(Settings.ClientId, token, platformId));
 
@@ -349,16 +362,45 @@ namespace Streamarr.Core.MetadataSource.Twitch
                 createdAt = parsed.ToUniversalTime();
             }
 
+            // archive = completed livestream VOD; highlight/upload = regular video content
+            var contentType = string.Equals(video.VideoType, "archive", StringComparison.OrdinalIgnoreCase)
+                ? ContentType.Vod
+                : ContentType.Video;
+
             return new ContentMetadataResult
             {
                 PlatformContentId = video.Id,
                 PlatformChannelId = video.UserId ?? string.Empty,
                 PlatformChannelTitle = video.UserName ?? video.UserLogin ?? string.Empty,
-                ContentType = ContentType.Vod,
+                ContentType = contentType,
                 Title = video.Title ?? string.Empty,
                 Description = video.Description ?? string.Empty,
                 ThumbnailUrl = TwitchApiClient.NormalizeThumbnailUrl(video.ThumbnailUrl ?? string.Empty),
                 Duration = TwitchApiClient.ParseTwitchDuration(video.Duration),
+                AirDateUtc = createdAt
+            };
+        }
+
+        private static ContentMetadataResult MapClipToContent(TwitchClip clip)
+        {
+            DateTime? createdAt = null;
+            if (DateTime.TryParse(clip.CreatedAt, null, DateTimeStyles.RoundtripKind, out var parsed))
+            {
+                createdAt = parsed.ToUniversalTime();
+            }
+
+            // Use the clip URL as PlatformContentId — yt-dlp downloads clips by URL,
+            // not by clip ID.
+            return new ContentMetadataResult
+            {
+                PlatformContentId = clip.Url ?? clip.Id,
+                PlatformChannelId = clip.BroadcasterId ?? string.Empty,
+                PlatformChannelTitle = clip.BroadcasterName ?? string.Empty,
+                ContentType = ContentType.Short,
+                Title = clip.Title ?? string.Empty,
+                Description = string.Empty,
+                ThumbnailUrl = clip.ThumbnailUrl ?? string.Empty,
+                Duration = TimeSpan.FromSeconds(clip.Duration),
                 AirDateUtc = createdAt
             };
         }

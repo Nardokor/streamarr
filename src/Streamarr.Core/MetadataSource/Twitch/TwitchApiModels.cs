@@ -100,6 +100,10 @@ namespace Streamarr.Core.MetadataSource.Twitch
         // Twitch duration format e.g. "3h4m21s", "42m10s", "1h", "10s"
         [JsonPropertyName("duration")]
         public string Duration { get; set; }
+
+        // "archive" = completed livestream VOD, "highlight" = user highlight, "upload" = uploaded video
+        [JsonPropertyName("type")]
+        public string VideoType { get; set; }
     }
 
     public class TwitchStreamsResponse
@@ -132,6 +136,59 @@ namespace Streamarr.Core.MetadataSource.Twitch
         // Contains {width}x{height} tokens — normalize before use
         [JsonPropertyName("thumbnail_url")]
         public string ThumbnailUrl { get; set; }
+    }
+
+    public class TwitchChannelInfoResponse
+    {
+        [JsonPropertyName("data")]
+        public List<TwitchChannelInfo> Data { get; set; } = new List<TwitchChannelInfo>();
+    }
+
+    public class TwitchChannelInfo
+    {
+        [JsonPropertyName("broadcaster_id")]
+        public string BroadcasterId { get; set; }
+
+        [JsonPropertyName("game_name")]
+        public string GameName { get; set; }
+    }
+
+    public class TwitchClipsResponse
+    {
+        [JsonPropertyName("data")]
+        public List<TwitchClip> Data { get; set; } = new List<TwitchClip>();
+
+        [JsonPropertyName("pagination")]
+        public TwitchPagination Pagination { get; set; }
+    }
+
+    public class TwitchClip
+    {
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
+
+        [JsonPropertyName("broadcaster_id")]
+        public string BroadcasterId { get; set; }
+
+        [JsonPropertyName("broadcaster_name")]
+        public string BroadcasterName { get; set; }
+
+        [JsonPropertyName("title")]
+        public string Title { get; set; }
+
+        [JsonPropertyName("url")]
+        public string Url { get; set; }
+
+        [JsonPropertyName("thumbnail_url")]
+        public string ThumbnailUrl { get; set; }
+
+        // Duration in seconds (float)
+        [JsonPropertyName("duration")]
+        public float Duration { get; set; }
+
+        // ISO-8601 timestamp
+        [JsonPropertyName("created_at")]
+        public string CreatedAt { get; set; }
     }
 
     public class TwitchPagination

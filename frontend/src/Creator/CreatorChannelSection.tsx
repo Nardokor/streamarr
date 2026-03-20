@@ -23,7 +23,10 @@ import {
   formatDate,
   formatDuration,
   getContentTypeLabel,
+  getShortsLabel,
   getStatusLabel,
+  getTypeLabels,
+  getVideosLabel,
 } from './creatorUtils';
 import { useDeleteChannel, useUpdateChannel } from './useCreators';
 import {
@@ -64,7 +67,7 @@ const columns: Column[] = [
   { name: 'download', label: '', isVisible: true },
 ];
 
-const TYPE_LABELS = ['Video', 'Short', 'VoD', 'Live', 'Upcoming'] as const;
+// TYPE_LABELS is now platform-aware — generated per channel via getTypeLabels()
 const STATUS_FILTERS: { kind: string; label: string }[] = [
   { kind: 'downloaded', label: 'Downloaded' },
   { kind: 'missing', label: 'Missing' },
@@ -97,8 +100,8 @@ function statusClass(kind: string): string {
 }
 
 function typeClass(label: string): string {
-  if (label === 'Video') return styles.typeVideo;
-  if (label === 'Short') return styles.typeShort;
+  if (label === 'Video' || label === 'Highlight') return styles.typeVideo;
+  if (label === 'Short' || label === 'Clip') return styles.typeShort;
   if (label === 'VoD') return styles.typeVod;
   if (label === 'Live') return styles.typeLive;
   if (label === 'Upcoming') return styles.typeUpcoming;
@@ -155,13 +158,15 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
   const { data: sources } = useMetadataSources();
   const sourceFields = getSourceFields(sources, channel.platform);
   const hasField = (name: string) => sourceFields.has(name);
+  const typeLabels = getTypeLabels(channel.platform);
+  const shortsLabel = getShortsLabel(channel.platform);
+  const videosLabel = getVideosLabel(channel.platform);
 
   const [expanded, setExpanded] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [selectedContentId, setSelectedContentId] = useState<number | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [filterMembers, setFilterMembers] = useState(false);
   const [filterTypes, setFilterTypes] = useState<Set<string>>(new Set());
   const [filterStatuses, setFilterStatuses] = useState<Set<string>>(new Set());
   const [searchText, setSearchText] = useState('');
@@ -173,7 +178,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
   const [dlShorts, setDlShorts] = useState(channel.downloadShorts);
   const [dlVods, setDlVods] = useState(channel.downloadVods);
   const [dlLive, setDlLive] = useState(channel.downloadLive);
-  const [dlMembers, setDlMembers] = useState(channel.downloadMembers);
 
   // Wanted — word filters
   const [watchedWords, setWatchedWords] = useState(channel.watchedWords);
@@ -190,7 +194,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
   const [keepVideos, setKeepVideos] = useState(channel.keepVideos);
   const [keepShorts, setKeepShorts] = useState(channel.keepShorts);
   const [keepVods, setKeepVods] = useState(channel.keepVods);
-  const [keepMembers, setKeepMembers] = useState(channel.keepMembers);
   const [retentionKeepWords, setRetentionKeepWords] = useState(channel.retentionKeepWords);
 
   useEffect(() => {
@@ -198,7 +201,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     setDlShorts(channel.downloadShorts);
     setDlVods(channel.downloadVods);
     setDlLive(channel.downloadLive);
-    setDlMembers(channel.downloadMembers);
     setWatchedWords(channel.watchedWords);
     setIgnoredWords(channel.ignoredWords);
     setWatchedDefeatsIgnored(channel.watchedDefeatsIgnored);
@@ -207,14 +209,12 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     setKeepVideos(channel.keepVideos);
     setKeepShorts(channel.keepShorts);
     setKeepVods(channel.keepVods);
-    setKeepMembers(channel.keepMembers);
     setRetentionKeepWords(channel.retentionKeepWords);
   }, [
     channel.downloadVideos,
     channel.downloadShorts,
     channel.downloadVods,
     channel.downloadLive,
-    channel.downloadMembers,
     channel.watchedWords,
     channel.ignoredWords,
     channel.watchedDefeatsIgnored,
@@ -223,7 +223,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     channel.keepVideos,
     channel.keepShorts,
     channel.keepVods,
-    channel.keepMembers,
     channel.retentionKeepWords,
   ]);
 
@@ -304,7 +303,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
         downloadShorts: dlShorts,
         downloadVods: dlVods,
         downloadLive: dlLive,
-        downloadMembers: dlMembers,
         watchedWords,
         ignoredWords,
         watchedDefeatsIgnored,
@@ -313,7 +311,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
         keepVideos,
         keepShorts,
         keepVods,
-        keepMembers,
         retentionKeepWords,
       },
       {
@@ -326,7 +323,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     dlShorts,
     dlVods,
     dlLive,
-    dlMembers,
     watchedWords,
     ignoredWords,
     watchedDefeatsIgnored,
@@ -335,7 +331,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     keepVideos,
     keepShorts,
     keepVods,
-    keepMembers,
     retentionKeepWords,
     updateChannel,
   ]);
@@ -346,7 +341,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     setDlShorts(channel.downloadShorts);
     setDlVods(channel.downloadVods);
     setDlLive(channel.downloadLive);
-    setDlMembers(channel.downloadMembers);
     setWatchedWords(channel.watchedWords);
     setIgnoredWords(channel.ignoredWords);
     setWatchedDefeatsIgnored(channel.watchedDefeatsIgnored);
@@ -355,7 +349,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     setKeepVideos(channel.keepVideos);
     setKeepShorts(channel.keepShorts);
     setKeepVods(channel.keepVods);
-    setKeepMembers(channel.keepMembers);
     setRetentionKeepWords(channel.retentionKeepWords);
     setSettingsOpen(false);
   }, [channel]);
@@ -395,13 +388,10 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
       items = items.filter((i) => i.title.toLowerCase().includes(s));
     }
     if (filterTypes.size > 0) {
-      items = items.filter((i) => filterTypes.has(getContentTypeLabel(i.contentType) ?? ''));
+      items = items.filter((i) => filterTypes.has(getContentTypeLabel(i.contentType, channel.platform) ?? ''));
     }
     if (filterStatuses.size > 0) {
       items = items.filter((i) => filterStatuses.has(getStatusLabel(i).kind));
-    }
-    if (filterMembers) {
-      items = items.filter((i) => i.isMembers);
     }
 
     items.sort((a, b) => {
@@ -417,7 +407,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
           cmp = a.title.localeCompare(b.title);
           break;
         case 'type':
-          cmp = (getContentTypeLabel(a.contentType) ?? '').localeCompare(getContentTypeLabel(b.contentType) ?? '');
+          cmp = (getContentTypeLabel(a.contentType, channel.platform) ?? '').localeCompare(getContentTypeLabel(b.contentType, channel.platform) ?? '');
           break;
         case 'duration': {
           const toSec = (d: string | null) => {
@@ -438,35 +428,38 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     });
 
     return items;
-  }, [content, searchText, filterTypes, filterStatuses, filterMembers, sortKey, sortDir]);
+  }, [content, searchText, filterTypes, filterStatuses, sortKey, sortDir]);
 
   return (
     <div className={styles.section}>
       <div className={styles.header} onClick={handleToggle}>
         <span className={`${styles.chevron} ${expanded ? '' : styles.chevronCollapsed}`}>▼</span>
-        <span className={styles.platformBadge}>{platform}</span>
+        <span className={`${styles.platformBadge} ${channel.platform === 'twitch' ? styles.platformBadgeTwitch : ''}`}>{platform}</span>
         <span className={styles.channelTitle}>{channel.title}</span>
+        {channel.category && <span className={styles.categoryBadge}>{channel.category}</span>}
 
         <span className={styles.headerActions} onClick={(e) => e.stopPropagation()}>
-          <button
-            className={`${styles.iconBtn} ${
-              channel.membershipStatus === 'active' ? styles.iconBtnMembershipActive :
-              channel.membershipStatus === 'none' ? styles.iconBtnMembershipNone :
-              ''
-            }`}
-            onClick={handleRecheckMembership}
-            title={
-              channel.membershipStatus === 'active'
-                ? `Membership active — last checked ${channel.lastMembershipCheck ? formatDate(channel.lastMembershipCheck) : 'never'}. Click to re-check.`
-                : channel.membershipStatus === 'none'
-                ? `No membership — last checked ${channel.lastMembershipCheck ? formatDate(channel.lastMembershipCheck) : 'never'}. Click to re-check.`
-                : 'Membership status unknown — click to check'
-            }
-            type="button"
-            disabled={isRefreshing}
-          >
-            <Icon name={channel.membershipStatus === 'active' ? icons.LOCK_OPEN : icons.LOCK} size={12} />
-          </button>
+          {channel.platform === 'youTube' && (
+            <button
+              className={`${styles.iconBtn} ${
+                channel.membershipStatus === 'active' ? styles.iconBtnMembershipActive :
+                channel.membershipStatus === 'none' ? styles.iconBtnMembershipNone :
+                ''
+              }`}
+              onClick={handleRecheckMembership}
+              title={
+                channel.membershipStatus === 'active'
+                  ? `Membership active — last checked ${channel.lastMembershipCheck ? formatDate(channel.lastMembershipCheck) : 'never'}. Click to re-check.`
+                  : channel.membershipStatus === 'none'
+                  ? `No membership — last checked ${channel.lastMembershipCheck ? formatDate(channel.lastMembershipCheck) : 'never'}. Click to re-check.`
+                  : 'Membership status unknown — click to check'
+              }
+              type="button"
+              disabled={isRefreshing}
+            >
+              <Icon name={channel.membershipStatus === 'active' ? icons.LOCK_OPEN : icons.LOCK} size={12} />
+            </button>
+          )}
 
           <button
             className={styles.iconBtn}
@@ -509,7 +502,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
           )}
 
           <button
-            className={`${styles.iconBtn} ${(filterOpen || filterTypes.size > 0 || filterStatuses.size > 0 || filterMembers || searchText) ? styles.iconBtnActive : ''}`}
+            className={`${styles.iconBtn} ${(filterOpen || filterTypes.size > 0 || filterStatuses.size > 0 || searchText) ? styles.iconBtnActive : ''}`}
             onClick={(e) => { e.stopPropagation(); setFilterOpen((p) => !p); }}
             title="Filter content"
             type="button"
@@ -545,13 +538,13 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                 {hasField('defaultDownloadVideos') && (
                   <label className={styles.checkLabel}>
                     <input type="checkbox" checked={dlVideos} onChange={(e) => setDlVideos(e.target.checked)} />
-                    {' '}Videos
+                    {' '}{videosLabel}
                   </label>
                 )}
                 {hasField('defaultDownloadShorts') && (
                   <label className={styles.checkLabel}>
                     <input type="checkbox" checked={dlShorts} onChange={(e) => setDlShorts(e.target.checked)} />
-                    {' '}Shorts
+                    {' '}{shortsLabel}
                   </label>
                 )}
                 <label className={styles.checkLabel}>
@@ -561,10 +554,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                 <label className={styles.checkLabel}>
                   <input type="checkbox" checked={dlLive} onChange={(e) => setDlLive(e.target.checked)} />
                   {' '}Live
-                </label>
-                <label className={styles.checkLabel}>
-                  <input type="checkbox" checked={dlMembers} onChange={(e) => setDlMembers(e.target.checked)} />
-                  {' '}Members
                 </label>
               </div>
             </FormGroup>
@@ -655,22 +644,18 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                 {hasField('defaultKeepVideos') && (
                   <label className={styles.checkLabel}>
                     <input type="checkbox" checked={keepVideos} onChange={(e) => setKeepVideos(e.target.checked)} />
-                    {' '}Videos
+                    {' '}{videosLabel}
                   </label>
                 )}
                 {hasField('defaultKeepShorts') && (
                   <label className={styles.checkLabel}>
                     <input type="checkbox" checked={keepShorts} onChange={(e) => setKeepShorts(e.target.checked)} />
-                    {' '}Shorts
+                    {' '}{shortsLabel}
                   </label>
                 )}
                 <label className={styles.checkLabel}>
                   <input type="checkbox" checked={keepVods} onChange={(e) => setKeepVods(e.target.checked)} />
                   {' '}VoDs
-                </label>
-                <label className={styles.checkLabel}>
-                  <input type="checkbox" checked={keepMembers} onChange={(e) => setKeepMembers(e.target.checked)} />
-                  {' '}Members
                 </label>
               </div>
             </FormGroup>
@@ -721,7 +706,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
             />
 
             <div className={styles.filterChips}>
-              {TYPE_LABELS.map((label) => (
+              {typeLabels.map((label) => (
                 <button
                   key={label}
                   type="button"
@@ -744,21 +729,13 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                   {label}
                 </button>
               ))}
-              <button
-                type="button"
-                className={`${styles.filterChip} ${filterMembers ? styles.filterChipActive : ''}`}
-                onClick={() => setFilterMembers((p) => !p)}
-              >
-                <Icon name={icons.LOCK_OPEN} size={10} />
-                {' '}Members
-              </button>
             </div>
           </div>
           ) : null}
 
           {displayContent.length === 0 ? (
             <div className={styles.emptyNote}>
-              {(filterTypes.size > 0 || filterStatuses.size > 0 || filterMembers || searchText)
+              {(filterTypes.size > 0 || filterStatuses.size > 0 || searchText)
                 ? 'No content matches the current filters.'
                 : 'No content synced yet for this channel.'}
             </div>
@@ -773,7 +750,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                 {displayContent.map((item) => {
                     const status = getStatusLabel(item);
                     const downloadPercent = downloadProgress.get(item.id);
-                    const typeLabel = getContentTypeLabel(item.contentType);
+                    const typeLabel = getContentTypeLabel(item.contentType, channel.platform);
                     const videoUrl = !item.platformContentId.startsWith('local-')
                       ? buildPlatformUrl(channel.platform, item.platformContentId)
                       : null;
@@ -814,7 +791,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                         </TableRowCell>
 
                         <TableRowCell className={styles.membersCell}>
-                          {item.isMembers ? (
+                          {channel.platform === 'youTube' && item.isMembers ? (
                             <Icon
                               name={item.isAccessible ? icons.LOCK_OPEN : icons.LOCK}
                               className={item.isAccessible ? styles.membersAccessible : styles.membersLocked}

@@ -168,16 +168,9 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 ? channelInfo.ChannelUrl
                 : channelInfo.UploaderUrl;
 
-            var thumbnailUrl = channelInfo.Thumbnail;
-            if (!string.IsNullOrWhiteSpace(channelId))
-            {
-                var apiThumbnail = _youTubeApiClient.GetChannelThumbnailUrl(Settings.ApiKey, channelId);
-                if (!string.IsNullOrEmpty(apiThumbnail))
-                {
-                    thumbnailUrl = apiThumbnail;
-                }
-            }
-
+            // Use yt-dlp thumbnail directly — avoids a channels.list API call (1 unit)
+            // on every sync cycle. The API thumbnail fetch is reserved for SearchCreator
+            // (one-time cost on add) where higher-quality is worth the unit.
             return new ChannelMetadataResult
             {
                 Platform = PlatformType.YouTube,
@@ -185,7 +178,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 PlatformUrl = channelPageUrl,
                 Title = channelName,
                 Description = channelInfo.Description,
-                ThumbnailUrl = thumbnailUrl
+                ThumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(channelInfo.Thumbnail)
             };
         }
 

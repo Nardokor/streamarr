@@ -32,6 +32,12 @@
   color: var(--colorWarning, #f39c12);
 }
 
+.liveLabel {
+  color: #e74c3c;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .progress {
   width: 180px;
 }

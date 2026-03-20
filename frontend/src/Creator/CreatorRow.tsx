@@ -9,14 +9,15 @@ import { useCommandExecuting, useExecuteCommand } from 'Commands/useCommands';
 import { icons } from 'Helpers/Props';
 import Creator from 'typings/Creator';
 import { formatDate, getNextLiveDate } from './creatorUtils';
-import { useCreatorContent, useUpdateCreator } from './useCreators';
+import { CreatorStats, useCreatorContent, useUpdateCreator } from './useCreators';
 import styles from './CreatorRow.css';
 
 interface CreatorRowProps {
   creator: Creator;
+  stats?: CreatorStats;
 }
 
-function CreatorRow({ creator }: CreatorRowProps) {
+function CreatorRow({ creator, stats }: CreatorRowProps) {
   const { id, title, monitored } = creator;
 
   const { data: content } = useCreatorContent(id);
@@ -79,7 +80,9 @@ function CreatorRow({ creator }: CreatorRowProps) {
       </TableRowCell>
 
       <TableRowCell className={styles.nextLive}>
-        {nextLive ? formatDate(nextLive.toISOString()) : '—'}
+        {stats?.isLiveNow
+          ? <span className={styles.liveLabel}>LIVE{stats.liveCategory ? ` · ${stats.liveCategory}` : ''}</span>
+          : nextLive ? formatDate(nextLive.toISOString()) : '—'}
       </TableRowCell>
 
       <TableRowCell className={styles.progress}>

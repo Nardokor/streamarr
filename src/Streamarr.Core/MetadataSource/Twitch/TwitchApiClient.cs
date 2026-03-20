@@ -103,7 +103,7 @@ namespace Streamarr.Core.MetadataSource.Twitch
             do
             {
                 var url = $"{HelixBaseUrl}/videos?user_id={Uri.EscapeDataString(userId)}" +
-                          "&type=archive&sort=time&first=100";
+                          "&sort=time&first=100";
                 if (cursor != null)
                 {
                     url += $"&after={Uri.EscapeDataString(cursor)}";
@@ -149,6 +149,73 @@ namespace Streamarr.Core.MetadataSource.Twitch
             while (cursor != null);
 
             _logger.Debug("Twitch GetVideos for user {0}: {1} VODs (since: {2})", userId, results.Count, since?.ToString("u") ?? "all");
+
+            return results;
+        }
+
+        // ── Channel info ───────────────────────────────────────────────────────
+
+        public TwitchChannelInfo GetChannelInfo(string clientId, string accessToken, string userId)
+        {
+            var url = $"{HelixBaseUrl}/channels?broadcaster_id={Uri.EscapeDataString(userId)}";
+            var response = FetchHelix<TwitchChannelInfoResponse>(clientId, accessToken, url);
+            return response?.Data?.FirstOrDefault();
+        }
+
+        // ── Clips ──────────────────────────────────────────────────────────────
+
+        public List<TwitchClip> GetClips(string clientId, string accessToken, string userId, DateTime? since = null)
+        {
+            var results = new List<TwitchClip>();
+            string cursor = null;
+
+            do
+            {
+                var url = $"{HelixBaseUrl}/clips?broadcaster_id={Uri.EscapeDataString(userId)}" +
+                          "&first=100";
+                if (cursor != null)
+                {
+                    url += $"&after={Uri.EscapeDataString(cursor)}";
+                }
+
+                var response = FetchHelix<TwitchClipsResponse>(clientId, accessToken, url);
+
+                if (response?.Data == null || response.Data.Count == 0)
+                {
+                    break;
+                }
+
+                var doneEarly = false;
+
+                foreach (var clip in response.Data)
+                {
+                    if (!DateTime.TryParse(clip.CreatedAt, null, DateTimeStyles.RoundtripKind, out var createdAt))
+                    {
+                        results.Add(clip);
+                        continue;
+                    }
+
+                    createdAt = createdAt.ToUniversalTime();
+
+                    if (since.HasValue && createdAt <= since.Value)
+                    {
+                        doneEarly = true;
+                        break;
+                    }
+
+                    results.Add(clip);
+                }
+
+                if (doneEarly)
+                {
+                    break;
+                }
+
+                cursor = response.Pagination?.Cursor;
+            }
+            while (cursor != null);
+
+            _logger.Debug("Twitch GetClips for user {0}: {1} clips (since: {2})", userId, results.Count, since?.ToString("u") ?? "all");
 
             return results;
         }

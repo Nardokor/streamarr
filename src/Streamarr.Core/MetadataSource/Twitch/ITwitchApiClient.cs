@@ -18,5 +18,9 @@ namespace Streamarr.Core.MetadataSource.Twitch
         TwitchVideo GetVideo(string clientId, string accessToken, string videoId);
 
         TwitchStream GetLiveStream(string clientId, string accessToken, string userLogin);
+
+        TwitchChannelInfo GetChannelInfo(string clientId, string accessToken, string userId);
+
+        List<TwitchClip> GetClips(string clientId, string accessToken, string userId, DateTime? since = null);
     }
 }

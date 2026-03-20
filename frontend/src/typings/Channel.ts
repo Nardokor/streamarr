@@ -10,6 +10,7 @@ interface Channel extends ModelBase {
   title: string;
   description: string;
   thumbnailUrl: string;
+  category: string;
   sortOrder: number;
   monitored: boolean;
   status: ChannelStatusType;

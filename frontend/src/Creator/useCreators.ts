@@ -194,6 +194,7 @@ export interface CreatorStats {
   downloadedCount: number;
   wantedCount: number;
   isLiveNow: boolean;
+  liveCategory: string;
   hasMissing: boolean;
   hasActiveMembership: boolean;
 }

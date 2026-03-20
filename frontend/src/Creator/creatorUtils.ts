@@ -1,14 +1,34 @@
 import Content, { ContentType } from 'typings/Content';
 
-export function getContentTypeLabel(contentType: ContentType): string {
+export function getContentTypeLabel(contentType: ContentType, platform?: string): string {
+  const isTwitch = platform === 'twitch';
   switch (contentType) {
-    case 'video': return 'Video';
-    case 'short': return 'Short';
+    case 'video': return isTwitch ? 'Highlight' : 'Video';
+    case 'short': return isTwitch ? 'Clip' : 'Short';
     case 'vod': return 'VoD';
     case 'live': return 'Live';
     case 'upcoming': return 'Upcoming';
     default: return '';
   }
+}
+
+export function getTypeLabels(platform?: string): string[] {
+  const isTwitch = platform === 'twitch';
+  return [
+    isTwitch ? 'Highlight' : 'Video',
+    isTwitch ? 'Clip' : 'Short',
+    'VoD',
+    'Live',
+    'Upcoming',
+  ];
+}
+
+export function getShortsLabel(platform?: string): string {
+  return platform === 'twitch' ? 'Clips' : 'Shorts';
+}
+
+export function getVideosLabel(platform?: string): string {
+  return platform === 'twitch' ? 'Highlights' : 'Videos';
 }
 
 export function formatDuration(duration: string | null): string {
@@ -103,7 +123,9 @@ export function buildPlatformUrl(
     case 'youTube':
       return `https://www.youtube.com/watch?v=${platformContentId}`;
     case 'twitch':
-      return `https://www.twitch.tv/videos/${platformContentId}`;
+      return platformContentId.startsWith('https://')
+        ? platformContentId
+        : `https://www.twitch.tv/videos/${platformContentId}`;
     case 'fansly':
       return `https://fansly.com/post/${platformContentId}`;
     case 'party':

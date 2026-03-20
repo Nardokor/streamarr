@@ -45,9 +45,11 @@ namespace Streamarr.Core.Creators
 
             var existing = _contentService.GetByChannelId(channel.Id);
 
+            // Only probe Live and Upcoming items — VODs have already transitioned and
+            // their LiveStreamingDetails never change, so including them would burn
+            // one videos.list call per 50 undownloaded VODs on every live-check cycle.
             var livestreamContent = existing
-                .Where(c => (c.ContentType == ContentType.Vod ||
-                             c.ContentType == ContentType.Live ||
+                .Where(c => (c.ContentType == ContentType.Live ||
                              c.ContentType == ContentType.Upcoming) &&
                             c.Status != ContentStatus.Downloaded &&
                             c.Status != ContentStatus.Deleted)

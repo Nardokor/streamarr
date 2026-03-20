@@ -59,7 +59,9 @@ function CreatorPoster({ creator, stats }: CreatorPosterProps) {
           />
         </div>
         {stats?.isLiveNow ? (
-          <div className={styles.liveBadge}>LIVE</div>
+          <div className={styles.liveBadge}>
+            LIVE{stats.liveCategory ? ` · ${stats.liveCategory}` : ''}
+          </div>
         ) : null}
       </div>
 

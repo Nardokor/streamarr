@@ -76,10 +76,15 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
                                      .Select(c => channelById[c.ChannelId].CreatorId)
                                      .ToHashSet();
 
-        var liveNow = _contentService.GetAllLiveNow()
-                                     .Where(c => channelById.ContainsKey(c.ChannelId))
-                                     .Select(c => channelById[c.ChannelId].CreatorId)
-                                     .ToHashSet();
+        var liveNowContent = _contentService.GetAllLiveNow()
+                                            .Where(c => channelById.ContainsKey(c.ChannelId))
+                                            .ToList();
+
+        var liveNow = liveNowContent.Select(c => channelById[c.ChannelId].CreatorId).ToHashSet();
+
+        var liveCategory = liveNowContent
+            .GroupBy(c => channelById[c.ChannelId].CreatorId)
+            .ToDictionary(g => g.Key, g => channelById[g.First().ChannelId].Category);
 
         var activeMembership = allChannels
             .Where(c => c.MembershipStatus == MembershipStatus.Active)
@@ -92,6 +97,7 @@ public class CreatorController : RestControllerWithSignalR<CreatorResource, Crea
             DownloadedCount = downloaded.GetValueOrDefault(creator.Id, 0),
             WantedCount = wanted.GetValueOrDefault(creator.Id, 0),
             IsLiveNow = liveNow.Contains(creator.Id),
+            LiveCategory = liveCategory.GetValueOrDefault(creator.Id, string.Empty),
             HasMissing = missing.Contains(creator.Id),
             HasActiveMembership = activeMembership.Contains(creator.Id),
         }).ToList();

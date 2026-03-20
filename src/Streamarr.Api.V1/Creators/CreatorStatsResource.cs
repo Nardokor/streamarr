@@ -6,6 +6,7 @@ public class CreatorStatsResource
     public int DownloadedCount { get; set; }
     public int WantedCount { get; set; }
     public bool IsLiveNow { get; set; }
+    public string LiveCategory { get; set; } = string.Empty;
     public bool HasMissing { get; set; }
     public bool HasActiveMembership { get; set; }
 }

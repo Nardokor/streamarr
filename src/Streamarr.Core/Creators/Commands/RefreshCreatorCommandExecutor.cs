@@ -120,14 +120,15 @@ namespace Streamarr.Core.Creators.Commands
                 // Unknown: always probe (first-time detection).
                 // None: only probe if the last check was > 7 days ago (or never run).
                 var membershipRecheckThreshold = TimeSpan.FromDays(7);
-                var shouldCheckMembership = channel.MembershipStatus switch
-                {
-                    MembershipStatus.Active  => true,
-                    MembershipStatus.Unknown => true,
-                    MembershipStatus.None    => channel.LastMembershipCheck == null ||
-                                               DateTime.UtcNow - channel.LastMembershipCheck.Value > membershipRecheckThreshold,
-                    _                        => false
-                };
+                var shouldCheckMembership = channel.Platform == PlatformType.YouTube &&
+                    channel.MembershipStatus switch
+                    {
+                        MembershipStatus.Active  => true,
+                        MembershipStatus.Unknown => true,
+                        MembershipStatus.None    => channel.LastMembershipCheck == null ||
+                                                   DateTime.UtcNow - channel.LastMembershipCheck.Value > membershipRecheckThreshold,
+                        _                        => false
+                    };
 
                 _logger.Info(
                     "Membership check decision for '{0}': status={1}, lastCheck={2}, shouldCheck={3}",
@@ -135,6 +136,21 @@ namespace Streamarr.Core.Creators.Commands
                     channel.MembershipStatus,
                     channel.LastMembershipCheck?.ToString("u") ?? "never",
                     shouldCheckMembership);
+
+                // Refresh channel category from platform metadata
+                try
+                {
+                    var channelMeta = source.GetChannelMetadata(channel.PlatformUrl);
+                    if (!string.IsNullOrEmpty(channelMeta.Category) && channelMeta.Category != channel.Category)
+                    {
+                        channel.Category = channelMeta.Category;
+                        _channelService.UpdateChannel(channel);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Failed to refresh category for channel '{0}'", channel.Title);
+                }
 
                 var newItems = source.GetNewContent(channel.PlatformUrl, channel.PlatformId, channel.LastInfoSync, shouldCheckMembership).ToList();
 

@@ -45,6 +45,22 @@
   flex-shrink: 0;
 }
 
+.platformBadgeTwitch {
+  background: #9146ff;
+}
+
+.categoryBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--tableRowAlternatingBackgroundColor);
+  color: var(--textColor);
+  border: 1px solid var(--borderColor);
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
 .channelTitle {
   font-weight: 600;
   font-size: 0.95rem;

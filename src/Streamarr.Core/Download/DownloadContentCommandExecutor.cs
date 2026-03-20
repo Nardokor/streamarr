@@ -236,6 +236,8 @@ namespace Streamarr.Core.Download
                 PlatformType.YouTube => $"https://www.youtube.com/watch?v={platformContentId}",
                 PlatformType.Twitch when platformContentId.StartsWith("live:") =>
                     $"https://www.twitch.tv/{platformContentId["live:".Length..]}",
+                PlatformType.Twitch when platformContentId.StartsWith("https://") =>
+                    platformContentId,
                 PlatformType.Twitch => $"https://www.twitch.tv/videos/{platformContentId}",
                 PlatformType.Fansly => $"https://fansly.com/post/{platformContentId}",
                 PlatformType.Party => $"https://party.gg/{platformContentId}",

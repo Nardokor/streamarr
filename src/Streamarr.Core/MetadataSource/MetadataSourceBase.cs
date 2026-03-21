@@ -13,6 +13,10 @@ namespace Streamarr.Core.MetadataSource
         public abstract string Name { get; }
         public abstract PlatformType Platform { get; }
 
+        // By default, livestream status checks use this source's own platform.
+        // Override to delegate to another platform (e.g. Fourthwall → YouTube).
+        public virtual PlatformType LivestreamDelegatePlatform => Platform;
+
         public Type ConfigContract => typeof(TSettings);
         public virtual ProviderMessage Message => null!;
         public virtual IEnumerable<ProviderDefinition> DefaultDefinitions => new List<ProviderDefinition>();

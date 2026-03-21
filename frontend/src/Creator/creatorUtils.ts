@@ -126,6 +126,8 @@ export function buildPlatformUrl(
       return platformContentId.startsWith('https://')
         ? platformContentId
         : `https://www.twitch.tv/videos/${platformContentId}`;
+    case 'fourthwall':
+      return `https://www.youtube.com/watch?v=${platformContentId}`;
     case 'fansly':
       return `https://fansly.com/post/${platformContentId}`;
     case 'party':

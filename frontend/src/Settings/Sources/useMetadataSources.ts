@@ -58,6 +58,20 @@ export const useTestMetadataSource = () =>
     method: 'POST',
   });
 
+export const useDeleteMetadataSource = (id: number) => {
+  const queryClient = useQueryClient();
+
+  return useApiMutation<void, void>({
+    path: `${PATH}/${id}`,
+    method: 'DELETE',
+    mutationOptions: {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: [PATH] });
+      },
+    },
+  });
+};
+
 export function getFieldValue<T>(fields: Field[], name: string, fallback: T): T {
   const field = fields.find((f) => f.name === name);
 

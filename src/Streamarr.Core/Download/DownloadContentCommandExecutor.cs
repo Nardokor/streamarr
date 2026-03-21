@@ -239,6 +239,7 @@ namespace Streamarr.Core.Download
                 PlatformType.Twitch when platformContentId.StartsWith("https://") =>
                     platformContentId,
                 PlatformType.Twitch => $"https://www.twitch.tv/videos/{platformContentId}",
+                PlatformType.Fourthwall => $"https://www.youtube.com/watch?v={platformContentId}",
                 PlatformType.Fansly => $"https://fansly.com/post/{platformContentId}",
                 PlatformType.Party => $"https://party.gg/{platformContentId}",
                 PlatformType.Patreon => $"https://www.patreon.com/posts/{platformContentId}",

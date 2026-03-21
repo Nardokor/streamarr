@@ -49,6 +49,10 @@
   background: #9146ff;
 }
 
+.platformBadgeFourthwall {
+  background: #5c3fe0;
+}
+
 .categoryBadge {
   display: inline-block;
   padding: 2px 8px;

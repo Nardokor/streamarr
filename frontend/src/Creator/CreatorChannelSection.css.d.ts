@@ -33,6 +33,7 @@ interface CssExports {
   'membersCell': string;
   'membersLocked': string;
   'platformBadge': string;
+  'platformBadgeFourthwall': string;
   'platformBadgeTwitch': string;
   'saveBtn': string;
   'searchInput': string;

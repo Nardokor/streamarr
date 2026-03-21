@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
+using Streamarr.Core.ContentFiles;
+using Streamarr.Core.Import;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.MetadataSource;
 
@@ -15,29 +18,35 @@ namespace Streamarr.Core.Creators.Commands
         private readonly ICreatorService _creatorService;
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
+        private readonly IContentFileService _contentFileService;
         private readonly IContentFilterService _contentFilterService;
         private readonly IMetadataSourceFactory _metadataSourceFactory;
         private readonly ICreatorAvatarService _creatorAvatarService;
         private readonly ILivestreamStatusService _livestreamStatusService;
+        private readonly IUnmatchedFileService _unmatchedFileService;
         private readonly Logger _logger;
 
         public RefreshCreatorCommandExecutor(
             ICreatorService creatorService,
             IChannelService channelService,
             IContentService contentService,
+            IContentFileService contentFileService,
             IContentFilterService contentFilterService,
             IMetadataSourceFactory metadataSourceFactory,
             ICreatorAvatarService creatorAvatarService,
             ILivestreamStatusService livestreamStatusService,
+            IUnmatchedFileService unmatchedFileService,
             Logger logger)
         {
             _creatorService = creatorService;
             _channelService = channelService;
             _contentService = contentService;
+            _contentFileService = contentFileService;
             _contentFilterService = contentFilterService;
             _metadataSourceFactory = metadataSourceFactory;
             _creatorAvatarService = creatorAvatarService;
             _livestreamStatusService = livestreamStatusService;
+            _unmatchedFileService = unmatchedFileService;
             _logger = logger;
         }
 
@@ -327,6 +336,7 @@ namespace Streamarr.Core.Creators.Commands
                 {
                     _logger.Info("Found {0} new item(s) for channel '{1}'", added.Count, channel.Title);
                     _contentService.AddContents(added);
+                    ResolveUnmatchedFiles(channel, added);
                 }
 
                 // Re-evaluate filter for existing Missing/Unwanted items in case channel settings changed
@@ -372,6 +382,48 @@ namespace Streamarr.Core.Creators.Commands
             catch (Exception ex)
             {
                 _logger.Warn(ex, "Failed to check livestream status for channel '{0}'", channel.Title);
+            }
+        }
+
+        private void ResolveUnmatchedFiles(Channel channel, List<Content.Content> newContent)
+        {
+            var unmatched = _unmatchedFileService.GetByCreatorId(channel.CreatorId);
+            if (!unmatched.Any())
+            {
+                return;
+            }
+
+            foreach (var content in newContent)
+            {
+                var idToken = $"[{content.PlatformContentId}]";
+                var match = unmatched.FirstOrDefault(u =>
+                    u.FileName.Contains(idToken, StringComparison.OrdinalIgnoreCase));
+
+                if (match == null)
+                {
+                    continue;
+                }
+
+                var fileInfo = new FileInfo(match.FilePath);
+                var contentFile = _contentFileService.AddContentFile(new ContentFile
+                {
+                    ContentId = content.Id,
+                    RelativePath = match.FileName,
+                    Size = match.FileSize,
+                    DateAdded = DateTime.UtcNow,
+                    OriginalFilePath = match.FilePath,
+                });
+
+                content.ContentFileId = contentFile.Id;
+                content.Status = ContentStatus.Downloaded;
+                _contentService.UpdateContent(content);
+
+                _unmatchedFileService.Delete(match.Id);
+
+                _logger.Info(
+                    "Resolved unmatched file '{0}' → content '{1}'",
+                    match.FileName,
+                    content.Title);
             }
         }
     }

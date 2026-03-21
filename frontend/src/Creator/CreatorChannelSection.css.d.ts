@@ -23,6 +23,7 @@ interface CssExports {
   'filterChipActive': string;
   'filterChips': string;
   'filterInput': string;
+  'fixedTable': string;
   'header': string;
   'headerActions': string;
   'iconBtn': string;
@@ -53,6 +54,7 @@ interface CssExports {
   'statusQueued': string;
   'statusRecording': string;
   'statusUnmonitored': string;
+  'titleCell': string;
   'titleLink': string;
   'typeBadge': string;
   'typeLive': string;

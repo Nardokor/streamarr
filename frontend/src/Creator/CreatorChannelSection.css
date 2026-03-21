@@ -1,9 +1,10 @@
 .section {
-  margin-bottom: 0;
+  margin-bottom: 12px;
   border: 1px solid var(--borderColor);
   border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 12px;
+  /* clip clips children to the border-radius without blocking child scroll containers */
+  overflow: clip;
+  max-width: 100%;
 }
 
 .header {
@@ -385,6 +386,29 @@
   letter-spacing: 0.06em;
   color: var(--textColor, #eee);
   padding: 10px 0 4px;
+}
+
+.fixedTable {
+  table-layout: fixed;
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+/* Pin every column except title (2nd) to its minimum content width.
+   Title takes all remaining space and truncates with ellipsis. */
+.fixedTable th:nth-child(1) { width: 80px; }   /* thumbnail */
+.fixedTable th:nth-child(3) { width: 90px; }   /* type */
+.fixedTable th:nth-child(4) { width: 28px; }   /* members lock icon */
+.fixedTable th:nth-child(5) { width: 95px; }   /* airDate */
+.fixedTable th:nth-child(6) { width: 80px; }   /* duration */
+.fixedTable th:nth-child(7) { width: 130px; }  /* status */
+.fixedTable th:nth-child(8) { width: 36px; }   /* download */
+
+.titleCell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .titleLink {

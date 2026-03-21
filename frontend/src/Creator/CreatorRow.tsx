@@ -54,10 +54,10 @@ function CreatorRow({ creator, stats }: CreatorRowProps) {
   return (
     <TableRow>
       <TableRowCell className={styles.thumbnail}>
-        {creator.thumbnailUrl ? (
+        {(creator.customThumbnailUrl || creator.thumbnailUrl) ? (
           <img
             className={styles.thumbnailImg}
-            src={creator.thumbnailUrl}
+            src={creator.customThumbnailUrl || creator.thumbnailUrl}
             alt={title}
           />
         ) : (

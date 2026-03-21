@@ -46,7 +46,7 @@ function CreatorPoster({ creator, stats }: CreatorPosterProps) {
       onKeyDown={(e) => e.key === 'Enter' && handlePress()}
     >
       <div className={styles.thumbnailContainer}>
-        {thumbnailUrl ? (
+        {(creator.customThumbnailUrl || thumbnailUrl) ? (
           <img className={styles.thumbnail} src={creator.customThumbnailUrl || thumbnailUrl} alt={title} />
         ) : (
           <div className={styles.thumbnailPlaceholder}>🎬</div>

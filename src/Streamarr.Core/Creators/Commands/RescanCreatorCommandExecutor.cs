@@ -7,6 +7,7 @@ using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
 using Streamarr.Core.ContentFiles;
+using Streamarr.Core.Import;
 using Streamarr.Core.Messaging.Commands;
 
 namespace Streamarr.Core.Creators.Commands
@@ -26,6 +27,7 @@ namespace Streamarr.Core.Creators.Commands
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
         private readonly IContentFileService _contentFileService;
+        private readonly IUnmatchedFileService _unmatchedFileService;
         private readonly Logger _logger;
 
         public RescanCreatorCommandExecutor(
@@ -33,12 +35,14 @@ namespace Streamarr.Core.Creators.Commands
             IChannelService channelService,
             IContentService contentService,
             IContentFileService contentFileService,
+            IUnmatchedFileService unmatchedFileService,
             Logger logger)
         {
             _creatorService = creatorService;
             _channelService = channelService;
             _contentService = contentService;
             _contentFileService = contentFileService;
+            _unmatchedFileService = unmatchedFileService;
             _logger = logger;
         }
 
@@ -67,7 +71,22 @@ namespace Streamarr.Core.Creators.Commands
 
             _logger.Info("Scanning local files for creator '{0}' at '{1}'", creator.Title, creator.Path);
 
-            var idToFile = ScanVideoFiles(creator.Path);
+            ScanVideoFiles(creator.Path, out var idToFile, out var noIdFiles);
+
+            // Files with no recognisable ID go straight to unmatched
+            foreach (var filePath in noIdFiles)
+            {
+                var fileInfo = new FileInfo(filePath);
+                _unmatchedFileService.Add(new UnmatchedFile
+                {
+                    CreatorId = creator.Id,
+                    FilePath = filePath,
+                    FileName = Path.GetFileName(filePath),
+                    FileSize = fileInfo.Length,
+                    DateFound = fileInfo.LastWriteTimeUtc,
+                    Reason = UnmatchedFileReason.NoYouTubeId,
+                });
+            }
 
             if (idToFile.Count == 0)
             {
@@ -78,6 +97,9 @@ namespace Streamarr.Core.Creators.Commands
             _logger.Info("Found {0} video file(s) with IDs for '{1}'", idToFile.Count, creator.Title);
 
             var channels = _channelService.GetByCreatorId(creator.Id);
+
+            // Track which IDs were matched so the rest can be recorded as unmatched
+            var matchedIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var linked = 0;
 
             foreach (var channel in channels)
@@ -110,17 +132,50 @@ namespace Streamarr.Core.Creators.Commands
                     content.Status = ContentStatus.Downloaded;
                     _contentService.UpdateContent(content);
 
+                    matchedIds.Add(content.PlatformContentId);
                     linked++;
                     _logger.Debug("Linked '{0}' to content '{1}'", filePath, content.Title);
                 }
             }
 
-            _logger.Info("Rescan complete for '{0}': {1} file(s) linked", creator.Title, linked);
+            // Files whose ID didn't match any known content record go to unmatched
+            var unmatched = 0;
+            foreach (var kvp in idToFile)
+            {
+                if (matchedIds.Contains(kvp.Key))
+                {
+                    continue;
+                }
+
+                var fileInfo = new FileInfo(kvp.Value);
+                _unmatchedFileService.Add(new UnmatchedFile
+                {
+                    CreatorId = creator.Id,
+                    FilePath = kvp.Value,
+                    FileName = Path.GetFileName(kvp.Value),
+                    FileSize = fileInfo.Length,
+                    DateFound = fileInfo.LastWriteTimeUtc,
+                    Reason = UnmatchedFileReason.MetadataNotFound,
+                });
+
+                unmatched++;
+                _logger.Debug("No content record for ID '{0}'; recorded as unmatched", kvp.Key);
+            }
+
+            _logger.Info(
+                "Rescan complete for '{0}': {1} linked, {2} unmatched",
+                creator.Title,
+                linked,
+                unmatched + noIdFiles.Count);
         }
 
-        private static Dictionary<string, string> ScanVideoFiles(string dirPath)
+        private static void ScanVideoFiles(
+            string dirPath,
+            out Dictionary<string, string> idToFile,
+            out List<string> noIdFiles)
         {
-            var idToFile = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            idToFile = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            noIdFiles = new List<string>();
 
             foreach (var file in Directory.GetFiles(dirPath))
             {
@@ -133,6 +188,7 @@ namespace Streamarr.Core.Creators.Commands
                 var match = YouTubeIdRegex.Match(Path.GetFileName(file));
                 if (!match.Success)
                 {
+                    noIdFiles.Add(file);
                     continue;
                 }
 
@@ -142,8 +198,6 @@ namespace Streamarr.Core.Creators.Commands
                     idToFile[videoId] = file;
                 }
             }
-
-            return idToFile;
         }
     }
 }

@@ -49,6 +49,7 @@ function CreatorDetail({ match }: Props) {
   const executeCommand = useExecuteCommand();
   const isRefreshing = useCommandExecuting(CommandNames.RefreshCreator);
   const isDownloading = useCommandExecuting(CommandNames.DownloadMissingContent);
+  const isRescanning = useCommandExecuting(CommandNames.RescanCreator);
 
   // When any refresh command finishes, re-fetch channel data so server-side
   // changes (e.g. membershipStatus) are reflected without relying on SignalR.
@@ -123,6 +124,10 @@ function CreatorDetail({ match }: Props) {
     executeCommand({ name: CommandNames.DownloadMissingContent, creatorId });
   }, [executeCommand, creatorId]);
 
+  const handleRescan = useCallback(() => {
+    executeCommand({ name: CommandNames.RescanCreator, creatorId });
+  }, [executeCommand, creatorId]);
+
   const handleDeleteConfirm = useCallback(() => {
     deleteCreator(undefined, {
       onSuccess: () => {
@@ -171,6 +176,13 @@ function CreatorDetail({ match }: Props) {
             iconName={icons.DOWNLOAD}
             isSpinning={isDownloading}
             onPress={handleDownloadMissing}
+          />
+
+          <PageToolbarButton
+            label="Scan Local Files"
+            iconName={icons.SEARCH}
+            isSpinning={isRescanning}
+            onPress={handleRescan}
           />
 
           <PageToolbarButton

@@ -1,5 +1,7 @@
 .section {
   margin-top: 16px;
+  overflow: clip;
+  max-width: 100%;
 }
 
 .header {
@@ -53,10 +55,31 @@
   color: var(--colorDanger);
 }
 
+.fixedTable {
+  table-layout: fixed;
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+/* Pin fixed columns; filename (1st) takes all remaining space */
+.fixedTable th:nth-child(2) { width: 130px; }  /* reason */
+.fixedTable th:nth-child(3) { width: 70px; }   /* size */
+.fixedTable th:nth-child(4) { width: 90px; }   /* date */
+.fixedTable th:nth-child(5) { width: 64px; }   /* actions */
+
+.thCell {
+  padding: 8px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--textSecondary);
+  border-bottom: 1px solid var(--borderColor);
+}
+
 .fileNameCell {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
-  flex: 1 0 200px;
   font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -66,7 +89,6 @@
 .reasonCell {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
-  flex: 0 1 240px;
   color: var(--textSecondary);
   font-size: 13px;
 }
@@ -74,7 +96,6 @@
 .sizeCell {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
-  flex: 0 0 100px;
   color: var(--textSecondary);
   font-size: 13px;
   text-align: right;
@@ -83,15 +104,12 @@
 .dateCell {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
-  flex: 0 0 120px;
   color: var(--textSecondary);
   font-size: 13px;
 }
 
 .actionsCell {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
-
-  flex: 0 0 80px;
 }
 
 .actionButtons {

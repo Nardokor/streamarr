@@ -37,11 +37,18 @@ namespace Streamarr.Core.Creators
 
         public void RefreshLivestreamStatuses(Channel channel)
         {
-            var source = _metadataSourceFactory.GetByPlatform(channel.Platform);
-            if (source == null)
+            var channelSource = _metadataSourceFactory.GetByPlatform(channel.Platform);
+            if (channelSource == null)
             {
                 return;
             }
+
+            // If the channel's content IDs belong to a different platform (e.g. Fourthwall
+            // hosts unlisted YouTube videos), use that platform's source for status checks.
+            var delegatePlatform = channelSource.LivestreamDelegatePlatform;
+            var source = delegatePlatform != channel.Platform
+                ? (_metadataSourceFactory.GetByPlatform(delegatePlatform) ?? channelSource)
+                : channelSource;
 
             var existing = _contentService.GetByChannelId(channel.Id);
 

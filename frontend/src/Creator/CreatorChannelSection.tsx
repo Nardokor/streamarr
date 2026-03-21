@@ -40,6 +40,7 @@ import styles from './CreatorChannelSection.css';
 const PLATFORM_IMPLEMENTATION: Record<string, string> = {
   youTube: 'YouTube',
   twitch: 'Twitch',
+  fourthwall: 'Fourthwall',
 };
 
 function getSourceFields(
@@ -79,6 +80,7 @@ function platformLabel(platform: string): string {
   const map: Record<string, string> = {
     youTube: 'YouTube',
     twitch: 'Twitch',
+    fourthwall: 'Fourthwall',
   };
   return map[platform] ?? platform;
 }
@@ -434,7 +436,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     <div className={styles.section}>
       <div className={styles.header} onClick={handleToggle}>
         <span className={`${styles.chevron} ${expanded ? '' : styles.chevronCollapsed}`}>▼</span>
-        <span className={`${styles.platformBadge} ${channel.platform === 'twitch' ? styles.platformBadgeTwitch : ''}`}>{platform}</span>
+        <span className={`${styles.platformBadge} ${channel.platform === 'twitch' ? styles.platformBadgeTwitch : channel.platform === 'fourthwall' ? styles.platformBadgeFourthwall : ''}`}>{platform}</span>
         <span className={styles.channelTitle}>{channel.title}</span>
         {channel.category && <span className={styles.categoryBadge}>{channel.category}</span>}
 

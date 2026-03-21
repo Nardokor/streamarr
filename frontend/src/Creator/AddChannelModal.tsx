@@ -33,6 +33,11 @@ const PLATFORMS = [
     label: 'Twitch',
     placeholder: 'Twitch username or channel URL',
   },
+  {
+    id: 'fourthwall',
+    label: 'Fourthwall',
+    placeholder: 'Full site URL (e.g. https://namijifreesia.party/)',
+  },
 ] as const;
 
 function AddChannelModal({
@@ -47,10 +52,14 @@ function AddChannelModal({
   const twitchSource = (sources ?? []).find(
     (s) => s.implementation === 'Twitch' && s.enable
   );
+  const fourthwallSource = (sources ?? []).find(
+    (s) => s.implementation === 'Fourthwall' && s.enable
+  );
 
   const configuredPlatforms = PLATFORMS.filter((p) => {
     if (p.id === 'youtube') return !!youtubeSource;
     if (p.id === 'twitch') return !!twitchSource;
+    if (p.id === 'fourthwall') return !!fourthwallSource;
     return false;
   });
 
@@ -66,7 +75,11 @@ function AddChannelModal({
     (configuredPlatforms.length > 0 ? configuredPlatforms[0] : null);
 
   const activeSource =
-    activePlatform?.id === 'twitch' ? twitchSource : youtubeSource;
+    activePlatform?.id === 'twitch'
+      ? twitchSource
+      : activePlatform?.id === 'fourthwall'
+        ? fourthwallSource
+        : youtubeSource;
 
   const { data: lookupResult, isFetching: isSearching } =
     useCreatorLookup(searchTerm, activePlatform?.id);

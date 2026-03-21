@@ -1,10 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import IconButton from 'Components/Link/IconButton';
-import Table from 'Components/Table/Table';
-import TableBody from 'Components/Table/TableBody';
-import TableHeader from 'Components/Table/TableHeader';
-import TableHeaderCell from 'Components/Table/TableHeaderCell';
 import TableRow from 'Components/Table/TableRow';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import { icons } from 'Helpers/Props';
@@ -160,21 +156,22 @@ function CreatorUnmatchedSection({ creatorId, channels }: CreatorUnmatchedSectio
 
       {expanded ? (
         <div className={styles.body}>
-          <Table columns={[]}>
-            <TableHeader>
-              <TableHeaderCell name="fileName" label="File" />
-              <TableHeaderCell name="reason" label="Reason" />
-              <TableHeaderCell name="size" label="Size" />
-              <TableHeaderCell name="dateFound" label="Date" />
-              <TableHeaderCell name="actions" />
-            </TableHeader>
-
-            <TableBody>
+          <table className={styles.fixedTable}>
+            <thead>
+              <tr>
+                <th className={styles.thCell}>File</th>
+                <th className={styles.thCell}>Reason</th>
+                <th className={styles.thCell}>Size</th>
+                <th className={styles.thCell}>Date</th>
+                <th className={styles.thCell} />
+              </tr>
+            </thead>
+            <tbody>
               {files.map((file) => (
                 <UnmatchedFileRow key={file.id} file={file} channels={channels} />
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
       ) : null}
     </div>

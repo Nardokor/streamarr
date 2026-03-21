@@ -13,11 +13,13 @@ interface CssExports {
   'empty': string;
   'error': string;
   'fileNameCell': string;
+  'fixedTable': string;
   'header': string;
   'reasonCell': string;
   'section': string;
   'sectionLabel': string;
   'sizeCell': string;
+  'thCell': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

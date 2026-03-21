@@ -11,6 +11,11 @@ namespace Streamarr.Core.MetadataSource
     {
         PlatformType Platform { get; }
 
+        // When a platform's content IDs are native to a different platform (e.g. Fourthwall
+        // hosts unlisted YouTube videos), this returns that platform so callers can route
+        // livestream status checks through the correct source.  Defaults to Platform.
+        PlatformType LivestreamDelegatePlatform { get; }
+
         // Creator / channel discovery
         CreatorMetadataResult SearchCreator(string query);
         ChannelMetadataResult GetChannelMetadata(string platformUrl);

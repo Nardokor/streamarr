@@ -8,6 +8,7 @@ namespace Streamarr.Core.Channels
         Fansly = 3,
         Party = 4,
         Patreon = 5,
-        Twitter = 6
+        Twitter = 6,
+        Fourthwall = 7
     }
 }

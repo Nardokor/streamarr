@@ -22,7 +22,7 @@ namespace Streamarr.Core.ThingiProvider
 
         public string Implementation { get; set; }
         public string ConfigContract { get; set; }
-        public virtual bool Enable { get; set; }
+        public virtual bool Enable { get; set; } = true;
 
         [MemberwiseEqualityIgnore]
         public ProviderMessage Message { get; set; }

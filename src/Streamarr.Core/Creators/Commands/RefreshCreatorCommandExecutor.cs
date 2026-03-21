@@ -152,13 +152,55 @@ namespace Streamarr.Core.Creators.Commands
                     _logger.Warn(ex, "Failed to refresh category for channel '{0}'", channel.Title);
                 }
 
-                var newItems = source.GetNewContent(channel.PlatformUrl, channel.PlatformId, channel.LastInfoSync, shouldCheckMembership).ToList();
+                // Pass null as since when the channel has no content yet so sources
+                // do a full backfill rather than applying an incremental cutoff from
+                // a previous sync that may have returned 0 items (e.g. due to a bug).
+                var hasExistingContent = _contentService.GetByChannelId(channel.Id).Any();
+                var sinceCutoff = hasExistingContent ? channel.LastInfoSync : null;
+                var newItems = source.GetNewContent(channel.PlatformUrl, channel.PlatformId, sinceCutoff, shouldCheckMembership).ToList();
 
                 _logger.Info(
                     "GetNewContent returned {0} item(s) for '{1}' ({2} members item(s))",
                     newItems.Count,
                     channel.Title,
                     newItems.Count(i => i.IsMembers));
+
+                // If this source delegates livestream checks to another platform
+                // (e.g. Fourthwall content IDs are YouTube IDs), batch-check the
+                // delegate source now so items are stored with the correct ContentType
+                // (Upcoming/Live) rather than always Video.
+                var delegatePlatform = source.LivestreamDelegatePlatform;
+                if (delegatePlatform != source.Platform && newItems.Any())
+                {
+                    var delegateSource = _metadataSourceFactory.GetByPlatform(delegatePlatform);
+                    if (delegateSource != null)
+                    {
+                        try
+                        {
+                            var ids = newItems.Select(i => i.PlatformContentId).ToList();
+                            var delegateMeta = delegateSource.GetContentMetadataBatch(ids)
+                                .ToDictionary(m => m.PlatformContentId);
+
+                            foreach (var item in newItems)
+                            {
+                                if (delegateMeta.TryGetValue(item.PlatformContentId, out var meta) &&
+                                    (meta.ContentType == ContentType.Live || meta.ContentType == ContentType.Upcoming))
+                                {
+                                    item.ContentType = meta.ContentType;
+                                    if (meta.AirDateUtc.HasValue)
+                                    {
+                                        item.AirDateUtc = meta.AirDateUtc;
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Warn(ex, "Failed to batch-check livestream types via {0} delegate for '{1}'", delegatePlatform, channel.Title);
+                        }
+                    }
+                }
+
                 var added = new List<Content.Content>();
                 var backfillItems = new List<Content.Content>();
 

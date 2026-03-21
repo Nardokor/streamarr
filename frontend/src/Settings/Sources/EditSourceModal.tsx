@@ -12,11 +12,14 @@ import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import { inputTypes } from 'Helpers/Props';
 import { InputChanged } from 'typings/inputs';
+import { kinds } from 'Helpers/Props';
 import {
   MetadataSourceResource,
   applyFieldChanges,
   getFieldValue,
   useCreateMetadataSource,
+  useDeleteMetadataSource,
+  useMetadataSources,
   useTestMetadataSource,
   useUpdateMetadataSource,
 } from './useMetadataSources';
@@ -34,6 +37,10 @@ function BaseSettingsFields({
   onChange,
   showVideos,
   showShorts,
+  showVods = true,
+  showLive = true,
+  showLiveCheckInterval = true,
+  showFilters = true,
   videosLabel = 'Videos',
   shortsLabel = 'Shorts',
 }: {
@@ -41,6 +48,10 @@ function BaseSettingsFields({
   onChange: (change: InputChanged) => void;
   showVideos: boolean;
   showShorts: boolean;
+  showVods?: boolean;
+  showLive?: boolean;
+  showLiveCheckInterval?: boolean;
+  showFilters?: boolean;
   videosLabel?: string;
   shortsLabel?: string;
 }) {
@@ -61,20 +72,22 @@ function BaseSettingsFields({
         />
       </FormGroup>
 
-      <FormGroup>
-        <FormLabel>Live Check Interval (minutes)</FormLabel>
-        <FormInputGroup
-          type={inputTypes.NUMBER}
-          name="liveCheckIntervalMinutes"
-          helpText="How often to check livestream status (min 5, max 1440)"
-          min={5}
-          max={1440}
-          value={getVal('liveCheckIntervalMinutes', 60)}
-          errors={[]}
-          warnings={[]}
-          onChange={onChange}
-        />
-      </FormGroup>
+      {showLiveCheckInterval && (
+        <FormGroup>
+          <FormLabel>Live Check Interval (minutes)</FormLabel>
+          <FormInputGroup
+            type={inputTypes.NUMBER}
+            name="liveCheckIntervalMinutes"
+            helpText="How often to check livestream status (min 5, max 1440)"
+            min={5}
+            max={1440}
+            value={getVal('liveCheckIntervalMinutes', 60)}
+            errors={[]}
+            warnings={[]}
+            onChange={onChange}
+          />
+        </FormGroup>
+      )}
 
       {showVideos && (
         <FormGroup>
@@ -106,83 +119,91 @@ function BaseSettingsFields({
         </FormGroup>
       )}
 
-      <FormGroup>
-        <FormLabel>Default: Download VoDs</FormLabel>
-        <FormInputGroup
-          type={inputTypes.CHECK}
-          name="defaultDownloadVods"
-          helpText="Include past livestreams by default for new channels"
-          value={getVal('defaultDownloadVods', true)}
-          errors={[]}
-          warnings={[]}
-          onChange={onChange}
-        />
-      </FormGroup>
+      {showVods && (
+        <FormGroup>
+          <FormLabel>Default: Download VoDs</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="defaultDownloadVods"
+            helpText="Include past livestreams by default for new channels"
+            value={getVal('defaultDownloadVods', true)}
+            errors={[]}
+            warnings={[]}
+            onChange={onChange}
+          />
+        </FormGroup>
+      )}
 
-      <FormGroup>
-        <FormLabel>Default: Download Live</FormLabel>
-        <FormInputGroup
-          type={inputTypes.CHECK}
-          name="defaultDownloadLive"
-          helpText="Record active livestreams by default for new channels"
-          value={getVal('defaultDownloadLive', false)}
-          errors={[]}
-          warnings={[]}
-          onChange={onChange}
-        />
-      </FormGroup>
+      {showLive && (
+        <FormGroup>
+          <FormLabel>Default: Download Live</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="defaultDownloadLive"
+            helpText="Record active livestreams by default for new channels"
+            value={getVal('defaultDownloadLive', false)}
+            errors={[]}
+            warnings={[]}
+            onChange={onChange}
+          />
+        </FormGroup>
+      )}
 
-      <FormGroup>
-        <FormLabel>Default: Watched Words</FormLabel>
-        <FormInputGroup
-          type={inputTypes.TEXT}
-          name="defaultWatchedWords"
-          helpText="word1, word2 … — only matching content is wanted (blank = all)"
-          value={getVal('defaultWatchedWords', '')}
-          errors={[]}
-          warnings={[]}
-          onChange={onChange}
-        />
-      </FormGroup>
+      {showFilters && (
+        <>
+          <FormGroup>
+            <FormLabel>Default: Watched Words</FormLabel>
+            <FormInputGroup
+              type={inputTypes.TEXT}
+              name="defaultWatchedWords"
+              helpText="word1, word2 … — only matching content is wanted (blank = all)"
+              value={getVal('defaultWatchedWords', '')}
+              errors={[]}
+              warnings={[]}
+              onChange={onChange}
+            />
+          </FormGroup>
 
-      <FormGroup>
-        <FormLabel>Default: Ignored Words</FormLabel>
-        <FormInputGroup
-          type={inputTypes.TEXT}
-          name="defaultIgnoredWords"
-          helpText="word1, word2 … — matching content is unwanted (blank = none)"
-          value={getVal('defaultIgnoredWords', '')}
-          errors={[]}
-          warnings={[]}
-          onChange={onChange}
-        />
-      </FormGroup>
+          <FormGroup>
+            <FormLabel>Default: Ignored Words</FormLabel>
+            <FormInputGroup
+              type={inputTypes.TEXT}
+              name="defaultIgnoredWords"
+              helpText="word1, word2 … — matching content is unwanted (blank = none)"
+              value={getVal('defaultIgnoredWords', '')}
+              errors={[]}
+              warnings={[]}
+              onChange={onChange}
+            />
+          </FormGroup>
 
-      <FormGroup>
-        <FormLabel>Default: Watched Defeats Ignored</FormLabel>
-        <FormInputGroup
-          type={inputTypes.CHECK}
-          name="defaultWatchedDefeatsIgnored"
-          helpText="Watched words take priority over ignored words"
-          value={getVal('defaultWatchedDefeatsIgnored', true)}
-          errors={[]}
-          warnings={[]}
-          onChange={onChange}
-        />
-      </FormGroup>
+          <FormGroup>
+            <FormLabel>Default: Watched Defeats Ignored</FormLabel>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="defaultWatchedDefeatsIgnored"
+              helpText="Watched words take priority over ignored words"
+              value={getVal('defaultWatchedDefeatsIgnored', true)}
+              errors={[]}
+              warnings={[]}
+              onChange={onChange}
+            />
+          </FormGroup>
 
-      <FormGroup>
-        <FormLabel>Default: Auto Download</FormLabel>
-        <FormInputGroup
-          type={inputTypes.CHECK}
-          name="defaultAutoDownload"
-          helpText="Automatically queue missing content for download"
-          value={getVal('defaultAutoDownload', true)}
-          errors={[]}
-          warnings={[]}
-          onChange={onChange}
-        />
-      </FormGroup>
+          <FormGroup>
+            <FormLabel>Default: Auto Download</FormLabel>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="defaultAutoDownload"
+              helpText="Automatically queue missing content for download"
+              value={getVal('defaultAutoDownload', true)}
+              errors={[]}
+              warnings={[]}
+              onChange={onChange}
+            />
+          </FormGroup>
+        </>
+      )}
     </>
   );
 }
@@ -210,6 +231,9 @@ function YouTubeSourceForm({
     source.id ?? 0
   );
   const isSaving = isCreating || isUpdating;
+  const { mutate: deleteSource, isPending: isDeleting } =
+    useDeleteMetadataSource(source.id ?? 0);
+
 
   const { mutate: runTest, isPending: isTesting } = useTestMetadataSource();
 
@@ -334,7 +358,20 @@ function YouTubeSourceForm({
       </ModalBody>
 
       <ModalFooter>
+        {!isNew && (
+          <div style={{ marginRight: 'auto' }}>
+            <SpinnerButton
+              kind={kinds.DANGER}
+              isSpinning={isDeleting}
+              onPress={() => deleteSource(undefined, { onSuccess: () => onModalClose() })}
+            >
+              Delete
+            </SpinnerButton>
+          </div>
+        )}
+
         <Button onPress={onModalClose}>Cancel</Button>
+
 
         <SpinnerButton isSpinning={isTesting} onPress={handleTest}>
           Test
@@ -342,6 +379,183 @@ function YouTubeSourceForm({
 
         <SpinnerButton isSpinning={isSaving} onPress={handleSave}>
           Save
+        </SpinnerButton>
+      </ModalFooter>
+    </>
+  );
+}
+
+// ── Fourthwall form ────────────────────────────────────────────────────────
+
+function FourthwallSourceForm({
+  source,
+  onModalClose,
+}: {
+  source: MetadataSourceResource;
+  onModalClose: () => void;
+}) {
+  const isNew = !source.id;
+
+  const { data: allSources } = useMetadataSources();
+  const youtubeApiConfigured = (allSources ?? []).some(
+    (s) =>
+      s.implementation === 'YouTube' &&
+      s.enable &&
+      getFieldValue<string>(s.fields, 'apiKey', '').trim() !== ''
+  );
+
+  const [enabled, setEnabled] = useState(source.enable ?? true);
+  const [pending, setPending] = useState<Record<string, unknown>>({});
+  const [testResult, setTestResult] = useState<'success' | 'failure' | null>(null);
+  const [testMessage, setTestMessage] = useState('');
+
+  const { mutate: create, isPending: isCreating } = useCreateMetadataSource();
+  const { mutate: update, isPending: isUpdating } = useUpdateMetadataSource(source.id ?? 0);
+  const isSaving = isCreating || isUpdating;
+  const { mutate: deleteSource, isPending: isDeleting } =
+    useDeleteMetadataSource(source.id ?? 0);
+
+
+  const { mutate: runTest, isPending: isTesting } = useTestMetadataSource();
+
+  const getVal = useCallback(
+    <T,>(name: string, fallback: T): T => {
+      if (name in pending) return pending[name] as T;
+      return getFieldValue<T>(source.fields, name, fallback);
+    },
+    [pending, source.fields]
+  );
+
+  const handleInputChange = useCallback((change: InputChanged) => {
+    setPending((prev) => ({ ...prev, [change.name]: change.value }));
+  }, []);
+
+  const buildUpdatedSource = useCallback(
+    (): MetadataSourceResource => ({
+      ...source,
+      name: source.name || 'Fourthwall',
+      enable: enabled,
+      fields: applyFieldChanges(source.fields, pending),
+    }),
+    [source, enabled, pending]
+  );
+
+  const handleTest = useCallback(() => {
+    runTest(buildUpdatedSource(), {
+      onSuccess: () => {
+        setTestResult('success');
+        setTestMessage('Cookies file found');
+      },
+      onError: (err) => {
+        setTestResult('failure');
+        setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Test failed');
+      },
+    });
+  }, [runTest, buildUpdatedSource]);
+
+  const handleSave = useCallback(() => {
+    const updated = buildUpdatedSource();
+    const save = isNew ? create : update;
+    save(updated, {
+      onSuccess: () => onModalClose(),
+      onError: (err) => {
+        setTestResult('failure');
+        setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Save failed');
+      },
+    });
+  }, [buildUpdatedSource, isNew, create, update, onModalClose]);
+
+  return (
+    <>
+      <ModalHeader>Fourthwall</ModalHeader>
+
+      <ModalBody>
+        <FormGroup>
+          <FormLabel>Enable</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="enable"
+            helpText="Enable this source for content syncing and channel searches."
+            value={enabled}
+            errors={[]}
+            warnings={[]}
+            onChange={(change: InputChanged) =>
+              setEnabled(change.value as boolean)
+            }
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>Cookies File</FormLabel>
+          <FormInputGroup
+            type={inputTypes.TEXT}
+            name="cookiesFilePath"
+            helpText="Path to a Netscape-format cookies.txt file exported from your browser while logged in to Fourthwall."
+            value={getVal('cookiesFilePath', '')}
+            errors={[]}
+            warnings={[]}
+            onChange={handleInputChange}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>Use YouTube API for Live Detection</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="useYouTubeApi"
+            helpText={
+              youtubeApiConfigured
+                ? 'Use the YouTube Data API to detect upcoming and live streams. Streams posted to Fourthwall before going live will be detected as Upcoming and recorded automatically when they start.'
+                : 'Requires a YouTube source with an API key configured in Settings \u203a Sources.'
+            }
+            value={youtubeApiConfigured ? getVal('useYouTubeApi', true) : false}
+            isDisabled={!youtubeApiConfigured}
+            errors={[]}
+            warnings={[]}
+            onChange={youtubeApiConfigured ? handleInputChange : () => undefined}
+          />
+        </FormGroup>
+
+        <BaseSettingsFields
+          getVal={getVal}
+          onChange={handleInputChange}
+          showVideos={true}
+          showShorts={false}
+          showVods={false}
+          showLive={true}
+          showLiveCheckInterval={false}
+          showFilters={false}
+        />
+
+        {testResult !== null && (
+          <Alert kind={testResult === 'success' ? 'success' : 'danger'}>
+            {testMessage}
+          </Alert>
+        )}
+      </ModalBody>
+
+      <ModalFooter>
+        {!isNew && (
+          <div style={{ marginRight: 'auto' }}>
+            <SpinnerButton
+              kind={kinds.DANGER}
+              isSpinning={isDeleting}
+              onPress={() => deleteSource(undefined, { onSuccess: () => onModalClose() })}
+            >
+              Delete
+            </SpinnerButton>
+          </div>
+        )}
+
+        <Button onPress={onModalClose}>Cancel</Button>
+
+
+        <SpinnerButton isSpinning={isTesting} onPress={handleTest}>
+          Test
+        </SpinnerButton>
+
+        <SpinnerButton isSpinning={isSaving} onPress={handleSave}>
+          {isNew ? 'Add' : 'Save'}
         </SpinnerButton>
       </ModalFooter>
     </>
@@ -371,6 +585,8 @@ function TwitchSourceForm({
     source.id ?? 0
   );
   const isSaving = isCreating || isUpdating;
+  const { mutate: deleteSource, isPending: isDeleting } =
+    useDeleteMetadataSource(source.id ?? 0);
 
   const { mutate: runTest, isPending: isTesting } = useTestMetadataSource();
 
@@ -511,7 +727,20 @@ function TwitchSourceForm({
       </ModalBody>
 
       <ModalFooter>
+        {!isNew && (
+          <div style={{ marginRight: 'auto' }}>
+            <SpinnerButton
+              kind={kinds.DANGER}
+              isSpinning={isDeleting}
+              onPress={() => deleteSource(undefined, { onSuccess: () => onModalClose() })}
+            >
+              Delete
+            </SpinnerButton>
+          </div>
+        )}
+
         <Button onPress={onModalClose}>Cancel</Button>
+
 
         <SpinnerButton isSpinning={isTesting} onPress={handleTest}>
           Test
@@ -539,6 +768,8 @@ function EditSourceModal({
           <YouTubeSourceForm source={source} onModalClose={onModalClose} />
         ) : source?.implementation === 'Twitch' ? (
           <TwitchSourceForm source={source} onModalClose={onModalClose} />
+        ) : source?.implementation === 'Fourthwall' ? (
+          <FourthwallSourceForm source={source} onModalClose={onModalClose} />
         ) : null}
       </ModalContent>
     </Modal>

@@ -123,6 +123,14 @@ namespace Streamarr.Core.Download
                     content.ContentFileId = contentFile.Id;
                     content.Status = ContentStatus.Downloaded;
                     content.PreviousStatus = null;
+
+                    // A completed live recording is now a VOD — transition immediately
+                    // rather than waiting for the next channel refresh.
+                    if (isLive)
+                    {
+                        content.ContentType = ContentType.Vod;
+                    }
+
                     _contentService.UpdateContent(content);
 
                     _nfoWriter.WriteCreatorNfo(creator);

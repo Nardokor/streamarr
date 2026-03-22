@@ -364,25 +364,29 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 return null;
             }
 
-            if (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow)
+            var broadcastContent = video.Snippet?.LiveBroadcastContent ?? string.Empty;
+
+            if (broadcastContent == "upcoming" ||
+                (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow && broadcastContent != "none"))
             {
                 return new ContentStatusUpdate
                 {
                     PlatformContentId = video.Id,
                     NewContentType = ContentType.Upcoming,
-                    NewAirDateUtc = lsd.ScheduledStartTime.Value,
+                    NewAirDateUtc = lsd.ScheduledStartTime ?? lsd.ActualStartTime,
                     ExistsOnPlatform = true,
                     ShouldTriggerDownload = false
                 };
             }
 
-            if (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue)
+            if (broadcastContent == "live" ||
+                (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue && broadcastContent != "none"))
             {
                 return new ContentStatusUpdate
                 {
                     PlatformContentId = video.Id,
                     NewContentType = ContentType.Live,
-                    NewAirDateUtc = lsd.ActualStartTime.Value,
+                    NewAirDateUtc = lsd.ActualStartTime ?? lsd.ScheduledStartTime,
                     ExistsOnPlatform = true,
                     ShouldTriggerDownload = true
                 };
@@ -601,12 +605,19 @@ namespace Streamarr.Core.MetadataSource.YouTube
             var lsd = video.LiveStreamingDetails;
             if (lsd != null)
             {
-                if (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue)
+                // snippet.liveBroadcastContent is authoritative: "live", "upcoming", or "none".
+                // YouTube sometimes omits ActualEndTime for completed streams, so relying solely
+                // on ActualStartTime.HasValue && !ActualEndTime.HasValue produces false positives.
+                var broadcastContent = video.Snippet?.LiveBroadcastContent ?? string.Empty;
+
+                if (broadcastContent == "live" ||
+                    (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue && broadcastContent != "none"))
                 {
                     return ContentType.Live;
                 }
 
-                if (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow)
+                if (broadcastContent == "upcoming" ||
+                    (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow && broadcastContent != "none"))
                 {
                     return ContentType.Upcoming;
                 }

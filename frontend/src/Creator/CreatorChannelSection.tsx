@@ -156,6 +156,39 @@ function DownloadCell({ contentId, statusKind, monitored, onDownload }: Download
   return null;
 }
 
+interface DeleteFileCellProps {
+  contentId: number;
+  creatorId: number;
+  hasFile: boolean;
+}
+
+function DeleteFileCell({ contentId, creatorId, hasFile }: DeleteFileCellProps) {
+  const queryClient = useQueryClient();
+  const { mutate: deleteFile, isPending } = useApiMutation<void, void>({
+    path: `/content/${contentId}/file`,
+    method: 'DELETE',
+    mutationOptions: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [`/content/creator/${creatorId}`] });
+      },
+    },
+  });
+
+  if (!hasFile) {
+    return null;
+  }
+
+  return (
+    <IconButton
+      name={icons.DELETE}
+      size={12}
+      title="Delete file"
+      isDisabled={isPending}
+      onPress={() => deleteFile(undefined)}
+    />
+  );
+}
+
 function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps) {
   const { data: sources } = useMetadataSources();
   const sourceFields = getSourceFields(sources, channel.platform);
@@ -822,6 +855,12 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                         </TableRowCell>
 
                         <TableRowCell className={styles.downloadCell} onClick={(e) => e.stopPropagation()}>
+                          <DeleteFileCell
+                            contentId={item.id}
+                            creatorId={channel.creatorId}
+                            hasFile={item.contentFileId > 0}
+                          />
+
                           <DownloadCell
                             contentId={item.id}
                             statusKind={status.kind}

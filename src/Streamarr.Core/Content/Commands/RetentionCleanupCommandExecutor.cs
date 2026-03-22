@@ -9,6 +9,7 @@ using Streamarr.Core.ContentFiles;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.MetadataSource;
+using Streamarr.Core.RootFolders;
 
 namespace Streamarr.Core.Content.Commands
 {
@@ -21,6 +22,7 @@ namespace Streamarr.Core.Content.Commands
         private readonly IMetadataSourceFactory _metadataSourceFactory;
         private readonly IDiskProvider _diskProvider;
         private readonly IConfigService _configService;
+        private readonly IRootFolderService _rootFolderService;
         private readonly Logger _logger;
 
         public RetentionCleanupCommandExecutor(
@@ -31,6 +33,7 @@ namespace Streamarr.Core.Content.Commands
             IMetadataSourceFactory metadataSourceFactory,
             IDiskProvider diskProvider,
             IConfigService configService,
+            IRootFolderService rootFolderService,
             Logger logger)
         {
             _creatorService = creatorService;
@@ -40,6 +43,7 @@ namespace Streamarr.Core.Content.Commands
             _metadataSourceFactory = metadataSourceFactory;
             _diskProvider = diskProvider;
             _configService = configService;
+            _rootFolderService = rootFolderService;
             _logger = logger;
         }
 
@@ -180,18 +184,20 @@ namespace Streamarr.Core.Content.Commands
                 }
             }
 
-            // Past retention, still on platform (or no source configured), unmodified — delete and mark Available
+            // Past retention, still on platform (or no source configured), unmodified — move to recycle bin
             var contentFile = _contentFileService.GetContentFile(content.ContentFileId);
             var fullPath = Path.Combine(creator.Path, contentFile.RelativePath);
+            var rootFolderPath = _rootFolderService.GetBestRootFolderPath(creator.Path);
+            var recycleBinPath = Path.Combine(rootFolderPath, ".recycle");
 
             try
             {
-                _diskProvider.DeleteFile(fullPath);
-                _logger.Info("Deleted retained content file '{0}'", fullPath);
+                _diskProvider.MoveToRecycleBin(fullPath, recycleBinPath);
+                _logger.Info("Moved retained content file '{0}' to recycle bin", fullPath);
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Failed to delete file '{0}'", fullPath);
+                _logger.Warn(ex, "Failed to move file '{0}' to recycle bin", fullPath);
                 return;
             }
 

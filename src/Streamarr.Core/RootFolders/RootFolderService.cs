@@ -38,7 +38,8 @@ namespace Streamarr.Core.RootFolders
                                                                      ".appledesktop",
                                                                      ".appledouble",
                                                                      "@eadir",
-                                                                     ".grab"
+                                                                     ".grab",
+                                                                     ".recycle"
                                                                  };
 
         public RootFolderService(IRootFolderRepository rootFolderRepository,
@@ -108,6 +109,13 @@ namespace Streamarr.Core.RootFolders
             }
 
             _rootFolderRepository.Insert(rootFolder);
+
+            var recycleBinPath = Path.Combine(rootFolder.Path, ".recycle");
+            if (!_diskProvider.FolderExists(recycleBinPath))
+            {
+                _diskProvider.CreateFolder(recycleBinPath);
+                _logger.Debug("Created recycle bin folder at '{0}'", recycleBinPath);
+            }
 
             GetDetails(rootFolder, true);
             _cache.Clear();

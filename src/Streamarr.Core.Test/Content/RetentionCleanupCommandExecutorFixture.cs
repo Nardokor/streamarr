@@ -10,6 +10,7 @@ using Streamarr.Core.Content.Commands;
 using Streamarr.Core.ContentFiles;
 using Streamarr.Core.Creators;
 using Streamarr.Core.MetadataSource;
+using Streamarr.Core.RootFolders;
 using Streamarr.Core.Test.Framework;
 using ContentEntity = Streamarr.Core.Content.Content;
 
@@ -28,6 +29,10 @@ namespace Streamarr.Core.Test.Content
         public void SetUp()
         {
             _creator = new Creator { Id = 1, Title = "Test Creator", Path = "/creators/test" };
+
+            Mocker.GetMock<IRootFolderService>()
+                  .Setup(s => s.GetBestRootFolderPath("/creators/test"))
+                  .Returns("/creators");
             _channel = new Channel
             {
                 Id = 10,
@@ -193,12 +198,12 @@ namespace Streamarr.Core.Test.Content
         // ── Normal deletion ───────────────────────────────────────────────────
 
         [Test]
-        public void should_delete_file_and_mark_available_when_past_retention()
+        public void should_move_file_to_recycle_bin_and_mark_available_when_past_retention()
         {
             Execute();
 
             Mocker.GetMock<IDiskProvider>().Verify(
-                d => d.DeleteFile("/creators/test/OldVideo.mkv"),
+                d => d.MoveToRecycleBin("/creators/test/OldVideo.mkv", "/creators/.recycle"),
                 Times.Once);
 
             Mocker.GetMock<IContentService>().Verify(

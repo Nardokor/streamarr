@@ -50,6 +50,7 @@ function CreatorDetail({ match }: Props) {
   const isRefreshing = useCommandExecuting(CommandNames.RefreshCreator);
   const isDownloading = useCommandExecuting(CommandNames.DownloadMissingContent);
   const isRescanning = useCommandExecuting(CommandNames.RescanCreator);
+  const isCheckingLive = useCommandExecuting(CommandNames.CheckLiveStreams);
 
   // When any refresh command finishes, re-fetch channel data so server-side
   // changes (e.g. membershipStatus) are reflected without relying on SignalR.
@@ -128,6 +129,10 @@ function CreatorDetail({ match }: Props) {
     executeCommand({ name: CommandNames.RescanCreator, creatorId });
   }, [executeCommand, creatorId]);
 
+  const handleCheckLive = useCallback(() => {
+    executeCommand({ name: CommandNames.CheckLiveStreams, creatorId });
+  }, [executeCommand, creatorId]);
+
   const handleDeleteConfirm = useCallback(() => {
     deleteCreator(undefined, {
       onSuccess: () => {
@@ -183,6 +188,13 @@ function CreatorDetail({ match }: Props) {
             iconName={icons.SEARCH}
             isSpinning={isRescanning}
             onPress={handleRescan}
+          />
+
+          <PageToolbarButton
+            label="Check Live"
+            iconName={icons.NETWORK}
+            isSpinning={isCheckingLive}
+            onPress={handleCheckLive}
           />
 
           <PageToolbarButton

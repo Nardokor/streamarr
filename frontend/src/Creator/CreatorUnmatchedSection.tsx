@@ -26,6 +26,7 @@ function UnmatchedFileRow({ file, channels }: UnmatchedFileRowProps) {
   const { assign, isAssigning } = useAssignUnmatchedFile(file.id, file.creatorId);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickerPos, setPickerPos] = useState({ top: 0, left: 0 });
+  const [playerOpen, setPlayerOpen] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
 
   const handleOpenPicker = useCallback(() => {
@@ -63,8 +64,25 @@ function UnmatchedFileRow({ file, channels }: UnmatchedFileRowProps) {
   return (
     <TableRow>
       <TableRowCell className={styles.fileNameCell} title={file.filePath}>
-        {file.fileName}
+        <button className={styles.fileNameBtn} onClick={() => setPlayerOpen(true)}>
+          {file.fileName}
+        </button>
       </TableRowCell>
+
+      {playerOpen ? ReactDOM.createPortal(
+        <div className={styles.playerOverlay} onClick={() => setPlayerOpen(false)}>
+          <div className={styles.playerContainer} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.playerClose} onClick={() => setPlayerOpen(false)}>✕</button>
+            <video
+              className={styles.playerVideo}
+              src={`/api/v1/unmatchedfile/${file.id}/stream?apikey=${window.Streamarr.apiKey}`}
+              controls
+              autoPlay
+            />
+          </div>
+        </div>,
+        document.body
+      ) : null}
 
       <TableRowCell className={styles.reasonCell}>
         {unmatchedFileReasonLabel[file.reason] ?? 'Unknown'}

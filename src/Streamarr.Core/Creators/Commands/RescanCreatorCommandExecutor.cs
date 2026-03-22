@@ -71,11 +71,26 @@ namespace Streamarr.Core.Creators.Commands
 
             _logger.Info("Scanning local files for creator '{0}' at '{1}'", creator.Title, creator.Path);
 
+            var channels = _channelService.GetByCreatorId(creator.Id);
+
+            // Prune stale unmatched records before scanning so the fresh state is accurate
+            PruneStaleUnmatched(creator, channels);
+
             ScanVideoFiles(creator.Path, out var idToFile, out var noIdFiles);
 
-            // Files with no recognisable ID go straight to unmatched
+            // Reload after pruning so existingUnmatchedPaths reflects the cleaned state
+            var existingUnmatchedPaths = new HashSet<string>(
+                _unmatchedFileService.GetByCreatorId(creator.Id).Select(u => u.FilePath),
+                StringComparer.OrdinalIgnoreCase);
+
+            // Files with no recognisable ID go to unmatched (skip if already recorded)
             foreach (var filePath in noIdFiles)
             {
+                if (existingUnmatchedPaths.Contains(filePath))
+                {
+                    continue;
+                }
+
                 var fileInfo = new FileInfo(filePath);
                 _unmatchedFileService.Add(new UnmatchedFile
                 {
@@ -96,8 +111,6 @@ namespace Streamarr.Core.Creators.Commands
 
             _logger.Info("Found {0} video file(s) with IDs for '{1}'", idToFile.Count, creator.Title);
 
-            var channels = _channelService.GetByCreatorId(creator.Id);
-
             // Track which IDs were matched so the rest can be recorded as unmatched
             var matchedIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var linked = 0;
@@ -110,6 +123,8 @@ namespace Streamarr.Core.Creators.Commands
                 {
                     if (content.ContentFileId > 0)
                     {
+                        // Already linked — mark as matched so the file is not added to unmatched
+                        matchedIds.Add(content.PlatformContentId);
                         continue;
                     }
 
@@ -147,6 +162,11 @@ namespace Streamarr.Core.Creators.Commands
                     continue;
                 }
 
+                if (existingUnmatchedPaths.Contains(kvp.Value))
+                {
+                    continue;
+                }
+
                 var fileInfo = new FileInfo(kvp.Value);
                 _unmatchedFileService.Add(new UnmatchedFile
                 {
@@ -167,6 +187,49 @@ namespace Streamarr.Core.Creators.Commands
                 creator.Title,
                 linked,
                 unmatched + noIdFiles.Count);
+        }
+
+        private void PruneStaleUnmatched(Creator creator, List<Channel> channels)
+        {
+            var existing = _unmatchedFileService.GetByCreatorId(creator.Id);
+            if (!existing.Any())
+            {
+                return;
+            }
+
+            // Build the set of IDs already linked to a content file so we can
+            // detect unmatched records that have since been resolved.
+            var linkedIds = channels
+                .SelectMany(ch => _contentService.GetByChannelId(ch.Id))
+                .Where(c => c.ContentFileId > 0)
+                .Select(c => c.PlatformContentId)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            var pruned = 0;
+
+            foreach (var record in existing)
+            {
+                if (!File.Exists(record.FilePath))
+                {
+                    _unmatchedFileService.Delete(record.Id);
+                    _logger.Debug("Pruned unmatched record for deleted file: {0}", record.FileName);
+                    pruned++;
+                    continue;
+                }
+
+                var idMatch = YouTubeIdRegex.Match(record.FileName);
+                if (idMatch.Success && linkedIds.Contains(idMatch.Groups[1].Value))
+                {
+                    _unmatchedFileService.Delete(record.Id);
+                    _logger.Debug("Pruned unmatched record for already-downloaded file: {0}", record.FileName);
+                    pruned++;
+                }
+            }
+
+            if (pruned > 0)
+            {
+                _logger.Info("Pruned {0} stale unmatched record(s) for creator '{1}'", pruned, creator.Title);
+            }
         }
 
         private static void ScanVideoFiles(

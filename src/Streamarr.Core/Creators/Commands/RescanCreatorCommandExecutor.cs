@@ -217,8 +217,9 @@ namespace Streamarr.Core.Creators.Commands
                     continue;
                 }
 
-                var idMatch = YouTubeIdRegex.Match(record.FileName);
-                if (idMatch.Success && linkedIds.Contains(idMatch.Groups[1].Value))
+                var idMatches = YouTubeIdRegex.Matches(record.FileName);
+                var idMatch = idMatches.Count > 0 ? idMatches[idMatches.Count - 1] : null;
+                if (idMatch != null && linkedIds.Contains(idMatch.Groups[1].Value))
                 {
                     _unmatchedFileService.Delete(record.Id);
                     _logger.Debug("Pruned unmatched record for already-downloaded file: {0}", record.FileName);
@@ -248,14 +249,17 @@ namespace Streamarr.Core.Creators.Commands
                     continue;
                 }
 
-                var match = YouTubeIdRegex.Match(Path.GetFileName(file));
-                if (!match.Success)
+                // yt-dlp always appends the ID as the last bracketed token, so use
+                // the last match to avoid false hits on bracketed words in the title
+                // (e.g. "[Inscryption]" is 11 chars and would be matched first).
+                var matches = YouTubeIdRegex.Matches(Path.GetFileName(file));
+                if (matches.Count == 0)
                 {
                     noIdFiles.Add(file);
                     continue;
                 }
 
-                var videoId = match.Groups[1].Value;
+                var videoId = matches[matches.Count - 1].Groups[1].Value;
                 if (!idToFile.ContainsKey(videoId))
                 {
                     idToFile[videoId] = file;

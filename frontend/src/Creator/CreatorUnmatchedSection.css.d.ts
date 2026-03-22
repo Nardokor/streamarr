@@ -12,9 +12,14 @@ interface CssExports {
   'dateCell': string;
   'empty': string;
   'error': string;
+  'fileNameBtn': string;
   'fileNameCell': string;
   'fixedTable': string;
   'header': string;
+  'playerClose': string;
+  'playerContainer': string;
+  'playerOverlay': string;
+  'playerVideo': string;
   'reasonCell': string;
   'section': string;
   'sectionLabel': string;

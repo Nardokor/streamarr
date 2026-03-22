@@ -4,6 +4,8 @@ namespace Streamarr.Core.Creators.Commands
 {
     public class CheckLiveStreamsCommand : Command
     {
+        public int? CreatorId { get; set; }
+
         public override bool SendUpdatesToClient => false;
         public override string CompletionMessage => "Live stream statuses updated";
     }

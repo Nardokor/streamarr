@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Messaging.Commands;
@@ -26,7 +27,9 @@ namespace Streamarr.Core.Creators.Commands
 
         public void Execute(CheckLiveStreamsCommand message)
         {
-            var creators = _creatorService.GetMonitoredCreators();
+            var creators = message.CreatorId.HasValue
+                ? new List<Creator> { _creatorService.GetCreator(message.CreatorId.Value) }
+                : _creatorService.GetMonitoredCreators();
 
             foreach (var creator in creators)
             {

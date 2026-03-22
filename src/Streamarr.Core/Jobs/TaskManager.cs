@@ -120,6 +120,12 @@ namespace Streamarr.Core.Jobs
                     new ScheduledTask
                     {
                         Interval = 24 * 60,
+                        TypeName = typeof(RecycleBinCleanupCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
+                        Interval = 24 * 60,
                         TypeName = typeof(UpdateYtDlpCommand).FullName
                     },
 

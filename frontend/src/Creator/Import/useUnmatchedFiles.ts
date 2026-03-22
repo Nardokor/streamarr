@@ -61,3 +61,19 @@ export const useDismissUnmatchedFile = (id: number, creatorId: number) => {
   });
   return { dismiss: mutate, isDismissing: isPending, dismissError: error };
 };
+
+export const useDeleteUnmatchedFile = (id: number, creatorId: number) => {
+  const queryClient = useQueryClient();
+  const { mutate, isPending, error } = useApiMutation<unknown, void>({
+    path: `${UNMATCHED_PATH}/${id}/file`,
+    method: 'DELETE',
+    mutationOptions: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: [`${UNMATCHED_PATH}/creator/${creatorId}`],
+        });
+      },
+    },
+  });
+  return { deleteFile: mutate, isDeletingFile: isPending, deleteFileError: error };
+};

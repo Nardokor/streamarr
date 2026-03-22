@@ -1,6 +1,9 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Streamarr.Common.Disk;
+using Streamarr.Core.Creators;
 using Streamarr.Core.Import;
+using Streamarr.Core.RootFolders;
 using Streamarr.Http;
 using IO = System.IO;
 
@@ -22,10 +25,20 @@ public class UnmatchedFileController : Controller
     };
 
     private readonly IUnmatchedFileService _unmatchedFileService;
+    private readonly ICreatorService _creatorService;
+    private readonly IRootFolderService _rootFolderService;
+    private readonly IDiskProvider _diskProvider;
 
-    public UnmatchedFileController(IUnmatchedFileService unmatchedFileService)
+    public UnmatchedFileController(
+        IUnmatchedFileService unmatchedFileService,
+        ICreatorService creatorService,
+        IRootFolderService rootFolderService,
+        IDiskProvider diskProvider)
     {
         _unmatchedFileService = unmatchedFileService;
+        _creatorService = creatorService;
+        _rootFolderService = rootFolderService;
+        _diskProvider = diskProvider;
     }
 
     [HttpGet]
@@ -54,7 +67,32 @@ public class UnmatchedFileController : Controller
     public IActionResult Delete(int id)
     {
         _unmatchedFileService.Delete(id);
-        return Ok();
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}/file")]
+    public IActionResult DeleteFile(int id)
+    {
+        var file = _unmatchedFileService.GetById(id);
+        if (file == null)
+        {
+            return NotFound();
+        }
+
+        var creator = _creatorService.GetCreator(file.CreatorId);
+        var rootFolderPath = _rootFolderService.GetBestRootFolderPath(creator.Path);
+        var recycleBinPath = IO.Path.Combine(rootFolderPath, ".recycle");
+
+        // FilePath comes from the database, not directly from the user-supplied id
+#pragma warning disable CA3003
+        if (IO.File.Exists(file.FilePath))
+        {
+            _diskProvider.MoveToRecycleBin(file.FilePath, recycleBinPath);
+        }
+#pragma warning restore CA3003
+
+        _unmatchedFileService.Delete(id);
+        return NoContent();
     }
 
     [HttpGet("{id:int}/stream")]

@@ -78,47 +78,44 @@ public class UnmatchedFileController : Controller
 
         if (ext == ".mkv")
         {
-            return RemuxAndStream(file.FilePath, id);
+            return RemuxAndStream(file.FilePath);
         }
 
         return PhysicalFile(file.FilePath, mimeType, enableRangeProcessing: true);
     }
 
-    private IActionResult RemuxAndStream(string sourcePath, int id)
+    private IActionResult RemuxAndStream(string sourcePath)
     {
-        var tempDir = IO.Path.Combine(IO.Path.GetTempPath(), "streamarr-remux");
-        IO.Directory.CreateDirectory(tempDir);
-
-        var tempPath = IO.Path.Combine(tempDir, $"{id}_{Guid.NewGuid():N}.mp4");
-
-        // sourcePath comes from the database; the temp filename uses only a server-generated GUID
+        // sourcePath comes from the database, not directly from user input
 #pragma warning disable CA3006
         var psi = new ProcessStartInfo("ffmpeg")
         {
-            Arguments = $"-i \"{sourcePath}\" -c copy -movflags +faststart -f mp4 -y \"{tempPath}\"",
-            RedirectStandardOutput = false,
+            // frag_keyframe+empty_moov produces a fragmented MP4 that can be piped
+            // without knowing the file size — playback starts immediately
+            Arguments = $"-i \"{sourcePath}\" -c copy -f mp4 -movflags frag_keyframe+empty_moov pipe:1",
+            RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
             CreateNoWindow = true,
         };
 #pragma warning restore CA3006
 
-        using var process = Process.Start(psi);
-        process?.WaitForExit();
-
-        // Path comes from the database / server-generated temp path
-#pragma warning disable CA3003
-        if (process?.ExitCode != 0 || !IO.File.Exists(tempPath))
+        var process = Process.Start(psi);
+        if (process == null)
         {
-            return StatusCode(500, "Remux failed");
+            return StatusCode(500, "Failed to start ffmpeg");
         }
-#pragma warning restore CA3003
 
         HttpContext.Response.OnCompleted(() =>
         {
             try
             {
-                IO.File.Delete(tempPath);
+                if (!process.HasExited)
+                {
+                    process.Kill(entireProcessTree: true);
+                }
+
+                process.Dispose();
             }
             catch
             {
@@ -128,7 +125,7 @@ public class UnmatchedFileController : Controller
             return Task.CompletedTask;
         });
 
-        return PhysicalFile(tempPath, "video/mp4", enableRangeProcessing: true);
+        return File(process.StandardOutput.BaseStream, "video/mp4");
     }
 }
 

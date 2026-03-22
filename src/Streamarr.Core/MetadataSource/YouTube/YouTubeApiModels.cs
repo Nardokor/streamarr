@@ -46,6 +46,10 @@ namespace Streamarr.Core.MetadataSource.YouTube
         public string Title { get; set; }
         public string Description { get; set; }
         public YoutubeVideoThumbnails Thumbnails { get; set; }
+
+        // "live", "upcoming", or "none" — authoritative broadcast state from YouTube.
+        // Always "none" for completed streams even when ActualEndTime is missing.
+        public string LiveBroadcastContent { get; set; }
     }
 
     public class YoutubeVideoThumbnails

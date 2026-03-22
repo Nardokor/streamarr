@@ -504,7 +504,10 @@ namespace Streamarr.Core.Download.YtDlp
 
                 try
                 {
-                    _processProvider.Kill(process.Id);
+                    // Kill the entire process tree so child processes (e.g. ffmpeg spawned
+                    // during live recording) are also terminated. Without this, ffmpeg keeps
+                    // the stdout/stderr pipe open and WaitForExit() never returns.
+                    process.Kill(entireProcessTree: true);
                 }
                 catch (Exception ex)
                 {
@@ -600,7 +603,8 @@ namespace Streamarr.Core.Download.YtDlp
                 args.Add("--live-from-start");
                 args.Add("--hls-use-mpegts");
                 args.Add("--wait-for-video 5-30");
-                args.Add("--fragment-retries inf");
+                args.Add("--fragment-retries 15");
+                args.Add("--skip-unavailable-fragments");
                 args.Add("--retry-sleep fragment:5");
                 args.Add("--socket-timeout 30");
             }

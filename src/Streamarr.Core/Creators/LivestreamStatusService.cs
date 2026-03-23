@@ -80,6 +80,16 @@ namespace Streamarr.Core.Creators
             {
                 if (!updates.TryGetValue(content.PlatformContentId, out var update))
                 {
+                    // Video is absent from the API response — it was deleted or removed while live.
+                    // Transition it out of the live/upcoming state so it is no longer probed.
+                    _logger.Info(
+                        "Live content '{0}' ({1}) is no longer available on the platform; marking as Unwanted",
+                        content.Title,
+                        content.PlatformContentId);
+
+                    content.ContentType = ContentType.Vod;
+                    content.Status = ContentStatus.Unwanted;
+                    _contentService.UpdateContent(content);
                     continue;
                 }
 

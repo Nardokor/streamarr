@@ -178,7 +178,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 PlatformUrl = channelPageUrl,
                 Title = channelName,
                 Description = channelInfo.Description,
-                ThumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(channelInfo.Thumbnail)
+                ThumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(channelInfo.BestAvatarUrl)
             };
         }
 
@@ -511,7 +511,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 ? channelInfo.ChannelUrl
                 : channelInfo.UploaderUrl;
 
-            var thumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(channelInfo.Thumbnail);
+            var thumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(channelInfo.BestAvatarUrl);
 
             return new CreatorMetadataResult
             {

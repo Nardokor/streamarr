@@ -602,7 +602,6 @@ namespace Streamarr.Core.Download.YtDlp
                 args.Add("-k");
                 args.Add("--live-from-start");
                 args.Add("--hls-use-mpegts");
-                args.Add("--wait-for-video 5-30");
                 args.Add("--fragment-retries 15");
                 args.Add("--skip-unavailable-fragments");
                 args.Add("--retry-sleep fragment:5");

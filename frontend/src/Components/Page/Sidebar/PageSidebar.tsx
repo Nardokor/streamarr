@@ -64,6 +64,12 @@ const LINKS: SidebarItem[] = [
   },
 
   {
+    iconName: icons.NETWORK,
+    title: 'Channels',
+    to: '/channels',
+  },
+
+  {
     iconName: icons.MISSING,
     title: 'Wanted',
     to: '/wanted/missing',

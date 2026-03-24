@@ -1,0 +1,61 @@
+.mixedNote {
+  font-size: 0.85rem;
+  color: var(--textSecondary, #888);
+  background: var(--inputBackground, #2a2a2a);
+  border: 1px solid var(--borderColor, #444);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--textSecondary, #888);
+  margin-bottom: 16px;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--textSecondary, #888);
+  margin-bottom: 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--borderColor, #444);
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.label {
+  flex: 0 0 180px;
+  font-size: 0.9rem;
+  color: var(--textColor, #eee);
+}
+
+.select,
+.input {
+  flex: 1;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--borderColor, #555);
+  border-radius: 4px;
+  background: var(--inputBackground, #2a2a2a);
+  color: var(--textColor, #eee);
+  font-size: 0.875rem;
+}
+
+.select:focus,
+.input:focus {
+  outline: none;
+  border-color: var(--colorPrimary, #3498db);
+}

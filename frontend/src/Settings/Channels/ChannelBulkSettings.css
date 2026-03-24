@@ -1,0 +1,140 @@
+.toolbarGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+}
+
+.searchInput {
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--borderColor, #555);
+  border-radius: 4px;
+  background: var(--inputBackground, #2a2a2a);
+  color: var(--textColor, #eee);
+  font-size: 0.85rem;
+  width: 220px;
+  margin-right: 8px;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--colorPrimary, #3498db);
+}
+
+.platformFilter {
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--borderColor, #555);
+  border-radius: 4px;
+  background: var(--inputBackground, #2a2a2a);
+  color: var(--textColor, #eee);
+  font-size: 0.85rem;
+  margin-right: 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.sortableHeader {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortableHeader:hover {
+  color: var(--textColor, #eee);
+}
+
+.table th {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 2px solid var(--borderColor, #444);
+  color: var(--textSecondary, #888);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.row,
+.rowSelected {
+  cursor: pointer;
+  border-bottom: 1px solid var(--borderColor, #333);
+  transition: background 100ms;
+}
+
+.row:hover {
+  background: var(--tableRowHoverBackground, rgba(255, 255, 255, 0.04));
+}
+
+.rowSelected {
+  background: var(--colorPrimaryTransparent, rgba(52, 152, 219, 0.12));
+}
+
+.rowSelected:hover {
+  background: var(--colorPrimaryTransparent, rgba(52, 152, 219, 0.18));
+}
+
+.checkCell {
+  width: 36px;
+  padding: 6px 10px;
+  text-align: center;
+}
+
+.cell {
+  padding: 6px 10px;
+}
+
+.centeredCell {
+  padding: 6px 10px;
+  text-align: center;
+}
+
+.wordCell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty {
+  color: var(--textSecondary, #666);
+}
+
+.selectBar {
+  position: fixed;
+  bottom: 0;
+  left: 210px;
+  right: 0;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  background: var(--pageFooterBackgroundColor, #1a1a1a);
+  border-top: 1px solid var(--borderColor, #444);
+  z-index: 100;
+}
+
+.selectBarCount {
+  font-size: 0.875rem;
+  color: var(--textSecondary, #888);
+  margin-right: 8px;
+}
+
+.selectBarSpacer {
+  flex: 1;
+}
+
+.channelLink {
+  color: var(--colorPrimary, #3498db);
+  text-decoration: none;
+}
+
+.channelLink:hover {
+  text-decoration: underline;
+}

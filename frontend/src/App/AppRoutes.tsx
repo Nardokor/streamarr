@@ -18,6 +18,7 @@ import UISettings from 'Settings/UI/UISettings';
 import ArchivalSettings from 'Settings/Archival/ArchivalSettings';
 import DownloadClientSettings from 'Settings/DownloadClient/DownloadClientSettings';
 import ConnectPage from 'Settings/Connect/ConnectPage';
+import ChannelBulkSettings from 'Settings/Channels/ChannelBulkSettings';
 import History from 'Activity/History/History';
 import Queue from 'Activity/Queue/Queue';
 import WantedMissing from 'Wanted/WantedMissing';
@@ -88,6 +89,8 @@ function AppRoutes() {
       <Route path="/settings/downloadclient" component={DownloadClientSettings} />
 
       <Route path="/settings/connect" component={ConnectPage} />
+
+      <Route path="/channels" component={ChannelBulkSettings} />
 
       {/*
         Wanted

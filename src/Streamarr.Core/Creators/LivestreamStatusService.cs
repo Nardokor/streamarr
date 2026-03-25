@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using NLog;
 using Streamarr.Core.Channels;
@@ -5,6 +6,7 @@ using Streamarr.Core.Content;
 using Streamarr.Core.Download;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.MetadataSource;
+using ContentEntity = Streamarr.Core.Content.Content;
 
 namespace Streamarr.Core.Creators
 {
@@ -64,6 +66,14 @@ namespace Streamarr.Core.Creators
 
             if (!livestreamContent.Any())
             {
+                // No known live/upcoming content — if the channel wants live streams,
+                // probe the channel directly so a new stream is discovered and can
+                // start recording without waiting for the next full sync.
+                if (channel.DownloadLive)
+                {
+                    TryDiscoverActiveLivestream(channel, source);
+                }
+
                 return;
             }
 
@@ -188,6 +198,51 @@ namespace Streamarr.Core.Creators
                         content.AirDateUtc,
                         content.Status);
                 }
+            }
+        }
+        private void TryDiscoverActiveLivestream(Channel channel, IMetadataSource source)
+        {
+            var live = source.GetActiveLivestream(channel.PlatformUrl, channel.PlatformId);
+            if (live == null)
+            {
+                return;
+            }
+
+            // Skip if the content already exists — a recent full sync may have added it.
+            var existing = _contentService.FindByPlatformContentId(channel.Id, live.PlatformContentId);
+            if (existing != null)
+            {
+                return;
+            }
+
+            _logger.Info(
+                "Discovered active livestream '{0}' ({1}) for '{2}' via live check",
+                live.Title,
+                live.PlatformContentId,
+                channel.Title);
+
+            var passes = _contentFilterService.PassesFilter(live.Title, ContentType.Live, channel);
+            var content = new ContentEntity
+            {
+                ChannelId = channel.Id,
+                PlatformContentId = live.PlatformContentId,
+                ContentType = ContentType.Live,
+                Title = live.Title,
+                ThumbnailUrl = live.ThumbnailUrl,
+                AirDateUtc = live.AirDateUtc,
+                DateAdded = DateTime.UtcNow,
+                Monitored = true,
+                Status = passes ? ContentStatus.Missing : ContentStatus.Unwanted,
+            };
+
+            var added = _contentService.AddContent(content);
+
+            if (passes && channel.AutoDownload)
+            {
+                added.Status = ContentStatus.Recording;
+                _contentService.UpdateContent(added);
+                _commandQueueManager.Push(new DownloadContentCommand { ContentId = added.Id });
+                _logger.Info("Queued live recording for '{0}' (auto-discovered via live check)", live.Title);
             }
         }
     }

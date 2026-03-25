@@ -50,17 +50,23 @@ namespace Streamarr.Core.Creators.Commands
             _logger = logger;
         }
 
+        // Limit membership probes for None/Unknown channels to this many per scheduled run.
+        // Active channels are always probed (they have accessible content to monitor).
+        private const int MaxMembershipChecksPerRun = 5;
+
         public void Execute(RefreshCreatorCommand message)
         {
             var creators = message.CreatorId.HasValue
                 ? new List<Creator> { _creatorService.GetCreator(message.CreatorId.Value) }
                 : _creatorService.GetMonitoredCreators();
 
+            var membershipChecksUsed = 0;
+
             foreach (var creator in creators)
             {
                 try
                 {
-                    RefreshCreator(creator);
+                    RefreshCreator(creator, ref membershipChecksUsed);
                 }
                 catch (Exception ex)
                 {
@@ -69,7 +75,7 @@ namespace Streamarr.Core.Creators.Commands
             }
         }
 
-        private void RefreshCreator(Creator creator)
+        private void RefreshCreator(Creator creator, ref int membershipChecksUsed)
         {
             _logger.Info("Refreshing creator '{0}'", creator.Title);
 
@@ -79,7 +85,7 @@ namespace Streamarr.Core.Creators.Commands
 
             foreach (var channel in channels.Where(c => c.Monitored))
             {
-                RefreshChannel(channel);
+                RefreshChannel(channel, ref membershipChecksUsed);
             }
         }
 
@@ -118,7 +124,7 @@ namespace Streamarr.Core.Creators.Commands
             }
         }
 
-        private void RefreshChannel(Channel channel)
+        private void RefreshChannel(Channel channel, ref int membershipChecksUsed)
         {
             _logger.Info("Syncing channel '{0}' ({1})", channel.Title, channel.Platform);
 
@@ -129,30 +135,37 @@ namespace Streamarr.Core.Creators.Commands
                 return;
             }
 
+            // Determine whether to probe the membership tab this sync.
+            // Active: always probe (new members content may exist).
+            // Unknown/None: probe up to MaxMembershipChecksPerRun times per run to avoid
+            //   all bulk-imported channels checking simultaneously after their first week.
+            // None: additionally requires the 7-day recheck threshold to be exceeded.
+            var membershipRecheckThreshold = TimeSpan.FromDays(7);
+            var shouldCheckMembership = channel.Platform == PlatformType.YouTube &&
+                channel.MembershipStatus switch
+                {
+                    MembershipStatus.Active  => true,
+                    MembershipStatus.Unknown => membershipChecksUsed < MaxMembershipChecksPerRun,
+                    MembershipStatus.None    => membershipChecksUsed < MaxMembershipChecksPerRun &&
+                                               (channel.LastMembershipCheck == null ||
+                                                DateTime.UtcNow - channel.LastMembershipCheck.Value > membershipRecheckThreshold),
+                    _                        => false
+                };
+
+            if (shouldCheckMembership && channel.MembershipStatus != MembershipStatus.Active)
+            {
+                membershipChecksUsed++;
+            }
+
+            _logger.Info(
+                "Membership check decision for '{0}': status={1}, lastCheck={2}, shouldCheck={3}",
+                channel.Title,
+                channel.MembershipStatus,
+                channel.LastMembershipCheck?.ToString("u") ?? "never",
+                shouldCheckMembership);
+
             try
             {
-                // Determine whether to probe the membership tab this sync.
-                // Active: always probe (new members content may exist).
-                // Unknown: always probe (first-time detection).
-                // None: only probe if the last check was > 7 days ago (or never run).
-                var membershipRecheckThreshold = TimeSpan.FromDays(7);
-                var shouldCheckMembership = channel.Platform == PlatformType.YouTube &&
-                    channel.MembershipStatus switch
-                    {
-                        MembershipStatus.Active  => true,
-                        MembershipStatus.Unknown => true,
-                        MembershipStatus.None    => channel.LastMembershipCheck == null ||
-                                                   DateTime.UtcNow - channel.LastMembershipCheck.Value > membershipRecheckThreshold,
-                        _                        => false
-                    };
-
-                _logger.Info(
-                    "Membership check decision for '{0}': status={1}, lastCheck={2}, shouldCheck={3}",
-                    channel.Title,
-                    channel.MembershipStatus,
-                    channel.LastMembershipCheck?.ToString("u") ?? "never",
-                    shouldCheckMembership);
-
                 // Refresh channel category from platform metadata
                 try
                 {
@@ -379,6 +392,14 @@ namespace Streamarr.Core.Creators.Commands
             catch (Exception ex)
             {
                 _logger.Error(ex, "Failed to sync channel '{0}'", channel.Title);
+
+                // Record the membership check attempt even on failure so a persistent
+                // sync error doesn't cause None-status channels to re-probe every run.
+                if (shouldCheckMembership)
+                {
+                    channel.LastMembershipCheck = DateTime.UtcNow;
+                    _channelService.UpdateChannel(channel);
+                }
             }
 
             // Live check runs independently so a playlist scan failure doesn't block it.

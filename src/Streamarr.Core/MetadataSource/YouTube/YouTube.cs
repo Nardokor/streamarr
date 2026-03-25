@@ -417,6 +417,33 @@ namespace Streamarr.Core.MetadataSource.YouTube
             return _ytDlpClient.IsVideoAccessible(platformContentId);
         }
 
+        public override ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId)
+        {
+            try
+            {
+                var channelInfo = _ytDlpClient.GetChannelInfo(platformUrl);
+                var liveEntry = channelInfo.Entries.FirstOrDefault(e => e.IsLive == true);
+                if (liveEntry == null)
+                {
+                    return null;
+                }
+
+                return new ContentMetadataResult
+                {
+                    PlatformContentId = liveEntry.Id,
+                    ContentType = ContentType.Live,
+                    Title = string.IsNullOrEmpty(liveEntry.Title) ? "Live Stream" : liveEntry.Title,
+                    ThumbnailUrl = liveEntry.Thumbnail,
+                    AirDateUtc = DateTime.UtcNow,
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Failed to check active livestream for '{0}'", platformUrl);
+                return null;
+            }
+        }
+
         // ── Mapping ────────────────────────────────────────────────────────────
 
         private static ContentMetadataResult MapYtDlpToContentMetadata(YtDlpVideoInfo video, bool isMembers = false)

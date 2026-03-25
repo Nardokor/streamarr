@@ -227,20 +227,21 @@ namespace Streamarr.Core.Download.YtDlp
                     return false;
                 }
 
-                // Non-access failure (network, solver, etc.) — assume accessible to avoid
-                // incorrectly blocking content when yt-dlp encounters a transient error.
-                _logger.Warn("IsVideoAccessible({0}) — non-access error (treating as accessible): {1}", videoId, error.Split('\n')[0].Trim());
-                return true;
+                // Unrecognised non-zero exit — treat as inaccessible so a transient yt-dlp
+                // error or an unknown membership error string doesn't produce a false positive.
+                _logger.Warn("IsVideoAccessible({0}) — unrecognised error (treating as inaccessible): {1}", videoId, error.Split('\n')[0].Trim());
+                return false;
             }
 
-            // Parse the printed availability value. Exit 0 with members_only/subscriber_only
-            // means yt-dlp could reach the metadata but the content is gated.
-            var availability = output.Standard.FirstOrDefault()?.Content?.Trim().ToLowerInvariant() ?? "public";
-            var inaccessible = availability is "members_only" or "subscriber_only"
-                                             or "premium_only" or "needs_auth" or "private";
+            // Parse the printed availability value. Only "public" and "unlisted" are
+            // considered accessible — any other value (including empty, members_only,
+            // subscriber_only, premium_only, needs_auth, private, or an unknown future
+            // value) is treated as inaccessible to avoid false positives.
+            var availability = output.Standard.FirstOrDefault()?.Content?.Trim().ToLowerInvariant() ?? string.Empty;
+            var accessible = availability is "public" or "unlisted";
 
-            _logger.Debug("IsVideoAccessible({0}) → availability={1}, accessible={2}", videoId, availability, !inaccessible);
-            return !inaccessible;
+            _logger.Debug("IsVideoAccessible({0}) → availability={1}, accessible={2}", videoId, availability, accessible);
+            return accessible;
         }
 
         public YtDlpChannelInfo GetChannelInfo(string channelUrl)

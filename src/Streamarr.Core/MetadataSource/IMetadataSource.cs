@@ -32,6 +32,11 @@ namespace Streamarr.Core.MetadataSource
 
         // Probe whether authenticated user can access a given piece of content (e.g. members-only)
         bool ProbeContentAccessibility(string platformContentId);
+
+        // Check whether the channel is currently hosting an active live stream.
+        // Returns metadata for the live content if found, or null if not live.
+        // Used by CheckLiveStreams to discover streams without waiting for a full sync.
+        ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId);
     }
 
     // ── Result DTOs ──────────────────────────────────────────────────────────

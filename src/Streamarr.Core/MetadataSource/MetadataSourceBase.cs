@@ -36,6 +36,11 @@ namespace Streamarr.Core.MetadataSource
             return true;
         }
 
+        public virtual ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId)
+        {
+            return null;
+        }
+
         public virtual ValidationResult Test()
         {
             return new ValidationResult();

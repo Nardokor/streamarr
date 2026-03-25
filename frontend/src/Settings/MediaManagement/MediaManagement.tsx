@@ -13,7 +13,6 @@ import { inputTypes, kinds, sizes } from 'Helpers/Props';
 import RootFolders from 'RootFolder/RootFolders';
 import { useShowAdvancedSettings } from 'Settings/advancedSettingsStore';
 import SettingsToolbar from 'Settings/SettingsToolbar';
-import { useIsWindows } from 'System/Status/useSystemStatus';
 import { InputChanged } from 'typings/inputs';
 import AddRootFolder from './RootFolder/AddRootFolder';
 import {
@@ -22,6 +21,7 @@ import {
   useManageMediaManagementSettings,
   useManageNamingSettings,
 } from './useMediaManagementSettings';
+import useRecycleBin from './useRecycleBin';
 
 const colonReplacementOptions: EnhancedSelectInputValue<number>[] = [
   { key: 4, value: 'Smart (replaces with a dash near spaces)' },
@@ -33,7 +33,7 @@ const colonReplacementOptions: EnhancedSelectInputValue<number>[] = [
 
 function MediaManagement() {
   const showAdvancedSettings = useShowAdvancedSettings();
-  const isWindows = useIsWindows();
+  const { data: recycleBinItems, isFetched: isRecycleBinFetched } = useRecycleBin();
 
   const {
     isFetching: isMediaFetching,
@@ -199,87 +199,6 @@ function MediaManagement() {
               <FormGroup
                 advancedSettings={showAdvancedSettings}
                 isAdvanced={true}
-                size={sizes.MEDIUM}
-              >
-                <FormLabel>Delete Empty Folders</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="deleteEmptyFolders"
-                  helpText="Remove empty creator folders after content is deleted"
-                  onChange={handleMediaInputChange}
-                  {...mediaSettings.deleteEmptyFolders}
-                />
-              </FormGroup>
-
-              <FormGroup
-                advancedSettings={showAdvancedSettings}
-                isAdvanced={true}
-                size={sizes.MEDIUM}
-              >
-                <FormLabel>Use Hardlinks Instead of Copy</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="copyUsingHardlinks"
-                  helpText="Use hardlinks when possible to avoid duplicating disk space"
-                  onChange={handleMediaInputChange}
-                  {...mediaSettings.copyUsingHardlinks}
-                />
-              </FormGroup>
-
-              <FormGroup
-                advancedSettings={showAdvancedSettings}
-                isAdvanced={true}
-                size={sizes.MEDIUM}
-              >
-                <FormLabel>Skip Free Space Check</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="skipFreeSpaceCheckWhenImporting"
-                  helpText="Skip the free space check before downloading"
-                  onChange={handleMediaInputChange}
-                  {...mediaSettings.skipFreeSpaceCheckWhenImporting}
-                />
-              </FormGroup>
-
-              <FormGroup
-                advancedSettings={showAdvancedSettings}
-                isAdvanced={true}
-                size={sizes.MEDIUM}
-              >
-                <FormLabel>Minimum Free Space (MB)</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.NUMBER}
-                  unit="MB"
-                  name="minimumFreeSpaceWhenImporting"
-                  helpText="Prevent downloading if disk free space drops below this threshold"
-                  onChange={handleMediaInputChange}
-                  {...mediaSettings.minimumFreeSpaceWhenImporting}
-                />
-              </FormGroup>
-
-              <FormGroup
-                advancedSettings={showAdvancedSettings}
-                isAdvanced={true}
-              >
-                <FormLabel>Recycle Bin</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.PATH}
-                  name="recycleBin"
-                  helpText="Deleted files will be moved here instead of permanently deleted"
-                  includeFiles={false}
-                  onChange={handleMediaInputChange}
-                  {...mediaSettings.recycleBin}
-                />
-              </FormGroup>
-
-              <FormGroup
-                advancedSettings={showAdvancedSettings}
-                isAdvanced={true}
               >
                 <FormLabel>Recycle Bin Cleanup (days)</FormLabel>
 
@@ -294,55 +213,6 @@ function MediaManagement() {
               </FormGroup>
             </FieldSet>
 
-            {showAdvancedSettings && !isWindows ? (
-              <FieldSet legend="Permissions">
-                <FormGroup
-                  advancedSettings={showAdvancedSettings}
-                  isAdvanced={true}
-                  size={sizes.MEDIUM}
-                >
-                  <FormLabel>Set Permissions</FormLabel>
-
-                  <FormInputGroup
-                    type={inputTypes.CHECK}
-                    name="setPermissionsLinux"
-                    helpText="Set file permissions on downloaded files"
-                    onChange={handleMediaInputChange}
-                    {...mediaSettings.setPermissionsLinux}
-                  />
-                </FormGroup>
-
-                <FormGroup
-                  advancedSettings={showAdvancedSettings}
-                  isAdvanced={true}
-                >
-                  <FormLabel>chmod Folder</FormLabel>
-
-                  <FormInputGroup
-                    type={inputTypes.UMASK}
-                    name="chmodFolder"
-                    helpText="Permissions to apply to folders (e.g. 755)"
-                    onChange={handleMediaInputChange}
-                    {...mediaSettings.chmodFolder}
-                  />
-                </FormGroup>
-
-                <FormGroup
-                  advancedSettings={showAdvancedSettings}
-                  isAdvanced={true}
-                >
-                  <FormLabel>chown Group</FormLabel>
-
-                  <FormInputGroup
-                    type={inputTypes.TEXT}
-                    name="chownGroup"
-                    helpText="Group to assign to downloaded files"
-                    onChange={handleMediaInputChange}
-                    {...mediaSettings.chownGroup}
-                  />
-                </FormGroup>
-              </FieldSet>
-            ) : null}
           </Form>
         ) : null}
 
@@ -350,6 +220,51 @@ function MediaManagement() {
           <RootFolders />
           <AddRootFolder />
         </FieldSet>
+
+        {isRecycleBinFetched && recycleBinItems.length > 0 ? (
+          <FieldSet legend="Recycle Bin">
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '1px solid var(--borderColor)', color: 'var(--textSecondary)' }}>File</th>
+                  <th style={{ textAlign: 'right', padding: '6px 8px', borderBottom: '1px solid var(--borderColor)', color: 'var(--textSecondary)' }}>Size</th>
+                  <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '1px solid var(--borderColor)', color: 'var(--textSecondary)' }}>Root Folder</th>
+                  <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '1px solid var(--borderColor)', color: 'var(--textSecondary)' }}>Recycled</th>
+                  <th style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '1px solid var(--borderColor)', color: 'var(--textSecondary)' }}>Expires</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recycleBinItems.map((item, i) => {
+                  const now = Date.now();
+                  const expiresAt = item.expiresAt ? new Date(item.expiresAt) : null;
+                  const daysLeft = expiresAt ? Math.ceil((expiresAt.getTime() - now) / 86400000) : null;
+                  const isExpiringSoon = daysLeft !== null && daysLeft <= 1;
+                  const sizeStr = item.fileSize > 1073741824
+                    ? `${(item.fileSize / 1073741824).toFixed(1)} GB`
+                    : item.fileSize > 1048576
+                      ? `${(item.fileSize / 1048576).toFixed(1)} MB`
+                      : `${Math.round(item.fileSize / 1024)} KB`;
+
+                  return (
+                    <tr key={i}>
+                      <td style={{ padding: '6px 8px', color: 'var(--textColor)', maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={item.fileName}>{item.fileName}</td>
+                      <td style={{ padding: '6px 8px', textAlign: 'right', color: 'var(--textSecondary)' }}>{sizeStr}</td>
+                      <td style={{ padding: '6px 8px', color: 'var(--textSecondary)' }}>{item.rootFolderPath}</td>
+                      <td style={{ padding: '6px 8px', color: 'var(--textSecondary)' }}>{new Date(item.recycledAt).toLocaleDateString()}</td>
+                      <td style={{ padding: '6px 8px', color: isExpiringSoon ? 'var(--colorDanger)' : 'var(--textSecondary)' }}>
+                        {expiresAt
+                          ? daysLeft !== null && daysLeft <= 0
+                            ? 'Today'
+                            : `${daysLeft}d`
+                          : '—'}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </FieldSet>
+        ) : null}
       </PageContentBody>
     </PageContent>
   );

@@ -228,6 +228,30 @@ namespace Streamarr.Common.Disk
             File.Delete(path);
         }
 
+        public string MoveToRecycleBin(string path, string recycleBinPath)
+        {
+            Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);
+
+            Directory.CreateDirectory(recycleBinPath);
+
+            var fileName = Path.GetFileNameWithoutExtension(path);
+            var ext = Path.GetExtension(path);
+            var destination = Path.Combine(recycleBinPath, Path.GetFileName(path));
+
+            if (File.Exists(destination))
+            {
+                var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+                destination = Path.Combine(recycleBinPath, $"{fileName}.{timestamp}{ext}");
+            }
+
+            Logger.Trace("Moving '{0}' to recycle bin at '{1}'", path, destination);
+            RemoveReadOnly(path);
+            File.Move(path, destination);
+            File.WriteAllText(destination + ".recycledat", DateTime.UtcNow.ToString("O"));
+
+            return destination;
+        }
+
         public void CloneFile(string source, string destination, bool overwrite = false)
         {
             Ensure.That(source, () => source).IsValidPath(PathValidationType.CurrentOs);

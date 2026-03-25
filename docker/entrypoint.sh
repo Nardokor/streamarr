@@ -25,6 +25,9 @@ usermod -o -u "$PUID" streamarr
 mkdir -p /config
 chown -R streamarr:streamarr /config
 
+# Re-chown yt-dlp after PUID/PGID remapping so self-update works
+chown -R streamarr:streamarr /opt/yt-dlp
+
 # Pull latest yt-dlp nightly before handing off to the app.
 # /opt/yt-dlp is owned by streamarr so this also works at runtime
 # via the daily UpdateYtDlp scheduled task (no restart needed).

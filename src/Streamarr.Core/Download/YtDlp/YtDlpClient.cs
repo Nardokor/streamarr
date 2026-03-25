@@ -247,7 +247,7 @@ namespace Streamarr.Core.Download.YtDlp
         {
             _logger.Debug("Getting channel info: {0}", channelUrl);
 
-            var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1 --socket-timeout 30{CookieArg} {Quote(channelUrl)}";
+            var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1 --socket-timeout 30 --extractor-args \"youtubetab:skip=authcheck\"{CookieArg} {Quote(channelUrl)}";
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
             if (output.ExitCode != 0)
@@ -602,7 +602,6 @@ namespace Streamarr.Core.Download.YtDlp
                 args.Add("-k");
                 args.Add("--live-from-start");
                 args.Add("--hls-use-mpegts");
-                args.Add("--wait-for-video 5-30");
                 args.Add("--fragment-retries 15");
                 args.Add("--skip-unavailable-fragments");
                 args.Add("--retry-sleep fragment:5");

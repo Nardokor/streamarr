@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import Alert from 'Components/Alert';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import Menu from 'Components/Menu/Menu';
@@ -13,6 +13,7 @@ import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
+import { OnScroll } from 'Components/Scroller/Scroller';
 import Column from 'Components/Table/Column';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
@@ -47,6 +48,37 @@ function readViewPref(): ViewMode {
     // ignore
   }
   return 'poster';
+}
+
+const SESSION_KEY = 'creatorIndexState';
+
+interface SessionState {
+  sortKey: SortKey;
+  sortDirection: SortDirection;
+  filterKey: FilterKey;
+  searchQuery: string;
+  scrollTop: number;
+}
+
+function readSessionState(): Partial<SessionState> {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (raw) {
+      return JSON.parse(raw) as Partial<SessionState>;
+    }
+  } catch {
+    // ignore
+  }
+  return {};
+}
+
+function writeSessionState(patch: Partial<SessionState>) {
+  try {
+    const current = readSessionState();
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...current, ...patch }));
+  } catch {
+    // ignore
+  }
 }
 
 function sortCreators(
@@ -87,11 +119,14 @@ function CreatorIndex() {
     [stats]
   );
 
+  const session = useMemo(() => readSessionState(), []);
+  const initialScrollTop = useRef(session.scrollTop ?? 0);
+
   const [view, setView] = useState<ViewMode>(readViewPref);
-  const [sortKey, setSortKey] = useState<SortKey>('title');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('ascending');
-  const [filterKey, setFilterKey] = useState<FilterKey>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [sortKey, setSortKey] = useState<SortKey>(session.sortKey ?? 'title');
+  const [sortDirection, setSortDirection] = useState<SortDirection>(session.sortDirection ?? 'ascending');
+  const [filterKey, setFilterKey] = useState<FilterKey>(session.filterKey ?? 'all');
+  const [searchQuery, setSearchQuery] = useState(session.searchQuery ?? '');
 
   const handleViewChange = useCallback((v: string) => {
     const mode = v as ViewMode;
@@ -106,10 +141,16 @@ function CreatorIndex() {
   const handleSortPress = useCallback(
     (key: string) => {
       if (key === sortKey) {
-        setSortDirection((d) => (d === 'ascending' ? 'descending' : 'ascending'));
+        setSortDirection((d) => {
+          const next = d === 'ascending' ? 'descending' : 'ascending';
+          writeSessionState({ sortKey: sortKey, sortDirection: next });
+          return next;
+        });
       } else {
+        const nextDir: SortDirection = key === 'title' ? 'ascending' : 'descending';
         setSortKey(key as SortKey);
-        setSortDirection(key === 'title' ? 'ascending' : 'descending');
+        setSortDirection(nextDir);
+        writeSessionState({ sortKey: key as SortKey, sortDirection: nextDir });
       }
     },
     [sortKey]
@@ -117,6 +158,16 @@ function CreatorIndex() {
 
   const handleFilterChange = useCallback((key: string) => {
     setFilterKey(key as FilterKey);
+    writeSessionState({ filterKey: key as FilterKey });
+  }, []);
+
+  const handleSearchChange = useCallback((query: string) => {
+    setSearchQuery(query);
+    writeSessionState({ searchQuery: query });
+  }, []);
+
+  const handleScroll = useCallback(({ scrollTop }: OnScroll) => {
+    writeSessionState({ scrollTop });
   }, []);
 
   const hasActiveFilter = filterKey !== 'all';
@@ -153,13 +204,13 @@ function CreatorIndex() {
               type="text"
               placeholder="Search creators…"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
             {searchQuery ? (
               <button
                 className={styles.clearBtn}
                 type="button"
-                onClick={() => setSearchQuery('')}
+                onClick={() => handleSearchChange('')}
               >
                 ✕
               </button>
@@ -280,7 +331,10 @@ function CreatorIndex() {
         </PageToolbarSection>
       </PageToolbar>
 
-      <PageContentBody>
+      <PageContentBody
+        initialScrollTop={initialScrollTop.current}
+        onScroll={handleScroll}
+      >
         {isLoading ? <LoadingIndicator /> : null}
 
         {!isLoading && !!error ? (

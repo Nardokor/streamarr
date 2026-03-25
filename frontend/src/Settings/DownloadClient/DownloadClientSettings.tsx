@@ -8,10 +8,14 @@ import FormLabel from 'Components/Form/FormLabel';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
+import SpinnerButton from 'Components/Link/SpinnerButton';
+import CommandNames from 'Commands/CommandNames';
+import { useCommandExecuting, useExecuteCommand } from 'Commands/useCommands';
 import { inputTypes, kinds, sizes } from 'Helpers/Props';
 import SettingsToolbar from 'Settings/SettingsToolbar';
 import { InputChanged } from 'typings/inputs';
 import { useManageDownloadClientSettings } from './useDownloadClientSettings';
+import useYtDlpStatus from './useYtDlpStatus';
 
 function DownloadClientSettings() {
   const {
@@ -36,9 +40,17 @@ function DownloadClientSettings() {
     [updateSetting]
   );
 
+  const { data: ytDlpStatus } = useYtDlpStatus();
+  const executeCommand = useExecuteCommand();
+  const isUpdating = useCommandExecuting(CommandNames.UpdateYtDlp);
+
   const handleSavePress = useCallback(() => {
     saveSettings();
   }, [saveSettings]);
+
+  const handleUpdateYtDlp = useCallback(() => {
+    executeCommand({ name: CommandNames.UpdateYtDlp });
+  }, [executeCommand]);
 
   return (
     <PageContent title="Download Client Settings">
@@ -62,6 +74,21 @@ function DownloadClientSettings() {
             validationWarnings={validationWarnings}
           >
             <FieldSet legend="yt-dlp">
+              <FormGroup size={sizes.MEDIUM}>
+                <FormLabel>Version</FormLabel>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span>{ytDlpStatus?.version ?? 'Unknown'}</span>
+
+                  <SpinnerButton
+                    isSpinning={isUpdating}
+                    onPress={handleUpdateYtDlp}
+                  >
+                    Update yt-dlp
+                  </SpinnerButton>
+                </div>
+              </FormGroup>
+
               <FormGroup size={sizes.MEDIUM}>
                 <FormLabel>Binary Path</FormLabel>
 

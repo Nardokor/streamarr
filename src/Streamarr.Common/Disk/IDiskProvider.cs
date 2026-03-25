@@ -28,6 +28,7 @@ namespace Streamarr.Common.Disk
         long GetFileSize(string path);
         void CreateFolder(string path);
         void DeleteFile(string path);
+        string MoveToRecycleBin(string path, string recycleBinPath);
         void CloneFile(string source, string destination, bool overwrite = false);
         void CopyFile(string source, string destination, bool overwrite = false);
         void MoveFile(string source, string destination, bool overwrite = false);

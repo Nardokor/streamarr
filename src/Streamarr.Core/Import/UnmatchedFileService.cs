@@ -14,6 +14,7 @@ namespace Streamarr.Core.Import
     {
         List<UnmatchedFile> GetAll();
         List<UnmatchedFile> GetByCreatorId(int creatorId);
+        UnmatchedFile GetById(int id);
         UnmatchedFile Add(UnmatchedFile unmatchedFile);
         ContentEntity Assign(int unmatchedFileId, int channelId);
         void Delete(int id);
@@ -49,6 +50,11 @@ namespace Streamarr.Core.Import
         public List<UnmatchedFile> GetByCreatorId(int creatorId)
         {
             return _repo.GetByCreatorId(creatorId);
+        }
+
+        public UnmatchedFile GetById(int id)
+        {
+            return _repo.Get(id);
         }
 
         public UnmatchedFile Add(UnmatchedFile unmatchedFile)

@@ -58,7 +58,14 @@ namespace Streamarr.Core.Creators.Commands
 
             foreach (var creator in creators)
             {
-                RefreshCreator(creator);
+                try
+                {
+                    RefreshCreator(creator);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "Unhandled error refreshing creator '{0}' — skipping to next", creator.Title);
+                }
             }
         }
 

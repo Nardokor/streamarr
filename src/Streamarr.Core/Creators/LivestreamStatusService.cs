@@ -200,6 +200,7 @@ namespace Streamarr.Core.Creators
                 }
             }
         }
+
         private void TryDiscoverActiveLivestream(Channel channel, IMetadataSource source)
         {
             var live = source.GetActiveLivestream(channel.PlatformUrl, channel.PlatformId);

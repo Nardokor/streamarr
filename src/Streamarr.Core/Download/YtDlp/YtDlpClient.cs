@@ -63,12 +63,7 @@ namespace Streamarr.Core.Download.YtDlp
             PropertyNameCaseInsensitive = true
         };
 
-        private static readonly TimeSpan CookieCacheDuration = TimeSpan.FromSeconds(30);
-
         private readonly ConcurrentDictionary<int, Process> _activeDownloads = new();
-        private readonly object _cookieLock = new object();
-        private string _cookieTempPath;
-        private DateTime _cookieCopiedAt = DateTime.MinValue;
 
         private readonly IProcessProvider _processProvider;
         private readonly IDiskProvider _diskProvider;
@@ -77,53 +72,9 @@ namespace Streamarr.Core.Download.YtDlp
 
         public bool HasCookies => !string.IsNullOrWhiteSpace(Settings.CookieFilePath);
 
-        private string CookieArg
-        {
-            get
-            {
-                var path = GetSafeCookiePath();
-                return path != null ? $" --cookies {Quote(path)}" : string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Returns the path to a stable snapshot of the cookie file that yt-dlp can read
-        /// safely. The snapshot is refreshed at most once per <see cref="CookieCacheDuration"/>
-        /// so that concurrent browser writes to the original file don't corrupt yt-dlp reads.
-        /// Falls back to the original path when the copy cannot be created.
-        /// </summary>
-        private string GetSafeCookiePath()
-        {
-            var sourcePath = Settings.CookieFilePath;
-            if (string.IsNullOrWhiteSpace(sourcePath))
-            {
-                return null;
-            }
-
-            lock (_cookieLock)
-            {
-                if (string.IsNullOrWhiteSpace(_cookieTempPath))
-                {
-                    _cookieTempPath = Path.Combine(Path.GetTempPath(), "streamarr-cookies.txt");
-                }
-
-                if (DateTime.UtcNow - _cookieCopiedAt > CookieCacheDuration)
-                {
-                    try
-                    {
-                        File.Copy(sourcePath, _cookieTempPath, overwrite: true);
-                        _cookieCopiedAt = DateTime.UtcNow;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Warn(ex, "Failed to snapshot cookie file {0}; falling back to original path", sourcePath);
-                        return sourcePath;
-                    }
-                }
-
-                return _cookieTempPath;
-            }
-        }
+        private string CookieArg => !string.IsNullOrWhiteSpace(Settings.CookieFilePath)
+            ? $" --cookies {Quote(Settings.CookieFilePath)}"
+            : string.Empty;
 
         private YtDlpSettings Settings => new YtDlpSettings
         {
@@ -276,29 +227,20 @@ namespace Streamarr.Core.Download.YtDlp
                     return false;
                 }
 
-                // Cookie file parse failure is a transient yt-dlp issue unrelated to video
-                // accessibility — treat the video as accessible so we don't suppress downloads.
-                if (lower.Contains("does not look like a netscape format cookies file"))
-                {
-                    _logger.Warn("IsVideoAccessible({0}) — cookie file unreadable by yt-dlp (treating as accessible): {1}", videoId, error.Split('\n')[0].Trim());
-                    return true;
-                }
-
-                // Unrecognised non-zero exit — treat as inaccessible so a transient yt-dlp
-                // error or an unknown membership error string doesn't produce a false positive.
-                _logger.Warn("IsVideoAccessible({0}) — unrecognised error (treating as inaccessible): {1}", videoId, error.Split('\n')[0].Trim());
-                return false;
+                // Non-access failure (network, solver, etc.) — assume accessible to avoid
+                // incorrectly blocking content when yt-dlp encounters a transient error.
+                _logger.Warn("IsVideoAccessible({0}) — non-access error (treating as accessible): {1}", videoId, error.Split('\n')[0].Trim());
+                return true;
             }
 
-            // Parse the printed availability value. Only "public" and "unlisted" are
-            // considered accessible — any other value (including empty, members_only,
-            // subscriber_only, premium_only, needs_auth, private, or an unknown future
-            // value) is treated as inaccessible to avoid false positives.
-            var availability = output.Standard.FirstOrDefault()?.Content?.Trim().ToLowerInvariant() ?? string.Empty;
-            var accessible = availability is "public" or "unlisted";
+            // Parse the printed availability value. Exit 0 with members_only/subscriber_only
+            // means yt-dlp could reach the metadata but the content is gated.
+            var availability = output.Standard.FirstOrDefault()?.Content?.Trim().ToLowerInvariant() ?? "public";
+            var inaccessible = availability is "members_only" or "subscriber_only"
+                                             or "premium_only" or "needs_auth" or "private";
 
-            _logger.Debug("IsVideoAccessible({0}) → availability={1}, accessible={2}", videoId, availability, accessible);
-            return accessible;
+            _logger.Debug("IsVideoAccessible({0}) → availability={1}, accessible={2}", videoId, availability, !inaccessible);
+            return !inaccessible;
         }
 
         public YtDlpChannelInfo GetChannelInfo(string channelUrl)
@@ -392,10 +334,9 @@ namespace Streamarr.Core.Download.YtDlp
                 argParts.Add($"--dateafter {dateAfter}");
             }
 
-            var cookiePath = GetSafeCookiePath();
-            if (cookiePath != null)
+            if (!string.IsNullOrWhiteSpace(Settings.CookieFilePath))
             {
-                argParts.Add($"--cookies {Quote(cookiePath)}");
+                argParts.Add($"--cookies {Quote(Settings.CookieFilePath)}");
             }
 
             argParts.Add(Quote(url));
@@ -677,11 +618,10 @@ namespace Streamarr.Core.Download.YtDlp
                 args.Add("--embed-thumbnail");
             }
 
-            var cookiePath = needsCookies ? GetSafeCookiePath() : null;
-            if (cookiePath != null)
+            if (needsCookies && !string.IsNullOrWhiteSpace(Settings.CookieFilePath))
             {
                 args.Add("--cookies");
-                args.Add(Quote(cookiePath));
+                args.Add(Quote(Settings.CookieFilePath));
             }
 
             args.Add(Quote(url));

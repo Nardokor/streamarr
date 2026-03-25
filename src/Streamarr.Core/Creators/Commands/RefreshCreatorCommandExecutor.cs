@@ -15,6 +15,10 @@ namespace Streamarr.Core.Creators.Commands
 {
     public class RefreshCreatorCommandExecutor : IExecute<RefreshCreatorCommand>
     {
+        // Limit membership probes for None/Unknown channels to this many per scheduled run.
+        // Active channels are always probed (they have accessible content to monitor).
+        private const int MaxMembershipChecksPerRun = 5;
+
         private readonly ICreatorService _creatorService;
         private readonly IChannelService _channelService;
         private readonly IContentService _contentService;
@@ -49,10 +53,6 @@ namespace Streamarr.Core.Creators.Commands
             _unmatchedFileService = unmatchedFileService;
             _logger = logger;
         }
-
-        // Limit membership probes for None/Unknown channels to this many per scheduled run.
-        // Active channels are always probed (they have accessible content to monitor).
-        private const int MaxMembershipChecksPerRun = 5;
 
         public void Execute(RefreshCreatorCommand message)
         {

@@ -366,39 +366,43 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
             var broadcastContent = video.Snippet?.LiveBroadcastContent ?? string.Empty;
 
-            if (broadcastContent == "upcoming" ||
-                (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow && broadcastContent != "none"))
-            {
-                return new ContentStatusUpdate
-                {
-                    PlatformContentId = video.Id,
-                    NewContentType = ContentType.Upcoming,
-                    NewAirDateUtc = lsd.ScheduledStartTime ?? lsd.ActualStartTime,
-                    ExistsOnPlatform = true,
-                    ShouldTriggerDownload = false
-                };
-            }
-
-            if (broadcastContent == "live" ||
-                (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue && broadcastContent != "none"))
+            // Check actualStartTime + no actualEndTime first — this is authoritative.
+            // broadcastContent can lag several minutes behind the real stream state,
+            // so a stream that is already live may still say "upcoming" in the API.
+            if (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue)
             {
                 return new ContentStatusUpdate
                 {
                     PlatformContentId = video.Id,
                     NewContentType = ContentType.Live,
-                    NewAirDateUtc = lsd.ActualStartTime ?? lsd.ScheduledStartTime,
+                    NewAirDateUtc = lsd.ActualStartTime,
                     ExistsOnPlatform = true,
                     ShouldTriggerDownload = true
                 };
             }
 
-            if (lsd.ActualStartTime.HasValue)
+            // Stream has ended (actualEndTime is set).
+            if (lsd.ActualStartTime.HasValue && lsd.ActualEndTime.HasValue)
             {
                 return new ContentStatusUpdate
                 {
                     PlatformContentId = video.Id,
                     NewContentType = ContentType.Vod,
                     NewAirDateUtc = lsd.ActualStartTime.Value,
+                    ExistsOnPlatform = true,
+                    ShouldTriggerDownload = false
+                };
+            }
+
+            // No actualStartTime yet — stream hasn't started.
+            if (broadcastContent == "upcoming" ||
+                (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow))
+            {
+                return new ContentStatusUpdate
+                {
+                    PlatformContentId = video.Id,
+                    NewContentType = ContentType.Upcoming,
+                    NewAirDateUtc = lsd.ScheduledStartTime,
                     ExistsOnPlatform = true,
                     ShouldTriggerDownload = false
                 };

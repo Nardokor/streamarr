@@ -453,6 +453,12 @@ namespace Streamarr.Core.MetadataSource.YouTube
                     AirDateUtc = DateTime.UtcNow,
                 };
             }
+            catch (Exception ex) when (ex.Message.Contains("not currently live", StringComparison.OrdinalIgnoreCase))
+            {
+                // Channel is offline — this is the normal case, not an error.
+                _logger.Debug("Channel '{0}' is not currently live", liveUrl);
+                return null;
+            }
             catch (Exception ex)
             {
                 _logger.Warn(ex, "Failed to check active livestream for '{0}'", liveUrl);

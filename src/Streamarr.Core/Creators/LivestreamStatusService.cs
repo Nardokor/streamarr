@@ -83,6 +83,12 @@ namespace Streamarr.Core.Creators
                 .GetLivestreamStatusUpdates(livestreamContent.Select(c => c.PlatformContentId))
                 .ToDictionary(u => u.PlatformContentId);
 
+            _logger.Debug(
+                "Got {0} update(s) from API for {1} tracked item(s) in '{2}'",
+                updates.Count,
+                livestreamContent.Count,
+                channel.Title);
+
             foreach (var content in livestreamContent)
             {
                 if (!updates.TryGetValue(content.PlatformContentId, out var update))
@@ -100,11 +106,25 @@ namespace Streamarr.Core.Creators
                     continue;
                 }
 
+                _logger.Debug(
+                    "'{0}' ({1}): DB={2}/{3} → API={4}",
+                    content.Title,
+                    content.PlatformContentId,
+                    content.ContentType,
+                    content.Status,
+                    update.NewContentType);
+
                 ContentStatus? newStatus = null;
 
                 if (update.NewContentType == ContentType.Live)
                 {
-                    if (channel.DownloadLive)
+                    if (!channel.DownloadLive)
+                    {
+                        _logger.Debug(
+                            "Stream '{0}' is live but DownloadLive=false; tracking only",
+                            content.Title);
+                    }
+                    else
                     {
                         if (content.Status == ContentStatus.Unwanted)
                         {

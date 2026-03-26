@@ -216,6 +216,14 @@ namespace Streamarr.Core.Creators
                         content.Status);
                 }
             }
+
+            // Even when existing live/upcoming items were found, also probe for a new
+            // stream that isn't in the DB yet.  A channel can have a stale Upcoming
+            // sentinel from a previously-scheduled stream while simultaneously running
+            // a completely different live broadcast that Refresh Creator hasn't picked
+            // up yet.  TryDiscoverActiveLivestream is a no-op if the stream already
+            // exists (FindByPlatformContentId guard inside).
+            TryDiscoverActiveLivestream(channel, source);
         }
 
         private void TryDiscoverActiveLivestream(Channel channel, IMetadataSource source)

@@ -419,27 +419,43 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         public override ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId)
         {
+            // Use CHANNEL_URL/live — YouTube routes this directly to the active live stream
+            // if one exists, or returns an error if the channel is offline.  This avoids the
+            // GetChannelInfo two-level tab/playlist structure where entries[] contains tab
+            // playlists (Videos, Live, Shorts), not individual videos, so IsLive is never set.
+            var baseUrl = platformUrl.TrimEnd('/');
+            foreach (var knownTab in new[] { "/videos", "/shorts", "/streams", "/live" })
+            {
+                if (baseUrl.EndsWith(knownTab, StringComparison.OrdinalIgnoreCase))
+                {
+                    baseUrl = baseUrl[..^knownTab.Length];
+                    break;
+                }
+            }
+
+            var liveUrl = baseUrl + "/live";
+
             try
             {
-                var channelInfo = _ytDlpClient.GetChannelInfo(platformUrl);
-                var liveEntry = channelInfo.Entries.FirstOrDefault(e => e.IsLive == true);
-                if (liveEntry == null)
+                var video = _ytDlpClient.GetVideoInfo(liveUrl);
+
+                if (video.IsLive != true)
                 {
                     return null;
                 }
 
                 return new ContentMetadataResult
                 {
-                    PlatformContentId = liveEntry.Id,
+                    PlatformContentId = video.Id,
                     ContentType = ContentType.Live,
-                    Title = string.IsNullOrEmpty(liveEntry.Title) ? "Live Stream" : liveEntry.Title,
-                    ThumbnailUrl = liveEntry.Thumbnail,
+                    Title = string.IsNullOrEmpty(video.Title) ? "Live Stream" : video.Title,
+                    ThumbnailUrl = video.Thumbnail,
                     AirDateUtc = DateTime.UtcNow,
                 };
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Failed to check active livestream for '{0}'", platformUrl);
+                _logger.Warn(ex, "Failed to check active livestream for '{0}'", liveUrl);
                 return null;
             }
         }

@@ -66,14 +66,11 @@ namespace Streamarr.Core.Creators
 
             if (!livestreamContent.Any())
             {
-                // No known live/upcoming content — if the channel wants live streams,
-                // probe the channel directly so a new stream is discovered and can
-                // start recording without waiting for the next full sync.
-                if (channel.DownloadLive)
-                {
-                    TryDiscoverActiveLivestream(channel, source);
-                }
-
+                // No known live/upcoming content — probe the channel directly so a
+                // new stream is discovered without waiting for the next full sync.
+                // Discovery is always attempted regardless of DownloadLive; that flag
+                // controls whether the discovered item is queued for recording.
+                TryDiscoverActiveLivestream(channel, source);
                 return;
             }
 
@@ -223,6 +220,7 @@ namespace Streamarr.Core.Creators
                 channel.Title);
 
             var passes = _contentFilterService.PassesFilter(live.Title, ContentType.Live, channel);
+            var initialStatus = passes && channel.DownloadLive ? ContentStatus.Missing : ContentStatus.Unwanted;
             var content = new ContentEntity
             {
                 ChannelId = channel.Id,
@@ -233,12 +231,12 @@ namespace Streamarr.Core.Creators
                 AirDateUtc = live.AirDateUtc,
                 DateAdded = DateTime.UtcNow,
                 Monitored = true,
-                Status = passes ? ContentStatus.Missing : ContentStatus.Unwanted,
+                Status = initialStatus,
             };
 
             var added = _contentService.AddContent(content);
 
-            if (passes && channel.AutoDownload)
+            if (passes && channel.DownloadLive && channel.AutoDownload)
             {
                 added.Status = ContentStatus.Recording;
                 _contentService.UpdateContent(added);

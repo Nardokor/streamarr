@@ -189,7 +189,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (_ytDlpClient.HasCookies)
             {
                 _logger.Info("Cookie file configured — using yt-dlp listing (checkMembership={0})", checkMembership);
-                return GetNewContentHybrid(platformUrl, since, checkMembership);
+                return GetNewContentHybrid(platformUrl, platformId, since, checkMembership);
             }
 
             return GetNewContentViaApi(platformId, since);
@@ -209,23 +209,53 @@ namespace Streamarr.Core.MetadataSource.YouTube
             _logger.Info("Fetching playlist {0} via YouTube API (since: {1})", uploadsPlaylistId, since?.ToString("u") ?? "beginning");
 
             var playlistItems = _youTubeApiClient.GetPlaylistItems(Settings.ApiKey, uploadsPlaylistId, since);
+            var playlistVideoIds = new HashSet<string>(playlistItems.Select(p => p.VideoId), StringComparer.OrdinalIgnoreCase);
 
-            if (!playlistItems.Any())
+            // Supplement with RSS to catch ongoing live streams. The uploads playlist only
+            // receives a live stream after it ends and is archived as a VOD. The RSS feed
+            // always includes the currently-live stream as the most recent entry.
+            var rssExtraIds = new List<string>();
+            try
+            {
+                var rssIds = _youTubeApiClient.GetChannelRecentVideoIds(platformId);
+                foreach (var id in rssIds)
+                {
+                    if (!playlistVideoIds.Contains(id))
+                    {
+                        rssExtraIds.Add(id);
+                    }
+                }
+
+                if (rssExtraIds.Count > 0)
+                {
+                    _logger.Debug("RSS supplement: {0} candidate ID(s) not yet in uploads playlist for {1}", rssExtraIds.Count, platformId);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "RSS supplement failed for channel '{0}'; live stream detection may be delayed until next sync", platformId);
+            }
+
+            var allIds = playlistItems.Select(p => p.VideoId).Concat(rssExtraIds).ToList();
+
+            if (!allIds.Any())
             {
                 _logger.Info("No new items found for playlist {0}", uploadsPlaylistId);
                 return Enumerable.Empty<ContentMetadataResult>();
             }
 
-            _logger.Info("Found {0} new items, fetching details", playlistItems.Count);
+            if (playlistItems.Any())
+            {
+                _logger.Info("Found {0} new item(s) in playlist, fetching details", playlistItems.Count);
+            }
 
-            var videoDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, playlistItems.Select(p => p.VideoId));
-
+            var videoDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, allIds);
             var publishedAtById = playlistItems.ToDictionary(p => p.VideoId, p => p.PublishedAt);
 
             return videoDetails.Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id)));
         }
 
-        private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, DateTime? since, bool checkMembership)
+        private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, string platformId, DateTime? since, bool checkMembership)
         {
             // 1. Regular tabs: videos, shorts, streams (date-filtered for efficiency)
             var dateAfter = since?.ToString("yyyyMMdd");
@@ -273,11 +303,40 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
             _logger.Info("yt-dlp found {0} items ({1} from membership tab) for {2}", allVideos.Count, membershipIds.Count, platformUrl);
 
-            // 4. YouTube API enrichment for richer metadata (timestamps, liveStreamingDetails)
+            // 3.5. RSS supplement: catch ongoing live streams that yt-dlp may miss because
+            // they have no upload_date yet and are filtered out by --dateafter.
+            var rssExtraIds = new List<string>();
+            if (!string.IsNullOrWhiteSpace(platformId))
+            {
+                try
+                {
+                    var rssIds = _youTubeApiClient.GetChannelRecentVideoIds(platformId);
+                    foreach (var id in rssIds)
+                    {
+                        if (!seen.Contains(id))
+                        {
+                            rssExtraIds.Add(id);
+                        }
+                    }
+
+                    if (rssExtraIds.Count > 0)
+                    {
+                        _logger.Debug("RSS supplement: {0} candidate ID(s) not in yt-dlp listing for {1}", rssExtraIds.Count, platformUrl);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "RSS supplement failed for '{0}'; live stream detection may be delayed until next sync", platformUrl);
+                }
+            }
+
+            // 4. YouTube API enrichment for richer metadata (timestamps, liveStreamingDetails).
+            // Include RSS-only IDs in the same batch call — no extra quota cost.
             var apiById = new Dictionary<string, YoutubeVideo>();
             if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
             {
-                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, allVideos.Select(v => v.Id));
+                var idsToFetch = allVideos.Select(v => v.Id).Concat(rssExtraIds);
+                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, idsToFetch);
                 foreach (var v in apiVideos)
                 {
                     apiById[v.Id] = v;
@@ -304,6 +363,25 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (membersOnlyCount > 0)
             {
                 _logger.Info("{0} members-only video(s) identified", membersOnlyCount);
+            }
+
+            // 6. Append RSS-only live streams (if API key available and they are currently live).
+            // Without an API key we have no way to confirm they're live, so we skip them.
+            foreach (var id in rssExtraIds)
+            {
+                if (!apiById.TryGetValue(id, out var apiVideo))
+                {
+                    continue;
+                }
+
+                var lsd = apiVideo.LiveStreamingDetails;
+                if (lsd == null || !lsd.ActualStartTime.HasValue || lsd.ActualEndTime.HasValue)
+                {
+                    continue;
+                }
+
+                _logger.Debug("RSS supplement: adding live stream '{0}' ({1})", apiVideo.Snippet?.Title, id);
+                result.Add(MapToContentMetadata(apiVideo, publishedAt: null));
             }
 
             return result;

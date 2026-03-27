@@ -15,12 +15,10 @@ namespace Streamarr.Core.MetadataSource
             return new StreamarrValidationResult(Validator.Validate(this));
         }
 
-        // Sync scheduling
-        [FieldDefinition(90, Label = "Refresh Interval", Unit = "hours", HelpText = "How often to sync new content from this source (hours).")]
+        // Sync scheduling — this interval also governs live stream detection; set to 1 hour
+        // for near-real-time discovery.
+        [FieldDefinition(90, Label = "Refresh Interval", Unit = "hours", HelpText = "How often to sync new content and detect live streams (hours). Set to 1 for hourly live stream detection.")]
         public int RefreshIntervalHours { get; set; } = 24;
-
-        [FieldDefinition(91, Label = "Live Check Interval", Unit = "minutes", HelpText = "How often to check the status of active livestreams (minutes).")]
-        public int LiveCheckIntervalMinutes { get; set; } = 60;
 
         // Default channel filter settings applied when a new channel is added from this source
         [FieldDefinition(100, Label = "Download Videos", Type = FieldType.Checkbox, HelpText = "Download regular videos by default for new channels.")]

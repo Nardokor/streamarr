@@ -63,9 +63,13 @@ function BaseSettingsFields({
           helpText="How often to scan for new content (min 1, max 168)"
           min={1}
           max={168}
-          value={getVal('refreshIntervalHours', 24)}
+          value={getVal('refreshIntervalHours', 1)}
           errors={[]}
-          warnings={[]}
+          warnings={
+            getVal('refreshIntervalHours', 1) > 6
+              ? [{ message: 'Values above 6 hours may cause recent uploads and live streams to be missed' }]
+              : []
+          }
           onChange={onChange}
         />
       </FormGroup>

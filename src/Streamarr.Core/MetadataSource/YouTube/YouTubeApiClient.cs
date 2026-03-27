@@ -16,7 +16,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
         string GetChannelThumbnailUrl(string apiKey, string channelId);
 
         // Fetches the channel's RSS feed and returns the most recent video IDs.
-        // Free — no API quota consumed. Returns up to 5 IDs.
+        // Free — no API quota consumed. Returns up to 15 IDs.
         List<string> GetChannelRecentVideoIds(string channelId);
     }
 
@@ -156,7 +156,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             return doc.Descendants(yt + "videoId")
                       .Select(e => e.Value)
                       .Where(id => !string.IsNullOrWhiteSpace(id))
-                      .Take(5)
+                      .Take(15)
                       .ToList();
         }
 

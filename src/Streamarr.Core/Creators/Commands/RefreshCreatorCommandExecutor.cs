@@ -140,7 +140,7 @@ namespace Streamarr.Core.Creators.Commands
             // Unknown/None: probe up to MaxMembershipChecksPerRun times per run to avoid
             //   all bulk-imported channels checking simultaneously after their first week.
             // None: additionally requires the 7-day recheck threshold to be exceeded.
-            var membershipRecheckThreshold = TimeSpan.FromDays(7);
+            var membershipRecheckThreshold = TimeSpan.FromDays(30);
             var shouldCheckMembership = channel.Platform == PlatformType.YouTube &&
                 channel.MembershipStatus switch
                 {

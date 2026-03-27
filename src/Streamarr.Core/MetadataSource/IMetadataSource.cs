@@ -35,7 +35,6 @@ namespace Streamarr.Core.MetadataSource
 
         // Check whether the channel is currently hosting an active live stream.
         // Returns metadata for the live content if found, or null if not live.
-        // Used by CheckLiveStreams to discover streams without waiting for a full sync.
         ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId);
     }
 

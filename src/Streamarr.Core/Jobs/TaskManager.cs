@@ -83,12 +83,6 @@ namespace Streamarr.Core.Jobs
 
                     new ScheduledTask
                     {
-                        Interval = GetLiveCheckInterval(),
-                        TypeName = typeof(CheckLiveStreamsCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
                         Interval = 5,
                         TypeName = typeof(MessagingCleanupCommand).FullName
                     },
@@ -190,12 +184,6 @@ namespace Streamarr.Core.Jobs
             return Math.Max(60, (settings?.RefreshIntervalHours ?? 24) * 60);
         }
 
-        private int GetLiveCheckInterval()
-        {
-            var settings = GetMetadataSettings();
-            return Math.Max(5, settings?.LiveCheckIntervalMinutes ?? 60);
-        }
-
         private MetadataSourceSettingsBase GetMetadataSettings()
         {
             // Use the first enabled source's settings for scheduling intervals.
@@ -244,13 +232,9 @@ namespace Streamarr.Core.Jobs
             var refresh = _scheduledTaskRepository.GetDefinition(typeof(RefreshCreatorCommand));
             refresh.Interval = GetFullRefreshInterval();
 
-            var liveCheck = _scheduledTaskRepository.GetDefinition(typeof(CheckLiveStreamsCommand));
-            liveCheck.Interval = GetLiveCheckInterval();
-
-            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { refresh, liveCheck });
+            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { refresh });
 
             _cache.Find(refresh.TypeName).Interval = refresh.Interval;
-            _cache.Find(liveCheck.TypeName).Interval = liveCheck.Interval;
         }
     }
 }

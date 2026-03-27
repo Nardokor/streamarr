@@ -39,7 +39,6 @@ function BaseSettingsFields({
   showShorts,
   showVods = true,
   showLive = true,
-  showLiveCheckInterval = true,
   showFilters = true,
   videosLabel = 'Videos',
   shortsLabel = 'Shorts',
@@ -50,7 +49,6 @@ function BaseSettingsFields({
   showShorts: boolean;
   showVods?: boolean;
   showLive?: boolean;
-  showLiveCheckInterval?: boolean;
   showFilters?: boolean;
   videosLabel?: string;
   shortsLabel?: string;
@@ -65,29 +63,16 @@ function BaseSettingsFields({
           helpText="How often to scan for new content (min 1, max 168)"
           min={1}
           max={168}
-          value={getVal('refreshIntervalHours', 24)}
+          value={getVal('refreshIntervalHours', 1)}
           errors={[]}
-          warnings={[]}
+          warnings={
+            getVal('refreshIntervalHours', 1) > 6
+              ? [{ message: 'Values above 6 hours may cause recent uploads and live streams to be missed' }]
+              : []
+          }
           onChange={onChange}
         />
       </FormGroup>
-
-      {showLiveCheckInterval && (
-        <FormGroup>
-          <FormLabel>Live Check Interval (minutes)</FormLabel>
-          <FormInputGroup
-            type={inputTypes.NUMBER}
-            name="liveCheckIntervalMinutes"
-            helpText="How often to check livestream status (min 5, max 1440)"
-            min={5}
-            max={1440}
-            value={getVal('liveCheckIntervalMinutes', 60)}
-            errors={[]}
-            warnings={[]}
-            onChange={onChange}
-          />
-        </FormGroup>
-      )}
 
       {showVideos && (
         <FormGroup>
@@ -523,7 +508,6 @@ function FourthwallSourceForm({
           showShorts={false}
           showVods={false}
           showLive={true}
-          showLiveCheckInterval={false}
           showFilters={false}
         />
 

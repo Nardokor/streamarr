@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using NLog;
 using Streamarr.Core.Channels;
@@ -6,7 +5,6 @@ using Streamarr.Core.Content;
 using Streamarr.Core.Download;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.MetadataSource;
-using ContentEntity = Streamarr.Core.Content.Content;
 
 namespace Streamarr.Core.Creators
 {
@@ -52,6 +50,11 @@ namespace Streamarr.Core.Creators
                 ? (_metadataSourceFactory.GetByPlatform(delegatePlatform) ?? channelSource)
                 : channelSource;
 
+            UpdateTrackedStatuses(channel, source);
+        }
+
+        private void UpdateTrackedStatuses(Channel channel, IMetadataSource source)
+        {
             var existing = _contentService.GetByChannelId(channel.Id);
 
             // Only probe Live and Upcoming items — VODs have already transitioned and
@@ -66,11 +69,6 @@ namespace Streamarr.Core.Creators
 
             if (!livestreamContent.Any())
             {
-                // No known live/upcoming content — probe the channel directly so a
-                // new stream is discovered without waiting for the next full sync.
-                // Discovery is always attempted regardless of DownloadLive; that flag
-                // controls whether the discovered item is queued for recording.
-                TryDiscoverActiveLivestream(channel, source);
                 return;
             }
 
@@ -215,61 +213,6 @@ namespace Streamarr.Core.Creators
                         content.AirDateUtc,
                         content.Status);
                 }
-            }
-
-            // Even when existing live/upcoming items were found, also probe for a new
-            // stream that isn't in the DB yet.  A channel can have a stale Upcoming
-            // sentinel from a previously-scheduled stream while simultaneously running
-            // a completely different live broadcast that Refresh Creator hasn't picked
-            // up yet.  TryDiscoverActiveLivestream is a no-op if the stream already
-            // exists (FindByPlatformContentId guard inside).
-            TryDiscoverActiveLivestream(channel, source);
-        }
-
-        private void TryDiscoverActiveLivestream(Channel channel, IMetadataSource source)
-        {
-            var live = source.GetActiveLivestream(channel.PlatformUrl, channel.PlatformId);
-            if (live == null)
-            {
-                return;
-            }
-
-            // Skip if the content already exists — a recent full sync may have added it.
-            var existing = _contentService.FindByPlatformContentId(channel.Id, live.PlatformContentId);
-            if (existing != null)
-            {
-                return;
-            }
-
-            _logger.Info(
-                "Discovered active livestream '{0}' ({1}) for '{2}' via live check",
-                live.Title,
-                live.PlatformContentId,
-                channel.Title);
-
-            var passes = _contentFilterService.PassesFilter(live.Title, ContentType.Live, channel);
-            var initialStatus = passes && channel.DownloadLive ? ContentStatus.Missing : ContentStatus.Unwanted;
-            var content = new ContentEntity
-            {
-                ChannelId = channel.Id,
-                PlatformContentId = live.PlatformContentId,
-                ContentType = ContentType.Live,
-                Title = live.Title,
-                ThumbnailUrl = live.ThumbnailUrl,
-                AirDateUtc = live.AirDateUtc,
-                DateAdded = DateTime.UtcNow,
-                Monitored = true,
-                Status = initialStatus,
-            };
-
-            var added = _contentService.AddContent(content);
-
-            if (passes && channel.DownloadLive && channel.AutoDownload)
-            {
-                added.Status = ContentStatus.Recording;
-                _contentService.UpdateContent(added);
-                _commandQueueManager.Push(new DownloadContentCommand { ContentId = added.Id });
-                _logger.Info("Queued live recording for '{0}' (auto-discovered via live check)", live.Title);
             }
         }
     }

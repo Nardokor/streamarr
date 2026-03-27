@@ -226,10 +226,11 @@ namespace Streamarr.Core.MetadataSource.YouTube
                     }
                 }
 
-                if (rssExtraIds.Count > 0)
-                {
-                    _logger.Debug("RSS supplement: {0} candidate ID(s) not yet in uploads playlist for {1}", rssExtraIds.Count, platformId);
-                }
+                _logger.Info(
+                    "RSS supplement: {0} recent ID(s) fetched, {1} not yet in uploads playlist for {2}",
+                    rssIds.Count,
+                    rssExtraIds.Count,
+                    platformId);
             }
             catch (Exception ex)
             {
@@ -319,10 +320,11 @@ namespace Streamarr.Core.MetadataSource.YouTube
                         }
                     }
 
-                    if (rssExtraIds.Count > 0)
-                    {
-                        _logger.Debug("RSS supplement: {0} candidate ID(s) not in yt-dlp listing for {1}", rssExtraIds.Count, platformUrl);
-                    }
+                    _logger.Info(
+                        "RSS supplement: {0} recent ID(s) fetched, {1} not in yt-dlp listing for {2}",
+                        rssIds.Count,
+                        rssExtraIds.Count,
+                        platformUrl);
                 }
                 catch (Exception ex)
                 {

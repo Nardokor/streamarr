@@ -39,7 +39,6 @@ function BaseSettingsFields({
   showShorts,
   showVods = true,
   showLive = true,
-  showLiveCheckInterval = true,
   showFilters = true,
   videosLabel = 'Videos',
   shortsLabel = 'Shorts',
@@ -50,7 +49,6 @@ function BaseSettingsFields({
   showShorts: boolean;
   showVods?: boolean;
   showLive?: boolean;
-  showLiveCheckInterval?: boolean;
   showFilters?: boolean;
   videosLabel?: string;
   shortsLabel?: string;
@@ -71,23 +69,6 @@ function BaseSettingsFields({
           onChange={onChange}
         />
       </FormGroup>
-
-      {showLiveCheckInterval && (
-        <FormGroup>
-          <FormLabel>Live Check Interval (minutes)</FormLabel>
-          <FormInputGroup
-            type={inputTypes.NUMBER}
-            name="liveCheckIntervalMinutes"
-            helpText="How often to check livestream status (min 5, max 1440)"
-            min={5}
-            max={1440}
-            value={getVal('liveCheckIntervalMinutes', 60)}
-            errors={[]}
-            warnings={[]}
-            onChange={onChange}
-          />
-        </FormGroup>
-      )}
 
       {showVideos && (
         <FormGroup>
@@ -523,7 +504,6 @@ function FourthwallSourceForm({
           showShorts={false}
           showVods={false}
           showLive={true}
-          showLiveCheckInterval={false}
           showFilters={false}
         />
 

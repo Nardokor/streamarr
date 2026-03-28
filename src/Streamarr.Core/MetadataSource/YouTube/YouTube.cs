@@ -219,6 +219,12 @@ namespace Streamarr.Core.MetadataSource.YouTube
                     return GetInitialSyncViaApi(platformId, platformUrl, checkMembership);
                 }
 
+                if (!string.IsNullOrWhiteSpace(Settings.WebhookBaseUrl))
+                {
+                    _logger.Info("Incremental sync — WebSub configured, skipping RSS; using playlist API for {0}", platformUrl);
+                    return GetIncrementalSyncViaApi(platformId, platformUrl, since.Value, checkMembership);
+                }
+
                 _logger.Info("Incremental sync — using RSS for {0}", platformUrl);
                 return GetIncrementalSyncViaRss(platformId, platformUrl, since.Value, checkMembership);
             }
@@ -241,7 +247,18 @@ namespace Streamarr.Core.MetadataSource.YouTube
             var playlistItems = _youTubeApiClient.GetPlaylistItems(Settings.ApiKey, uploadsPlaylistId, since: null);
             var playlistIds = new HashSet<string>(playlistItems.Select(p => p.VideoId), StringComparer.OrdinalIgnoreCase);
 
-            var rssExtraIds = FetchRssExtras(platformId, platformUrl, playlistIds);
+            var rssExtraIds = string.IsNullOrWhiteSpace(Settings.WebhookBaseUrl)
+                ? FetchRssExtras(platformId, platformUrl, playlistIds)
+                : new List<string>();
+
+            if (rssExtraIds.Count > 0)
+            {
+                _logger.Debug("WebSub not configured — using RSS supplement: {0} extra ID(s) for {1}", rssExtraIds.Count, platformUrl);
+            }
+            else if (!string.IsNullOrWhiteSpace(Settings.WebhookBaseUrl))
+            {
+                _logger.Debug("WebSub configured — skipping RSS supplement for {0}", platformUrl);
+            }
 
             var allPublicIds = playlistItems.Select(p => p.VideoId).Concat(rssExtraIds);
             var publishedAtById = playlistItems.ToDictionary(p => p.VideoId, p => p.PublishedAt);

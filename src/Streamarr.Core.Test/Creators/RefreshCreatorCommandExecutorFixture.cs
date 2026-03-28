@@ -6,6 +6,7 @@ using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Creators.Commands;
+using Streamarr.Core.Import;
 using Streamarr.Core.MetadataSource;
 using Streamarr.Core.Test.Framework;
 using Streamarr.Test.Common;
@@ -52,6 +53,14 @@ namespace Streamarr.Core.Test.Creators
             Mocker.GetMock<IChannelService>()
                   .Setup(s => s.GetByCreatorId(_creator.Id))
                   .Returns(new List<Channel> { _channel });
+
+            Mocker.GetMock<IContentService>()
+                  .Setup(s => s.GetByChannelId(It.IsAny<int>()))
+                  .Returns(new List<ContentEntity>());
+
+            Mocker.GetMock<IUnmatchedFileService>()
+                  .Setup(s => s.GetByCreatorId(It.IsAny<int>()))
+                  .Returns(new List<UnmatchedFile>());
 
             Mocker.GetMock<IContentFilterService>()
                   .Setup(s => s.PassesFilter(It.IsAny<string>(), It.IsAny<ContentType>(), It.IsAny<Channel>(), It.IsAny<bool>(), It.IsAny<bool>()))

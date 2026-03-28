@@ -39,6 +39,14 @@ namespace Streamarr.Core.Test.MetadataSource
             Mocker.GetMock<IYouTubeApiClient>()
                   .Setup(c => c.GetChannelThumbnailUrl(It.IsAny<string>(), It.IsAny<string>()))
                   .Returns(string.Empty);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetVideoDetails(It.IsAny<string>(), It.IsAny<IEnumerable<string>>()))
+                  .Returns(new List<YoutubeVideo>());
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetChannelRecentVideoIds(It.IsAny<string>()))
+                  .Returns(new List<string>());
         }
 
         // ── SearchCreator URL routing ─────────────────────────────────────────

@@ -438,5 +438,8 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
 
             return domain;
         }
+
+        public override string GetDownloadUrl(string platformContentId) =>
+            $"https://www.youtube.com/watch?v={platformContentId}";
     }
 }

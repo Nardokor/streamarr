@@ -846,5 +846,8 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
             return ContentType.Video;
         }
+
+        public override string GetDownloadUrl(string platformContentId) =>
+            $"https://www.youtube.com/watch?v={platformContentId}";
     }
 }

@@ -29,25 +29,18 @@ import {
   getVideosLabel,
 } from './creatorUtils';
 import { useDeleteChannel, useUpdateChannel } from './useCreators';
+import { PLATFORM_REGISTRY } from 'Sources/registry';
 import {
   useMetadataSources,
   MetadataSourceResource,
 } from 'Settings/Sources/useMetadataSources';
 import styles from './CreatorChannelSection.css';
 
-// Maps the camelCase platform value on Channel to the implementation name on
-// MetadataSourceResource so we can look up the source's field schema.
-const PLATFORM_IMPLEMENTATION: Record<string, string> = {
-  youTube: 'YouTube',
-  twitch: 'Twitch',
-  fourthwall: 'Fourthwall',
-};
-
 function getSourceFields(
   sources: MetadataSourceResource[] | undefined,
   platform: string
 ): Set<string> {
-  const impl = PLATFORM_IMPLEMENTATION[platform];
+  const impl = PLATFORM_REGISTRY[platform]?.implementation;
   const source = (sources ?? []).find((s) => s.implementation === impl && s.enable);
   return new Set((source?.fields ?? []).map((f) => f.name));
 }
@@ -75,15 +68,6 @@ const STATUS_FILTERS: { kind: string; label: string }[] = [
   { kind: 'unwanted', label: 'Unwanted' },
   { kind: 'recording', label: 'Recording' },
 ];
-
-function platformLabel(platform: string): string {
-  const map: Record<string, string> = {
-    youTube: 'YouTube',
-    twitch: 'Twitch',
-    fourthwall: 'Fourthwall',
-  };
-  return map[platform] ?? platform;
-}
 
 function statusClass(kind: string): string {
   if (kind === 'downloaded') return styles.statusDownloaded;
@@ -413,7 +397,8 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     });
   }, []);
 
-  const platform = platformLabel(channel.platform);
+  const platformCfg = PLATFORM_REGISTRY[channel.platform];
+  const platform = platformCfg?.label ?? channel.platform;
 
   const displayContent = useMemo(() => {
     let items = [...content];
@@ -469,12 +454,12 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
     <div className={styles.section}>
       <div className={styles.header} onClick={handleToggle}>
         <span className={`${styles.chevron} ${expanded ? '' : styles.chevronCollapsed}`}>▼</span>
-        <span className={`${styles.platformBadge} ${channel.platform === 'twitch' ? styles.platformBadgeTwitch : channel.platform === 'fourthwall' ? styles.platformBadgeFourthwall : ''}`}>{platform}</span>
+        <span className={`${styles.platformBadge} ${platformCfg?.badgeVariant === 'twitch' ? styles.platformBadgeTwitch : platformCfg?.badgeVariant === 'fourthwall' ? styles.platformBadgeFourthwall : ''}`}>{platform}</span>
         <span className={styles.channelTitle}>{channel.title}</span>
         {channel.category && <span className={styles.categoryBadge}>{channel.category}</span>}
 
         <span className={styles.headerActions} onClick={(e) => e.stopPropagation()}>
-          {channel.platform === 'youTube' && (
+          {!!platformCfg?.showMembershipButton && (
             <button
               className={`${styles.iconBtn} ${
                 channel.membershipStatus === 'active' ? styles.iconBtnMembershipActive :
@@ -827,7 +812,7 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                         </TableRowCell>
 
                         <TableRowCell className={styles.membersCell}>
-                          {channel.platform === 'youTube' && item.isMembers ? (
+                          {!!platformCfg?.showMembershipButton && item.isMembers ? (
                             <Icon
                               name={item.isAccessible ? icons.LOCK_OPEN : icons.LOCK}
                               className={item.isAccessible ? styles.membersAccessible : styles.membersLocked}

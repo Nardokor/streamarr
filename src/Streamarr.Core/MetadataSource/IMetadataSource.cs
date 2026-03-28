@@ -38,6 +38,9 @@ namespace Streamarr.Core.MetadataSource
         // Check whether the channel is currently hosting an active live stream.
         // Returns metadata for the live content if found, or null if not live.
         ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId);
+
+        // Returns the URL yt-dlp should fetch to download the given piece of content.
+        string GetDownloadUrl(string platformContentId);
     }
 
     // ── Result DTOs ──────────────────────────────────────────────────────────

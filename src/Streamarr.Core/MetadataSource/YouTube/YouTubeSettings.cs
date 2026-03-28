@@ -18,6 +18,9 @@ namespace Streamarr.Core.MetadataSource.YouTube
         [FieldDefinition(0, Label = "API Key", Type = FieldType.Password, Privacy = PrivacyLevel.ApiKey, HelpText = "YouTube Data API v3 key from Google Cloud Console. Optional but strongly recommended.")]
         public string ApiKey { get; set; } = string.Empty;
 
+        [FieldDefinition(1, Label = "Webhook Base URL", HelpText = "Public base URL for push notifications via Tailscale Funnel (e.g. https://streamarr.your-tailnet.ts.net). Streamarr will append /api/v1/webhook/youtube. Leave empty to use polling only.")]
+        public string WebhookBaseUrl { get; set; } = string.Empty;
+
         protected override AbstractValidator<MetadataSourceSettingsBase> Validator => _validator;
     }
 }

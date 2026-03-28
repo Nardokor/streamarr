@@ -60,6 +60,9 @@ namespace Streamarr.Core.Channels
         public bool KeepMembers { get; set; }
         public string RetentionKeepWords { get; set; } = string.Empty;
 
+        // WebSub
+        public string WebSubSecret { get; set; }
+
         // Navigation
         public LazyLoaded<Creator> Creator { get; set; }
     }

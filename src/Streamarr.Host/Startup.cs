@@ -323,6 +323,8 @@ namespace Streamarr.Host
                 ExceptionHandler = errorHandler.HandleException
             });
 
+            app.UseMiddleware<WebhookOnlyMiddleware>();
+
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();

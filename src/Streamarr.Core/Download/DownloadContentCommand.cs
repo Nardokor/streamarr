@@ -5,6 +5,7 @@ namespace Streamarr.Core.Download
     public class DownloadContentCommand : Command
     {
         public int ContentId { get; set; }
+        public bool IsResume { get; set; }
 
         public override bool SendUpdatesToClient => true;
         public override bool IsLongRunning => true;

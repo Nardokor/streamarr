@@ -12,6 +12,7 @@ namespace Streamarr.Core.Content
         List<Content> GetMissingContent(int channelId);
         List<Content> GetAllMissing();
         List<Content> GetAllDownloaded();
+        List<Content> GetAllDownloading();
         List<Content> GetAllLiveNow();
         List<Content> GetAllRecording();
         List<Content> GetAllWanted();
@@ -65,6 +66,11 @@ namespace Streamarr.Core.Content
         public List<Content> GetAllDownloaded()
         {
             return _repo.GetAllDownloaded();
+        }
+
+        public List<Content> GetAllDownloading()
+        {
+            return _repo.GetAllDownloading();
         }
 
         public List<Content> GetAllLiveNow()

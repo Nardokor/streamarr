@@ -69,30 +69,33 @@ namespace Streamarr.Core.Download
             content.Status = isLive ? ContentStatus.Recording : ContentStatus.Downloading;
             _contentService.UpdateContent(content);
 
-            if (isLive)
+            if (!message.IsResume)
             {
-                _eventAggregator.PublishEvent(new LiveStreamStartedEvent
+                if (isLive)
                 {
-                    Message = new LiveStreamStartedMessage
+                    _eventAggregator.PublishEvent(new LiveStreamStartedEvent
                     {
-                        ContentTitle = content.Title,
-                        CreatorName = creator.Title,
-                        ChannelName = channel.Title,
-                    }
-                });
-            }
-            else
-            {
-                _eventAggregator.PublishEvent(new ContentGrabbedEvent
+                        Message = new LiveStreamStartedMessage
+                        {
+                            ContentTitle = content.Title,
+                            CreatorName = creator.Title,
+                            ChannelName = channel.Title,
+                        }
+                    });
+                }
+                else
                 {
-                    Message = new ContentGrabbedMessage
+                    _eventAggregator.PublishEvent(new ContentGrabbedEvent
                     {
-                        ContentTitle = content.Title,
-                        CreatorName = creator.Title,
-                        ChannelName = channel.Title,
-                        ContentType = content.ContentType,
-                    }
-                });
+                        Message = new ContentGrabbedMessage
+                        {
+                            ContentTitle = content.Title,
+                            CreatorName = creator.Title,
+                            ChannelName = channel.Title,
+                            ContentType = content.ContentType,
+                        }
+                    });
+                }
             }
 
             try

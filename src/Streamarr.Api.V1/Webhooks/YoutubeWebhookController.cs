@@ -29,7 +29,7 @@ public class YoutubeWebhookController : ControllerBase
         _channelService = channelService;
         _webSubService = webSubService;
         _commandQueue = commandQueue;
-        _logger = LogManager.GetCurrentClassLogger();
+        _logger = LogManager.GetLogger(nameof(YoutubeWebhookController));
     }
 
     // YouTube hub sends a GET to verify the subscription.

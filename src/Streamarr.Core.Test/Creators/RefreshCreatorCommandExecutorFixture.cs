@@ -36,7 +36,7 @@ namespace Streamarr.Core.Test.Creators
             };
 
             _sourceStub = new Mock<IMetadataSource>();
-            _sourceStub.Setup(s => s.GetNewContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
+            _sourceStub.Setup(s => s.GetNewContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<bool>()))
                        .Returns(new List<ContentMetadataResult>());
             _sourceStub.Setup(s => s.GetChannelMetadata(It.IsAny<string>()))
                        .Returns(new ChannelMetadataResult());
@@ -54,7 +54,7 @@ namespace Streamarr.Core.Test.Creators
                   .Returns(new List<Channel> { _channel });
 
             Mocker.GetMock<IContentFilterService>()
-                  .Setup(s => s.PassesFilter(It.IsAny<string>(), It.IsAny<ContentType>(), It.IsAny<Channel>()))
+                  .Setup(s => s.PassesFilter(It.IsAny<string>(), It.IsAny<ContentType>(), It.IsAny<Channel>(), It.IsAny<bool>(), It.IsAny<bool>()))
                   .Returns(true);
         }
 
@@ -122,7 +122,7 @@ namespace Streamarr.Core.Test.Creators
                 ContentType = ContentType.Video,
             };
 
-            _sourceStub.Setup(s => s.GetNewContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
+            _sourceStub.Setup(s => s.GetNewContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<bool>()))
                        .Returns(new List<ContentMetadataResult> { item });
 
             Mocker.GetMock<IContentService>()
@@ -149,7 +149,7 @@ namespace Streamarr.Core.Test.Creators
                 ContentType = ContentType.Video,
             };
 
-            _sourceStub.Setup(s => s.GetNewContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
+            _sourceStub.Setup(s => s.GetNewContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<bool>()))
                        .Returns(new List<ContentMetadataResult> { item });
 
             Mocker.GetMock<IContentService>()
@@ -157,7 +157,7 @@ namespace Streamarr.Core.Test.Creators
                   .Returns((ContentEntity)null);
 
             Mocker.GetMock<IContentFilterService>()
-                  .Setup(s => s.PassesFilter(item.Title, item.ContentType, _channel))
+                  .Setup(s => s.PassesFilter(item.Title, item.ContentType, _channel, It.IsAny<bool>(), It.IsAny<bool>()))
                   .Returns(false);
 
             Execute();
@@ -173,7 +173,7 @@ namespace Streamarr.Core.Test.Creators
         {
             var item = new ContentMetadataResult { PlatformContentId = "dupe1", Title = "Duplicate" };
 
-            _sourceStub.Setup(s => s.GetNewContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
+            _sourceStub.Setup(s => s.GetNewContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<bool>()))
                        .Returns(new List<ContentMetadataResult> { item });
 
             // Simulate already-existing content
@@ -203,7 +203,7 @@ namespace Streamarr.Core.Test.Creators
         [Test]
         public void should_still_check_livestream_status_when_content_sync_throws()
         {
-            _sourceStub.Setup(s => s.GetNewContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
+            _sourceStub.Setup(s => s.GetNewContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<bool>()))
                        .Throws(new Exception("API error"));
 
             Execute();

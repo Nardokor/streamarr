@@ -15,6 +15,7 @@ using Streamarr.Core.Lifecycle;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.MetadataSource;
+using Streamarr.Core.MetadataSource.YouTube;
 using Streamarr.Core.ThingiProvider.Events;
 using Streamarr.Core.Update.Commands;
 
@@ -121,6 +122,12 @@ namespace Streamarr.Core.Jobs
                     {
                         Interval = 24 * 60,
                         TypeName = typeof(UpdateYtDlpCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
+                        Interval = 24 * 60,
+                        TypeName = typeof(RenewWebSubSubscriptionsCommand).FullName
                     },
 
                     new ScheduledTask

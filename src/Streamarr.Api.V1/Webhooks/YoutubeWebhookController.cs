@@ -1,5 +1,6 @@
 using System.Text;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 using Streamarr.Core.Channels;
@@ -10,6 +11,7 @@ using Streamarr.Http;
 
 namespace Streamarr.Api.V1.Webhooks;
 
+[AllowAnonymous]
 [V1ApiController("webhook/youtube")]
 public class YoutubeWebhookController : ControllerBase
 {

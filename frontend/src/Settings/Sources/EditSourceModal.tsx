@@ -333,7 +333,7 @@ function YouTubeSourceForm({
           <FormInputGroup
             type={inputTypes.TEXT}
             name="webhookBaseUrl"
-            helpText="Public base URL for push notifications via Tailscale Funnel (e.g. https://shigure.taila9c4.ts.net). Leave empty to use polling only."
+            helpText="Public base URL for push notifications via Tailscale Funnel (e.g. https://streamarr.your-tailnet.ts.net). Leave empty to use polling only."
             value={getVal('webhookBaseUrl', '')}
             errors={[]}
             warnings={[]}

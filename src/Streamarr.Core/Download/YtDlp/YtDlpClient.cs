@@ -20,15 +20,17 @@ namespace Streamarr.Core.Download.YtDlp
         void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null);
-        List<YtDlpVideoInfo> GetMembershipTabVideos(string channelUrl);
         YtDlpVideoInfo GetVideoInfo(string videoUrl);
 
         /// <summary>
         /// Lightweight accessibility check using --print (no format resolution, no deno).
-        /// Returns true if the video is accessible with current cookies; false if it requires
-        /// a membership level the cookies don't satisfy.
+        /// Returns a ContentAccessibilityResult that distinguishes:
+        ///   Accessible   — video plays with current cookies
+        ///   NotMember    — "Join this channel" error (no membership at all)
+        ///   TierRequired — member but wrong tier ("available on level: X")
+        ///   Inaccessible — deleted / private / unrecognised error
         /// </summary>
-        bool IsVideoAccessible(string videoId);
+        Streamarr.Core.MetadataSource.ContentAccessibilityResult ProbeVideoAccessibility(string videoId, bool withCookies = true);
 
         bool IsDenoAvailable();
 
@@ -199,14 +201,16 @@ namespace Streamarr.Core.Download.YtDlp
             return JsonSerializer.Deserialize<YtDlpVideoInfo>(json, JsonOptions);
         }
 
-        public bool IsVideoAccessible(string videoId)
+        public Streamarr.Core.MetadataSource.ContentAccessibilityResult ProbeVideoAccessibility(string videoId, bool withCookies = true)
         {
             var url = $"https://www.youtube.com/watch?v={videoId}";
 
             // --print availability reads from video metadata — does not require format
-            // resolution or trigger the n-challenge. We parse the printed value to
-            // distinguish "members_only"/"subscriber_only" from genuinely public content.
-            var args = $"--print availability --no-playlist --socket-timeout 15{CookieArg} {Quote(url)}";
+            // resolution or trigger the n-challenge.
+            // withCookies=false is used for tier discovery: without auth, YouTube always
+            // returns the tier error so we learn the required level without needing access.
+            var cookieArg = withCookies ? CookieArg : string.Empty;
+            var args = $"--print availability --no-playlist --socket-timeout 15{cookieArg} {Quote(url)}";
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
             if (output.ExitCode != 0)
@@ -214,34 +218,56 @@ namespace Streamarr.Core.Download.YtDlp
                 var error = string.Join(" ", output.Error.Select(l => l.Content));
                 var lower = error.ToLowerInvariant();
 
+                // "This video is available to this channel's members on level: X (or any higher level)."
+                // — user has a membership but not the required tier. The tier name ends at the
+                // optional "(or any higher level)" clause or a period; more text may follow.
+                var tierMatch = Regex.Match(error, @"on level[:\s]+([^.(]+?)(?:\s*\(or any higher level\))?(?=[.\s]|$)", RegexOptions.IgnoreCase);
+                if (tierMatch.Success)
+                {
+                    var tier = tierMatch.Groups[1].Value.Trim();
+                    _logger.Debug("ProbeVideoAccessibility({0}) → tier required: {1}", videoId, tier);
+                    return Streamarr.Core.MetadataSource.ContentAccessibilityResult.TierRequired(tier);
+                }
+
+                // "Join this channel to get access to members-only content…"
+                // — user has no membership at all; all other videos on this channel are also inaccessible.
+                if (lower.Contains("join this channel") || lower.Contains("requires subscription"))
+                {
+                    _logger.Debug("ProbeVideoAccessibility({0}) → not a member", videoId);
+                    return Streamarr.Core.MetadataSource.ContentAccessibilityResult.NotMember();
+                }
+
+                // YouTube rate-limits the account — transient, do not treat as inaccessible.
+                if (lower.Contains("rate-limited") || lower.Contains("rate_limited"))
+                {
+                    _logger.Warn("ProbeVideoAccessibility({0}) — rate-limited by YouTube, skipping", videoId);
+                    return Streamarr.Core.MetadataSource.ContentAccessibilityResult.RateLimited();
+                }
+
                 var isAccessDenial = lower.Contains("members only") ||
                                      lower.Contains("members-only") ||
-                                     lower.Contains("join this channel") ||
-                                     lower.Contains("requires subscription") ||
                                      lower.Contains("private video") ||
                                      lower.Contains("video unavailable");
 
                 if (isAccessDenial)
                 {
-                    _logger.Debug("IsVideoAccessible({0}) → inaccessible (exit {1}): {2}", videoId, output.ExitCode, error.Split('\n')[0].Trim());
-                    return false;
+                    _logger.Debug("ProbeVideoAccessibility({0}) → inaccessible (exit {1}): {2}", videoId, output.ExitCode, error.Split('\n')[0].Trim());
+                    return Streamarr.Core.MetadataSource.ContentAccessibilityResult.Inaccessible();
                 }
 
                 // Unrecognised non-zero exit — treat as inaccessible so a transient yt-dlp
                 // error or an unknown membership error string doesn't produce a false positive.
-                _logger.Warn("IsVideoAccessible({0}) — unrecognised error (treating as inaccessible): {1}", videoId, error.Split('\n')[0].Trim());
-                return false;
+                _logger.Warn("ProbeVideoAccessibility({0}) — unrecognised error (treating as inaccessible): {1}", videoId, error.Split('\n')[0].Trim());
+                return Streamarr.Core.MetadataSource.ContentAccessibilityResult.Inaccessible();
             }
 
-            // Parse the printed availability value. Only "public" and "unlisted" are
-            // considered accessible — any other value (including empty, members_only,
-            // subscriber_only, premium_only, needs_auth, private, or an unknown future
-            // value) is treated as inaccessible to avoid false positives.
-            var availability = output.Standard.FirstOrDefault()?.Content?.Trim().ToLowerInvariant() ?? string.Empty;
-            var accessible = availability is "public" or "unlisted";
-
-            _logger.Debug("IsVideoAccessible({0}) → availability={1}, accessible={2}", videoId, availability, accessible);
-            return accessible;
+            // Exit 0 means yt-dlp successfully fetched the video metadata — the video is accessible.
+            // The availability string describes the video type ("public", "members_only", etc.)
+            // not whether the caller can access it; with valid cookies a "members_only" video
+            // exits 0 and is fully accessible.
+            var availability = output.Standard.FirstOrDefault()?.Content?.Trim() ?? string.Empty;
+            _logger.Debug("ProbeVideoAccessibility({0}) → exit 0, availability={1}, accessible=True", videoId, availability);
+            return Streamarr.Core.MetadataSource.ContentAccessibilityResult.Accessible();
         }
 
         public YtDlpChannelInfo GetChannelInfo(string channelUrl)
@@ -298,22 +324,6 @@ namespace Streamarr.Core.Download.YtDlp
             return allVideos;
         }
 
-        public List<YtDlpVideoInfo> GetMembershipTabVideos(string channelUrl)
-        {
-            var baseUrl = channelUrl.TrimEnd('/');
-            foreach (var knownTab in new[] { "/videos", "/shorts", "/streams", "/live", "/membership" })
-            {
-                if (baseUrl.EndsWith(knownTab, StringComparison.OrdinalIgnoreCase))
-                {
-                    baseUrl = baseUrl[..^knownTab.Length];
-                    break;
-                }
-            }
-
-            // Fetch all (no dateAfter) so historical members content can be backfilled
-            return FetchFromTab($"{baseUrl}/membership", limit: null, dateAfter: null);
-        }
-
         private List<YtDlpVideoInfo> FetchFromTab(string url, int? limit, string dateAfter)
         {
             _logger.Debug("Fetching tab: {0}", url);
@@ -322,7 +332,8 @@ namespace Streamarr.Core.Download.YtDlp
             {
                 "--flat-playlist",
                 "--dump-json",
-                "--skip-download"
+                "--skip-download",
+                "--socket-timeout 30"
             };
 
             if (limit.HasValue)
@@ -348,7 +359,7 @@ namespace Streamarr.Core.Download.YtDlp
             if (output.ExitCode != 0)
             {
                 var error = string.Join(Environment.NewLine, output.Error.Select(l => l.Content));
-                _logger.Debug("yt-dlp returned non-zero for {0} (tab may be empty): {1}", url, error);
+                _logger.Warn("yt-dlp returned exit {0} for {1}: {2}", output.ExitCode, url, error);
                 return new List<YtDlpVideoInfo>();
             }
 

@@ -60,32 +60,46 @@ namespace Streamarr.Core.Creators.Commands
                 ? new List<Creator> { _creatorService.GetCreator(message.CreatorId.Value) }
                 : _creatorService.GetMonitoredCreators();
 
-            var membershipChecksUsed = 0;
+            // Fetch channels once per creator to avoid redundant DB calls
+            var creatorsWithChannels = creators
+                .Select(c => (Creator: c, Channels: _channelService.GetByCreatorId(c.Id)))
+                .ToList();
 
-            foreach (var creator in creators)
+            // Avatar refresh: order doesn't matter
+            foreach (var (creator, channels) in creatorsWithChannels)
             {
                 try
                 {
-                    RefreshCreator(creator, ref membershipChecksUsed);
+                    _logger.Info("Refreshing creator '{0}'", creator.Title);
+                    RefreshAvatar(creator, channels);
                 }
                 catch (Exception ex)
                 {
                     _logger.Error(ex, "Unhandled error refreshing creator '{0}' — skipping to next", creator.Title);
                 }
             }
-        }
 
-        private void RefreshCreator(Creator creator, ref int membershipChecksUsed)
-        {
-            _logger.Info("Refreshing creator '{0}'", creator.Title);
+            // Channel sync: sorted globally by LastMembershipCheck ascending (null = never = highest priority)
+            // so that when YouTube rate-limits and the run is interrupted, the channels checked
+            // least recently were already processed and nothing is permanently starved.
+            var sortedChannels = creatorsWithChannels
+                .SelectMany(x => x.Channels.Where(ch => ch.Monitored))
+                .OrderBy(ch => ch.LastMembershipCheck ?? DateTime.MinValue)
+                .ToList();
 
-            var channels = _channelService.GetByCreatorId(creator.Id);
+            var membershipChecksUsed = 0;
+            var membershipRateLimited = false;
 
-            RefreshAvatar(creator, channels);
-
-            foreach (var channel in channels.Where(c => c.Monitored))
+            foreach (var channel in sortedChannels)
             {
-                RefreshChannel(channel, ref membershipChecksUsed);
+                try
+                {
+                    RefreshChannel(channel, ref membershipChecksUsed, ref membershipRateLimited);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "Unhandled error syncing channel '{0}' — skipping to next", channel.Title);
+                }
             }
         }
 
@@ -124,7 +138,7 @@ namespace Streamarr.Core.Creators.Commands
             }
         }
 
-        private void RefreshChannel(Channel channel, ref int membershipChecksUsed)
+        private void RefreshChannel(Channel channel, ref int membershipChecksUsed, ref bool membershipRateLimited)
         {
             _logger.Info("Syncing channel '{0}' ({1})", channel.Title, channel.Platform);
 
@@ -140,8 +154,10 @@ namespace Streamarr.Core.Creators.Commands
             // Unknown/None: probe up to MaxMembershipChecksPerRun times per run to avoid
             //   all bulk-imported channels checking simultaneously after their first week.
             // None: additionally requires the 7-day recheck threshold to be exceeded.
+            var rateLimitedThisChannel = false;
+
             var membershipRecheckThreshold = TimeSpan.FromDays(30);
-            var shouldCheckMembership = channel.Platform == PlatformType.YouTube &&
+            var shouldCheckMembership = !membershipRateLimited && channel.Platform == PlatformType.YouTube &&
                 channel.MembershipStatus switch
                 {
                     MembershipStatus.Active  => true,
@@ -152,17 +168,27 @@ namespace Streamarr.Core.Creators.Commands
                     _                        => false
                 };
 
+            // Gate the expensive per-video inaccessible re-probe separately.
+            // For Active channels shouldCheckMembership is always true, so without this
+            // the re-probe would fire on every sync — potentially hundreds of yt-dlp calls.
+            var inaccessibleReprobeThreshold = TimeSpan.FromDays(30);
+            var shouldReprobeInaccessible = shouldCheckMembership &&
+                (channel.MembershipStatus != MembershipStatus.Active ||
+                 channel.LastMembershipCheck == null ||
+                 DateTime.UtcNow - channel.LastMembershipCheck.Value > inaccessibleReprobeThreshold);
+
             if (shouldCheckMembership && channel.MembershipStatus != MembershipStatus.Active)
             {
                 membershipChecksUsed++;
             }
 
             _logger.Info(
-                "Membership check decision for '{0}': status={1}, lastCheck={2}, shouldCheck={3}",
+                "Membership check decision for '{0}': status={1}, lastCheck={2}, shouldCheck={3}, shouldReprobe={4}",
                 channel.Title,
                 channel.MembershipStatus,
                 channel.LastMembershipCheck?.ToString("u") ?? "never",
-                shouldCheckMembership);
+                shouldCheckMembership,
+                shouldReprobeInaccessible);
 
             try
             {
@@ -279,23 +305,88 @@ namespace Streamarr.Core.Creators.Commands
                     });
                 }
 
-                // Parallel accessibility probes for new members content
+                // Two-phase accessibility probe for new members content.
+                // Phase 1: probe WITHOUT cookies (parallel) — YouTube always returns the
+                //   required tier in the error, giving us tier info without needing access.
+                // Phase 2: probe one video per unique tier WITH cookies — exit 0 = accessible.
+                // This avoids mis-reading "members_only" availability as inaccessible and
+                // keeps total probe count to (N videos) + (T unique tiers) instead of N.
                 var newMembersContent = added.Where(c => c.IsMembers).ToList();
                 if (newMembersContent.Any())
                 {
-                    _logger.Info("Probing accessibility for {0} new members video(s) (parallel)...", newMembersContent.Count);
+                    _logger.Info("Discovering tiers for {0} new members video(s) (parallel, no cookies)...", newMembersContent.Count);
+
+                    // Maps content ID → tier name (empty string = base membership, any level grants access)
+                    var tierByContentId = new System.Collections.Concurrent.ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                     Parallel.ForEach(
                         newMembersContent,
                         new ParallelOptions { MaxDegreeOfParallelism = 4 },
                         content =>
                         {
-                            content.IsAccessible = source.ProbeContentAccessibility(content.PlatformContentId);
-                            _logger.Debug("Members video '{0}': {1}", content.PlatformContentId, content.IsAccessible ? "accessible" : "inaccessible");
-                            if (!content.IsAccessible)
+                            var probe = source.ProbeContentAccessibility(content.PlatformContentId, withCookies: false);
+                            if (!string.IsNullOrEmpty(probe.RequiredTier))
                             {
-                                content.Status = ContentStatus.Unwanted;
+                                // Tier-specific content — requires that level or higher
+                                tierByContentId[content.PlatformContentId] = probe.RequiredTier;
+                                content.MembershipTier = probe.RequiredTier;
+                            }
+                            else if (probe.IsNotMember)
+                            {
+                                // "Join this channel" with no tier — accessible to any member (base level)
+                                tierByContentId[content.PlatformContentId] = string.Empty;
                             }
                         });
+
+                    // Phase 2: one probe per unique tier with cookies
+                    var uniqueTiers = tierByContentId.Values
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .ToList();
+
+                    _logger.Info("{0} unique tier(s) found — probing with cookies...", uniqueTiers.Count);
+
+                    var tierAccessible = new System.Collections.Generic.Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var tier in uniqueTiers)
+                    {
+                        var sampleId = tierByContentId
+                            .First(kvp => string.Equals(kvp.Value, tier, StringComparison.OrdinalIgnoreCase))
+                            .Key;
+                        var probe = source.ProbeContentAccessibility(sampleId, withCookies: true);
+                        if (probe.IsRateLimited)
+                        {
+                            _logger.Warn("Rate-limited by YouTube during membership probe for '{0}' — aborting membership check for this run", channel.Title);
+                            rateLimitedThisChannel = true;
+                            membershipRateLimited = true;
+                            break;
+                        }
+
+                        tierAccessible[tier] = probe.IsAccessible;
+                        _logger.Debug("Tier '{0}': {1}", string.IsNullOrEmpty(tier) ? "(base)" : tier, probe.IsAccessible ? "accessible" : "inaccessible");
+                    }
+
+                    // Phase 3: apply results — use tierByContentId so base-level videos
+                    // (empty tier, no MembershipTier stored) are resolved correctly
+                    var membershipConfirmedNew = false;
+                    foreach (var content in newMembersContent)
+                    {
+                        var accessible = tierByContentId.TryGetValue(content.PlatformContentId, out var contentTier)
+                            && tierAccessible.TryGetValue(contentTier, out var result)
+                            && result;
+                        content.IsAccessible = accessible;
+                        if (accessible)
+                        {
+                            membershipConfirmedNew = true;
+                        }
+                        else
+                        {
+                            content.Status = ContentStatus.Unwanted;
+                        }
+                    }
+
+                    _logger.Info(
+                        "New members probe for '{0}': {1} tier(s), {2}",
+                        channel.Title,
+                        uniqueTiers.Count,
+                        membershipConfirmedNew ? "membership confirmed" : "no accessible tiers found");
                 }
 
                 // Parallel probes for backfill items then persist
@@ -306,8 +397,9 @@ namespace Streamarr.Core.Creators.Commands
                         new ParallelOptions { MaxDegreeOfParallelism = 4 },
                         existing =>
                         {
-                            existing.IsAccessible = source.ProbeContentAccessibility(existing.PlatformContentId);
-                            _logger.Debug("Backfilling members flag for '{0}' (accessible: {1})", existing.PlatformContentId, existing.IsAccessible);
+                            var probe = source.ProbeContentAccessibility(existing.PlatformContentId);
+                            existing.IsAccessible = probe.IsAccessible;
+                            _logger.Debug("Backfilling members flag for '{0}' (accessible: {1})", existing.PlatformContentId, probe.IsAccessible);
                         });
 
                     foreach (var existing in backfillItems)
@@ -318,37 +410,96 @@ namespace Streamarr.Core.Creators.Commands
 
                 // Re-probe existing inaccessible members items when checking membership.
                 // Handles the case where a user gains membership after content was first synced.
-                if (shouldCheckMembership)
+                // Gated on shouldReprobeInaccessible rather than shouldCheckMembership so that
+                // Active channels (always shouldCheck=true) don't burn yt-dlp on every sync.
+                if (shouldReprobeInaccessible)
                 {
-                    var existingInaccessible = _contentService.GetByChannelId(channel.Id)
-                        .Where(c => c.IsMembers && !c.IsAccessible)
+                    var allMembersContent = _contentService.GetByChannelId(channel.Id)
+                        .Where(c => c.IsMembers)
                         .ToList();
 
-                    if (existingInaccessible.Any())
+                    if (allMembersContent.Any())
                     {
+                        // Probe one video per unique tier across ALL members content (accessible and not).
+                        // Covers both directions: gaining access (inaccessible → accessible) and
+                        // losing access when membership lapses (accessible → inaccessible).
+                        var tierGroups = allMembersContent
+                            .GroupBy(c => c.MembershipTier ?? string.Empty, StringComparer.OrdinalIgnoreCase)
+                            .ToList();
+
                         _logger.Info(
-                            "Re-probing {0} previously inaccessible members video(s) for '{1}'",
-                            existingInaccessible.Count,
-                            channel.Title);
+                            "Re-probing members content for '{0}': {1} video(s), {2} tier group(s)",
+                            channel.Title,
+                            allMembersContent.Count,
+                            tierGroups.Count);
 
-                        Parallel.ForEach(
-                            existingInaccessible,
-                            new ParallelOptions { MaxDegreeOfParallelism = 4 },
-                            content =>
-                            {
-                                content.IsAccessible = source.ProbeContentAccessibility(content.PlatformContentId);
-                                _logger.Debug(
-                                    "Re-probe '{0}': {1}",
-                                    content.PlatformContentId,
-                                    content.IsAccessible ? "now accessible" : "still inaccessible");
-                            });
+                        var tierResults = new System.Collections.Generic.Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+                        var tierChangedIds = new System.Collections.Generic.HashSet<int>();
 
-                        foreach (var content in existingInaccessible.Where(c => c.IsAccessible))
+                        foreach (var group in tierGroups)
                         {
-                            var passes = _contentFilterService.PassesFilter(content.Title, content.ContentType, channel, isMembers: true, isAccessible: true);
-                            content.Status = passes ? ContentStatus.Missing : ContentStatus.Unwanted;
-                            _contentService.UpdateContent(content);
+                            var storedTier = group.Key;
+                            var tierLabel = string.IsNullOrEmpty(storedTier) ? "(base)" : storedTier;
+                            var probe = source.ProbeContentAccessibility(group.First().PlatformContentId, withCookies: true);
+
+                            if (probe.IsRateLimited)
+                            {
+                                _logger.Warn("Rate-limited by YouTube during re-probe for '{0}' — aborting membership check for this run", channel.Title);
+                                rateLimitedThisChannel = true;
+                                membershipRateLimited = true;
+                                break;
+                            }
+
+                            tierResults[storedTier] = probe.IsAccessible;
+
+                            if (!probe.IsAccessible && !string.IsNullOrEmpty(probe.RequiredTier) &&
+                                !string.Equals(probe.RequiredTier, storedTier, StringComparison.OrdinalIgnoreCase))
+                            {
+                                _logger.Debug("Re-probe tier '{0}': changed to '{1}'", tierLabel, probe.RequiredTier);
+                                foreach (var content in group)
+                                {
+                                    content.MembershipTier = probe.RequiredTier;
+                                    tierChangedIds.Add(content.Id);
+                                }
+                            }
+                            else
+                            {
+                                _logger.Debug("Re-probe tier '{0}': {1}", tierLabel, probe.IsAccessible ? "accessible" : "inaccessible");
+                            }
                         }
+
+                        foreach (var content in allMembersContent)
+                        {
+                            var tier = content.MembershipTier ?? string.Empty;
+                            if (!tierResults.TryGetValue(tier, out var accessible))
+                            {
+                                continue;
+                            }
+
+                            var wasAccessible = content.IsAccessible;
+                            content.IsAccessible = accessible;
+
+                            if (accessible != wasAccessible || tierChangedIds.Contains(content.Id))
+                            {
+                                if (accessible)
+                                {
+                                    var passes = _contentFilterService.PassesFilter(content.Title, content.ContentType, channel, isMembers: true, isAccessible: true);
+                                    content.Status = passes ? ContentStatus.Missing : ContentStatus.Unwanted;
+                                }
+                                else
+                                {
+                                    content.Status = ContentStatus.Unwanted;
+                                }
+
+                                _contentService.UpdateContent(content);
+                            }
+                        }
+
+                        _logger.Info(
+                            "Re-probe complete for '{0}': {1} probe(s), tiers: {2}",
+                            channel.Title,
+                            tierGroups.Count,
+                            string.Join(", ", tierResults.Select(kv => $"{(string.IsNullOrEmpty(kv.Key) ? "(base)" : kv.Key)}={kv.Value}")));
                     }
                 }
 
@@ -362,8 +513,8 @@ namespace Streamarr.Core.Creators.Commands
                 // Re-evaluate filter for existing Missing/Unwanted items in case channel settings changed
                 _contentFilterService.ReapplyFilterForChannel(channel);
 
-                // Update membership status if we probed the tab this sync.
-                if (shouldCheckMembership)
+                // Update membership status if we probed this sync and were not interrupted by rate-limiting.
+                if (shouldCheckMembership && !rateLimitedThisChannel)
                 {
                     // Re-query the full channel content so we account for both newly-added
                     // items and previously-existing accessible members content. Using only
@@ -383,7 +534,15 @@ namespace Streamarr.Core.Creators.Commands
                         newMembershipStatus);
 
                     channel.MembershipStatus = newMembershipStatus;
-                    channel.LastMembershipCheck = DateTime.UtcNow;
+
+                    if (shouldReprobeInaccessible)
+                    {
+                        channel.LastMembershipCheck = DateTime.UtcNow;
+                    }
+                }
+                else if (rateLimitedThisChannel)
+                {
+                    _logger.Info("Membership check for '{0}' aborted due to rate-limiting — LastMembershipCheck not updated", channel.Title);
                 }
 
                 channel.LastInfoSync = DateTime.UtcNow;
@@ -393,9 +552,9 @@ namespace Streamarr.Core.Creators.Commands
             {
                 _logger.Error(ex, "Failed to sync channel '{0}'", channel.Title);
 
-                // Record the membership check attempt even on failure so a persistent
-                // sync error doesn't cause None-status channels to re-probe every run.
-                if (shouldCheckMembership)
+                // Record the re-probe attempt even on failure so a persistent sync error
+                // doesn't cause the inaccessible re-probe to hammer channels every run.
+                if (shouldReprobeInaccessible)
                 {
                     channel.LastMembershipCheck = DateTime.UtcNow;
                     _channelService.UpdateChannel(channel);

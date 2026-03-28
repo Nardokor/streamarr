@@ -154,13 +154,31 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         public override ChannelMetadataResult GetChannelMetadata(string platformUrl)
         {
+            if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
+            {
+                // Use the YouTube Data API when a key is available — a single channels.list
+                // call (~200 ms) is far faster than spawning yt-dlp (~1.5 s) on every sync.
+                var channelId = ParseChannelIdFromUrl(platformUrl);
+                if (!string.IsNullOrWhiteSpace(channelId))
+                {
+                    var thumbnailUrl = _youTubeApiClient.GetChannelThumbnailUrl(Settings.ApiKey, channelId);
+                    return new ChannelMetadataResult
+                    {
+                        Platform = PlatformType.YouTube,
+                        PlatformId = channelId,
+                        PlatformUrl = platformUrl,
+                        ThumbnailUrl = thumbnailUrl
+                    };
+                }
+            }
+
             var channelInfo = _ytDlpClient.GetChannelInfo(platformUrl);
 
             var channelName = !string.IsNullOrWhiteSpace(channelInfo.Channel)
                 ? channelInfo.Channel
                 : channelInfo.Uploader;
 
-            var channelId = !string.IsNullOrWhiteSpace(channelInfo.ChannelId)
+            var channelId2 = !string.IsNullOrWhiteSpace(channelInfo.ChannelId)
                 ? channelInfo.ChannelId
                 : channelInfo.UploaderId;
 
@@ -168,18 +186,25 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 ? channelInfo.ChannelUrl
                 : channelInfo.UploaderUrl;
 
-            // Use yt-dlp thumbnail directly — avoids a channels.list API call (1 unit)
-            // on every sync cycle. The API thumbnail fetch is reserved for SearchCreator
-            // (one-time cost on add) where higher-quality is worth the unit.
             return new ChannelMetadataResult
             {
                 Platform = PlatformType.YouTube,
-                PlatformId = channelId,
+                PlatformId = channelId2,
                 PlatformUrl = channelPageUrl,
                 Title = channelName,
                 Description = channelInfo.Description,
                 ThumbnailUrl = YouTubeApiClient.NormalizeThumbnailUrl(channelInfo.BestAvatarUrl)
             };
+        }
+
+        // Extracts the UCxxx channel ID from a canonical /channel/UCxxx URL.
+        // Returns empty string for handle-based URLs (@name) — callers fall back to yt-dlp.
+        private static string ParseChannelIdFromUrl(string url)
+        {
+            var match = System.Text.RegularExpressions.Regex.Match(
+                url ?? string.Empty,
+                @"/channel/(UC[A-Za-z0-9_\-]+)");
+            return match.Success ? match.Groups[1].Value : string.Empty;
         }
 
         // ── Content sync ───────────────────────────────────────────────────────
@@ -206,7 +231,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         // Initial sync: fetch the full uploads playlist via API so we have all historical content.
         // RSS is added as a supplement to catch any active live stream not yet in the playlist.
-        // Cookies are used only for the membership tab when checkMembership is true.
+        // Cookies are used only for membership discovery when checkMembership is true.
         private IEnumerable<ContentMetadataResult> GetInitialSyncViaApi(
             string platformId, string platformUrl, bool checkMembership)
         {
@@ -230,7 +255,11 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (checkMembership && _ytDlpClient.HasCookies)
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
-                result.AddRange(FetchMembershipContent(platformUrl, seen));
+                result.AddRange(FetchMembershipContent(platformUrl, seen, since: null));
+            }
+            else if (checkMembership)
+            {
+                _logger.Info("Membership check skipped for {0} — no cookie file configured", platformUrl);
             }
 
             return result;
@@ -267,7 +296,11 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (checkMembership && _ytDlpClient.HasCookies)
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
-                result.AddRange(FetchMembershipContent(platformUrl, seen));
+                result.AddRange(FetchMembershipContent(platformUrl, seen, since));
+            }
+            else if (checkMembership)
+            {
+                _logger.Info("Membership check skipped for {0} — no cookie file configured", platformUrl);
             }
 
             return result;
@@ -294,7 +327,11 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (checkMembership && _ytDlpClient.HasCookies)
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
-                result.AddRange(FetchMembershipContent(platformUrl, seen));
+                result.AddRange(FetchMembershipContent(platformUrl, seen, since));
+            }
+            else if (checkMembership)
+            {
+                _logger.Info("Membership check skipped for {0} — no cookie file configured", platformUrl);
             }
 
             return result;
@@ -321,33 +358,32 @@ namespace Streamarr.Core.MetadataSource.YouTube
             }
         }
 
-        // Fetches membership-tab content via yt-dlp (requires cookies) and enriches via API if available.
-        // Only IDs not already in alreadySeen are returned to avoid duplicates.
-        private List<ContentMetadataResult> FetchMembershipContent(string platformUrl, HashSet<string> alreadySeen)
+        // Fetches members-only content by doing a flat yt-dlp listing of the regular channel tabs
+        // (videos + shorts + streams) with the cookie file, then filtering by availability.
+        // Members-only videos appear in the flat listing as locked entries (availability =
+        // "subscriber_only" / "members_only") that are invisible to the YouTube API.
+        // `since` is forwarded as --dateafter to keep incremental syncs fast.
+        private List<ContentMetadataResult> FetchMembershipContent(string platformUrl, HashSet<string> alreadySeen, DateTime? since)
         {
-            var membershipVideos = _ytDlpClient.GetMembershipTabVideos(platformUrl);
-            var membershipIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var newVideos = new List<YtDlpVideoInfo>();
-            foreach (var v in membershipVideos)
-            {
-                if (string.IsNullOrWhiteSpace(v.Id))
-                {
-                    continue;
-                }
+            var dateAfter = since?.ToString("yyyyMMdd");
+            var allVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
 
-                membershipIds.Add(v.Id);
-                if (!alreadySeen.Contains(v.Id))
-                {
-                    newVideos.Add(v);
-                }
+            var newMembersVideos = allVideos
+                .Where(v => !string.IsNullOrWhiteSpace(v.Id) && IsMembersOnlyAvailability(v.Availability) && !alreadySeen.Contains(v.Id))
+                .ToList();
+
+            var totalFound = allVideos.Count(v => IsMembersOnlyAvailability(v.Availability));
+
+            if (totalFound > 0)
+            {
+                _logger.Info("{0} members-only video(s) found in channel listing ({1} new) for {2}", totalFound, newMembersVideos.Count, platformUrl);
+            }
+            else
+            {
+                _logger.Info("No members-only videos found in channel listing for {0}", platformUrl);
             }
 
-            if (membershipIds.Count > 0)
-            {
-                _logger.Info("{0} membership video(s) found ({1} new) for {2}", membershipIds.Count, newVideos.Count, platformUrl);
-            }
-
-            if (!newVideos.Any())
+            if (!newMembersVideos.Any())
             {
                 return new List<ContentMetadataResult>();
             }
@@ -355,58 +391,32 @@ namespace Streamarr.Core.MetadataSource.YouTube
             var apiById = new Dictionary<string, YoutubeVideo>();
             if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
             {
-                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, newVideos.Select(v => v.Id));
+                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, newMembersVideos.Select(v => v.Id));
                 foreach (var v in apiVideos)
                 {
                     apiById[v.Id] = v;
                 }
             }
 
-            return newVideos
+            return newMembersVideos
                 .Select(v => apiById.TryGetValue(v.Id, out var apiVideo)
                     ? MapToContentMetadata(apiVideo, publishedAt: null, isMembers: true)
                     : MapYtDlpToContentMetadata(v, isMembers: true))
                 .ToList();
         }
 
+        private static bool IsMembersOnlyAvailability(string availability) =>
+            string.Equals(availability, "subscriber_only", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(availability, "members_only", StringComparison.OrdinalIgnoreCase);
+
         // No-API-key fallback: full yt-dlp listing with optional membership tab.
+        // No-API-key fallback: full yt-dlp listing with members-only detection via availability field.
         // Used only when Settings.ApiKey is not configured.
         // Rich metadata (liveStreamingDetails, precise timestamps) is unavailable without an API key.
         private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, string platformId, DateTime? since, bool checkMembership)
         {
             var dateAfter = since?.ToString("yyyyMMdd");
-            var regularVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
-
-            var membershipIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var membershipVideos = new List<YtDlpVideoInfo>();
-            if (checkMembership && _ytDlpClient.HasCookies)
-            {
-                membershipVideos = _ytDlpClient.GetMembershipTabVideos(platformUrl);
-                foreach (var v in membershipVideos)
-                {
-                    if (!string.IsNullOrWhiteSpace(v.Id))
-                    {
-                        membershipIds.Add(v.Id);
-                    }
-                }
-
-                if (membershipIds.Count > 0)
-                {
-                    _logger.Info("{0} video(s) found in membership tab", membershipIds.Count);
-                }
-            }
-
-            var seen = new HashSet<string>(
-                regularVideos.Select(v => v.Id).Where(id => !string.IsNullOrWhiteSpace(id)),
-                StringComparer.OrdinalIgnoreCase);
-            var allVideos = regularVideos.ToList();
-            foreach (var v in membershipVideos)
-            {
-                if (!string.IsNullOrWhiteSpace(v.Id) && seen.Add(v.Id))
-                {
-                    allVideos.Add(v);
-                }
-            }
+            var allVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
 
             if (!allVideos.Any())
             {
@@ -414,13 +424,10 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 return Enumerable.Empty<ContentMetadataResult>();
             }
 
-            _logger.Info("yt-dlp found {0} items ({1} from membership tab) for {2}", allVideos.Count, membershipIds.Count, platformUrl);
-
             var membersOnlyCount = 0;
             var result = allVideos.Select(v =>
             {
-                var isMembers = membershipIds.Contains(v.Id)
-                    || string.Equals(v.Availability, "subscriber_only", StringComparison.OrdinalIgnoreCase);
+                var isMembers = checkMembership && IsMembersOnlyAvailability(v.Availability);
                 if (isMembers)
                 {
                     membersOnlyCount++;
@@ -429,10 +436,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 return MapYtDlpToContentMetadata(v, isMembers: isMembers);
             }).ToList();
 
-            if (membersOnlyCount > 0)
-            {
-                _logger.Info("{0} members-only video(s) identified", membersOnlyCount);
-            }
+            _logger.Info("yt-dlp found {0} item(s) ({1} members-only) for {2}", allVideos.Count, membersOnlyCount, platformUrl);
 
             return result;
         }
@@ -552,12 +556,13 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         // ── Accessibility probe ────────────────────────────────────────────────
 
-        public override bool ProbeContentAccessibility(string platformContentId)
+        public override ContentAccessibilityResult ProbeContentAccessibility(string platformContentId, bool withCookies = true)
         {
             // Uses --print availability (metadata-only fetch) to avoid triggering
             // deno/JS-challenge format resolution — inaccessible videos fail before
             // format extraction with a clear membership error.
-            return _ytDlpClient.IsVideoAccessible(platformContentId);
+            // withCookies=false is used for tier discovery (Phase 1 of the two-phase probe).
+            return _ytDlpClient.ProbeVideoAccessibility(platformContentId, withCookies);
         }
 
         public override ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId)

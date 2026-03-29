@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
@@ -17,6 +18,8 @@ namespace Streamarr.Core.MetadataSource.Patreon
         {
             "video_file",
             "video_external_file",
+            "video_embed",        // unlisted YouTube video embedded in the post
+            "livestream_youtube", // YouTube livestream VOD linked from the post
         };
 
         private readonly IPatreonApiClient _client;
@@ -35,35 +38,23 @@ namespace Streamarr.Core.MetadataSource.Patreon
 
         public override ValidationResult Test()
         {
-            if (string.IsNullOrWhiteSpace(Settings.AccessToken))
+            if (string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
             {
                 return new ValidationResult(new[]
                 {
-                    new ValidationFailure("AccessToken", "Access token is required.")
+                    new ValidationFailure("CookiesFilePath", "Cookies file path is required.")
                 });
             }
 
-            try
-            {
-                var identity = _client.GetIdentity(Settings.AccessToken);
-                if (identity == null)
-                {
-                    return new ValidationResult(new[]
-                    {
-                        new ValidationFailure("AccessToken", "Could not retrieve identity from Patreon. Check your access token.")
-                    });
-                }
-
-                _logger.Info("Patreon token valid for user: {0}", identity.Attributes?.FullName ?? identity.Id);
-                return new ValidationResult();
-            }
-            catch (Exception ex)
+            if (!File.Exists(Settings.CookiesFilePath))
             {
                 return new ValidationResult(new[]
                 {
-                    new ValidationFailure("AccessToken", $"Patreon API error: {ex.Message}")
+                    new ValidationFailure("CookiesFilePath", $"Cookies file not found: {Settings.CookiesFilePath}")
                 });
             }
+
+            return new ValidationResult();
         }
 
         // ── Discovery ──────────────────────────────────────────────────────────
@@ -72,60 +63,39 @@ namespace Streamarr.Core.MetadataSource.Patreon
         {
             query = (query ?? string.Empty).Trim();
 
-            // Accept full URLs: https://www.patreon.com/creatorname
             var vanity = ExtractVanity(query);
-
-            _logger.Info("Searching Patreon for: {0} (vanity: {1})", query, vanity ?? "(none)");
-
-            var campaigns = _client.GetMemberCampaigns(Settings.AccessToken);
-
-            PatreonCampaignResource? match = null;
-
-            if (!string.IsNullOrWhiteSpace(vanity))
-            {
-                match = campaigns.FirstOrDefault(c =>
-                    string.Equals(c.Attributes?.Vanity, vanity, StringComparison.OrdinalIgnoreCase));
-            }
-
-            if (match == null && !string.IsNullOrWhiteSpace(query))
-            {
-                // Fall back to partial name match against creation_name
-                match = campaigns.FirstOrDefault(c =>
-                    c.Attributes?.CreationName?.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    c.Attributes?.Vanity?.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0);
-            }
-
-            if (match == null)
+            if (string.IsNullOrWhiteSpace(vanity))
             {
                 throw new InvalidOperationException(
-                    $"No Patreon campaign found matching '{query}'. " +
-                    "Enter the creator's Patreon URL (e.g. https://www.patreon.com/creatorname) " +
-                    "or name. You must be a patron of this creator.");
+                    "Please enter a Patreon URL (e.g. https://www.patreon.com/creatorname) or username.");
             }
 
-            return BuildCreatorResult(match);
+            _logger.Info("Looking up Patreon campaign for vanity: {0}", vanity);
+
+            var campaign = _client.GetCampaignByVanity(Settings.CookiesFilePath, vanity);
+            if (campaign == null)
+            {
+                throw new InvalidOperationException(
+                    $"No Patreon campaign found for '{vanity}'. " +
+                    "Check the URL or username, and ensure your cookies are valid.");
+            }
+
+            return BuildCreatorResult(campaign);
         }
 
         public override ChannelMetadataResult GetChannelMetadata(string platformUrl)
         {
-            // platformUrl is stored as https://www.patreon.com/{vanity}
-            // We derive the campaign ID from the stored platformId via GetCampaign if needed,
-            // but since we only store the URL we re-derive the vanity and look up the campaign.
             var vanity = ExtractVanity(platformUrl);
             if (string.IsNullOrWhiteSpace(vanity))
             {
                 throw new InvalidOperationException($"Cannot derive Patreon vanity from URL: {platformUrl}");
             }
 
-            var campaigns = _client.GetMemberCampaigns(Settings.AccessToken);
-            var campaign = campaigns.FirstOrDefault(c =>
-                string.Equals(c.Attributes?.Vanity, vanity, StringComparison.OrdinalIgnoreCase));
-
+            var campaign = _client.GetCampaignByVanity(Settings.CookiesFilePath, vanity);
             if (campaign == null)
             {
                 throw new InvalidOperationException(
-                    $"Patreon campaign for '{vanity}' not found. " +
-                    "Ensure you are a patron and your access token is valid.");
+                    $"Patreon campaign for '{vanity}' not found. Check your cookies file.");
             }
 
             return BuildChannelResult(campaign);
@@ -141,7 +111,9 @@ namespace Streamarr.Core.MetadataSource.Patreon
         {
             _logger.Info("Fetching Patreon posts for campaign {0} (since: {1})", platformId, since?.ToString("u") ?? "all");
 
-            var posts = _client.GetCampaignPosts(Settings.AccessToken, platformId, since);
+            var posts = _client.GetCampaignPosts(Settings.CookiesFilePath, platformId, since);
+            _logger.Info("Patreon: fetched {0} total posts for campaign {1}", posts.Count, platformId);
+
             var results = new List<ContentMetadataResult>();
 
             foreach (var post in posts)
@@ -154,18 +126,21 @@ namespace Streamarr.Core.MetadataSource.Patreon
 
                 if (!IsVideoPost(attrs.PostType))
                 {
-                    _logger.Debug("Skipping post {0} with type '{1}'", post.Id, attrs.PostType);
+                    _logger.Debug("Skipping post {0} (type='{1}', title='{2}')", post.Id, attrs.PostType, attrs.Title);
                     continue;
                 }
 
                 var airDate = ParsePublishedAt(attrs.PublishedAt);
+                var contentType = string.Equals(attrs.PostType, "livestream_youtube", StringComparison.OrdinalIgnoreCase)
+                    ? ContentType.Vod
+                    : ContentType.Video;
 
                 results.Add(new ContentMetadataResult
                 {
                     PlatformContentId = post.Id,
                     PlatformChannelId = platformId,
                     PlatformChannelTitle = attrs.Title ?? string.Empty,
-                    ContentType = ContentType.Video,
+                    ContentType = contentType,
                     Title = attrs.Title ?? $"Patreon post {post.Id}",
                     Description = attrs.Content ?? string.Empty,
                     ThumbnailUrl = attrs.ThumbnailUrl ?? string.Empty,
@@ -184,7 +159,7 @@ namespace Streamarr.Core.MetadataSource.Patreon
         {
             try
             {
-                var post = _client.GetPost(Settings.AccessToken, platformContentId);
+                var post = _client.GetPost(Settings.CookiesFilePath, platformContentId);
                 if (post?.Attributes == null || !IsVideoPost(post.Attributes.PostType))
                 {
                     return null;
@@ -235,6 +210,9 @@ namespace Streamarr.Core.MetadataSource.Patreon
             return Enumerable.Empty<ContentStatusUpdate>();
         }
 
+        public override string GetDownloadUrl(string platformContentId) =>
+            $"https://www.patreon.com/posts/{platformContentId}";
+
         // ── Helpers ────────────────────────────────────────────────────────────
 
         private static CreatorMetadataResult BuildCreatorResult(PatreonCampaignResource campaign)
@@ -242,7 +220,10 @@ namespace Streamarr.Core.MetadataSource.Patreon
             var channel = BuildChannelResult(campaign);
             return new CreatorMetadataResult
             {
-                Name = campaign.Attributes?.CreationName ?? campaign.Attributes?.Vanity ?? campaign.Id,
+                Name = campaign.Attributes?.CreationName
+                       ?? campaign.Attributes?.Name
+                       ?? campaign.Attributes?.Vanity
+                       ?? campaign.Id,
                 Description = campaign.Attributes?.Summary ?? string.Empty,
                 ThumbnailUrl = campaign.Attributes?.ImageUrl ?? string.Empty,
                 Channels = new List<ChannelMetadataResult> { channel }
@@ -254,14 +235,17 @@ namespace Streamarr.Core.MetadataSource.Patreon
             var url = campaign.Attributes?.Url
                       ?? (campaign.Attributes?.Vanity != null
                           ? $"https://www.patreon.com/{campaign.Attributes.Vanity}"
-                          : $"https://www.patreon.com/");
+                          : "https://www.patreon.com/");
 
             return new ChannelMetadataResult
             {
                 Platform = PlatformType.Patreon,
                 PlatformId = campaign.Id,
                 PlatformUrl = url,
-                Title = campaign.Attributes?.CreationName ?? campaign.Attributes?.Vanity ?? campaign.Id,
+                Title = campaign.Attributes?.CreationName
+                        ?? campaign.Attributes?.Name
+                        ?? campaign.Attributes?.Vanity
+                        ?? campaign.Id,
                 Description = campaign.Attributes?.Summary ?? string.Empty,
                 ThumbnailUrl = campaign.Attributes?.ImageUrl ?? string.Empty
             };
@@ -287,7 +271,7 @@ namespace Streamarr.Core.MetadataSource.Patreon
             return null;
         }
 
-        // Extracts the vanity (username slug) from a Patreon URL or returns the input as-is if it looks like a slug.
+        // Extracts the vanity slug from a Patreon URL or returns the bare slug as-is.
         private static string? ExtractVanity(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
@@ -306,14 +290,13 @@ namespace Streamarr.Core.MetadataSource.Patreon
                         return null;
                     }
 
-                    // Path is "/vanity" or "/c/vanity" etc.
                     var segments = uri.AbsolutePath.Trim('/').Split('/');
                     if (segments.Length == 0 || string.IsNullOrWhiteSpace(segments[0]))
                     {
                         return null;
                     }
 
-                    // Skip "c" prefix used for newer Patreon URLs (/c/creatorname)
+                    // Skip "c" prefix used by newer Patreon URLs (/c/creatorname)
                     return segments[0].Equals("c", StringComparison.OrdinalIgnoreCase) && segments.Length > 1
                         ? segments[1]
                         : segments[0];
@@ -324,11 +307,8 @@ namespace Streamarr.Core.MetadataSource.Patreon
                 }
             }
 
-            // Bare slug — return as-is if it doesn't contain spaces
+            // Bare slug — accept if no spaces
             return input.Contains(' ') ? null : input;
         }
-
-        public override string GetDownloadUrl(string platformContentId) =>
-            $"https://www.patreon.com/posts/{platformContentId}";
     }
 }

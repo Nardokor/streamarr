@@ -16,7 +16,7 @@ namespace Streamarr.Core.Download.YtDlp
 {
     public interface IYtDlpClient
     {
-        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, bool needsCookies = false, Action<YtDlpProgress> onProgress = null);
+        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null);
         void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null);
@@ -391,11 +391,11 @@ namespace Streamarr.Core.Download.YtDlp
             return videos;
         }
 
-        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, bool needsCookies = false, Action<YtDlpProgress> onProgress = null)
+        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null)
         {
             _diskProvider.EnsureFolder(outputPath);
 
-            var args = BuildDownloadArgs(url, outputPath, isLive, needsCookies);
+            var args = BuildDownloadArgs(url, outputPath, isLive, cookiesFilePath);
             var mergedFile = string.Empty;
             var fragmentFiles = new List<string>();
             var alreadyDownloadedFile = string.Empty;
@@ -599,7 +599,7 @@ namespace Streamarr.Core.Download.YtDlp
             return $"--dump-json --skip-download --socket-timeout 15{CookieArg} {Quote(url)}";
         }
 
-        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, bool needsCookies = false)
+        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, string cookiesFilePath = null)
         {
             var args = new List<string>
             {
@@ -630,10 +630,10 @@ namespace Streamarr.Core.Download.YtDlp
                 args.Add("--embed-thumbnail");
             }
 
-            if (needsCookies && !string.IsNullOrWhiteSpace(Settings.CookieFilePath))
+            if (!string.IsNullOrWhiteSpace(cookiesFilePath))
             {
                 args.Add("--cookies");
-                args.Add(Quote(Settings.CookieFilePath));
+                args.Add(Quote(cookiesFilePath));
             }
 
             args.Add(Quote(url));

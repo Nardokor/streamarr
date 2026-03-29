@@ -97,7 +97,7 @@ namespace Streamarr.Core.MetadataSource.Patreon
         public PatreonPostResource GetPost(string cookiesFilePath, string postId)
         {
             var url = $"{ApiBase}/posts/{Uri.EscapeDataString(postId)}" +
-                      "?fields[post]=title,content,url,published_at,post_type,thumbnail_url,is_public,embed";
+                      "?fields[post]=title,content,url,published_at,post_type,thumbnail_url,is_public,embed,post_file";
 
             var response = Fetch<PatreonDataResponse<PatreonPostResource>>(cookiesFilePath, url);
             return response?.Data;

@@ -76,6 +76,7 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
 
         public override string Name => "Fourthwall";
         public override PlatformType Platform => PlatformType.Fourthwall;
+        public override string? CookiesFilePath => Settings.CookiesFilePath;
 
         // When UseYouTubeApi is enabled, delegate livestream status checks to the
         // YouTube source (Fourthwall content IDs are YouTube video IDs).

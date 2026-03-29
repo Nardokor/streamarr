@@ -188,7 +188,7 @@ const descriptor: SourceDescriptor = {
     shortsLabel: 'Posts',
     contentTypeLabel: (ct) => {
       switch (ct) {
-        case 'video': return 'Video Post';
+        case 'video': return 'Video';
         case 'short': return 'Post';
         case 'vod': return 'VoD';
         case 'live': return 'Live';

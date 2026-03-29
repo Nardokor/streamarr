@@ -65,7 +65,8 @@ namespace Streamarr.Core.Download
             var channel = _channelService.GetChannel(content.ChannelId);
             var creator = _creatorService.GetCreator(channel.CreatorId);
 
-            var url = GetSource(channel.Platform).GetDownloadUrl(content.PlatformContentId);
+            var source = GetSource(channel.Platform);
+            var url = source.GetDownloadUrl(content.PlatformContentId);
 
             _logger.ProgressInfo("Downloading '{0}' from {1}", content.Title, channel.Platform);
 
@@ -104,7 +105,7 @@ namespace Streamarr.Core.Download
 
             try
             {
-                var result = _ytDlpClient.Download(content.Id, url, creator.Path, isLive, content.IsMembers, progress =>
+                var result = _ytDlpClient.Download(content.Id, url, creator.Path, isLive, source.CookiesFilePath, progress =>
                 {
                     if (progress.PercentComplete.HasValue)
                     {

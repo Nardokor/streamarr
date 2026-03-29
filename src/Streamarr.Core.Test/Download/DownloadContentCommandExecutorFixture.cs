@@ -57,7 +57,7 @@ namespace Streamarr.Core.Test.Download
                   .Returns(_creator);
 
             Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<Action<YtDlpProgress>>()))
+                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<Action<YtDlpProgress>>()))
                   .Returns(new YtDlpDownloadResult { Success = true, FilePath = "/media/test/video.mp4", FileSize = 1024 });
 
             Mocker.GetMock<IContentFileService>()
@@ -100,7 +100,7 @@ namespace Streamarr.Core.Test.Download
                       expectedUrl,
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
-                      It.IsAny<bool>(),
+                      It.IsAny<string>(),
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
@@ -131,7 +131,7 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<string>(),
                       true,
-                      It.IsAny<bool>(),
+                      It.IsAny<string>(),
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
@@ -149,17 +149,19 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<string>(),
                       false,
-                      It.IsAny<bool>(),
+                      It.IsAny<string>(),
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
 
-        // ── needsCookies flag ─────────────────────────────────────────────────
+        // ── cookiesFilePath from source ───────────────────────────────────────
 
         [Test]
-        public void should_pass_needs_cookies_true_for_members_content()
+        public void should_pass_source_cookies_path_to_download_client()
         {
-            _content.IsMembers = true;
+            Mocker.GetMock<IMetadataSource>()
+                  .Setup(s => s.CookiesFilePath)
+                  .Returns("/config/patreon-cookies.txt");
 
             Execute();
 
@@ -169,15 +171,17 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
-                      true,
+                      "/config/patreon-cookies.txt",
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
 
         [Test]
-        public void should_pass_needs_cookies_false_for_public_content()
+        public void should_pass_null_cookies_when_source_has_no_cookies_file()
         {
-            _content.IsMembers = false;
+            Mocker.GetMock<IMetadataSource>()
+                  .Setup(s => s.CookiesFilePath)
+                  .Returns((string)null);
 
             Execute();
 
@@ -187,7 +191,7 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
-                      false,
+                      null,
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
@@ -209,7 +213,7 @@ namespace Streamarr.Core.Test.Download
         public void should_set_status_to_missing_on_failure()
         {
             Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<Action<YtDlpProgress>>()))
+                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<Action<YtDlpProgress>>()))
                   .Returns(new YtDlpDownloadResult { Success = false, ErrorMessage = "yt-dlp failed" });
 
             Execute();

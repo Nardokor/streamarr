@@ -3,13 +3,15 @@ import YouTube from './YouTube';
 import Twitch from './Twitch';
 import Fourthwall from './Fourthwall';
 import Patreon from './Patreon';
+import Fansly from './Fansly';
 
-// Keyed by MetadataSourceResource.implementation ('YouTube', 'Twitch', 'Fourthwall', 'Patreon')
+// Keyed by MetadataSourceResource.implementation ('YouTube', 'Twitch', 'Fourthwall', 'Patreon', 'Fansly')
 export const SOURCE_REGISTRY: Record<string, SourceDescriptor> = {
   YouTube,
   Twitch,
   Fourthwall,
   Patreon,
+  Fansly,
 };
 
 // Keyed by Channel.platform camelCase ('youTube', 'twitch', 'fourthwall')

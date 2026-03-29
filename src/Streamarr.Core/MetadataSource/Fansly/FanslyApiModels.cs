@@ -117,7 +117,7 @@ namespace Streamarr.Core.MetadataSource.Fansly
         public string MediaId { get; set; }
 
         [JsonPropertyName("createdAt")]
-        public long CreatedAt { get; set; }
+        public long? CreatedAt { get; set; }
 
         [JsonPropertyName("media")]
         public FanslyMedia Media { get; set; }
@@ -139,16 +139,16 @@ namespace Streamarr.Core.MetadataSource.Fansly
         public string Mimetype { get; set; }
 
         [JsonPropertyName("width")]
-        public int Width { get; set; }
+        public int? Width { get; set; }
 
         [JsonPropertyName("height")]
-        public int Height { get; set; }
+        public int? Height { get; set; }
 
         [JsonPropertyName("createdAt")]
-        public long CreatedAt { get; set; }
+        public long? CreatedAt { get; set; }
 
         [JsonPropertyName("updatedAt")]
-        public long UpdatedAt { get; set; }
+        public long? UpdatedAt { get; set; }
 
         [JsonPropertyName("metadata")]
         public string Metadata { get; set; }
@@ -172,10 +172,10 @@ namespace Streamarr.Core.MetadataSource.Fansly
         public string Mimetype { get; set; }
 
         [JsonPropertyName("width")]
-        public int Width { get; set; }
+        public int? Width { get; set; }
 
         [JsonPropertyName("height")]
-        public int Height { get; set; }
+        public int? Height { get; set; }
 
         [JsonPropertyName("locations")]
         public List<FanslyLocation> Locations { get; set; } = new List<FanslyLocation>();

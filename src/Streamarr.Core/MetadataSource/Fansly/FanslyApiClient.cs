@@ -66,6 +66,20 @@ namespace Streamarr.Core.MetadataSource.Fansly
                     break;
                 }
 
+                // Build a lookup from accountMedia.Id → media type for this page.
+                // type 2 = video, type 1 = image.
+                var mediaTypeById = new Dictionary<string, int>();
+                if (payload.AccountMedia != null)
+                {
+                    foreach (var am in payload.AccountMedia)
+                    {
+                        if (am.Id != null && am.Media != null)
+                        {
+                            mediaTypeById[am.Id] = am.Media.Type;
+                        }
+                    }
+                }
+
                 var doneEarly = false;
                 foreach (var post in payload.Posts)
                 {
@@ -76,10 +90,38 @@ namespace Streamarr.Core.MetadataSource.Fansly
                         break;
                     }
 
-                    // Include all posts with attachments — accountMedia is truncated by the
-                    // API and cannot be used as a reliable video filter. yt-dlp handles
-                    // format detection at download time.
-                    if (post.Attachments != null && post.Attachments.Count > 0)
+                    if (post.Attachments == null || post.Attachments.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    // Include the post only if at least one attachment is a video (type 2),
+                    // or if its contentId isn't in the sideload (unknown — include conservatively).
+                    var hasVideo = false;
+                    var allKnownNonVideo = true;
+                    foreach (var attachment in post.Attachments)
+                    {
+                        if (attachment.ContentId == null)
+                        {
+                            continue;
+                        }
+
+                        if (mediaTypeById.TryGetValue(attachment.ContentId, out var mediaType))
+                        {
+                            if (mediaType == 2)
+                            {
+                                hasVideo = true;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            // Not in sideload — type unknown; don't treat as confirmed non-video.
+                            allKnownNonVideo = false;
+                        }
+                    }
+
+                    if (hasVideo || !allKnownNonVideo)
                     {
                         results.Add(post);
                     }
@@ -95,7 +137,7 @@ namespace Streamarr.Core.MetadataSource.Fansly
                 cursor = payload.Posts[payload.Posts.Count - 1].Id;
             }
 
-            _logger.Debug("Fansly GetTimeline for {0}: {1} post(s) with attachments (since: {2})", accountId, results.Count, since?.ToString("u") ?? "all");
+            _logger.Debug("Fansly GetTimeline for {0}: {1} video post(s) (since: {2})", accountId, results.Count, since?.ToString("u") ?? "all");
             return results;
         }
 

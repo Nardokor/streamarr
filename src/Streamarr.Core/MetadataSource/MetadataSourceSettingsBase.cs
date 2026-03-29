@@ -25,22 +25,22 @@ namespace Streamarr.Core.MetadataSource
         public bool DefaultDownloadVideos { get; set; } = true;
 
         [FieldDefinition(101, Label = "Download Shorts", Type = FieldType.Checkbox, HelpText = "Download shorts by default for new channels.")]
-        public bool DefaultDownloadShorts { get; set; } = true;
+        public virtual bool DefaultDownloadShorts { get; set; } = true;
 
         [FieldDefinition(102, Label = "Download VODs", Type = FieldType.Checkbox, HelpText = "Download archived livestreams by default for new channels.")]
-        public bool DefaultDownloadVods { get; set; }
+        public virtual bool DefaultDownloadVods { get; set; }
 
         [FieldDefinition(103, Label = "Download Live", Type = FieldType.Checkbox, HelpText = "Record active livestreams by default for new channels.")]
         public bool DefaultDownloadLive { get; set; } = true;
 
         [FieldDefinition(104, Label = "Watched Words", HelpText = "Comma-separated words that must appear in the title. Empty = watch everything.")]
-        public string DefaultWatchedWords { get; set; } = string.Empty;
+        public virtual string DefaultWatchedWords { get; set; } = string.Empty;
 
         [FieldDefinition(105, Label = "Ignored Words", HelpText = "Comma-separated words that exclude a title from downloading.")]
-        public string DefaultIgnoredWords { get; set; } = string.Empty;
+        public virtual string DefaultIgnoredWords { get; set; } = string.Empty;
 
         [FieldDefinition(106, Label = "Watched Defeats Ignored", Type = FieldType.Checkbox, HelpText = "When a title matches both watched and ignored words, download it.")]
-        public bool DefaultWatchedDefeatsIgnored { get; set; } = true;
+        public virtual bool DefaultWatchedDefeatsIgnored { get; set; } = true;
 
         [FieldDefinition(107, Label = "Auto Download", Type = FieldType.Checkbox, HelpText = "Automatically queue matched content for download.")]
         public bool DefaultAutoDownload { get; set; }
@@ -50,16 +50,16 @@ namespace Streamarr.Core.MetadataSource
         public int DefaultRetentionDays { get; set; }
 
         [FieldDefinition(111, Label = "Always Keep: Videos", Type = FieldType.Checkbox, HelpText = "Never delete regular videos by default for new channels.")]
-        public bool DefaultKeepVideos { get; set; } = true;
+        public virtual bool DefaultKeepVideos { get; set; } = true;
 
         [FieldDefinition(112, Label = "Always Keep: Shorts", Type = FieldType.Checkbox, HelpText = "Never delete shorts by default for new channels.")]
-        public bool DefaultKeepShorts { get; set; } = true;
+        public virtual bool DefaultKeepShorts { get; set; } = true;
 
         [FieldDefinition(113, Label = "Always Keep: VODs", Type = FieldType.Checkbox, HelpText = "Never delete VODs by default for new channels.")]
-        public bool DefaultKeepVods { get; set; }
+        public virtual bool DefaultKeepVods { get; set; }
 
         [FieldDefinition(114, Label = "Keep Words", HelpText = "Comma-separated words — matching titles are never deleted. Applied by default for new channels.")]
-        public string DefaultRetentionKeepWords { get; set; } = string.Empty;
+        public virtual string DefaultRetentionKeepWords { get; set; } = string.Empty;
 
         public void ApplyDefaultsTo(Channel channel)
         {

@@ -326,5 +326,14 @@ namespace Streamarr.Core.Test.MetadataSource
 
             result.Should().BeEmpty();
         }
+
+        // ── GetDownloadUrl ────────────────────────────────────────────────────
+
+        [Test]
+        public void get_download_url_should_build_youtube_watch_url()
+        {
+            Subject.GetDownloadUrl("dQw4w9WgXcQ")
+                   .Should().Be("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+        }
     }
 }

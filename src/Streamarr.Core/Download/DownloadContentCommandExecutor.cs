@@ -12,6 +12,7 @@ using Streamarr.Core.Extras;
 using Streamarr.Core.History;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.MetadataSource;
 using Streamarr.Core.Notifications;
 using Streamarr.Core.Qualities;
 
@@ -26,6 +27,7 @@ namespace Streamarr.Core.Download
         private readonly ICreatorService _creatorService;
         private readonly IContentFileService _contentFileService;
         private readonly IYtDlpClient _ytDlpClient;
+        private readonly IMetadataSourceFactory _metadataSourceFactory;
         private readonly INfoWriterService _nfoWriter;
         private readonly IDownloadHistoryService _historyService;
         private readonly ILivestreamStatusService _livestreamStatusService;
@@ -37,6 +39,7 @@ namespace Streamarr.Core.Download
                                               ICreatorService creatorService,
                                               IContentFileService contentFileService,
                                               IYtDlpClient ytDlpClient,
+                                              IMetadataSourceFactory metadataSourceFactory,
                                               INfoWriterService nfoWriter,
                                               IDownloadHistoryService historyService,
                                               ILivestreamStatusService livestreamStatusService,
@@ -48,6 +51,7 @@ namespace Streamarr.Core.Download
             _creatorService = creatorService;
             _contentFileService = contentFileService;
             _ytDlpClient = ytDlpClient;
+            _metadataSourceFactory = metadataSourceFactory;
             _nfoWriter = nfoWriter;
             _historyService = historyService;
             _livestreamStatusService = livestreamStatusService;
@@ -61,7 +65,7 @@ namespace Streamarr.Core.Download
             var channel = _channelService.GetChannel(content.ChannelId);
             var creator = _creatorService.GetCreator(channel.CreatorId);
 
-            var url = BuildDownloadUrl(channel.Platform, content.PlatformContentId);
+            var url = GetSource(channel.Platform).GetDownloadUrl(content.PlatformContentId);
 
             _logger.ProgressInfo("Downloading '{0}' from {1}", content.Title, channel.Platform);
 
@@ -240,23 +244,10 @@ namespace Streamarr.Core.Download
             });
         }
 
-        private static string BuildDownloadUrl(PlatformType platform, string platformContentId)
+        private IMetadataSource GetSource(PlatformType platform)
         {
-            return platform switch
-            {
-                PlatformType.YouTube => $"https://www.youtube.com/watch?v={platformContentId}",
-                PlatformType.Twitch when platformContentId.StartsWith("live:") =>
-                    $"https://www.twitch.tv/{platformContentId["live:".Length..]}",
-                PlatformType.Twitch when platformContentId.StartsWith("https://") =>
-                    platformContentId,
-                PlatformType.Twitch => $"https://www.twitch.tv/videos/{platformContentId}",
-                PlatformType.Fourthwall => $"https://www.youtube.com/watch?v={platformContentId}",
-                PlatformType.Fansly => $"https://fansly.com/post/{platformContentId}",
-                PlatformType.Party => $"https://party.gg/{platformContentId}",
-                PlatformType.Patreon => $"https://www.patreon.com/posts/{platformContentId}",
-                PlatformType.Twitter => $"https://x.com/i/status/{platformContentId}",
-                _ => throw new ArgumentException($"Unsupported platform: {platform}")
-            };
+            return _metadataSourceFactory.GetByPlatform(platform)
+                ?? throw new InvalidOperationException($"No enabled source configured for platform '{platform}'");
         }
     }
 }

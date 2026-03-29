@@ -8,6 +8,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
+import { SOURCE_REGISTRY } from 'Sources/registry';
 import {
   getFieldValue,
   useMetadataSources,
@@ -22,46 +23,19 @@ interface AddChannelModalProps {
   onModalClose: () => void;
 }
 
-const PLATFORMS = [
-  {
-    id: 'youtube',
-    label: 'YouTube',
-    placeholder: 'YouTube @handle, channel URL, or name',
-  },
-  {
-    id: 'twitch',
-    label: 'Twitch',
-    placeholder: 'Twitch username or channel URL',
-  },
-  {
-    id: 'fourthwall',
-    label: 'Fourthwall',
-    placeholder: 'Full site URL (e.g. https://namijifreesia.party/)',
-  },
-] as const;
-
 function AddChannelModal({
   isOpen,
   creatorId,
   onModalClose,
 }: AddChannelModalProps) {
   const { data: sources } = useMetadataSources();
-  const youtubeSource = (sources ?? []).find(
-    (s) => s.implementation === 'YouTube' && s.enable
-  );
-  const twitchSource = (sources ?? []).find(
-    (s) => s.implementation === 'Twitch' && s.enable
-  );
-  const fourthwallSource = (sources ?? []).find(
-    (s) => s.implementation === 'Fourthwall' && s.enable
-  );
 
-  const configuredPlatforms = PLATFORMS.filter((p) => {
-    if (p.id === 'youtube') return !!youtubeSource;
-    if (p.id === 'twitch') return !!twitchSource;
-    if (p.id === 'fourthwall') return !!fourthwallSource;
-    return false;
-  });
+  const configuredPlatforms = (sources ?? [])
+    .filter((s) => s.enable && SOURCE_REGISTRY[s.implementation] != null)
+    .map((s) => {
+      const cfg = SOURCE_REGISTRY[s.implementation].platformConfig;
+      return { id: cfg.channelPlatform, label: cfg.label, placeholder: cfg.searchPlaceholder };
+    });
 
   const [selectedPlatformId, setSelectedPlatformId] = useState<string | null>(
     null
@@ -74,12 +48,9 @@ function AddChannelModal({
     configuredPlatforms.find((p) => p.id === selectedPlatformId) ??
     (configuredPlatforms.length > 0 ? configuredPlatforms[0] : null);
 
-  const activeSource =
-    activePlatform?.id === 'twitch'
-      ? twitchSource
-      : activePlatform?.id === 'fourthwall'
-        ? fourthwallSource
-        : youtubeSource;
+  const activeSource = (sources ?? []).find(
+    (s) => s.enable && SOURCE_REGISTRY[s.implementation]?.platformConfig.channelPlatform === activePlatform?.id
+  );
 
   const { data: lookupResult, isFetching: isSearching } =
     useCreatorLookup(searchTerm, activePlatform?.id);

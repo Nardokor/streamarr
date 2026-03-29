@@ -447,5 +447,20 @@ namespace Streamarr.Core.MetadataSource.Twitch
                 Channels = new List<ChannelMetadataResult> { channel }
             };
         }
+
+        public override string GetDownloadUrl(string platformContentId)
+        {
+            if (platformContentId.StartsWith(LivePrefix))
+            {
+                return $"https://www.twitch.tv/{platformContentId[LivePrefix.Length..]}";
+            }
+
+            if (platformContentId.StartsWith("https://"))
+            {
+                return platformContentId;
+            }
+
+            return $"https://www.twitch.tv/videos/{platformContentId}";
+        }
     }
 }

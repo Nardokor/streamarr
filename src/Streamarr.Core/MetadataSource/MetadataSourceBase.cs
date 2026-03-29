@@ -41,6 +41,8 @@ namespace Streamarr.Core.MetadataSource
             return null;
         }
 
+        public abstract string GetDownloadUrl(string platformContentId);
+
         public virtual ValidationResult Test()
         {
             return new ValidationResult();

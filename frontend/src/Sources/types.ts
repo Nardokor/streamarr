@@ -22,5 +22,5 @@ export interface PlatformConfig {
 
 export interface SourceDescriptor {
   platformConfig: PlatformConfig;
-  SettingsForm: ComponentType<SourceFormProps>;
+  SettingsForm?: ComponentType<SourceFormProps>;
 }

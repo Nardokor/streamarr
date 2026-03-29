@@ -18,6 +18,9 @@ interface Field {
   type: string;
   advanced: boolean;
   privacy: string;
+  helpText?: string;
+  helpTextWarning?: string;
+  placeholder?: string;
 }
 
 export default Field;

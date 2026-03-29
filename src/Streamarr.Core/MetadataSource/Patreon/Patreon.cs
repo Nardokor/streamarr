@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FluentValidation.Results;
 using NLog;
 using Streamarr.Core.Channels;
@@ -13,14 +14,33 @@ namespace Streamarr.Core.MetadataSource.Patreon
 {
     public class Patreon : MetadataSourceBase<PatreonSettings>
     {
-        // Post types that contain downloadable video content (yt-dlp Patreon extractor).
-        private static readonly HashSet<string> VideoPostTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        // Post types that contain downloadable content (yt-dlp Patreon extractor).
+        private static readonly HashSet<string> DownloadablePostTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "video_file",
             "video_external_file",
-            "video_embed",        // unlisted YouTube video embedded in the post
-            "livestream_youtube", // YouTube livestream VOD linked from the post
+            "video_embed",        // YouTube/Vimeo video embedded in the post
+            "livestream_youtube", // YouTube livestream VOD
+            "audio_file",         // audio attachment (voice packs etc.)
         };
+
+        // video_embed and livestream_youtube posts carry their real content as a YouTube URL
+        // in the embed.url field — we extract the video ID and download from YouTube directly.
+        private static readonly HashSet<string> YouTubeBackedPostTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "video_embed",
+            "livestream_youtube",
+        };
+
+        private static readonly Regex YouTubeIdRegex = new Regex(
+            @"(?:youtube\.com/(?:watch\?v=|live/|embed/)|youtu\.be/)([\w\-]{11})",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        // YouTube video IDs are exactly 11 alphanumeric/dash/underscore characters.
+        // Patreon post IDs are purely numeric, so this reliably distinguishes the two.
+        private static readonly Regex YouTubeVideoIdPattern = new Regex(
+            @"^[\w\-]{11}$",
+            RegexOptions.Compiled);
 
         private readonly IPatreonApiClient _client;
         private readonly Logger _logger;
@@ -253,7 +273,7 @@ namespace Streamarr.Core.MetadataSource.Patreon
 
         private static bool IsVideoPost(string? postType)
         {
-            return !string.IsNullOrWhiteSpace(postType) && VideoPostTypes.Contains(postType);
+            return !string.IsNullOrWhiteSpace(postType) && DownloadablePostTypes.Contains(postType);
         }
 
         private static DateTime? ParsePublishedAt(string? value)

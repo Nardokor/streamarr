@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from 'Components/Modal/Modal';
 import ModalContent from 'Components/Modal/ModalContent';
+import GenericSourceForm from 'Sources/GenericSourceForm';
 import { SOURCE_REGISTRY } from 'Sources/registry';
 import { MetadataSourceResource } from './useMetadataSources';
 
@@ -11,8 +12,8 @@ interface EditSourceModalProps {
 }
 
 function EditSourceModal({ source, isOpen, onModalClose }: EditSourceModalProps) {
-  const SourceForm =
-    source != null ? (SOURCE_REGISTRY[source.implementation]?.SettingsForm ?? null) : null;
+  const descriptor = source != null ? SOURCE_REGISTRY[source.implementation] : null;
+  const SourceForm = descriptor?.SettingsForm ?? (source != null ? GenericSourceForm : null);
 
   return (
     <Modal isOpen={isOpen} size="medium" onModalClose={onModalClose}>

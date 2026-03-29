@@ -13,6 +13,7 @@ function BaseSettingsFields({
   showVods = true,
   showLive = true,
   showFilters = true,
+  showWords = true,
   videosLabel = 'Videos',
   shortsLabel = 'Shorts',
 }: {
@@ -23,6 +24,7 @@ function BaseSettingsFields({
   showVods?: boolean;
   showLive?: boolean;
   showFilters?: boolean;
+  showWords?: boolean;
   videosLabel?: string;
   shortsLabel?: string;
 }) {
@@ -107,7 +109,7 @@ function BaseSettingsFields({
         </FormGroup>
       )}
 
-      {showFilters && (
+      {showFilters && showWords && (
         <>
           <FormGroup>
             <FormLabel>Default: Watched Words</FormLabel>
@@ -148,19 +150,22 @@ function BaseSettingsFields({
             />
           </FormGroup>
 
-          <FormGroup>
-            <FormLabel>Default: Auto Download</FormLabel>
-            <FormInputGroup
-              type={inputTypes.CHECK}
-              name="defaultAutoDownload"
-              helpText="Automatically queue missing content for download"
-              value={getVal('defaultAutoDownload', true)}
-              errors={[]}
-              warnings={[]}
-              onChange={onChange}
-            />
-          </FormGroup>
         </>
+      )}
+
+      {showFilters && (
+        <FormGroup>
+          <FormLabel>Default: Auto Download</FormLabel>
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="defaultAutoDownload"
+            helpText="Automatically queue missing content for download"
+            value={getVal('defaultAutoDownload', true)}
+            errors={[]}
+            warnings={[]}
+            onChange={onChange}
+          />
+        </FormGroup>
       )}
     </>
   );

@@ -22,7 +22,7 @@ import {
 import { SourceDescriptor, SourceFormProps } from '../types';
 import BaseSettingsFields from '../BaseSettingsFields';
 
-function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
+function FanslySourceForm({ source, onModalClose }: SourceFormProps) {
   const isNew = !source.id;
 
   const [enabled, setEnabled] = useState(source.enable ?? true);
@@ -51,7 +51,7 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
   const buildUpdatedSource = useCallback(
     (): MetadataSourceResource => ({
       ...source,
-      name: source.name || 'Patreon',
+      name: source.name || 'Fansly',
       enable: enabled,
       fields: applyFieldChanges(source.fields, pending),
     }),
@@ -62,7 +62,7 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
     runTest(buildUpdatedSource(), {
       onSuccess: () => {
         setTestResult('success');
-        setTestMessage('Connected to Patreon successfully');
+        setTestMessage('Connected to Fansly successfully');
       },
       onError: (err) => {
         setTestResult('failure');
@@ -73,7 +73,7 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
 
   const handleSave = useCallback(() => {
     const updated = buildUpdatedSource();
-    const cookiesFilePath = getFieldValue<string>(updated.fields, 'cookiesFilePath', '');
+    const authToken = getFieldValue<string>(updated.fields, 'authToken', '');
     const save = isNew ? create : update;
 
     const doSave = () => {
@@ -86,11 +86,11 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
       });
     };
 
-    if (cookiesFilePath && updated.enable) {
+    if (authToken && updated.enable) {
       runTest(updated, {
         onSuccess: () => {
           setTestResult('success');
-          setTestMessage('Connected to Patreon successfully');
+          setTestMessage('Connected to Fansly successfully');
           doSave();
         },
         onError: (err) => {
@@ -105,7 +105,7 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
 
   return (
     <>
-      <ModalHeader>Patreon</ModalHeader>
+      <ModalHeader>Fansly</ModalHeader>
 
       <ModalBody>
         <FormGroup>
@@ -122,12 +122,12 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
         </FormGroup>
 
         <FormGroup>
-          <FormLabel>Cookies File</FormLabel>
+          <FormLabel>Auth Token</FormLabel>
           <FormInputGroup
-            type={inputTypes.TEXT}
-            name="cookiesFilePath"
-            helpText="Path to a Netscape-format cookies.txt file exported from your browser while logged in to Patreon."
-            value={getVal('cookiesFilePath', '')}
+            type={inputTypes.PASSWORD}
+            name="authToken"
+            helpText="Your Fansly session token. In your browser, open DevTools → Application → Local Storage → fansly.com and copy the value of 'session_active_session', then extract the 'token' field from the JSON."
+            value={getVal('authToken', '')}
             errors={[]}
             warnings={[]}
             onChange={handleInputChange}
@@ -140,7 +140,9 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
           showVideos={true}
           showShorts={false}
           showVods={false}
-          showLive={false}
+          showLive={true}
+          showWords={false}
+          videosLabel="Posts"
         />
 
         {testResult !== null && (
@@ -179,11 +181,11 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
 
 const descriptor: SourceDescriptor = {
   platformConfig: {
-    label: 'Patreon',
-    channelPlatform: 'patreon',
-    implementation: 'Patreon',
-    searchPlaceholder: 'Patreon URL or username (e.g. https://www.patreon.com/creatorname)',
-    buildContentUrl: (id) => `https://www.patreon.com/posts/${id}`,
+    label: 'Fansly',
+    channelPlatform: 'fansly',
+    implementation: 'Fansly',
+    searchPlaceholder: 'Fansly URL or username (e.g. https://fansly.com/creatorname)',
+    buildContentUrl: (id) => `https://fansly.com/post/${id}`,
     videosLabel: 'Posts',
     shortsLabel: 'Posts',
     contentTypeLabel: (ct) => {
@@ -198,7 +200,7 @@ const descriptor: SourceDescriptor = {
     },
     showMembershipButton: false,
   },
-  SettingsForm: PatreonSourceForm,
+  SettingsForm: FanslySourceForm,
 };
 
 export default descriptor;

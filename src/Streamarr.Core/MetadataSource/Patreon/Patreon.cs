@@ -24,8 +24,9 @@ namespace Streamarr.Core.MetadataSource.Patreon
             "audio_file",         // audio attachment (voice packs etc.)
         };
 
-        // video_embed and livestream_youtube posts carry their real content as a YouTube URL
-        // in the embed.url field — we extract the video ID and download from YouTube directly.
+        // These post types carry their real content as a YouTube URL in embed.url.
+        // We extract the video ID so yt-dlp can download from YouTube directly,
+        // avoiding Patreon's Cloudflare protection at download time.
         private static readonly HashSet<string> YouTubeBackedPostTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "video_embed",
@@ -53,6 +54,7 @@ namespace Streamarr.Core.MetadataSource.Patreon
 
         public override string Name => "Patreon";
         public override PlatformType Platform => PlatformType.Patreon;
+        public override string? CookiesFilePath => Settings.CookiesFilePath;
 
         // ── Validation ─────────────────────────────────────────────────────────
 
@@ -132,8 +134,6 @@ namespace Streamarr.Core.MetadataSource.Patreon
             _logger.Info("Fetching Patreon posts for campaign {0} (since: {1})", platformId, since?.ToString("u") ?? "all");
 
             var posts = _client.GetCampaignPosts(Settings.CookiesFilePath, platformId, since);
-            _logger.Info("Patreon: fetched {0} total posts for campaign {1}", posts.Count, platformId);
-
             var results = new List<ContentMetadataResult>();
 
             foreach (var post in posts)
@@ -144,7 +144,7 @@ namespace Streamarr.Core.MetadataSource.Patreon
                     continue;
                 }
 
-                if (!IsVideoPost(attrs.PostType))
+                if (!DownloadablePostTypes.Contains(attrs.PostType ?? string.Empty))
                 {
                     _logger.Debug("Skipping post {0} (type='{1}', title='{2}')", post.Id, attrs.PostType, attrs.Title);
                     continue;
@@ -155,9 +155,26 @@ namespace Streamarr.Core.MetadataSource.Patreon
                     ? ContentType.Vod
                     : ContentType.Video;
 
+                // For YouTube-backed posts, extract the video ID from embed.url so yt-dlp
+                // downloads from YouTube directly, bypassing Patreon's Cloudflare protection.
+                var platformContentId = post.Id;
+                if (YouTubeBackedPostTypes.Contains(attrs.PostType ?? string.Empty))
+                {
+                    var youTubeId = ExtractYouTubeId(attrs.Embed?.Url);
+                    if (!string.IsNullOrWhiteSpace(youTubeId))
+                    {
+                        platformContentId = youTubeId;
+                        _logger.Debug("Post {0} ({1}): resolved embed to YouTube ID {2}", post.Id, attrs.PostType, youTubeId);
+                    }
+                    else
+                    {
+                        _logger.Warn("Post {0} ({1}): could not extract YouTube ID from embed URL '{2}' — will use Patreon post URL", post.Id, attrs.PostType, attrs.Embed?.Url ?? "(null)");
+                    }
+                }
+
                 results.Add(new ContentMetadataResult
                 {
-                    PlatformContentId = post.Id,
+                    PlatformContentId = platformContentId,
                     PlatformChannelId = platformId,
                     PlatformChannelTitle = attrs.Title ?? string.Empty,
                     ContentType = contentType,
@@ -169,7 +186,7 @@ namespace Streamarr.Core.MetadataSource.Patreon
                 });
             }
 
-            _logger.Info("GetNewContent for Patreon campaign {0}: {1} video post(s)", platformId, results.Count);
+            _logger.Info("GetNewContent for Patreon campaign {0}: {1} item(s)", platformId, results.Count);
             return results;
         }
 
@@ -177,10 +194,17 @@ namespace Streamarr.Core.MetadataSource.Patreon
 
         public override ContentMetadataResult? GetContentMetadata(string platformContentId)
         {
+            // If the stored ID is a YouTube video ID (from a video_embed/livestream_youtube post),
+            // we cannot look it up via the Patreon posts API.
+            if (IsYouTubeVideoId(platformContentId))
+            {
+                return null;
+            }
+
             try
             {
                 var post = _client.GetPost(Settings.CookiesFilePath, platformContentId);
-                if (post?.Attributes == null || !IsVideoPost(post.Attributes.PostType))
+                if (post?.Attributes == null || !DownloadablePostTypes.Contains(post.Attributes.PostType ?? string.Empty))
                 {
                     return null;
                 }
@@ -230,8 +254,33 @@ namespace Streamarr.Core.MetadataSource.Patreon
             return Enumerable.Empty<ContentStatusUpdate>();
         }
 
-        public override string GetDownloadUrl(string platformContentId) =>
-            $"https://www.patreon.com/posts/{platformContentId}";
+        public override string GetDownloadUrl(string platformContentId)
+        {
+            if (IsYouTubeVideoId(platformContentId))
+            {
+                return $"https://www.youtube.com/watch?v={platformContentId}";
+            }
+
+            // For directly-hosted posts (video_file, audio_file), fetch the post fresh
+            // to get the signed CDN URL from post_file.url, bypassing yt-dlp's Patreon
+            // extractor which struggles with Cloudflare and only grabs the thumbnail.
+            try
+            {
+                var post = _client.GetPost(Settings.CookiesFilePath, platformContentId);
+                var postFileUrl = post?.Attributes?.PostFile?.Url;
+                if (!string.IsNullOrWhiteSpace(postFileUrl))
+                {
+                    _logger.Debug("Post {0}: using post_file URL for direct download", platformContentId);
+                    return postFileUrl;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Failed to fetch post_file URL for post {0} — falling back to post URL", platformContentId);
+            }
+
+            return $"https://www.patreon.com/posts/{platformContentId}";
+        }
 
         // ── Helpers ────────────────────────────────────────────────────────────
 
@@ -271,10 +320,19 @@ namespace Streamarr.Core.MetadataSource.Patreon
             };
         }
 
-        private static bool IsVideoPost(string? postType)
+        private static string? ExtractYouTubeId(string? embedUrl)
         {
-            return !string.IsNullOrWhiteSpace(postType) && DownloadablePostTypes.Contains(postType);
+            if (string.IsNullOrWhiteSpace(embedUrl))
+            {
+                return null;
+            }
+
+            var match = YouTubeIdRegex.Match(embedUrl);
+            return match.Success ? match.Groups[1].Value : null;
         }
+
+        private static bool IsYouTubeVideoId(string? id) =>
+            id != null && id.Length == 11 && YouTubeVideoIdPattern.IsMatch(id);
 
         private static DateTime? ParsePublishedAt(string? value)
         {

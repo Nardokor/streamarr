@@ -104,6 +104,19 @@ namespace Streamarr.Core.MetadataSource.Patreon
         // Present on link and video_external_file posts
         [JsonPropertyName("embed")]
         public PatreonEmbed Embed { get; set; }
+
+        // Present on video_file and audio_file posts — direct CDN download URL
+        [JsonPropertyName("post_file")]
+        public PatreonPostFile PostFile { get; set; }
+    }
+
+    public class PatreonPostFile
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("url")]
+        public string Url { get; set; }
     }
 
     public class PatreonEmbed

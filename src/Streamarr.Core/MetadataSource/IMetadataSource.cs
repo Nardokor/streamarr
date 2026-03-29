@@ -41,6 +41,10 @@ namespace Streamarr.Core.MetadataSource
 
         // Returns the URL yt-dlp should fetch to download the given piece of content.
         string GetDownloadUrl(string platformContentId);
+
+        // Returns the path to a cookies file that should be passed to yt-dlp when
+        // downloading content from this source, or null if no cookies are required.
+        string? CookiesFilePath { get; }
     }
 
     // ── Result DTOs ──────────────────────────────────────────────────────────

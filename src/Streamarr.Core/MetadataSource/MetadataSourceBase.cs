@@ -24,6 +24,8 @@ namespace Streamarr.Core.MetadataSource
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 
+        public virtual string? CookiesFilePath => null;
+
         public abstract CreatorMetadataResult SearchCreator(string query);
         public abstract ChannelMetadataResult GetChannelMetadata(string platformUrl);
         public abstract IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since, bool checkMembership = false);

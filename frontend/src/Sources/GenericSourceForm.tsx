@@ -6,24 +6,59 @@ import ModalBody from 'Components/Modal/ModalBody';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import FormGroup from 'Components/Form/FormGroup';
-import FormInputGroup from 'Components/Form/FormInputGroup';
+import FormInputGroupBase from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import { inputTypes, kinds } from 'Helpers/Props';
+import type { InputType } from 'Helpers/Props/inputTypes';
 import { InputChanged } from 'typings/inputs';
+
+// Cast to avoid TypeScript union exhaustion on the generic `type` prop.
+// Each concrete usage in custom forms passes a specific inputTypes constant and
+// gets full type narrowing; here we accept any input type at runtime.
+const FormInputGroup = FormInputGroupBase as React.FC<{
+  type: InputType;
+  name: string;
+  value: unknown;
+  helpText?: string;
+  helpTextWarning?: string;
+  placeholder?: string;
+  errors: unknown[];
+  warnings: unknown[];
+  onChange: (change: InputChanged) => void;
+}>;
 import {
   MetadataSourceResource,
   applyFieldChanges,
-  getFieldValue,
   useCreateMetadataSource,
   useDeleteMetadataSource,
   useTestMetadataSource,
   useUpdateMetadataSource,
 } from 'Settings/Sources/useMetadataSources';
-import { SourceDescriptor, SourceFormProps } from '../types';
-import BaseSettingsFields from '../BaseSettingsFields';
+import { SourceFormProps } from './types';
 
-function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
+// Maps backend FieldType serialized strings to frontend inputTypes.
+const FIELD_TYPE_MAP: Record<string, InputType> = {
+  textbox: inputTypes.TEXT,
+  number: inputTypes.NUMBER,
+  password: inputTypes.PASSWORD,
+  checkbox: inputTypes.CHECK,
+  select: inputTypes.SELECT,
+  path: inputTypes.PATH,
+  filePath: inputTypes.PATH,
+  tag: inputTypes.TAG,
+  url: inputTypes.TEXT,
+};
+
+function resolveInputType(fieldType: string): InputType | null {
+  if (fieldType === 'action') {
+    return null;
+  }
+  return FIELD_TYPE_MAP[fieldType] ?? inputTypes.TEXT;
+}
+
+function GenericSourceForm({ source, onModalClose }: SourceFormProps) {
   const isNew = !source.id;
+  const title = source.implementationName || source.implementation;
 
   const [enabled, setEnabled] = useState(source.enable ?? true);
   const [pending, setPending] = useState<Record<string, unknown>>({});
@@ -37,9 +72,10 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
   const { mutate: runTest, isPending: isTesting } = useTestMetadataSource();
 
   const getVal = useCallback(
-    <T,>(name: string, fallback: T): T => {
-      if (name in pending) return pending[name] as T;
-      return getFieldValue<T>(source.fields, name, fallback);
+    (name: string) => {
+      if (name in pending) return pending[name];
+      const field = source.fields.find((f) => f.name === name);
+      return field?.value;
     },
     [pending, source.fields]
   );
@@ -51,7 +87,6 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
   const buildUpdatedSource = useCallback(
     (): MetadataSourceResource => ({
       ...source,
-      name: source.name || 'Patreon',
       enable: enabled,
       fields: applyFieldChanges(source.fields, pending),
     }),
@@ -62,7 +97,7 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
     runTest(buildUpdatedSource(), {
       onSuccess: () => {
         setTestResult('success');
-        setTestMessage('Connected to Patreon successfully');
+        setTestMessage('Connection successful');
       },
       onError: (err) => {
         setTestResult('failure');
@@ -73,39 +108,30 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
 
   const handleSave = useCallback(() => {
     const updated = buildUpdatedSource();
-    const cookiesFilePath = getFieldValue<string>(updated.fields, 'cookiesFilePath', '');
     const save = isNew ? create : update;
+    save(updated, {
+      onSuccess: () => onModalClose(),
+      onError: (err) => {
+        setTestResult('failure');
+        setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Save failed');
+      },
+    });
+  }, [buildUpdatedSource, isNew, create, update, onModalClose]);
 
-    const doSave = () => {
-      save(updated, {
-        onSuccess: () => onModalClose(),
-        onError: (err) => {
-          setTestResult('failure');
-          setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Save failed');
-        },
-      });
-    };
-
-    if (cookiesFilePath && updated.enable) {
-      runTest(updated, {
-        onSuccess: () => {
-          setTestResult('success');
-          setTestMessage('Connected to Patreon successfully');
-          doSave();
-        },
-        onError: (err) => {
-          setTestResult('failure');
-          setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Connection failed');
-        },
-      });
-    } else {
-      doSave();
-    }
-  }, [buildUpdatedSource, isNew, create, update, runTest, onModalClose]);
+  const visibleFields = source.fields
+    .filter((f) => {
+      if (f.hidden === 'hidden') return false;
+      if (f.hidden === 'hiddenIfNotSet') {
+        const val = getVal(f.name);
+        return val !== null && val !== undefined && val !== '';
+      }
+      return true;
+    })
+    .sort((a, b) => a.order - b.order);
 
   return (
     <>
-      <ModalHeader>Patreon</ModalHeader>
+      <ModalHeader>{title}</ModalHeader>
 
       <ModalBody>
         <FormGroup>
@@ -121,27 +147,27 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
           />
         </FormGroup>
 
-        <FormGroup>
-          <FormLabel>Cookies File</FormLabel>
-          <FormInputGroup
-            type={inputTypes.TEXT}
-            name="cookiesFilePath"
-            helpText="Path to a Netscape-format cookies.txt file exported from your browser while logged in to Patreon."
-            value={getVal('cookiesFilePath', '')}
-            errors={[]}
-            warnings={[]}
-            onChange={handleInputChange}
-          />
-        </FormGroup>
+        {visibleFields.map((field) => {
+          const inputType = resolveInputType(field.type);
+          if (inputType === null) return null;
 
-        <BaseSettingsFields
-          getVal={getVal}
-          onChange={handleInputChange}
-          showVideos={true}
-          showShorts={false}
-          showVods={false}
-          showLive={false}
-        />
+          return (
+            <FormGroup key={field.name}>
+              <FormLabel>{field.label}</FormLabel>
+              <FormInputGroup
+                type={inputType}
+                name={field.name}
+                helpText={field.helpText}
+                helpTextWarning={field.helpTextWarning}
+                placeholder={field.placeholder}
+                value={getVal(field.name) ?? (inputType === inputTypes.CHECK ? false : '')}
+                errors={[]}
+                warnings={[]}
+                onChange={handleInputChange}
+              />
+            </FormGroup>
+          );
+        })}
 
         {testResult !== null && (
           <Alert kind={testResult === 'success' ? 'success' : 'danger'}>
@@ -177,28 +203,4 @@ function PatreonSourceForm({ source, onModalClose }: SourceFormProps) {
   );
 }
 
-const descriptor: SourceDescriptor = {
-  platformConfig: {
-    label: 'Patreon',
-    channelPlatform: 'patreon',
-    implementation: 'Patreon',
-    searchPlaceholder: 'Patreon URL or username (e.g. https://www.patreon.com/creatorname)',
-    buildContentUrl: (id) => `https://www.patreon.com/posts/${id}`,
-    videosLabel: 'Posts',
-    shortsLabel: 'Posts',
-    contentTypeLabel: (ct) => {
-      switch (ct) {
-        case 'video': return 'Video';
-        case 'short': return 'Post';
-        case 'vod': return 'VoD';
-        case 'live': return 'Live';
-        case 'upcoming': return 'Upcoming';
-        default: return '';
-      }
-    },
-    showMembershipButton: false,
-  },
-  SettingsForm: PatreonSourceForm,
-};
-
-export default descriptor;
+export default GenericSourceForm;

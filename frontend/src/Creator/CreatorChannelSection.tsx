@@ -578,39 +578,45 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
               </div>
             </FormGroup>
 
-            <FormGroup>
-              <FormLabel size="small">Watched words</FormLabel>
-              <input
-                className={styles.filterInput}
-                type="text"
-                placeholder="word1, word2 … (blank = all)"
-                value={watchedWords}
-                onChange={(e) => setWatchedWords(e.target.value)}
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <FormLabel size="small">Ignored words</FormLabel>
-              <input
-                className={styles.filterInput}
-                type="text"
-                placeholder="word1, word2 … (blank = none)"
-                value={ignoredWords}
-                onChange={(e) => setIgnoredWords(e.target.value)}
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <FormLabel size="small">{' '}</FormLabel>
-              <label className={styles.checkLabel}>
+            {hasField('defaultWatchedWords') && (
+              <FormGroup>
+                <FormLabel size="small">Watched words</FormLabel>
                 <input
-                  type="checkbox"
-                  checked={watchedDefeatsIgnored}
-                  onChange={(e) => setWatchedDefeatsIgnored(e.target.checked)}
+                  className={styles.filterInput}
+                  type="text"
+                  placeholder="word1, word2 … (blank = all)"
+                  value={watchedWords}
+                  onChange={(e) => setWatchedWords(e.target.value)}
                 />
-                {' '}Watched words take priority over ignored words
-              </label>
-            </FormGroup>
+              </FormGroup>
+            )}
+
+            {hasField('defaultIgnoredWords') && (
+              <FormGroup>
+                <FormLabel size="small">Ignored words</FormLabel>
+                <input
+                  className={styles.filterInput}
+                  type="text"
+                  placeholder="word1, word2 … (blank = none)"
+                  value={ignoredWords}
+                  onChange={(e) => setIgnoredWords(e.target.value)}
+                />
+              </FormGroup>
+            )}
+
+            {hasField('defaultWatchedDefeatsIgnored') && (
+              <FormGroup>
+                <FormLabel size="small">{' '}</FormLabel>
+                <label className={styles.checkLabel}>
+                  <input
+                    type="checkbox"
+                    checked={watchedDefeatsIgnored}
+                    onChange={(e) => setWatchedDefeatsIgnored(e.target.checked)}
+                  />
+                  {' '}Watched words take priority over ignored words
+                </label>
+              </FormGroup>
+            )}
           </div>
 
           {/* Download */}
@@ -680,16 +686,18 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
               </div>
             </FormGroup>
 
-            <FormGroup>
-              <FormLabel size="small">Keep words</FormLabel>
-              <input
-                className={styles.filterInput}
-                type="text"
-                placeholder="word1, word2 … — matching titles are never deleted"
-                value={retentionKeepWords}
-                onChange={(e) => setRetentionKeepWords(e.target.value)}
-              />
-            </FormGroup>
+            {hasField('defaultRetentionKeepWords') && (
+              <FormGroup>
+                <FormLabel size="small">Keep words</FormLabel>
+                <input
+                  className={styles.filterInput}
+                  type="text"
+                  placeholder="word1, word2 … — matching titles are never deleted"
+                  value={retentionKeepWords}
+                  onChange={(e) => setRetentionKeepWords(e.target.value)}
+                />
+              </FormGroup>
+            )}
           </div>
 
           <div className={styles.settingsActions}>

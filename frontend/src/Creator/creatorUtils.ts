@@ -9,9 +9,16 @@ export function getContentTypeLabel(contentType: ContentType, platform?: string)
 export function getTypeLabels(platform?: string): string[] {
   const cfg = platform ? PLATFORM_REGISTRY[platform] : undefined;
   if (!cfg) return ['Video', 'Short', 'VoD', 'Live', 'Upcoming'];
-  return (['video', 'short', 'vod', 'live', 'upcoming'] as ContentType[]).map(
-    (ct) => cfg.contentTypeLabel(ct)
-  );
+  const seen = new Set<string>();
+  const labels: string[] = [];
+  for (const ct of ['video', 'short', 'vod', 'live', 'upcoming'] as ContentType[]) {
+    const label = cfg.contentTypeLabel(ct);
+    if (label && !seen.has(label)) {
+      seen.add(label);
+      labels.push(label);
+    }
+  }
+  return labels;
 }
 
 export function getShortsLabel(platform?: string): string {

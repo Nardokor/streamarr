@@ -114,7 +114,7 @@ namespace Streamarr.Core.MetadataSource.Fansly
                 Title = ExtractTitle(post.Content, post.Id),
                 Description = post.Content ?? string.Empty,
                 ThumbnailUrl = string.Empty,
-                AirDateUtc = DateTimeOffset.FromUnixTimeMilliseconds(post.CreatedAt).UtcDateTime,
+                AirDateUtc = DateTimeOffset.FromUnixTimeSeconds(post.CreatedAt).UtcDateTime,
                 IsAccessible = true
             }).ToList();
 
@@ -144,7 +144,7 @@ namespace Streamarr.Core.MetadataSource.Fansly
                     Title = ExtractTitle(post.Content, post.Id),
                     Description = post.Content ?? string.Empty,
                     ThumbnailUrl = string.Empty,
-                    AirDateUtc = DateTimeOffset.FromUnixTimeMilliseconds(post.CreatedAt).UtcDateTime,
+                    AirDateUtc = DateTimeOffset.FromUnixTimeSeconds(post.CreatedAt).UtcDateTime,
                     IsAccessible = true
                 };
             }

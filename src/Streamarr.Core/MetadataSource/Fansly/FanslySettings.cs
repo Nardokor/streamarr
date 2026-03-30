@@ -29,6 +29,10 @@ namespace Streamarr.Core.MetadataSource.Fansly
         [FieldDefinition(0, Label = "Auth Token", Type = FieldType.Password, HelpText = "Your Fansly session token. In your browser, open DevTools → Application → Local Storage → fansly.com and copy the value of 'session_active_session', then extract the 'token' field from the JSON.")]
         public string AuthToken { get; set; } = string.Empty;
 
+        // Fansly posts are the primary content type — use "Posts" label instead of "Videos".
+        [FieldDefinition(100, Label = "Download Posts", Type = FieldType.Checkbox, HelpText = "Download posts by default for new channels.")]
+        public override bool DefaultDownloadVideos { get; set; } = true;
+
         // ── Fields hidden from the generic form ────────────────────────────────
         // Fansly has no shorts, no VODs, and no word-based filters.
         // Override the virtual base properties WITHOUT [FieldDefinition] so SchemaBuilder

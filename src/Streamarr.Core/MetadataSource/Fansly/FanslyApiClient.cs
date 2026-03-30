@@ -83,7 +83,7 @@ namespace Streamarr.Core.MetadataSource.Fansly
                 var doneEarly = false;
                 foreach (var post in payload.Posts)
                 {
-                    var postDate = DateTimeOffset.FromUnixTimeMilliseconds(post.CreatedAt).UtcDateTime;
+                    var postDate = DateTimeOffset.FromUnixTimeSeconds(post.CreatedAt).UtcDateTime;
                     if (since.HasValue && postDate <= since.Value)
                     {
                         doneEarly = true;

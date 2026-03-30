@@ -87,6 +87,9 @@ function GenericSourceForm({ source, onModalClose }: SourceFormProps) {
   const buildUpdatedSource = useCallback(
     (): MetadataSourceResource => ({
       ...source,
+      // New sources have no name yet — default to the implementation name so the
+      // backend's required-name validation passes without a visible Name field.
+      name: source.name || source.implementationName || source.implementation || '',
       enable: enabled,
       fields: applyFieldChanges(source.fields, pending),
     }),

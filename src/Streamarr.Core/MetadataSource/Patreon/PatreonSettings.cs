@@ -1,5 +1,4 @@
 using FluentValidation;
-using Streamarr.Core.Annotations;
 
 namespace Streamarr.Core.MetadataSource.Patreon
 {
@@ -7,9 +6,6 @@ namespace Streamarr.Core.MetadataSource.Patreon
     {
         public PatreonSettingsValidator()
         {
-            RuleFor(c => ((PatreonSettings)c).CookiesFilePath)
-                .NotEmpty()
-                .WithMessage("A cookies file is required to access Patreon member content.");
         }
     }
 
@@ -24,9 +20,6 @@ namespace Streamarr.Core.MetadataSource.Patreon
             DefaultDownloadVods = false;
             DefaultDownloadLive = false;
         }
-
-        [FieldDefinition(0, Label = "Cookies File", Type = FieldType.FilePath, HelpText = "Path to a Netscape-format cookies.txt file exported from your browser while logged in to Patreon. Required to access patron-only content.")]
-        public string CookiesFilePath { get; set; } = string.Empty;
 
         // Override without [FieldDefinition] so SchemaBuilder excludes these from the fields array.
         // Patreon has no shorts, VODs, or live streams.

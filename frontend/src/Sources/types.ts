@@ -5,6 +5,7 @@ import type { MetadataSourceResource } from 'Settings/Sources/useMetadataSources
 export interface SourceFormProps {
   source: MetadataSourceResource;
   onModalClose: () => void;
+  supportsCookies?: boolean;
 }
 
 export interface PlatformConfig {
@@ -23,4 +24,5 @@ export interface PlatformConfig {
 export interface SourceDescriptor {
   platformConfig: PlatformConfig;
   SettingsForm?: ComponentType<SourceFormProps>;
+  supportsCookies?: boolean;
 }

@@ -49,7 +49,6 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         public override string Name => "YouTube";
         public override PlatformType Platform => PlatformType.YouTube;
-        public override string? CookiesFilePath => string.IsNullOrWhiteSpace(Settings.CookiesFilePath) ? null : Settings.CookiesFilePath;
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions =>
             new List<ProviderDefinition>

@@ -76,7 +76,6 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
 
         public override string Name => "Fourthwall";
         public override PlatformType Platform => PlatformType.Fourthwall;
-        public override string? CookiesFilePath => Settings.CookiesFilePath;
 
         // When UseYouTubeApi is enabled, delegate livestream status checks to the
         // YouTube source (Fourthwall content IDs are YouTube video IDs).
@@ -91,7 +90,7 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
             {
                 return new ValidationResult(new[]
                 {
-                    new ValidationFailure("CookiesFilePath", "Cookies file path is required.")
+                    new ValidationFailure("CookiesFilePath", "Upload a cookies file to enable access to Fourthwall content.")
                 });
             }
 
@@ -99,7 +98,7 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
             {
                 return new ValidationResult(new[]
                 {
-                    new ValidationFailure("CookiesFilePath", $"Cookies file not found: {Settings.CookiesFilePath}")
+                    new ValidationFailure("CookiesFilePath", "Cookies file is missing — please upload a new one.")
                 });
             }
 

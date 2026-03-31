@@ -21,9 +21,6 @@ namespace Streamarr.Core.MetadataSource.YouTube
         [FieldDefinition(1, Label = "Webhook Base URL", HelpText = "Public base URL for push notifications via Tailscale Funnel (e.g. https://streamarr.your-tailnet.ts.net). Streamarr will append /api/v1/webhook/youtube. Leave empty to use polling only.")]
         public string WebhookBaseUrl { get; set; } = string.Empty;
 
-        [FieldDefinition(2, Label = "Cookies File", Type = FieldType.FilePath, HelpText = "Path to a Netscape-format cookies.txt file exported from your browser while logged in to YouTube. Required to access members-only content.")]
-        public string CookiesFilePath { get; set; } = string.Empty;
-
         protected override AbstractValidator<MetadataSourceSettingsBase> Validator => _validator;
     }
 }

@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using NLog;
 using Streamarr.Core.Channels;
-using Streamarr.Core.Configuration;
 using Streamarr.Core.Lifecycle;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.MetadataSource.Twitch;
@@ -16,14 +15,12 @@ namespace Streamarr.Core.MetadataSource
     {
         private readonly IMetadataSourceFactory _factory;
         private readonly IRootFolderService _rootFolderService;
-        private readonly IConfigService _configService;
         private readonly Logger _logger;
 
-        public MetadataSourceSeeder(IMetadataSourceFactory factory, IRootFolderService rootFolderService, IConfigService configService, Logger logger)
+        public MetadataSourceSeeder(IMetadataSourceFactory factory, IRootFolderService rootFolderService, Logger logger)
         {
             _factory = factory;
             _rootFolderService = rootFolderService;
-            _configService = configService;
             _logger = logger;
         }
 
@@ -32,6 +29,7 @@ namespace Streamarr.Core.MetadataSource
             SeedRootFolder();
             SeedYouTube();
             SeedTwitch();
+            SeedCookieFile();
         }
 
         private void SeedRootFolder()
@@ -56,13 +54,12 @@ namespace Streamarr.Core.MetadataSource
             {
                 _logger.Warn("Failed to seed root folder '{0}' from STREAMARR_ROOT_FOLDER: {1}", path, ex.Message);
             }
-
-            SeedCookieFile(path);
         }
 
-        private void SeedCookieFile(string rootPath)
+        private void SeedCookieFile()
         {
-            if (!string.IsNullOrWhiteSpace(_configService.YtDlpCookieFilePath))
+            var rootPath = Environment.GetEnvironmentVariable("STREAMARR_ROOT_FOLDER");
+            if (string.IsNullOrWhiteSpace(rootPath))
             {
                 return;
             }
@@ -73,8 +70,13 @@ namespace Streamarr.Core.MetadataSource
                 return;
             }
 
-            _configService.YtDlpCookieFilePath = cookieFile;
-            _logger.Info("Auto-configured cookie file '{0}' from STREAMARR_ROOT_FOLDER", cookieFile);
+            var youtubeSource = _factory.All().FirstOrDefault(d => d.Platform == PlatformType.YouTube);
+            if (youtubeSource?.Settings is YouTubeSettings youtubeSettings && string.IsNullOrWhiteSpace(youtubeSettings.CookiesFilePath))
+            {
+                youtubeSettings.CookiesFilePath = cookieFile;
+                _factory.Update(youtubeSource);
+                _logger.Info("Auto-configured YouTube cookie file '{0}' from STREAMARR_ROOT_FOLDER", cookieFile);
+            }
         }
 
         private static string FindCookieFile(string rootPath)

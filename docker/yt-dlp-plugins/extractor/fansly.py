@@ -7,6 +7,7 @@ from yt_dlp.utils.traversal import traverse_obj
 
 
 class FanslyBaseIE(InfoExtractor):
+    _VALID_URL = False
     _NETRC_MACHINE = 'fansly'
 
     def _initialize_pre_login(self):

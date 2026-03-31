@@ -126,19 +126,6 @@ function DownloadClientSettings() {
                 />
               </FormGroup>
 
-              <FormGroup size={sizes.MEDIUM}>
-                <FormLabel>Cookie File</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.PATH}
-                  name="ytDlpCookieFilePath"
-                  helpText="Path to a Netscape-format cookies file for authenticated downloads."
-                  includeFiles={true}
-                  onChange={handleInputChange}
-                  {...settings.ytDlpCookieFilePath}
-                />
-              </FormGroup>
-
               <FormGroup size={sizes.LARGE}>
                 <FormLabel>Preferred Format</FormLabel>
 

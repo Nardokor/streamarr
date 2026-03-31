@@ -237,6 +237,11 @@ namespace Streamarr.Core.Jobs
         private void UpdateScheduledIntervals()
         {
             var refresh = _scheduledTaskRepository.GetDefinition(typeof(RefreshCreatorCommand));
+            if (refresh == null)
+            {
+                return;
+            }
+
             refresh.Interval = GetFullRefreshInterval();
 
             _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { refresh });

@@ -49,6 +49,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         public override string Name => "YouTube";
         public override PlatformType Platform => PlatformType.YouTube;
+        public override string? CookiesFilePath => string.IsNullOrWhiteSpace(Settings.CookiesFilePath) ? null : Settings.CookiesFilePath;
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions =>
             new List<ProviderDefinition>
@@ -269,7 +270,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
             _logger.Info("Initial sync: {0} public item(s) for {1}", result.Count, platformUrl);
 
-            if (checkMembership && _ytDlpClient.HasCookies)
+            if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
                 result.AddRange(FetchMembershipContent(platformUrl, seen, since: null));
@@ -310,7 +311,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             var videoDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, rssIds);
             var result = videoDetails.Select(v => MapToContentMetadata(v, publishedAt: null)).ToList();
 
-            if (checkMembership && _ytDlpClient.HasCookies)
+            if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
                 result.AddRange(FetchMembershipContent(platformUrl, seen, since));
@@ -341,7 +342,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 result.AddRange(videoDetails.Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id))));
             }
 
-            if (checkMembership && _ytDlpClient.HasCookies)
+            if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
                 result.AddRange(FetchMembershipContent(platformUrl, seen, since));
@@ -383,7 +384,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
         private List<ContentMetadataResult> FetchMembershipContent(string platformUrl, HashSet<string> alreadySeen, DateTime? since)
         {
             var dateAfter = since?.ToString("yyyyMMdd");
-            var allVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
+            var allVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter, cookiesFilePath: Settings.CookiesFilePath);
 
             var newMembersVideos = allVideos
                 .Where(v => !string.IsNullOrWhiteSpace(v.Id) && IsMembersOnlyAvailability(v.Availability) && !alreadySeen.Contains(v.Id))
@@ -579,7 +580,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             // deno/JS-challenge format resolution — inaccessible videos fail before
             // format extraction with a clear membership error.
             // withCookies=false is used for tier discovery (Phase 1 of the two-phase probe).
-            return _ytDlpClient.ProbeVideoAccessibility(platformContentId, withCookies);
+            return _ytDlpClient.ProbeVideoAccessibility(platformContentId, withCookies, Settings.CookiesFilePath);
         }
 
         public override ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId)

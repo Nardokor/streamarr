@@ -19,7 +19,7 @@ namespace Streamarr.Core.Download.YtDlp
         YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null);
         void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
-        List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null);
+        List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null);
         YtDlpVideoInfo GetVideoInfo(string videoUrl);
 
         /// <summary>
@@ -30,14 +30,13 @@ namespace Streamarr.Core.Download.YtDlp
         ///   TierRequired — member but wrong tier ("available on level: X")
         ///   Inaccessible — deleted / private / unrecognised error
         /// </summary>
-        Streamarr.Core.MetadataSource.ContentAccessibilityResult ProbeVideoAccessibility(string videoId, bool withCookies = true);
+        Streamarr.Core.MetadataSource.ContentAccessibilityResult ProbeVideoAccessibility(string videoId, bool withCookies = true, string cookiesFilePath = null);
 
         bool IsDenoAvailable();
 
         string GetVersion();
         bool IsAvailable();
         string SelfUpdate();
-        bool HasCookies { get; }
     }
 
     public class YtDlpClient : IYtDlpClient
@@ -72,17 +71,10 @@ namespace Streamarr.Core.Download.YtDlp
         private readonly IConfigService _configService;
         private readonly Logger _logger;
 
-        public bool HasCookies => !string.IsNullOrWhiteSpace(Settings.CookieFilePath);
-
-        private string CookieArg => !string.IsNullOrWhiteSpace(Settings.CookieFilePath)
-            ? $" --cookies {Quote(Settings.CookieFilePath)}"
-            : string.Empty;
-
         private YtDlpSettings Settings => new YtDlpSettings
         {
             BinaryPath = _configService.YtDlpBinaryPath,
             TempDownloadFolder = _configService.YtDlpTempDownloadFolder,
-            CookieFilePath = _configService.YtDlpCookieFilePath,
             EmbedMetadata = _configService.YtDlpEmbedMetadata,
             EmbedThumbnail = _configService.YtDlpEmbedThumbnail,
             PreferredFormat = _configService.YtDlpPreferredFormat,
@@ -201,7 +193,7 @@ namespace Streamarr.Core.Download.YtDlp
             return JsonSerializer.Deserialize<YtDlpVideoInfo>(json, JsonOptions);
         }
 
-        public Streamarr.Core.MetadataSource.ContentAccessibilityResult ProbeVideoAccessibility(string videoId, bool withCookies = true)
+        public Streamarr.Core.MetadataSource.ContentAccessibilityResult ProbeVideoAccessibility(string videoId, bool withCookies = true, string cookiesFilePath = null)
         {
             var url = $"https://www.youtube.com/watch?v={videoId}";
 
@@ -209,7 +201,9 @@ namespace Streamarr.Core.Download.YtDlp
             // resolution or trigger the n-challenge.
             // withCookies=false is used for tier discovery: without auth, YouTube always
             // returns the tier error so we learn the required level without needing access.
-            var cookieArg = withCookies ? CookieArg : string.Empty;
+            var cookieArg = withCookies && !string.IsNullOrWhiteSpace(cookiesFilePath)
+                ? $" --cookies {Quote(cookiesFilePath)}"
+                : string.Empty;
             var args = $"--print availability --no-playlist --socket-timeout 15{cookieArg} {Quote(url)}";
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
@@ -274,7 +268,7 @@ namespace Streamarr.Core.Download.YtDlp
         {
             _logger.Debug("Getting channel info: {0}", channelUrl);
 
-            var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1 --socket-timeout 30 --extractor-args \"youtubetab:skip=authcheck\"{CookieArg} {Quote(channelUrl)}";
+            var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1 --socket-timeout 30 --extractor-args \"youtubetab:skip=authcheck\" {Quote(channelUrl)}";
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
             if (output.ExitCode != 0)
@@ -288,7 +282,7 @@ namespace Streamarr.Core.Download.YtDlp
             return JsonSerializer.Deserialize<YtDlpChannelInfo>(json, JsonOptions);
         }
 
-        public List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null)
+        public List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null)
         {
             _logger.Debug("Getting channel content: {0} (limit={1}, dateAfter={2})", channelUrl, limit, dateAfter);
 
@@ -309,7 +303,7 @@ namespace Streamarr.Core.Download.YtDlp
             foreach (var tab in new[] { "videos", "shorts", "streams" })
             {
                 var tabUrl = $"{baseUrl}/{tab}";
-                var items = FetchFromTab(tabUrl, limit, dateAfter);
+                var items = FetchFromTab(tabUrl, limit, dateAfter, cookiesFilePath);
                 foreach (var item in items)
                 {
                     if (!string.IsNullOrWhiteSpace(item.Id) && seen.Add(item.Id))
@@ -324,7 +318,7 @@ namespace Streamarr.Core.Download.YtDlp
             return allVideos;
         }
 
-        private List<YtDlpVideoInfo> FetchFromTab(string url, int? limit, string dateAfter)
+        private List<YtDlpVideoInfo> FetchFromTab(string url, int? limit, string dateAfter, string cookiesFilePath = null)
         {
             _logger.Debug("Fetching tab: {0}", url);
 
@@ -346,9 +340,9 @@ namespace Streamarr.Core.Download.YtDlp
                 argParts.Add($"--dateafter {dateAfter}");
             }
 
-            if (!string.IsNullOrWhiteSpace(Settings.CookieFilePath))
+            if (!string.IsNullOrWhiteSpace(cookiesFilePath))
             {
-                argParts.Add($"--cookies {Quote(Settings.CookieFilePath)}");
+                argParts.Add($"--cookies {Quote(cookiesFilePath)}");
             }
 
             argParts.Add(Quote(url));
@@ -596,7 +590,7 @@ namespace Streamarr.Core.Download.YtDlp
 
         private string BuildMetadataArgs(string url)
         {
-            return $"--dump-json --skip-download --socket-timeout 15{CookieArg} {Quote(url)}";
+            return $"--dump-json --skip-download --socket-timeout 15 {Quote(url)}";
         }
 
         private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, string cookiesFilePath = null)

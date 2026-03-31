@@ -7,7 +7,6 @@ public class DownloadClientSettingsResource : RestResource
 {
     public string YtDlpBinaryPath { get; set; } = string.Empty;
     public string YtDlpTempDownloadFolder { get; set; } = string.Empty;
-    public string YtDlpCookieFilePath { get; set; } = string.Empty;
     public bool YtDlpEmbedMetadata { get; set; }
     public bool YtDlpEmbedThumbnail { get; set; }
     public string YtDlpPreferredFormat { get; set; } = string.Empty;
@@ -24,7 +23,6 @@ public static class DownloadClientSettingsMapper
             Id = 1,
             YtDlpBinaryPath = config.YtDlpBinaryPath,
             YtDlpTempDownloadFolder = config.YtDlpTempDownloadFolder,
-            YtDlpCookieFilePath = config.YtDlpCookieFilePath,
             YtDlpEmbedMetadata = config.YtDlpEmbedMetadata,
             YtDlpEmbedThumbnail = config.YtDlpEmbedThumbnail,
             YtDlpPreferredFormat = config.YtDlpPreferredFormat,
@@ -37,7 +35,6 @@ public static class DownloadClientSettingsMapper
     {
         config.YtDlpBinaryPath = resource.YtDlpBinaryPath;
         config.YtDlpTempDownloadFolder = resource.YtDlpTempDownloadFolder;
-        config.YtDlpCookieFilePath = resource.YtDlpCookieFilePath;
         config.YtDlpEmbedMetadata = resource.YtDlpEmbedMetadata;
         config.YtDlpEmbedThumbnail = resource.YtDlpEmbedThumbnail;
         config.YtDlpPreferredFormat = resource.YtDlpPreferredFormat;

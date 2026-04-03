@@ -54,7 +54,6 @@ namespace Streamarr.Core.MetadataSource.Patreon
 
         public override string Name => "Patreon";
         public override PlatformType Platform => PlatformType.Patreon;
-        public override string? CookiesFilePath => Settings.CookiesFilePath;
 
         // ── Validation ─────────────────────────────────────────────────────────
 
@@ -64,7 +63,7 @@ namespace Streamarr.Core.MetadataSource.Patreon
             {
                 return new ValidationResult(new[]
                 {
-                    new ValidationFailure("CookiesFilePath", "Cookies file path is required.")
+                    new ValidationFailure("CookiesFilePath", "Upload a cookies file to enable access to Patreon content.")
                 });
             }
 
@@ -72,7 +71,7 @@ namespace Streamarr.Core.MetadataSource.Patreon
             {
                 return new ValidationResult(new[]
                 {
-                    new ValidationFailure("CookiesFilePath", $"Cookies file not found: {Settings.CookiesFilePath}")
+                    new ValidationFailure("CookiesFilePath", "Cookies file is missing — please upload a new one.")
                 });
             }
 

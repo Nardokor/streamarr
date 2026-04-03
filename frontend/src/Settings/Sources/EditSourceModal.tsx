@@ -19,7 +19,11 @@ function EditSourceModal({ source, isOpen, onModalClose }: EditSourceModalProps)
     <Modal isOpen={isOpen} size="medium" onModalClose={onModalClose}>
       <ModalContent onModalClose={onModalClose}>
         {SourceForm != null && source != null ? (
-          <SourceForm source={source} onModalClose={onModalClose} />
+          <SourceForm
+            source={source}
+            onModalClose={onModalClose}
+            supportsCookies={descriptor?.supportsCookies}
+          />
         ) : null}
       </ModalContent>
     </Modal>

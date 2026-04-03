@@ -49,7 +49,6 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         public override string Name => "YouTube";
         public override PlatformType Platform => PlatformType.YouTube;
-        public override string? CookiesFilePath => string.IsNullOrWhiteSpace(Settings.CookiesFilePath) ? null : Settings.CookiesFilePath;
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions =>
             new List<ProviderDefinition>
@@ -324,13 +323,16 @@ namespace Streamarr.Core.MetadataSource.YouTube
             return result;
         }
 
-        // RSS fallback: used when the RSS feed is unavailable (outage, rate-limit, etc.).
-        // Fetches only content newer than `since` from the uploads playlist.
+        // Primary API sync when WebSub is configured, also used as fallback when RSS is unavailable.
+        // Fetches content newer than `since` from the uploads playlist.
+        // Supplements with RSS to catch live streams: a stream appears in the RSS feed immediately
+        // when it starts (which is what triggers the WebSub notification), but may take several
+        // minutes to appear in the uploads playlist.
         private IEnumerable<ContentMetadataResult> GetIncrementalSyncViaApi(
             string platformId, string platformUrl, DateTime since, bool checkMembership)
         {
             var uploadsPlaylistId = DeriveUploadsPlaylistId(platformId);
-            _logger.Info("Fetching playlist {0} since {1} (RSS fallback)", uploadsPlaylistId, since.ToString("u"));
+            _logger.Info("Fetching playlist {0} since {1}", uploadsPlaylistId, since.ToString("u"));
 
             var playlistItems = _youTubeApiClient.GetPlaylistItems(Settings.ApiKey, uploadsPlaylistId, since);
             var result = new List<ContentMetadataResult>();
@@ -340,6 +342,17 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 var publishedAtById = playlistItems.ToDictionary(p => p.VideoId, p => p.PublishedAt);
                 var videoDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, playlistItems.Select(p => p.VideoId));
                 result.AddRange(videoDetails.Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id))));
+            }
+
+            // RSS supplement: catches live streams that are already in the RSS feed but not yet
+            // in the uploads playlist (a race condition that's especially likely when a WebSub
+            // notification triggered this refresh).
+            var playlistIds = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
+            var rssExtraIds = FetchRssExtras(platformId, platformUrl, playlistIds);
+            if (rssExtraIds.Count > 0)
+            {
+                var rssDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, rssExtraIds);
+                result.AddRange(rssDetails.Select(v => MapToContentMetadata(v, null)));
             }
 
             if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
@@ -654,11 +667,15 @@ namespace Streamarr.Core.MetadataSource.YouTube
             }
 
             var contentType = ContentType.Video;
-            if (video.IsLive == true)
+            if (video.IsLive == true || video.LiveStatus == "is_live")
             {
                 contentType = ContentType.Live;
             }
-            else if (video.WasLive == true)
+            else if (video.LiveStatus == "is_upcoming")
+            {
+                contentType = ContentType.Upcoming;
+            }
+            else if (video.WasLive == true || video.LiveStatus == "was_live")
             {
                 contentType = ContentType.Vod;
             }

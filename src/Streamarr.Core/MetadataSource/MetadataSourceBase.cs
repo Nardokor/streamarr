@@ -24,7 +24,7 @@ namespace Streamarr.Core.MetadataSource
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 
-        public virtual string? CookiesFilePath => null;
+        public virtual string? CookiesFilePath => string.IsNullOrWhiteSpace(Settings.CookiesFilePath) ? null : Settings.CookiesFilePath;
 
         public abstract CreatorMetadataResult SearchCreator(string query);
         public abstract ChannelMetadataResult GetChannelMetadata(string platformUrl);

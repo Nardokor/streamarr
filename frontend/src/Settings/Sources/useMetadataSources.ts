@@ -1,7 +1,9 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useApiMutation from 'Helpers/Hooks/useApiMutation';
 import useApiQuery from 'Helpers/Hooks/useApiQuery';
 import Field from 'typings/Field';
+import { ApiError } from 'Utilities/Fetch/fetchJson';
+import getQueryPath from 'Utilities/Fetch/getQueryPath';
 
 export interface MetadataSourceResource {
   id: number;
@@ -67,6 +69,64 @@ export const useDeleteMetadataSource = (id: number) => {
     mutationOptions: {
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: [PATH] });
+      },
+    },
+  });
+};
+
+export interface CookieStatusResource {
+  hasCookies: boolean;
+}
+
+export const useCookieStatus = (id: number) =>
+  useApiQuery<CookieStatusResource>({ path: `${PATH}/${id}/cookies` });
+
+export const useUploadCookies = (id: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<CookieStatusResource, ApiError, File>({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(getQueryPath(`${PATH}/${id}/cookies`), {
+        method: 'POST',
+        headers: {
+          'X-Api-Key': window.Streamarr.apiKey,
+          'X-Streamarr-Client': 'Streamarr',
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new ApiError(
+          `${PATH}/${id}/cookies`,
+          response.status,
+          response.statusText
+        );
+      }
+
+      return response.json() as Promise<CookieStatusResource>;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [getQueryPath(`${PATH}/${id}/cookies`)],
+      });
+    },
+  });
+};
+
+export const useDeleteCookies = (id: number) => {
+  const queryClient = useQueryClient();
+
+  return useApiMutation<CookieStatusResource, void>({
+    path: `${PATH}/${id}/cookies`,
+    method: 'DELETE',
+    mutationOptions: {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: [getQueryPath(`${PATH}/${id}/cookies`)],
+        });
       },
     },
   });

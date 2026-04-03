@@ -2,6 +2,7 @@ import { SourceDescriptor } from '../types';
 import type { ContentType } from 'typings/Content';
 
 const descriptor: SourceDescriptor = {
+  supportsCookies: true,
   platformConfig: {
     label: 'YouTube',
     channelPlatform: 'youTube',

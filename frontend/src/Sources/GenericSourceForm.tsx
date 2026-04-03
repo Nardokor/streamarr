@@ -34,6 +34,7 @@ import {
   useTestMetadataSource,
   useUpdateMetadataSource,
 } from 'Settings/Sources/useMetadataSources';
+import CookieUploadSection from './CookieUploadSection';
 import { SourceFormProps } from './types';
 
 // Maps backend FieldType serialized strings to frontend inputTypes.
@@ -56,7 +57,7 @@ function resolveInputType(fieldType: string): InputType | null {
   return FIELD_TYPE_MAP[fieldType] ?? inputTypes.TEXT;
 }
 
-function GenericSourceForm({ source, onModalClose }: SourceFormProps) {
+function GenericSourceForm({ source, onModalClose, supportsCookies }: SourceFormProps) {
   const isNew = !source.id;
   const title = source.implementationName || source.implementation;
 
@@ -171,6 +172,10 @@ function GenericSourceForm({ source, onModalClose }: SourceFormProps) {
             </FormGroup>
           );
         })}
+
+        {!isNew && supportsCookies && source.id != null && (
+          <CookieUploadSection sourceId={source.id} />
+        )}
 
         {testResult !== null && (
           <Alert kind={testResult === 'success' ? 'success' : 'danger'}>

@@ -15,6 +15,10 @@ namespace Streamarr.Core.MetadataSource
             return new StreamarrValidationResult(Validator.Validate(this));
         }
 
+        // Managed by the application — set automatically when a cookie file is uploaded via the API.
+        // Not decorated with [FieldDefinition] so it is excluded from the settings form.
+        public string CookiesFilePath { get; set; } = string.Empty;
+
         // Sync scheduling — this interval also governs live stream detection.
         // Default 1 hour keeps live streams discoverable without burning API quota.
         [FieldDefinition(90, Label = "Refresh Interval", Unit = "hours", HelpText = "How often to sync new content and detect live streams (hours). Values above 6 may cause recent uploads and live streams to be missed.")]

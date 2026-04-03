@@ -653,11 +653,15 @@ namespace Streamarr.Core.MetadataSource.YouTube
             }
 
             var contentType = ContentType.Video;
-            if (video.IsLive == true)
+            if (video.IsLive == true || video.LiveStatus == "is_live")
             {
                 contentType = ContentType.Live;
             }
-            else if (video.WasLive == true)
+            else if (video.LiveStatus == "is_upcoming")
+            {
+                contentType = ContentType.Upcoming;
+            }
+            else if (video.WasLive == true || video.LiveStatus == "was_live")
             {
                 contentType = ContentType.Vod;
             }

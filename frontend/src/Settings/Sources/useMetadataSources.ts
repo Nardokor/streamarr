@@ -80,36 +80,38 @@ export interface CookieStatusResource {
   hasCookies: boolean;
 }
 
-export const useCookieStatus = (id: number) =>
-  useApiQuery<CookieStatusResource>({ path: `${PATH}/${id}/cookies` });
+export const useCookieStatus = (id: number, options?: { enabled?: boolean }) =>
+  useApiQuery<CookieStatusResource>({
+    path: `${PATH}/${id}/cookies`,
+    queryOptions: { enabled: options?.enabled ?? true },
+  });
+
+// Plain async function — safe to call from event callbacks (not a hook).
+export async function uploadCookies(id: number, file: File): Promise<CookieStatusResource> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(getQueryPath(`${PATH}/${id}/cookies`), {
+    method: 'POST',
+    headers: {
+      'X-Api-Key': window.Streamarr.apiKey,
+      'X-Streamarr-Client': 'Streamarr',
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new ApiError(`${PATH}/${id}/cookies`, response.status, response.statusText);
+  }
+
+  return response.json() as Promise<CookieStatusResource>;
+}
 
 export const useUploadCookies = (id: number) => {
   const queryClient = useQueryClient();
 
   return useMutation<CookieStatusResource, ApiError, File>({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await fetch(getQueryPath(`${PATH}/${id}/cookies`), {
-        method: 'POST',
-        headers: {
-          'X-Api-Key': window.Streamarr.apiKey,
-          'X-Streamarr-Client': 'Streamarr',
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new ApiError(
-          `${PATH}/${id}/cookies`,
-          response.status,
-          response.statusText
-        );
-      }
-
-      return response.json() as Promise<CookieStatusResource>;
-    },
+    mutationFn: (file: File) => uploadCookies(id, file),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [`${PATH}/${id}/cookies`],

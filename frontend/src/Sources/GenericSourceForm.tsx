@@ -29,6 +29,7 @@ const FormInputGroup = FormInputGroupBase as React.FC<{
 import {
   MetadataSourceResource,
   applyFieldChanges,
+  uploadCookies,
   useCreateMetadataSource,
   useDeleteMetadataSource,
   useTestMetadataSource,
@@ -65,6 +66,7 @@ function GenericSourceForm({ source, onModalClose, supportsCookies }: SourceForm
   const [pending, setPending] = useState<Record<string, unknown>>({});
   const [testResult, setTestResult] = useState<'success' | 'failure' | null>(null);
   const [testMessage, setTestMessage] = useState('');
+  const [pendingCookieFile, setPendingCookieFile] = useState<File | null>(null);
 
   const { mutate: create, isPending: isCreating } = useCreateMetadataSource();
   const { mutate: update, isPending: isUpdating } = useUpdateMetadataSource(source.id ?? 0);
@@ -112,15 +114,37 @@ function GenericSourceForm({ source, onModalClose, supportsCookies }: SourceForm
 
   const handleSave = useCallback(() => {
     const updated = buildUpdatedSource();
-    const save = isNew ? create : update;
-    save(updated, {
-      onSuccess: () => onModalClose(),
-      onError: (err) => {
-        setTestResult('failure');
-        setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Save failed');
-      },
-    });
-  }, [buildUpdatedSource, isNew, create, update, onModalClose]);
+
+    if (isNew) {
+      create(updated, {
+        onSuccess: (newSource) => {
+          const finish = async () => {
+            if (pendingCookieFile != null && newSource.id) {
+              try {
+                await uploadCookies(newSource.id, pendingCookieFile);
+              } catch {
+                // Non-fatal — user can upload from the edit form.
+              }
+            }
+            onModalClose();
+          };
+          void finish();
+        },
+        onError: (err) => {
+          setTestResult('failure');
+          setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Save failed');
+        },
+      });
+    } else {
+      update(updated, {
+        onSuccess: () => onModalClose(),
+        onError: (err) => {
+          setTestResult('failure');
+          setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Save failed');
+        },
+      });
+    }
+  }, [buildUpdatedSource, isNew, create, update, onModalClose, pendingCookieFile]);
 
   const visibleFields = source.fields
     .filter((f) => {
@@ -173,8 +197,12 @@ function GenericSourceForm({ source, onModalClose, supportsCookies }: SourceForm
           );
         })}
 
-        {!isNew && supportsCookies && source.id != null && (
-          <CookieUploadSection sourceId={source.id} />
+        {supportsCookies && (
+          <CookieUploadSection
+            sourceId={isNew ? undefined : source.id}
+            pendingFile={pendingCookieFile}
+            onPendingFileChange={setPendingCookieFile}
+          />
         )}
 
         {testResult !== null && (

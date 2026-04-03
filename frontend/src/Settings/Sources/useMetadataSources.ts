@@ -27,6 +27,7 @@ export const useUpdateMetadataSource = (id: number) => {
   return useApiMutation<number, MetadataSourceResource>({
     path: `${PATH}/${id}`,
     method: 'PUT',
+    queryParams: { forceSave: true },
     mutationOptions: {
       onSuccess: async () => {
         // PUT returns 202 with just the ID, not the full resource.
@@ -46,6 +47,7 @@ export const useCreateMetadataSource = () => {
   return useApiMutation<MetadataSourceResource, MetadataSourceResource>({
     path: PATH,
     method: 'POST',
+    queryParams: { forceSave: true },
     mutationOptions: {
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: [PATH] });

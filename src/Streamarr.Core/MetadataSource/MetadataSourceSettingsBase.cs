@@ -16,7 +16,9 @@ namespace Streamarr.Core.MetadataSource
         }
 
         // Managed by the application — set automatically when a cookie file is uploaded via the API.
-        // Not decorated with [FieldDefinition] so it is excluded from the settings form.
+        // Hidden so it is excluded from the settings form but still round-trips through the
+        // fields array, which allows ReadFromSchema to restore it on Test/Save requests.
+        [FieldDefinition(89, Hidden = HiddenType.Hidden, Type = FieldType.Textbox)]
         public string CookiesFilePath { get; set; } = string.Empty;
 
         // Sync scheduling — this interval also governs live stream detection.

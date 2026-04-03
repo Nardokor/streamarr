@@ -110,7 +110,7 @@ export const useUploadCookies = (id: number) => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: [getQueryPath(`${PATH}/${id}/cookies`)],
+        queryKey: [`${PATH}/${id}/cookies`],
       });
     },
   });
@@ -125,7 +125,7 @@ export const useDeleteCookies = (id: number) => {
     mutationOptions: {
       onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: [getQueryPath(`${PATH}/${id}/cookies`)],
+          queryKey: [`${PATH}/${id}/cookies`],
         });
       },
     },

@@ -59,8 +59,15 @@ function resolveInputType(fieldType: string): InputType | null {
 }
 
 function GenericSourceForm({ source, onModalClose, supportsCookies }: SourceFormProps) {
-  const isNew = !source.id;
-  const title = source.implementationName || source.implementation;
+  // savedSource is set after an auto-save (e.g. when Test is pressed on a new source).
+  // Once set the form transitions to edit mode — isNew becomes false, updates use PUT.
+  const [savedSource, setSavedSource] = useState<MetadataSourceResource | null>(null);
+
+  const effectiveSource = savedSource ?? source;
+  const effectiveId = effectiveSource.id ?? 0;
+  const isNew = effectiveId === 0;
+
+  const title = effectiveSource.implementationName || effectiveSource.implementation;
 
   const [enabled, setEnabled] = useState(source.enable ?? true);
   const [pending, setPending] = useState<Record<string, unknown>>({});
@@ -69,18 +76,18 @@ function GenericSourceForm({ source, onModalClose, supportsCookies }: SourceForm
   const [pendingCookieFile, setPendingCookieFile] = useState<File | null>(null);
 
   const { mutate: create, isPending: isCreating } = useCreateMetadataSource();
-  const { mutate: update, isPending: isUpdating } = useUpdateMetadataSource(source.id ?? 0);
+  const { mutate: update, isPending: isUpdating } = useUpdateMetadataSource(effectiveId);
   const isSaving = isCreating || isUpdating;
-  const { mutate: deleteSource, isPending: isDeleting } = useDeleteMetadataSource(source.id ?? 0);
+  const { mutate: deleteSource, isPending: isDeleting } = useDeleteMetadataSource(effectiveId);
   const { mutate: runTest, isPending: isTesting } = useTestMetadataSource();
 
   const getVal = useCallback(
     (name: string) => {
       if (name in pending) return pending[name];
-      const field = source.fields.find((f) => f.name === name);
+      const field = effectiveSource.fields.find((f) => f.name === name);
       return field?.value;
     },
-    [pending, source.fields]
+    [pending, effectiveSource.fields]
   );
 
   const handleInputChange = useCallback((change: InputChanged) => {
@@ -89,64 +96,100 @@ function GenericSourceForm({ source, onModalClose, supportsCookies }: SourceForm
 
   const buildUpdatedSource = useCallback(
     (): MetadataSourceResource => ({
-      ...source,
-      // New sources have no name yet — default to the implementation name so the
-      // backend's required-name validation passes without a visible Name field.
-      name: source.name || source.implementationName || source.implementation || '',
+      ...effectiveSource,
+      name: effectiveSource.name || effectiveSource.implementationName || effectiveSource.implementation || '',
       enable: enabled,
-      fields: applyFieldChanges(source.fields, pending),
+      fields: applyFieldChanges(effectiveSource.fields, pending),
     }),
-    [source, enabled, pending]
+    [effectiveSource, enabled, pending]
   );
 
-  const handleTest = useCallback(() => {
-    runTest(buildUpdatedSource(), {
-      onSuccess: () => {
-        setTestResult('success');
-        setTestMessage('Connection successful');
-      },
-      onError: (err) => {
-        setTestResult('failure');
-        setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Connection failed');
-      },
-    });
-  }, [runTest, buildUpdatedSource]);
-
-  const handleSave = useCallback(() => {
-    const updated = buildUpdatedSource();
-
-    if (isNew) {
-      create(updated, {
-        onSuccess: (newSource) => {
-          const finish = async () => {
+  // Saves the source and uploads any pending cookie. Returns the saved source,
+  // or null if saving failed. Updates form state to edit mode on success.
+  const saveAndUploadCookie = useCallback(
+    (body: MetadataSourceResource): Promise<MetadataSourceResource | null> => {
+      return new Promise((resolve) => {
+        create(body, {
+          onSuccess: async (newSource) => {
+            setSavedSource(newSource);
             if (pendingCookieFile != null && newSource.id) {
               try {
                 await uploadCookies(newSource.id, pendingCookieFile);
+                setPendingCookieFile(null);
               } catch {
-                // Non-fatal — user can upload from the edit form.
+                // Non-fatal — test/save still proceeds; cookie section shows in edit mode.
               }
             }
-            onModalClose();
-          };
-          void finish();
-        },
-        onError: (err) => {
-          setTestResult('failure');
-          setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Save failed');
-        },
+            resolve(newSource);
+          },
+          onError: (err) => {
+            setTestResult('failure');
+            setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Save failed');
+            resolve(null);
+          },
+        });
       });
-    } else {
-      update(updated, {
-        onSuccess: () => onModalClose(),
-        onError: (err) => {
-          setTestResult('failure');
-          setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Save failed');
-        },
-      });
-    }
-  }, [buildUpdatedSource, isNew, create, update, onModalClose, pendingCookieFile]);
+    },
+    [create, pendingCookieFile]
+  );
 
-  const visibleFields = source.fields
+  const handleTest = useCallback(() => {
+    const test = (body: MetadataSourceResource) => {
+      runTest(body, {
+        onSuccess: () => {
+          setTestResult('success');
+          setTestMessage('Connection successful');
+        },
+        onError: (err) => {
+          setTestResult('failure');
+          setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Connection failed');
+        },
+      });
+    };
+
+    if (isNew) {
+      // Auto-save to get an ID, upload any pending cookie, then test.
+      void saveAndUploadCookie(buildUpdatedSource()).then((newSource) => {
+        if (newSource != null) {
+          test(newSource);
+        }
+      });
+      return;
+    }
+
+    test(buildUpdatedSource());
+  }, [isNew, saveAndUploadCookie, buildUpdatedSource, runTest]);
+
+  const handleSave = useCallback(() => {
+    if (isNew) {
+      void saveAndUploadCookie(buildUpdatedSource()).then((newSource) => {
+        if (newSource != null) {
+          onModalClose();
+        }
+      });
+      return;
+    }
+
+    update(buildUpdatedSource(), {
+      onSuccess: async () => {
+        if (pendingCookieFile != null && effectiveId) {
+          try {
+            await uploadCookies(effectiveId, pendingCookieFile);
+            setPendingCookieFile(null);
+          } catch {
+            // Non-fatal.
+          }
+        }
+        onModalClose();
+      },
+      onError: (err) => {
+        setTestResult('failure');
+        setTestMessage(err.statusBody?.message ?? err.statusText ?? 'Save failed');
+      },
+    });
+  }, [isNew, saveAndUploadCookie, buildUpdatedSource, update, onModalClose, pendingCookieFile, effectiveId]);
+
+  const visibleFields = effectiveSource.fields
     .filter((f) => {
       if (f.hidden === 'hidden') return false;
       if (f.hidden === 'hiddenIfNotSet') {
@@ -199,7 +242,7 @@ function GenericSourceForm({ source, onModalClose, supportsCookies }: SourceForm
 
         {supportsCookies && (
           <CookieUploadSection
-            sourceId={isNew ? undefined : source.id}
+            sourceId={isNew ? undefined : effectiveId}
             pendingFile={pendingCookieFile}
             onPendingFileChange={setPendingCookieFile}
           />
@@ -227,7 +270,7 @@ function GenericSourceForm({ source, onModalClose, supportsCookies }: SourceForm
 
         <Button onPress={onModalClose}>Cancel</Button>
 
-        <SpinnerButton isSpinning={isTesting} onPress={handleTest}>
+        <SpinnerButton isSpinning={isTesting || isCreating} onPress={handleTest}>
           Test
         </SpinnerButton>
 

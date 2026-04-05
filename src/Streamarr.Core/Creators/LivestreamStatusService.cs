@@ -113,6 +113,7 @@ namespace Streamarr.Core.Creators
                     update.NewContentType);
 
                 ContentStatus? newStatus = null;
+                var shouldQueueRecording = false;
 
                 if (update.NewContentType == ContentType.Live)
                 {
@@ -140,7 +141,7 @@ namespace Streamarr.Core.Creators
                                     "Queuing live recording for '{0}' (DownloadLive)",
                                     content.Title);
 
-                                _commandQueueManager.Push(new DownloadContentCommand { ContentId = content.Id });
+                                shouldQueueRecording = true;
                             }
                         }
                         else
@@ -212,6 +213,11 @@ namespace Streamarr.Core.Creators
                         content.ContentType,
                         content.AirDateUtc,
                         content.Status);
+                }
+
+                if (shouldQueueRecording)
+                {
+                    _commandQueueManager.Push(new DownloadContentCommand { ContentId = content.Id });
                 }
             }
         }

@@ -27,6 +27,7 @@ export const useUpdateMetadataSource = (id: number) => {
   return useApiMutation<number, MetadataSourceResource>({
     path: `${PATH}/${id}`,
     method: 'PUT',
+    queryParams: { forceSave: true },
     mutationOptions: {
       onSuccess: async () => {
         // PUT returns 202 with just the ID, not the full resource.
@@ -46,6 +47,7 @@ export const useCreateMetadataSource = () => {
   return useApiMutation<MetadataSourceResource, MetadataSourceResource>({
     path: PATH,
     method: 'POST',
+    queryParams: { forceSave: true },
     mutationOptions: {
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: [PATH] });
@@ -78,39 +80,41 @@ export interface CookieStatusResource {
   hasCookies: boolean;
 }
 
-export const useCookieStatus = (id: number) =>
-  useApiQuery<CookieStatusResource>({ path: `${PATH}/${id}/cookies` });
+export const useCookieStatus = (id: number, options?: { enabled?: boolean }) =>
+  useApiQuery<CookieStatusResource>({
+    path: `${PATH}/${id}/cookies`,
+    queryOptions: { enabled: options?.enabled ?? true },
+  });
+
+// Plain async function — safe to call from event callbacks (not a hook).
+export async function uploadCookies(id: number, file: File): Promise<CookieStatusResource> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(getQueryPath(`${PATH}/${id}/cookies`), {
+    method: 'POST',
+    headers: {
+      'X-Api-Key': window.Streamarr.apiKey,
+      'X-Streamarr-Client': 'Streamarr',
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new ApiError(`${PATH}/${id}/cookies`, response.status, response.statusText);
+  }
+
+  return response.json() as Promise<CookieStatusResource>;
+}
 
 export const useUploadCookies = (id: number) => {
   const queryClient = useQueryClient();
 
   return useMutation<CookieStatusResource, ApiError, File>({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await fetch(getQueryPath(`${PATH}/${id}/cookies`), {
-        method: 'POST',
-        headers: {
-          'X-Api-Key': window.Streamarr.apiKey,
-          'X-Streamarr-Client': 'Streamarr',
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new ApiError(
-          `${PATH}/${id}/cookies`,
-          response.status,
-          response.statusText
-        );
-      }
-
-      return response.json() as Promise<CookieStatusResource>;
-    },
+    mutationFn: (file: File) => uploadCookies(id, file),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: [getQueryPath(`${PATH}/${id}/cookies`)],
+        queryKey: [`${PATH}/${id}/cookies`],
       });
     },
   });
@@ -125,7 +129,7 @@ export const useDeleteCookies = (id: number) => {
     mutationOptions: {
       onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: [getQueryPath(`${PATH}/${id}/cookies`)],
+          queryKey: [`${PATH}/${id}/cookies`],
         });
       },
     },

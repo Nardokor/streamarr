@@ -9,6 +9,7 @@ using FluentValidation.Results;
 using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
+using Streamarr.Core.Validation;
 
 namespace Streamarr.Core.MetadataSource.Fourthwall
 {
@@ -90,7 +91,10 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
             {
                 return new ValidationResult(new[]
                 {
-                    new ValidationFailure("CookiesFilePath", "Upload a cookies file to enable access to Fourthwall content.")
+                    new StreamarrValidationFailure("CookiesFilePath", "Upload a cookies file to enable access to Fourthwall content.")
+                    {
+                        IsWarning = true
+                    }
                 });
             }
 

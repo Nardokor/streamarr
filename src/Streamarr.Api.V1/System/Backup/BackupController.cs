@@ -107,7 +107,7 @@ public class BackupController : Controller
             return BadRequest(new { error = $"Invalid extension, must be one of: {string.Join(", ", ValidExtensions)}" });
         }
 
-        var path = Path.Combine(_appFolderInfo.TempFolder, $"sonarr_backup_restore{extension}");
+        var path = Path.Combine(_appFolderInfo.TempFolder, $"streamarr_backup_restore{extension}");
 
         _diskProvider.SaveStream(file.OpenReadStream(), path);
         _backupService.Restore(path);

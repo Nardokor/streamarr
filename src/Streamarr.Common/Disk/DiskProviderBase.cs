@@ -130,7 +130,7 @@ namespace Streamarr.Common.Disk
 
             try
             {
-                var testPath = Path.Combine(path, "sonarr_write_test.txt");
+                var testPath = Path.Combine(path, "streamarr_write_test.txt");
                 var testContent = $"This file was created to verify if '{path}' is writable. It should've been automatically deleted. Feel free to delete it.";
                 WriteAllText(testPath, testContent);
                 File.Delete(testPath);

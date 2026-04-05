@@ -224,7 +224,7 @@ namespace Streamarr.Common.EnvironmentInfo
         {
             if (OsInfo.IsNotWindows && _diskProvider.FolderExists(_appFolderInfo.AppDataFolder))
             {
-                _diskProvider.DeleteFile(Path.Combine(_appFolderInfo.AppDataFolder, "sonarr.pid"));
+                _diskProvider.DeleteFile(Path.Combine(_appFolderInfo.AppDataFolder, "streamarr.pid"));
             }
         }
     }

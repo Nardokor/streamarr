@@ -144,26 +144,82 @@ public class UnmatchedFileController : Controller
             return StatusCode(500, "Failed to start ffmpeg");
         }
 
-        HttpContext.Response.OnCompleted(() =>
+        // Drain stderr asynchronously so ffmpeg never blocks on a full pipe buffer.
+        _ = process.StandardError.BaseStream.CopyToAsync(IO.Stream.Null);
+
+        // Wrap stdout in a stream that disposes the process after the last read.
+        // This ensures cleanup always happens after streaming completes — even on
+        // client disconnect — eliminating the race between OnCompleted and FileStreamResult.
+        return File(new ProcessOutputStream(process, process.StandardOutput.BaseStream), "video/mp4");
+    }
+
+    /// <summary>
+    /// Forwards reads to an inner stream and kills + disposes the owning process when closed.
+    /// </summary>
+    private sealed class ProcessOutputStream : IO.Stream
+    {
+        private readonly Process _process;
+        private readonly IO.Stream _inner;
+
+        public ProcessOutputStream(Process process, IO.Stream inner)
         {
-            try
+            _process = process;
+            _inner = inner;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                if (!process.HasExited)
+                _inner.Dispose();
+                try
                 {
-                    process.Kill(entireProcessTree: true);
+                    if (!_process.HasExited)
+                    {
+                        _process.Kill(entireProcessTree: true);
+                    }
+
+                    _process.Dispose();
                 }
-
-                process.Dispose();
-            }
-            catch
-            {
-                // best-effort cleanup
+                catch (Exception)
+                {
+                    // best-effort cleanup — process may already have exited
+                }
             }
 
-            return Task.CompletedTask;
-        });
+            base.Dispose(disposing);
+        }
 
-        return File(process.StandardOutput.BaseStream, "video/mp4");
+        public override bool CanRead => _inner.CanRead;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position
+        {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
+
+        public override void Flush() =>
+            _inner.Flush();
+
+        public override int Read(byte[] buffer, int offset, int count) =>
+            _inner.Read(buffer, offset, count);
+
+        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct) =>
+            _inner.ReadAsync(buffer, offset, count, ct);
+
+        public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken ct = default) =>
+            _inner.ReadAsync(buffer, ct);
+
+        public override long Seek(long offset, IO.SeekOrigin origin) =>
+            throw new NotSupportedException();
+
+        public override void SetLength(long value) =>
+            throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count) =>
+            throw new NotSupportedException();
     }
 }
 

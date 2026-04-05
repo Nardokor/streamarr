@@ -71,47 +71,71 @@ namespace Streamarr.Core.Download
             _logger.ProgressInfo("Downloading '{0}' from {1}", content.Title, channel.Platform);
 
             var isLive = content.ContentType == ContentType.Live;
-            content.Status = isLive ? ContentStatus.Recording : ContentStatus.Downloading;
-            _contentService.UpdateContent(content);
 
-            if (!message.IsResume)
+            // Preserve the pre-download status for error recovery. DownloadQueueStatusHandler
+            // may not have run yet if a thread picked this up before the event fired.
+            if (content.PreviousStatus == null)
             {
-                if (isLive)
-                {
-                    _eventAggregator.PublishEvent(new LiveStreamStartedEvent
-                    {
-                        Message = new LiveStreamStartedMessage
-                        {
-                            ContentTitle = content.Title,
-                            CreatorName = creator.Title,
-                            ChannelName = channel.Title,
-                        }
-                    });
-                }
-                else
-                {
-                    _eventAggregator.PublishEvent(new ContentGrabbedEvent
-                    {
-                        Message = new ContentGrabbedMessage
-                        {
-                            ContentTitle = content.Title,
-                            CreatorName = creator.Title,
-                            ChannelName = channel.Title,
-                            ContentType = content.ContentType,
-                        }
-                    });
-                }
+                content.PreviousStatus = content.Status;
+            }
+
+            // Show as Queued while waiting for a concurrent download slot.
+            if (content.Status != ContentStatus.Queued)
+            {
+                content.Status = ContentStatus.Queued;
+                _contentService.UpdateContent(content);
             }
 
             try
             {
-                var result = _ytDlpClient.Download(content.Id, url, creator.Path, isLive, source.CookiesFilePath, progress =>
-                {
-                    if (progress.PercentComplete.HasValue)
+                var result = _ytDlpClient.Download(
+                    content.Id,
+                    url,
+                    creator.Path,
+                    isLive,
+                    source.CookiesFilePath,
+                    progress =>
                     {
-                        _logger.ProgressInfo("Downloading '{0}': {1:F1}%", content.Title, progress.PercentComplete.Value);
-                    }
-                });
+                        if (progress.PercentComplete.HasValue)
+                        {
+                            _logger.ProgressInfo("Downloading '{0}': {1:F1}%", content.Title, progress.PercentComplete.Value);
+                        }
+                    },
+                    onStarted: () =>
+                    {
+                        // Slot acquired — transition to the active download state and fire notifications.
+                        content.Status = isLive ? ContentStatus.Recording : ContentStatus.Downloading;
+                        _contentService.UpdateContent(content);
+
+                        if (!message.IsResume)
+                        {
+                            if (isLive)
+                            {
+                                _eventAggregator.PublishEvent(new LiveStreamStartedEvent
+                                {
+                                    Message = new LiveStreamStartedMessage
+                                    {
+                                        ContentTitle = content.Title,
+                                        CreatorName = creator.Title,
+                                        ChannelName = channel.Title,
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                _eventAggregator.PublishEvent(new ContentGrabbedEvent
+                                {
+                                    Message = new ContentGrabbedMessage
+                                    {
+                                        ContentTitle = content.Title,
+                                        CreatorName = creator.Title,
+                                        ChannelName = channel.Title,
+                                        ContentType = content.ContentType,
+                                    }
+                                });
+                            }
+                        }
+                    });
 
                 if (result.Success)
                 {

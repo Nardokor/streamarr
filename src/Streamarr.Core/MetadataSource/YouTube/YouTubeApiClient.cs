@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Xml.Linq;
 using NLog;
 
 namespace Streamarr.Core.MetadataSource.YouTube
@@ -13,6 +14,10 @@ namespace Streamarr.Core.MetadataSource.YouTube
         List<YoutubeVideo> GetVideoDetails(string apiKey, IEnumerable<string> videoIds);
         void TestApiKey(string apiKey);
         string GetChannelThumbnailUrl(string apiKey, string channelId);
+
+        // Fetches the channel's RSS feed and returns the most recent video IDs.
+        // Free — no API quota consumed. Returns up to 15 IDs.
+        List<string> GetChannelRecentVideoIds(string channelId);
     }
 
     public class YouTubeApiClient : IYouTubeApiClient
@@ -130,6 +135,29 @@ namespace Streamarr.Core.MetadataSource.YouTube
         {
             var url = $"{BaseUrl}/videos?part=snippet&id=dQw4w9WgXcQ&key={Uri.EscapeDataString(apiKey)}";
             Fetch<YoutubeVideosResponse>(url);
+        }
+
+        public List<string> GetChannelRecentVideoIds(string channelId)
+        {
+            var url = $"https://www.youtube.com/feeds/videos.xml?channel_id={Uri.EscapeDataString(channelId)}";
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            using var response = _http.Send(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new List<string>();
+            }
+
+            var content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var doc = XDocument.Parse(content);
+            XNamespace yt = "http://www.youtube.com/xml/schemas/2015";
+
+            return doc.Descendants(yt + "videoId")
+                      .Select(e => e.Value)
+                      .Where(id => !string.IsNullOrWhiteSpace(id))
+                      .Take(15)
+                      .ToList();
         }
 
         public string GetChannelThumbnailUrl(string apiKey, string channelId)

@@ -181,7 +181,7 @@ namespace Streamarr.Common.Processes
                     return;
                 }
 
-                logger.Error(eventArgs.Data);
+                logger.Debug(eventArgs.Data);
 
                 if (onErrorDataReceived != null)
                 {

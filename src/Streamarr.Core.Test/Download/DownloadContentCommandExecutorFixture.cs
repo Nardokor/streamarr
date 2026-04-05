@@ -7,6 +7,7 @@ using Streamarr.Core.ContentFiles;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Download;
 using Streamarr.Core.Download.YtDlp;
+using Streamarr.Core.MetadataSource;
 using Streamarr.Core.Test.Framework;
 using Streamarr.Test.Common;
 using ContentEntity = Streamarr.Core.Content.Content;
@@ -56,12 +57,22 @@ namespace Streamarr.Core.Test.Download
                   .Returns(_creator);
 
             Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<Action<YtDlpProgress>>()))
+                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<Action<YtDlpProgress>>()))
                   .Returns(new YtDlpDownloadResult { Success = true, FilePath = "/media/test/video.mp4", FileSize = 1024 });
 
             Mocker.GetMock<IContentFileService>()
                   .Setup(s => s.AddContentFile(It.IsAny<ContentFile>()))
                   .Returns(new ContentFile { Id = 1 });
+
+            // Default: factory returns a source whose GetDownloadUrl echoes a YouTube URL.
+            // Individual URL tests override GetDownloadUrl on the mock directly.
+            var mockSource = Mocker.GetMock<IMetadataSource>();
+            mockSource
+                .Setup(s => s.GetDownloadUrl(It.IsAny<string>()))
+                .Returns((string id) => $"https://www.youtube.com/watch?v={id}");
+            Mocker.GetMock<IMetadataSourceFactory>()
+                  .Setup(f => f.GetByPlatform(It.IsAny<PlatformType>()))
+                  .Returns(mockSource.Object);
         }
 
         private void Execute()
@@ -72,61 +83,37 @@ namespace Streamarr.Core.Test.Download
         // ── Download URL building ─────────────────────────────────────────────
 
         [Test]
-        public void should_build_youtube_watch_url()
+        public void should_pass_url_from_source_to_download_client()
         {
-            _channel.Platform = PlatformType.YouTube;
+            const string expectedUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
             _content.PlatformContentId = "dQw4w9WgXcQ";
 
+            Mocker.GetMock<IMetadataSource>()
+                  .Setup(s => s.GetDownloadUrl("dQw4w9WgXcQ"))
+                  .Returns(expectedUrl);
+
             Execute();
 
             Mocker.GetMock<IYtDlpClient>()
                   .Verify(c => c.Download(
                       _content.Id,
-                      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                      expectedUrl,
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
-                      It.IsAny<bool>(),
+                      It.IsAny<string>(),
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
 
         [Test]
-        public void should_build_twitch_vod_url_for_numeric_content_id()
+        public void should_look_up_source_by_channel_platform()
         {
             _channel.Platform = PlatformType.Twitch;
-            _content.PlatformContentId = "1234567890";
 
             Execute();
 
-            Mocker.GetMock<IYtDlpClient>()
-                  .Verify(c => c.Download(
-                      _content.Id,
-                      "https://www.twitch.tv/videos/1234567890",
-                      It.IsAny<string>(),
-                      It.IsAny<bool>(),
-                      It.IsAny<bool>(),
-                      It.IsAny<Action<YtDlpProgress>>()),
-                  Times.Once);
-        }
-
-        [Test]
-        public void should_build_twitch_channel_url_for_live_prefixed_content_id()
-        {
-            _channel.Platform = PlatformType.Twitch;
-            _content.PlatformContentId = "live:shroud";
-            _content.ContentType = ContentType.Live;
-
-            Execute();
-
-            Mocker.GetMock<IYtDlpClient>()
-                  .Verify(c => c.Download(
-                      _content.Id,
-                      "https://www.twitch.tv/shroud",
-                      It.IsAny<string>(),
-                      It.IsAny<bool>(),
-                      It.IsAny<bool>(),
-                      It.IsAny<Action<YtDlpProgress>>()),
-                  Times.Once);
+            Mocker.GetMock<IMetadataSourceFactory>()
+                  .Verify(f => f.GetByPlatform(PlatformType.Twitch), Times.Once);
         }
 
         // ── isLive flag ───────────────────────────────────────────────────────
@@ -144,7 +131,7 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<string>(),
                       true,
-                      It.IsAny<bool>(),
+                      It.IsAny<string>(),
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
@@ -162,17 +149,19 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<string>(),
                       false,
-                      It.IsAny<bool>(),
+                      It.IsAny<string>(),
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
 
-        // ── needsCookies flag ─────────────────────────────────────────────────
+        // ── cookiesFilePath from source ───────────────────────────────────────
 
         [Test]
-        public void should_pass_needs_cookies_true_for_members_content()
+        public void should_pass_source_cookies_path_to_download_client()
         {
-            _content.IsMembers = true;
+            Mocker.GetMock<IMetadataSource>()
+                  .Setup(s => s.CookiesFilePath)
+                  .Returns("/config/patreon-cookies.txt");
 
             Execute();
 
@@ -182,15 +171,17 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
-                      true,
+                      "/config/patreon-cookies.txt",
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
 
         [Test]
-        public void should_pass_needs_cookies_false_for_public_content()
+        public void should_pass_null_cookies_when_source_has_no_cookies_file()
         {
-            _content.IsMembers = false;
+            Mocker.GetMock<IMetadataSource>()
+                  .Setup(s => s.CookiesFilePath)
+                  .Returns((string)null);
 
             Execute();
 
@@ -200,7 +191,7 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
-                      false,
+                      null,
                       It.IsAny<Action<YtDlpProgress>>()),
                   Times.Once);
         }
@@ -222,7 +213,7 @@ namespace Streamarr.Core.Test.Download
         public void should_set_status_to_missing_on_failure()
         {
             Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<Action<YtDlpProgress>>()))
+                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<Action<YtDlpProgress>>()))
                   .Returns(new YtDlpDownloadResult { Success = false, ErrorMessage = "yt-dlp failed" });
 
             Execute();

@@ -66,6 +66,12 @@ RUN mkdir -p /opt/yt-dlp && \
 
 ENV PATH="/opt/yt-dlp:${PATH}"
 
+# Install custom yt-dlp plugins (e.g. Fansly — not yet upstream).
+# Placed in /etc/yt-dlp/plugins/ so yt-dlp --update-to nightly never touches them.
+# Remove once the extractor is merged upstream.
+RUN mkdir -p /etc/yt-dlp/plugins/local/yt_dlp_plugins/extractor
+COPY docker/yt-dlp-plugins/extractor/ /etc/yt-dlp/plugins/local/yt_dlp_plugins/extractor/
+
 # Install Deno for yt-dlp JavaScript challenge solving (n-parameter solver).
 # yt-dlp auto-discovers Deno on PATH — no extra configuration needed.
 RUN curl -fsSL https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip \

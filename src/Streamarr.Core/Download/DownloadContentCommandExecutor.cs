@@ -71,6 +71,14 @@ namespace Streamarr.Core.Download
             _logger.ProgressInfo("Downloading '{0}' from {1}", content.Title, channel.Platform);
 
             var isLive = content.ContentType == ContentType.Live;
+
+            // Preserve the pre-download status for error recovery, regardless of whether
+            // DownloadQueueStatusHandler has already run (it may not have with a fast thread pool).
+            if (content.PreviousStatus == null)
+            {
+                content.PreviousStatus = content.Status;
+            }
+
             content.Status = isLive ? ContentStatus.Recording : ContentStatus.Downloading;
             _contentService.UpdateContent(content);
 

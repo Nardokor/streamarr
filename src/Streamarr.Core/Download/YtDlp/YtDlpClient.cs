@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using NLog;
 using Streamarr.Common.Disk;
 using Streamarr.Common.Processes;
@@ -65,6 +66,7 @@ namespace Streamarr.Core.Download.YtDlp
         };
 
         private readonly ConcurrentDictionary<int, Process> _activeDownloads = new();
+        private readonly SemaphoreSlim _concurrentDownloadSemaphore;
 
         private readonly IProcessProvider _processProvider;
         private readonly IDiskProvider _diskProvider;
@@ -116,6 +118,9 @@ namespace Streamarr.Core.Download.YtDlp
             _diskProvider = diskProvider;
             _configService = configService;
             _logger = logger;
+
+            var maxConcurrent = Math.Max(1, configService.YtDlpMaxConcurrentDownloads);
+            _concurrentDownloadSemaphore = new SemaphoreSlim(maxConcurrent, maxConcurrent);
         }
 
         public bool IsAvailable()
@@ -386,6 +391,21 @@ namespace Streamarr.Core.Download.YtDlp
         }
 
         public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null)
+        {
+            _logger.Debug("Waiting for concurrent download slot ({0} available)", _concurrentDownloadSemaphore.CurrentCount);
+            _concurrentDownloadSemaphore.Wait();
+
+            try
+            {
+                return DownloadInternal(contentId, url, outputPath, isLive, cookiesFilePath, onProgress);
+            }
+            finally
+            {
+                _concurrentDownloadSemaphore.Release();
+            }
+        }
+
+        private YtDlpDownloadResult DownloadInternal(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null)
         {
             _diskProvider.EnsureFolder(outputPath);
 

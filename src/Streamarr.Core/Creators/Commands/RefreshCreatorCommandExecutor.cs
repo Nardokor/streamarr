@@ -274,7 +274,9 @@ namespace Streamarr.Core.Creators.Commands
                         }
 
                         // A recorded live stream that has since been archived on the platform becomes a VOD.
-                        if (existing.ContentType == ContentType.Live && item.ContentType == ContentType.Vod)
+                        // Covers both Live and Upcoming — the latter can get stuck if the race condition
+                        // in LivestreamStatusService fired before the DB was updated to ContentType.Live.
+                        if ((existing.ContentType == ContentType.Live || existing.ContentType == ContentType.Upcoming) && item.ContentType == ContentType.Vod)
                         {
                             existing.ContentType = ContentType.Vod;
                             _contentService.UpdateContent(existing);

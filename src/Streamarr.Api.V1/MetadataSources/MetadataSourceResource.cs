@@ -28,6 +28,7 @@ namespace Streamarr.Api.V1.MetadataSources
         {
             var definition = base.ToModel(resource, existingDefinition);
             definition.Enable = resource.Enable;
+            definition.Platform = resource.Platform != default ? resource.Platform : (existingDefinition?.Platform ?? default);
             return definition;
         }
     }

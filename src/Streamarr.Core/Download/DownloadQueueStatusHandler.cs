@@ -1,5 +1,6 @@
 using NLog;
 using Streamarr.Core.Content;
+using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Messaging.Events;
 
 namespace Streamarr.Core.Download
@@ -18,6 +19,15 @@ namespace Streamarr.Core.Download
         public void Handle(CommandQueuedEvent message)
         {
             if (message.Command.Body is not DownloadContentCommand cmd)
+            {
+                return;
+            }
+
+            // With a large thread pool, a worker can pick up the command (or even complete
+            // Execute()) before this event handler fires. CommandModel is a shared reference,
+            // so check its current status before touching content — if the command is no
+            // longer Queued, Execute() is already managing the content status transitions.
+            if (message.Command.Status != CommandStatus.Queued)
             {
                 return;
             }

@@ -154,13 +154,31 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         public override ChannelMetadataResult GetChannelMetadata(string platformUrl)
         {
+            if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
+            {
+                // Use the YouTube Data API when a key is available — a single channels.list
+                // call (~200 ms) is far faster than spawning yt-dlp (~1.5 s) on every sync.
+                var channelId = ParseChannelIdFromUrl(platformUrl);
+                if (!string.IsNullOrWhiteSpace(channelId))
+                {
+                    var thumbnailUrl = _youTubeApiClient.GetChannelThumbnailUrl(Settings.ApiKey, channelId);
+                    return new ChannelMetadataResult
+                    {
+                        Platform = PlatformType.YouTube,
+                        PlatformId = channelId,
+                        PlatformUrl = platformUrl,
+                        ThumbnailUrl = thumbnailUrl
+                    };
+                }
+            }
+
             var channelInfo = _ytDlpClient.GetChannelInfo(platformUrl);
 
             var channelName = !string.IsNullOrWhiteSpace(channelInfo.Channel)
                 ? channelInfo.Channel
                 : channelInfo.Uploader;
 
-            var channelId = !string.IsNullOrWhiteSpace(channelInfo.ChannelId)
+            var channelId2 = !string.IsNullOrWhiteSpace(channelInfo.ChannelId)
                 ? channelInfo.ChannelId
                 : channelInfo.UploaderId;
 
@@ -168,13 +186,10 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 ? channelInfo.ChannelUrl
                 : channelInfo.UploaderUrl;
 
-            // Use yt-dlp thumbnail directly — avoids a channels.list API call (1 unit)
-            // on every sync cycle. The API thumbnail fetch is reserved for SearchCreator
-            // (one-time cost on add) where higher-quality is worth the unit.
             return new ChannelMetadataResult
             {
                 Platform = PlatformType.YouTube,
-                PlatformId = channelId,
+                PlatformId = channelId2,
                 PlatformUrl = channelPageUrl,
                 Title = channelName,
                 Description = channelInfo.Description,
@@ -182,88 +197,257 @@ namespace Streamarr.Core.MetadataSource.YouTube
             };
         }
 
+        // Extracts the UCxxx channel ID from a canonical /channel/UCxxx URL.
+        // Returns empty string for handle-based URLs (@name) — callers fall back to yt-dlp.
+        private static string ParseChannelIdFromUrl(string url)
+        {
+            var match = System.Text.RegularExpressions.Regex.Match(
+                url ?? string.Empty,
+                @"/channel/(UC[A-Za-z0-9_\-]+)");
+            return match.Success ? match.Groups[1].Value : string.Empty;
+        }
+
         // ── Content sync ───────────────────────────────────────────────────────
 
         public override IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since, bool checkMembership = false)
         {
-            if (_ytDlpClient.HasCookies)
+            if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
             {
-                _logger.Info("Cookie file configured — using yt-dlp listing (checkMembership={0})", checkMembership);
-                return GetNewContentHybrid(platformUrl, since, checkMembership);
+                if (since == null)
+                {
+                    _logger.Info("Initial sync — fetching full playlist via API for {0}", platformUrl);
+                    return GetInitialSyncViaApi(platformId, platformUrl, checkMembership);
+                }
+
+                if (!string.IsNullOrWhiteSpace(Settings.WebhookBaseUrl))
+                {
+                    _logger.Info("Incremental sync — WebSub configured, skipping RSS; using playlist API for {0}", platformUrl);
+                    return GetIncrementalSyncViaApi(platformId, platformUrl, since.Value, checkMembership);
+                }
+
+                _logger.Info("Incremental sync — using RSS for {0}", platformUrl);
+                return GetIncrementalSyncViaRss(platformId, platformUrl, since.Value, checkMembership);
             }
 
-            return GetNewContentViaApi(platformId, since);
+            // No API key: fall back to yt-dlp for public content.
+            // Membership content requires cookies; without either, only public yt-dlp metadata is returned.
+            _logger.Info("No API key — using yt-dlp listing (checkMembership={0})", checkMembership);
+            return GetNewContentHybrid(platformUrl, platformId, since, checkMembership);
         }
 
-        private IEnumerable<ContentMetadataResult> GetNewContentViaApi(string platformId, DateTime? since)
+        // Initial sync: fetch the full uploads playlist via API so we have all historical content.
+        // RSS is added as a supplement to catch any active live stream not yet in the playlist.
+        // Cookies are used only for membership discovery when checkMembership is true.
+        private IEnumerable<ContentMetadataResult> GetInitialSyncViaApi(
+            string platformId, string platformUrl, bool checkMembership)
         {
-            // Derive uploads playlist ID: "UC..." → "UU..."
-            if (string.IsNullOrWhiteSpace(platformId) || !platformId.StartsWith("UC"))
+            var uploadsPlaylistId = DeriveUploadsPlaylistId(platformId);
+
+            _logger.Info("Fetching full playlist {0} (initial sync)", uploadsPlaylistId);
+            var playlistItems = _youTubeApiClient.GetPlaylistItems(Settings.ApiKey, uploadsPlaylistId, since: null);
+            var playlistIds = new HashSet<string>(playlistItems.Select(p => p.VideoId), StringComparer.OrdinalIgnoreCase);
+
+            var rssExtraIds = string.IsNullOrWhiteSpace(Settings.WebhookBaseUrl)
+                ? FetchRssExtras(platformId, platformUrl, playlistIds)
+                : new List<string>();
+
+            if (rssExtraIds.Count > 0)
             {
-                throw new InvalidOperationException(
-                    $"Cannot derive uploads playlist from channel ID '{platformId}'. Expected format: UCxxxxxxx");
+                _logger.Debug("WebSub not configured — using RSS supplement: {0} extra ID(s) for {1}", rssExtraIds.Count, platformUrl);
+            }
+            else if (!string.IsNullOrWhiteSpace(Settings.WebhookBaseUrl))
+            {
+                _logger.Debug("WebSub configured — skipping RSS supplement for {0}", platformUrl);
             }
 
-            var uploadsPlaylistId = string.Concat("UU", platformId.AsSpan(2));
+            var allPublicIds = playlistItems.Select(p => p.VideoId).Concat(rssExtraIds);
+            var publishedAtById = playlistItems.ToDictionary(p => p.VideoId, p => p.PublishedAt);
+            var videoDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, allPublicIds);
+            var result = videoDetails
+                .Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id)))
+                .ToList();
 
-            _logger.Info("Fetching playlist {0} via YouTube API (since: {1})", uploadsPlaylistId, since?.ToString("u") ?? "beginning");
+            _logger.Info("Initial sync: {0} public item(s) for {1}", result.Count, platformUrl);
+
+            if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
+            {
+                var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
+                result.AddRange(FetchMembershipContent(platformUrl, seen, since: null));
+            }
+            else if (checkMembership)
+            {
+                _logger.Info("Membership check skipped for {0} — no cookie file configured", platformUrl);
+            }
+
+            return result;
+        }
+
+        // Incremental sync: RSS gives us the 15 most recent video IDs (free, no quota).
+        // One GetVideoDetails call confirms types and catches live streams.
+        // Falls back to the playlist API if RSS is unavailable.
+        private IEnumerable<ContentMetadataResult> GetIncrementalSyncViaRss(
+            string platformId, string platformUrl, DateTime since, bool checkMembership)
+        {
+            List<string> rssIds;
+            try
+            {
+                rssIds = _youTubeApiClient.GetChannelRecentVideoIds(platformId);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "RSS fetch failed for '{0}' — falling back to playlist API", platformUrl);
+                return GetIncrementalSyncViaApi(platformId, platformUrl, since, checkMembership);
+            }
+
+            if (!rssIds.Any())
+            {
+                _logger.Warn("RSS returned no IDs for '{0}' — falling back to playlist API", platformUrl);
+                return GetIncrementalSyncViaApi(platformId, platformUrl, since, checkMembership);
+            }
+
+            _logger.Info("RSS: {0} recent ID(s) for {1}", rssIds.Count, platformUrl);
+
+            var videoDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, rssIds);
+            var result = videoDetails.Select(v => MapToContentMetadata(v, publishedAt: null)).ToList();
+
+            if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
+            {
+                var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
+                result.AddRange(FetchMembershipContent(platformUrl, seen, since));
+            }
+            else if (checkMembership)
+            {
+                _logger.Info("Membership check skipped for {0} — no cookie file configured", platformUrl);
+            }
+
+            return result;
+        }
+
+        // Primary API sync when WebSub is configured, also used as fallback when RSS is unavailable.
+        // Fetches content newer than `since` from the uploads playlist.
+        // Supplements with RSS to catch live streams: a stream appears in the RSS feed immediately
+        // when it starts (which is what triggers the WebSub notification), but may take several
+        // minutes to appear in the uploads playlist.
+        private IEnumerable<ContentMetadataResult> GetIncrementalSyncViaApi(
+            string platformId, string platformUrl, DateTime since, bool checkMembership)
+        {
+            var uploadsPlaylistId = DeriveUploadsPlaylistId(platformId);
+            _logger.Info("Fetching playlist {0} since {1}", uploadsPlaylistId, since.ToString("u"));
 
             var playlistItems = _youTubeApiClient.GetPlaylistItems(Settings.ApiKey, uploadsPlaylistId, since);
+            var result = new List<ContentMetadataResult>();
 
-            if (!playlistItems.Any())
+            if (playlistItems.Any())
             {
-                _logger.Info("No new items found for playlist {0}", uploadsPlaylistId);
-                return Enumerable.Empty<ContentMetadataResult>();
+                var publishedAtById = playlistItems.ToDictionary(p => p.VideoId, p => p.PublishedAt);
+                var videoDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, playlistItems.Select(p => p.VideoId));
+                result.AddRange(videoDetails.Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id))));
             }
 
-            _logger.Info("Found {0} new items, fetching details", playlistItems.Count);
+            // RSS supplement: catches live streams that are already in the RSS feed but not yet
+            // in the uploads playlist (a race condition that's especially likely when a WebSub
+            // notification triggered this refresh).
+            var playlistIds = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
+            var rssExtraIds = FetchRssExtras(platformId, platformUrl, playlistIds);
+            if (rssExtraIds.Count > 0)
+            {
+                var rssDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, rssExtraIds);
+                result.AddRange(rssDetails.Select(v => MapToContentMetadata(v, null)));
+            }
 
-            var videoDetails = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, playlistItems.Select(p => p.VideoId));
+            if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
+            {
+                var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
+                result.AddRange(FetchMembershipContent(platformUrl, seen, since));
+            }
+            else if (checkMembership)
+            {
+                _logger.Info("Membership check skipped for {0} — no cookie file configured", platformUrl);
+            }
 
-            var publishedAtById = playlistItems.ToDictionary(p => p.VideoId, p => p.PublishedAt);
-
-            return videoDetails.Select(v => MapToContentMetadata(v, publishedAtById.GetValueOrDefault(v.Id)));
+            return result;
         }
 
-        private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, DateTime? since, bool checkMembership)
+        // Fetches RSS IDs not already in the known set (used by initial sync as a live-stream supplement).
+        private List<string> FetchRssExtras(string platformId, string platformUrl, HashSet<string> alreadyKnown)
         {
-            // 1. Regular tabs: videos, shorts, streams (date-filtered for efficiency)
+            try
+            {
+                var rssIds = _youTubeApiClient.GetChannelRecentVideoIds(platformId);
+                var extras = rssIds.Where(id => !alreadyKnown.Contains(id)).ToList();
+                _logger.Info(
+                    "RSS supplement: {0} recent ID(s) fetched, {1} not yet in playlist for {2}",
+                    rssIds.Count,
+                    extras.Count,
+                    platformUrl);
+                return extras;
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "RSS supplement failed for '{0}'; active live stream may not be detected until next sync", platformUrl);
+                return new List<string>();
+            }
+        }
+
+        // Fetches members-only content by doing a flat yt-dlp listing of the regular channel tabs
+        // (videos + shorts + streams) with the cookie file, then filtering by availability.
+        // Members-only videos appear in the flat listing as locked entries (availability =
+        // "subscriber_only" / "members_only") that are invisible to the YouTube API.
+        // `since` is forwarded as --dateafter to keep incremental syncs fast.
+        private List<ContentMetadataResult> FetchMembershipContent(string platformUrl, HashSet<string> alreadySeen, DateTime? since)
+        {
             var dateAfter = since?.ToString("yyyyMMdd");
-            var regularVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
+            var allVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter, cookiesFilePath: Settings.CookiesFilePath);
 
-            // 2. Membership tab: only fetched when the channel has a confirmed or unknown membership.
-            //    Skipped for channels marked MembershipStatus.None (re-checked weekly by the executor).
-            var membershipIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var membershipVideos = new List<YtDlpVideoInfo>();
-            if (checkMembership)
+            var newMembersVideos = allVideos
+                .Where(v => !string.IsNullOrWhiteSpace(v.Id) && IsMembersOnlyAvailability(v.Availability) && !alreadySeen.Contains(v.Id))
+                .ToList();
+
+            var totalFound = allVideos.Count(v => IsMembersOnlyAvailability(v.Availability));
+
+            if (totalFound > 0)
             {
-                membershipVideos = _ytDlpClient.GetMembershipTabVideos(platformUrl);
-                foreach (var v in membershipVideos)
-                {
-                    if (!string.IsNullOrWhiteSpace(v.Id))
-                    {
-                        membershipIds.Add(v.Id);
-                    }
-                }
+                _logger.Info("{0} members-only video(s) found in channel listing ({1} new) for {2}", totalFound, newMembersVideos.Count, platformUrl);
+            }
+            else
+            {
+                _logger.Info("No members-only videos found in channel listing for {0}", platformUrl);
+            }
 
-                if (membershipIds.Count > 0)
+            if (!newMembersVideos.Any())
+            {
+                return new List<ContentMetadataResult>();
+            }
+
+            var apiById = new Dictionary<string, YoutubeVideo>();
+            if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
+            {
+                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, newMembersVideos.Select(v => v.Id));
+                foreach (var v in apiVideos)
                 {
-                    _logger.Info("{0} video(s) found in membership tab", membershipIds.Count);
+                    apiById[v.Id] = v;
                 }
             }
 
-            // 3. Merge: regular + membership-exclusive videos (union by ID)
-            var seen = new HashSet<string>(
-                regularVideos.Select(v => v.Id).Where(id => !string.IsNullOrWhiteSpace(id)),
-                StringComparer.OrdinalIgnoreCase);
-            var allVideos = regularVideos.ToList();
-            foreach (var v in membershipVideos)
-            {
-                if (!string.IsNullOrWhiteSpace(v.Id) && seen.Add(v.Id))
-                {
-                    allVideos.Add(v);
-                }
-            }
+            return newMembersVideos
+                .Select(v => apiById.TryGetValue(v.Id, out var apiVideo)
+                    ? MapToContentMetadata(apiVideo, publishedAt: null, isMembers: true)
+                    : MapYtDlpToContentMetadata(v, isMembers: true))
+                .ToList();
+        }
+
+        private static bool IsMembersOnlyAvailability(string availability) =>
+            string.Equals(availability, "subscriber_only", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(availability, "members_only", StringComparison.OrdinalIgnoreCase);
+
+        // No-API-key fallback: full yt-dlp listing with optional membership tab.
+        // No-API-key fallback: full yt-dlp listing with members-only detection via availability field.
+        // Used only when Settings.ApiKey is not configured.
+        // Rich metadata (liveStreamingDetails, precise timestamps) is unavailable without an API key.
+        private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, string platformId, DateTime? since, bool checkMembership)
+        {
+            var dateAfter = since?.ToString("yyyyMMdd");
+            var allVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
 
             if (!allVideos.Any())
             {
@@ -271,42 +455,32 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 return Enumerable.Empty<ContentMetadataResult>();
             }
 
-            _logger.Info("yt-dlp found {0} items ({1} from membership tab) for {2}", allVideos.Count, membershipIds.Count, platformUrl);
-
-            // 4. YouTube API enrichment for richer metadata (timestamps, liveStreamingDetails)
-            var apiById = new Dictionary<string, YoutubeVideo>();
-            if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
-            {
-                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, allVideos.Select(v => v.Id));
-                foreach (var v in apiVideos)
-                {
-                    apiById[v.Id] = v;
-                }
-            }
-
-            // 5. Map: IsMembers = membership tab presence OR yt-dlp availability == "subscriber_only"
-            //    (channels without a /membership tab use availability on regular tab videos instead)
             var membersOnlyCount = 0;
             var result = allVideos.Select(v =>
             {
-                var isMembers = membershipIds.Contains(v.Id)
-                    || string.Equals(v.Availability, "subscriber_only", StringComparison.OrdinalIgnoreCase);
+                var isMembers = checkMembership && IsMembersOnlyAvailability(v.Availability);
                 if (isMembers)
                 {
                     membersOnlyCount++;
                 }
 
-                return apiById.TryGetValue(v.Id, out var apiVideo)
-                    ? MapToContentMetadata(apiVideo, publishedAt: null, isMembers: isMembers)
-                    : MapYtDlpToContentMetadata(v, isMembers: isMembers);
+                return MapYtDlpToContentMetadata(v, isMembers: isMembers);
             }).ToList();
 
-            if (membersOnlyCount > 0)
-            {
-                _logger.Info("{0} members-only video(s) identified", membersOnlyCount);
-            }
+            _logger.Info("yt-dlp found {0} item(s) ({1} members-only) for {2}", allVideos.Count, membersOnlyCount, platformUrl);
 
             return result;
+        }
+
+        private static string DeriveUploadsPlaylistId(string platformId)
+        {
+            if (string.IsNullOrWhiteSpace(platformId) || !platformId.StartsWith("UC"))
+            {
+                throw new InvalidOperationException(
+                    $"Cannot derive uploads playlist from channel ID '{platformId}'. Expected format: UCxxxxxxx");
+            }
+
+            return string.Concat("UU", platformId.AsSpan(2));
         }
 
         // ── Single / batch lookup ──────────────────────────────────────────────
@@ -366,33 +540,23 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
             var broadcastContent = video.Snippet?.LiveBroadcastContent ?? string.Empty;
 
-            if (broadcastContent == "upcoming" ||
-                (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow && broadcastContent != "none"))
-            {
-                return new ContentStatusUpdate
-                {
-                    PlatformContentId = video.Id,
-                    NewContentType = ContentType.Upcoming,
-                    NewAirDateUtc = lsd.ScheduledStartTime ?? lsd.ActualStartTime,
-                    ExistsOnPlatform = true,
-                    ShouldTriggerDownload = false
-                };
-            }
-
-            if (broadcastContent == "live" ||
-                (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue && broadcastContent != "none"))
+            // Check actualStartTime + no actualEndTime first — this is authoritative.
+            // broadcastContent can lag several minutes behind the real stream state,
+            // so a stream that is already live may still say "upcoming" in the API.
+            if (lsd.ActualStartTime.HasValue && !lsd.ActualEndTime.HasValue)
             {
                 return new ContentStatusUpdate
                 {
                     PlatformContentId = video.Id,
                     NewContentType = ContentType.Live,
-                    NewAirDateUtc = lsd.ActualStartTime ?? lsd.ScheduledStartTime,
+                    NewAirDateUtc = lsd.ActualStartTime,
                     ExistsOnPlatform = true,
                     ShouldTriggerDownload = true
                 };
             }
 
-            if (lsd.ActualStartTime.HasValue)
+            // Stream has ended (actualEndTime is set).
+            if (lsd.ActualStartTime.HasValue && lsd.ActualEndTime.HasValue)
             {
                 return new ContentStatusUpdate
                 {
@@ -404,42 +568,79 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 };
             }
 
+            // No actualStartTime yet — stream hasn't started.
+            if (broadcastContent == "upcoming" ||
+                (lsd.ScheduledStartTime.HasValue && lsd.ScheduledStartTime.Value > DateTime.UtcNow))
+            {
+                return new ContentStatusUpdate
+                {
+                    PlatformContentId = video.Id,
+                    NewContentType = ContentType.Upcoming,
+                    NewAirDateUtc = lsd.ScheduledStartTime,
+                    ExistsOnPlatform = true,
+                    ShouldTriggerDownload = false
+                };
+            }
+
             return null;
         }
 
         // ── Accessibility probe ────────────────────────────────────────────────
 
-        public override bool ProbeContentAccessibility(string platformContentId)
+        public override ContentAccessibilityResult ProbeContentAccessibility(string platformContentId, bool withCookies = true)
         {
             // Uses --print availability (metadata-only fetch) to avoid triggering
             // deno/JS-challenge format resolution — inaccessible videos fail before
             // format extraction with a clear membership error.
-            return _ytDlpClient.IsVideoAccessible(platformContentId);
+            // withCookies=false is used for tier discovery (Phase 1 of the two-phase probe).
+            return _ytDlpClient.ProbeVideoAccessibility(platformContentId, withCookies, Settings.CookiesFilePath);
         }
 
         public override ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId)
         {
+            // Use CHANNEL_URL/live — YouTube routes this directly to the active live stream
+            // if one exists, or returns an error if the channel is offline.  This avoids the
+            // GetChannelInfo two-level tab/playlist structure where entries[] contains tab
+            // playlists (Videos, Live, Shorts), not individual videos, so IsLive is never set.
+            var baseUrl = platformUrl.TrimEnd('/');
+            foreach (var knownTab in new[] { "/videos", "/shorts", "/streams", "/live" })
+            {
+                if (baseUrl.EndsWith(knownTab, StringComparison.OrdinalIgnoreCase))
+                {
+                    baseUrl = baseUrl[..^knownTab.Length];
+                    break;
+                }
+            }
+
+            var liveUrl = baseUrl + "/live";
+
             try
             {
-                var channelInfo = _ytDlpClient.GetChannelInfo(platformUrl);
-                var liveEntry = channelInfo.Entries.FirstOrDefault(e => e.IsLive == true);
-                if (liveEntry == null)
+                var video = _ytDlpClient.GetVideoInfo(liveUrl);
+
+                if (video.IsLive != true)
                 {
                     return null;
                 }
 
                 return new ContentMetadataResult
                 {
-                    PlatformContentId = liveEntry.Id,
+                    PlatformContentId = video.Id,
                     ContentType = ContentType.Live,
-                    Title = string.IsNullOrEmpty(liveEntry.Title) ? "Live Stream" : liveEntry.Title,
-                    ThumbnailUrl = liveEntry.Thumbnail,
+                    Title = string.IsNullOrEmpty(video.Title) ? "Live Stream" : video.Title,
+                    ThumbnailUrl = video.Thumbnail,
                     AirDateUtc = DateTime.UtcNow,
                 };
             }
+            catch (Exception ex) when (ex.Message.Contains("not currently live", StringComparison.OrdinalIgnoreCase))
+            {
+                // Channel is offline — this is the normal case, not an error.
+                _logger.Debug("Channel '{0}' is not currently live", liveUrl);
+                return null;
+            }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Failed to check active livestream for '{0}'", platformUrl);
+                _logger.Warn(ex, "Failed to check active livestream for '{0}'", liveUrl);
                 return null;
             }
         }
@@ -466,11 +667,15 @@ namespace Streamarr.Core.MetadataSource.YouTube
             }
 
             var contentType = ContentType.Video;
-            if (video.IsLive == true)
+            if (video.IsLive == true || video.LiveStatus == "is_live")
             {
                 contentType = ContentType.Live;
             }
-            else if (video.WasLive == true)
+            else if (video.LiveStatus == "is_upcoming")
+            {
+                contentType = ContentType.Upcoming;
+            }
+            else if (video.WasLive == true || video.LiveStatus == "was_live")
             {
                 contentType = ContentType.Vod;
             }
@@ -659,5 +864,8 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
             return ContentType.Video;
         }
+
+        public override string GetDownloadUrl(string platformContentId) =>
+            $"https://www.youtube.com/watch?v={platformContentId}";
     }
 }

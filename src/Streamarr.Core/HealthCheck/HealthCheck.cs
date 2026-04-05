@@ -120,6 +120,7 @@ namespace Streamarr.Core.HealthCheck
         YouTubeApiKeyNotConfigured,
         YouTubeApiKeyInvalid,
         TwitchCredentialsMissing,
-        TwitchCredentialsInvalid
+        TwitchCredentialsInvalid,
+        DuplicateChannels
     }
 }

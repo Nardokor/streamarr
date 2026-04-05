@@ -1,34 +1,34 @@
+import { PLATFORM_REGISTRY } from 'Sources/registry';
 import Content, { ContentType } from 'typings/Content';
 
 export function getContentTypeLabel(contentType: ContentType, platform?: string): string {
-  const isTwitch = platform === 'twitch';
-  switch (contentType) {
-    case 'video': return isTwitch ? 'Highlight' : 'Video';
-    case 'short': return isTwitch ? 'Clip' : 'Short';
-    case 'vod': return 'VoD';
-    case 'live': return 'Live';
-    case 'upcoming': return 'Upcoming';
-    default: return '';
-  }
+  if (!platform) return '';
+  return PLATFORM_REGISTRY[platform]?.contentTypeLabel(contentType) ?? '';
 }
 
 export function getTypeLabels(platform?: string): string[] {
-  const isTwitch = platform === 'twitch';
-  return [
-    isTwitch ? 'Highlight' : 'Video',
-    isTwitch ? 'Clip' : 'Short',
-    'VoD',
-    'Live',
-    'Upcoming',
-  ];
+  const cfg = platform ? PLATFORM_REGISTRY[platform] : undefined;
+  if (!cfg) return ['Video', 'Short', 'VoD', 'Live', 'Upcoming'];
+  const seen = new Set<string>();
+  const labels: string[] = [];
+  for (const ct of ['video', 'short', 'vod', 'live', 'upcoming'] as ContentType[]) {
+    const label = cfg.contentTypeLabel(ct);
+    if (label && !seen.has(label)) {
+      seen.add(label);
+      labels.push(label);
+    }
+  }
+  return labels;
 }
 
 export function getShortsLabel(platform?: string): string {
-  return platform === 'twitch' ? 'Clips' : 'Shorts';
+  if (!platform) return 'Shorts';
+  return PLATFORM_REGISTRY[platform]?.shortsLabel ?? 'Shorts';
 }
 
 export function getVideosLabel(platform?: string): string {
-  return platform === 'twitch' ? 'Highlights' : 'Videos';
+  if (!platform) return 'Videos';
+  return PLATFORM_REGISTRY[platform]?.videosLabel ?? 'Videos';
 }
 
 export function formatDuration(duration: string | null): string {
@@ -119,26 +119,7 @@ export function buildPlatformUrl(
   platform: string,
   platformContentId: string
 ): string | null {
-  switch (platform) {
-    case 'youTube':
-      return `https://www.youtube.com/watch?v=${platformContentId}`;
-    case 'twitch':
-      return platformContentId.startsWith('https://')
-        ? platformContentId
-        : `https://www.twitch.tv/videos/${platformContentId}`;
-    case 'fourthwall':
-      return `https://www.youtube.com/watch?v=${platformContentId}`;
-    case 'fansly':
-      return `https://fansly.com/post/${platformContentId}`;
-    case 'party':
-      return `https://party.gg/${platformContentId}`;
-    case 'patreon':
-      return `https://www.patreon.com/posts/${platformContentId}`;
-    case 'twitter':
-      return `https://x.com/i/status/${platformContentId}`;
-    default:
-      return null;
-  }
+  return PLATFORM_REGISTRY[platform]?.buildContentUrl(platformContentId) ?? null;
 }
 
 export function getNextLiveDate(content: Content[]): Date | null {

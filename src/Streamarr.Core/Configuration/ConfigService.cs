@@ -219,12 +219,6 @@ namespace Streamarr.Core.Configuration
             set { SetValue("YtDlpTempDownloadFolder", value); }
         }
 
-        public string YtDlpCookieFilePath
-        {
-            get { return GetValue("YtDlpCookieFilePath", string.Empty); }
-            set { SetValue("YtDlpCookieFilePath", value); }
-        }
-
         public bool YtDlpEmbedMetadata
         {
             get { return GetValueBoolean("YtDlpEmbedMetadata", true); }

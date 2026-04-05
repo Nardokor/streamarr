@@ -29,6 +29,12 @@ namespace Streamarr.Core.Content
         public bool Monitored { get; set; }
         public bool IsMembers { get; set; }
         public bool IsAccessible { get; set; } = true;
+
+        // The membership tier required to access this video, as returned by the platform
+        // when a probe fails (e.g. "Double-Decker Bus"). Empty for non-members or public content.
+        // Used to group inaccessible videos by tier so only one probe is needed per tier.
+        public string MembershipTier { get; set; } = string.Empty;
+
         public ContentStatus Status { get; set; }
         public ContentStatus? PreviousStatus { get; set; }
 

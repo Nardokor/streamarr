@@ -24,6 +24,8 @@ namespace Streamarr.Core.MetadataSource
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 
+        public virtual string? CookiesFilePath => string.IsNullOrWhiteSpace(Settings.CookiesFilePath) ? null : Settings.CookiesFilePath;
+
         public abstract CreatorMetadataResult SearchCreator(string query);
         public abstract ChannelMetadataResult GetChannelMetadata(string platformUrl);
         public abstract IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since, bool checkMembership = false);
@@ -31,15 +33,17 @@ namespace Streamarr.Core.MetadataSource
         public abstract IEnumerable<ContentMetadataResult> GetContentMetadataBatch(IEnumerable<string> platformContentIds);
         public abstract IEnumerable<ContentStatusUpdate> GetLivestreamStatusUpdates(IEnumerable<string> platformContentIds);
 
-        public virtual bool ProbeContentAccessibility(string platformContentId)
+        public virtual ContentAccessibilityResult ProbeContentAccessibility(string platformContentId, bool withCookies = true)
         {
-            return true;
+            return ContentAccessibilityResult.Accessible();
         }
 
         public virtual ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId)
         {
             return null;
         }
+
+        public abstract string GetDownloadUrl(string platformContentId);
 
         public virtual ValidationResult Test()
         {

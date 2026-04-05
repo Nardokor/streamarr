@@ -42,7 +42,6 @@ namespace Streamarr.Core.Configuration
         // Download Client (yt-dlp)
         string YtDlpBinaryPath { get; set; }
         string YtDlpTempDownloadFolder { get; set; }
-        string YtDlpCookieFilePath { get; set; }
         bool YtDlpEmbedMetadata { get; set; }
         bool YtDlpEmbedThumbnail { get; set; }
         string YtDlpPreferredFormat { get; set; }

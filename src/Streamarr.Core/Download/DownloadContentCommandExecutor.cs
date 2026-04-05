@@ -12,6 +12,7 @@ using Streamarr.Core.Extras;
 using Streamarr.Core.History;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Messaging.Events;
+using Streamarr.Core.MetadataSource;
 using Streamarr.Core.Notifications;
 using Streamarr.Core.Qualities;
 
@@ -26,6 +27,7 @@ namespace Streamarr.Core.Download
         private readonly ICreatorService _creatorService;
         private readonly IContentFileService _contentFileService;
         private readonly IYtDlpClient _ytDlpClient;
+        private readonly IMetadataSourceFactory _metadataSourceFactory;
         private readonly INfoWriterService _nfoWriter;
         private readonly IDownloadHistoryService _historyService;
         private readonly ILivestreamStatusService _livestreamStatusService;
@@ -37,6 +39,7 @@ namespace Streamarr.Core.Download
                                               ICreatorService creatorService,
                                               IContentFileService contentFileService,
                                               IYtDlpClient ytDlpClient,
+                                              IMetadataSourceFactory metadataSourceFactory,
                                               INfoWriterService nfoWriter,
                                               IDownloadHistoryService historyService,
                                               ILivestreamStatusService livestreamStatusService,
@@ -48,6 +51,7 @@ namespace Streamarr.Core.Download
             _creatorService = creatorService;
             _contentFileService = contentFileService;
             _ytDlpClient = ytDlpClient;
+            _metadataSourceFactory = metadataSourceFactory;
             _nfoWriter = nfoWriter;
             _historyService = historyService;
             _livestreamStatusService = livestreamStatusService;
@@ -61,49 +65,77 @@ namespace Streamarr.Core.Download
             var channel = _channelService.GetChannel(content.ChannelId);
             var creator = _creatorService.GetCreator(channel.CreatorId);
 
-            var url = BuildDownloadUrl(channel.Platform, content.PlatformContentId);
+            var source = GetSource(channel.Platform);
+            var url = source.GetDownloadUrl(content.PlatformContentId);
 
             _logger.ProgressInfo("Downloading '{0}' from {1}", content.Title, channel.Platform);
 
             var isLive = content.ContentType == ContentType.Live;
-            content.Status = isLive ? ContentStatus.Recording : ContentStatus.Downloading;
-            _contentService.UpdateContent(content);
 
-            if (isLive)
+            // Preserve the pre-download status for error recovery. DownloadQueueStatusHandler
+            // may not have run yet if a thread picked this up before the event fired.
+            if (content.PreviousStatus == null)
             {
-                _eventAggregator.PublishEvent(new LiveStreamStartedEvent
-                {
-                    Message = new LiveStreamStartedMessage
-                    {
-                        ContentTitle = content.Title,
-                        CreatorName = creator.Title,
-                        ChannelName = channel.Title,
-                    }
-                });
+                content.PreviousStatus = content.Status;
             }
-            else
+
+            // Show as Queued while waiting for a concurrent download slot.
+            if (content.Status != ContentStatus.Queued)
             {
-                _eventAggregator.PublishEvent(new ContentGrabbedEvent
-                {
-                    Message = new ContentGrabbedMessage
-                    {
-                        ContentTitle = content.Title,
-                        CreatorName = creator.Title,
-                        ChannelName = channel.Title,
-                        ContentType = content.ContentType,
-                    }
-                });
+                content.Status = ContentStatus.Queued;
+                _contentService.UpdateContent(content);
             }
 
             try
             {
-                var result = _ytDlpClient.Download(content.Id, url, creator.Path, isLive, content.IsMembers, progress =>
-                {
-                    if (progress.PercentComplete.HasValue)
+                var result = _ytDlpClient.Download(
+                    content.Id,
+                    url,
+                    creator.Path,
+                    isLive,
+                    source.CookiesFilePath,
+                    progress =>
                     {
-                        _logger.ProgressInfo("Downloading '{0}': {1:F1}%", content.Title, progress.PercentComplete.Value);
-                    }
-                });
+                        if (progress.PercentComplete.HasValue)
+                        {
+                            _logger.ProgressInfo("Downloading '{0}': {1:F1}%", content.Title, progress.PercentComplete.Value);
+                        }
+                    },
+                    onStarted: () =>
+                    {
+                        // Slot acquired — transition to the active download state and fire notifications.
+                        content.Status = isLive ? ContentStatus.Recording : ContentStatus.Downloading;
+                        _contentService.UpdateContent(content);
+
+                        if (!message.IsResume)
+                        {
+                            if (isLive)
+                            {
+                                _eventAggregator.PublishEvent(new LiveStreamStartedEvent
+                                {
+                                    Message = new LiveStreamStartedMessage
+                                    {
+                                        ContentTitle = content.Title,
+                                        CreatorName = creator.Title,
+                                        ChannelName = channel.Title,
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                _eventAggregator.PublishEvent(new ContentGrabbedEvent
+                                {
+                                    Message = new ContentGrabbedMessage
+                                    {
+                                        ContentTitle = content.Title,
+                                        CreatorName = creator.Title,
+                                        ChannelName = channel.Title,
+                                        ContentType = content.ContentType,
+                                    }
+                                });
+                            }
+                        }
+                    });
 
                 if (result.Success)
                 {
@@ -237,23 +269,10 @@ namespace Streamarr.Core.Download
             });
         }
 
-        private static string BuildDownloadUrl(PlatformType platform, string platformContentId)
+        private IMetadataSource GetSource(PlatformType platform)
         {
-            return platform switch
-            {
-                PlatformType.YouTube => $"https://www.youtube.com/watch?v={platformContentId}",
-                PlatformType.Twitch when platformContentId.StartsWith("live:") =>
-                    $"https://www.twitch.tv/{platformContentId["live:".Length..]}",
-                PlatformType.Twitch when platformContentId.StartsWith("https://") =>
-                    platformContentId,
-                PlatformType.Twitch => $"https://www.twitch.tv/videos/{platformContentId}",
-                PlatformType.Fourthwall => $"https://www.youtube.com/watch?v={platformContentId}",
-                PlatformType.Fansly => $"https://fansly.com/post/{platformContentId}",
-                PlatformType.Party => $"https://party.gg/{platformContentId}",
-                PlatformType.Patreon => $"https://www.patreon.com/posts/{platformContentId}",
-                PlatformType.Twitter => $"https://x.com/i/status/{platformContentId}",
-                _ => throw new ArgumentException($"Unsupported platform: {platform}")
-            };
+            return _metadataSourceFactory.GetByPlatform(platform)
+                ?? throw new InvalidOperationException($"No enabled source configured for platform '{platform}'");
         }
     }
 }

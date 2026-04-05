@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using FluentAssertions;
 using NUnit.Framework;
 using Streamarr.Common.EnvironmentInfo;
@@ -76,6 +77,31 @@ namespace Streamarr.Core.Test.Localization
         public void should_throw_if_null_string_passed()
         {
             Assert.Throws<ArgumentNullException>(() => Subject.GetLocalizedString(null));
+        }
+
+        [Test]
+        public void should_return_phrase_key_when_localization_file_deserializes_to_null()
+        {
+            var tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            var localizationDir = Path.Combine(tempDir, "Localization", "Core");
+            Directory.CreateDirectory(localizationDir);
+
+            // JsonSerializer.Deserialize returns null when the JSON content is the literal "null"
+            File.WriteAllText(Path.Combine(localizationDir, "en.json"), "null");
+
+            Mocker.GetMock<IAppFolderInfo>().Setup(m => m.StartUpFolder).Returns(tempDir);
+
+            try
+            {
+                var result = Subject.GetLocalizedString("UiLanguage");
+                result.Should().Be("UiLanguage");
+            }
+            finally
+            {
+                Directory.Delete(tempDir, recursive: true);
+            }
+
+            ExceptionVerification.ExpectedErrors(1);
         }
     }
 }

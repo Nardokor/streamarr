@@ -145,8 +145,8 @@ function DownloadClientSettings() {
                   type={inputTypes.NUMBER}
                   name="ytDlpMaxConcurrentDownloads"
                   min={1}
-                  max={10}
-                  helpText="Maximum number of simultaneous yt-dlp download processes."
+                  max={20}
+                  helpText="Maximum number of simultaneous yt-dlp download processes. Requires a restart to take effect."
                   onChange={handleInputChange}
                   {...settings.ytDlpMaxConcurrentDownloads}
                 />

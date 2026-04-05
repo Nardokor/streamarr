@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using NLog;
 using Streamarr.Common.Cache;
 using Streamarr.Common.EnvironmentInfo;
@@ -94,10 +93,10 @@ namespace Streamarr.Core.Localization
             var startupFolder = _appFolderInfo.StartUpFolder;
             var prefix = Path.Combine(startupFolder, "Localization", "Core");
 
-            return _cache.Get("localization", () => LoadDictionary(prefix).GetAwaiter().GetResult());
+            return _cache.Get("localization", () => LoadDictionary(prefix));
         }
 
-        private async Task<Dictionary<string, string>> LoadDictionary(string prefix)
+        private Dictionary<string, string> LoadDictionary(string prefix)
         {
             var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             var filePath = Path.Combine(prefix, DefaultCulture + ".json");
@@ -108,8 +107,14 @@ namespace Streamarr.Core.Localization
                 return dictionary;
             }
 
-            await using var fs = File.OpenRead(filePath);
-            var dict = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(fs);
+            using var fs = File.OpenRead(filePath);
+            var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(fs);
+
+            if (dict == null)
+            {
+                _logger.Error("Failed to deserialize localization resource: {0}", filePath);
+                return dictionary;
+            }
 
             foreach (var key in dict.Keys)
             {

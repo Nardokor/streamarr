@@ -211,20 +211,46 @@ namespace Streamarr.Core.MetadataSource.Twitch
                     $"Got: '{platformId}'");
             }
 
-            _logger.Info("Fetching Twitch VODs for user {0} (since: {1})", platformId, since?.ToString("u") ?? "all");
+            _logger.Info("Fetching Twitch content for user {0} (since: {1})", platformId, since?.ToString("u") ?? "all");
 
             var results = new List<ContentMetadataResult>();
 
-            // 1. Archived VODs
+            // 1. Check live status first so we can filter the in-progress archive below.
+            //    Use the channel URL to extract the login — avoids an extra GetUserById API
+            //    call and eliminates that call as a failure point for live detection.
+            TwitchStream liveStream = null;
+            var urlMatch = TwitchUrlRegex.Match(platformUrl ?? string.Empty);
+            if (urlMatch.Success)
+            {
+                var userLogin = urlMatch.Groups[2].Value.ToLowerInvariant();
+                liveStream = CallApi(token =>
+                    _twitchApiClient.GetLiveStream(Settings.ClientId, token, userLogin));
+            }
+
+            // 2. Archived VODs — skip the in-progress archive for the current live stream.
+            //    While a stream is live Twitch returns it in /videos with type="archive" and
+            //    stream_id set to the active stream's ID.  Adding it as a Vod here would
+            //    create a duplicate entry alongside the live:username sentinel below.
             var videos = CallApi(token =>
                 _twitchApiClient.GetVideos(Settings.ClientId, token, platformId, since));
 
             foreach (var video in videos)
             {
+                if (liveStream != null &&
+                    !string.IsNullOrEmpty(video.StreamId) &&
+                    video.StreamId == liveStream.Id)
+                {
+                    _logger.Debug(
+                        "Skipping in-progress archive video {0} — stream {1} is still live",
+                        video.Id,
+                        liveStream.Id);
+                    continue;
+                }
+
                 results.Add(MapVodToContent(video));
             }
 
-            // 2. Clips (Stories)
+            // 3. Clips
             var clips = CallApi(token =>
                 _twitchApiClient.GetClips(Settings.ClientId, token, platformId, since));
 
@@ -233,20 +259,11 @@ namespace Streamarr.Core.MetadataSource.Twitch
                 results.Add(MapClipToContent(clip));
             }
 
-            // 3. Live stream — look up login from user ID to call /streams
-            var user = CallApi(token =>
-                _twitchApiClient.GetUserById(Settings.ClientId, token, platformId));
-
-            if (user != null)
+            // 4. Live stream entry
+            if (liveStream != null)
             {
-                var stream = CallApi(token =>
-                    _twitchApiClient.GetLiveStream(Settings.ClientId, token, user.Login));
-
-                if (stream != null)
-                {
-                    _logger.Info("User {0} is currently live — including live content item", user.Login);
-                    results.Add(MapStreamToContent(stream));
-                }
+                _logger.Info("User {0} is currently live — including live content item", liveStream.UserLogin);
+                results.Add(MapStreamToContent(liveStream));
             }
 
             _logger.Info("GetNewContent for Twitch user {0}: {1} item(s)", platformId, results.Count);

@@ -104,6 +104,10 @@ namespace Streamarr.Core.MetadataSource.Twitch
         // "archive" = completed livestream VOD, "highlight" = user highlight, "upload" = uploaded video
         [JsonPropertyName("type")]
         public string VideoType { get; set; }
+
+        // Set while the source stream is still live; null once the stream ends and the VOD is finalised.
+        [JsonPropertyName("stream_id")]
+        public string StreamId { get; set; }
     }
 
     public class TwitchStreamsResponse

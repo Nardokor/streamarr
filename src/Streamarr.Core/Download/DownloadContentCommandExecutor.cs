@@ -88,12 +88,17 @@ namespace Streamarr.Core.Download
 
             try
             {
+                // Passing cookies to yt-dlp for public live streams triggers YouTube's
+                // bot-detection path (tv downgraded player) which returns no formats.
+                // Skip cookies for live streams unless the content requires membership.
+                var cookiesFilePath = isLive && !content.IsMembers ? null : source.CookiesFilePath;
+
                 var result = _ytDlpClient.Download(
                     content.Id,
                     url,
                     creator.Path,
                     isLive,
-                    source.CookiesFilePath,
+                    cookiesFilePath,
                     progress =>
                     {
                         if (progress.PercentComplete.HasValue)

@@ -633,10 +633,6 @@ namespace Streamarr.Core.Download.YtDlp
                 args.Add("--skip-unavailable-fragments");
                 args.Add("--retry-sleep fragment:5");
                 args.Add("--socket-timeout 30");
-                // ios/mweb clients bypass YouTube bot-detection that causes
-                // "No video formats found!" when the tv downgraded player is used.
-                args.Add("--extractor-args");
-                args.Add(Quote("youtube:player_client=ios,mweb"));
             }
 
             if (Settings.EmbedMetadata)

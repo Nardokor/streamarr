@@ -41,7 +41,7 @@ namespace Streamarr.Core.HealthCheck
 
         private static HttpUri MakeWikiUrl(string fragment)
         {
-            return new HttpUri("https://wiki.servarr.com/sonarr/system") + new HttpUri(fragment);
+            return new HttpUri("https://wiki.servarr.com/streamarr/system") + new HttpUri(fragment);
         }
     }
 

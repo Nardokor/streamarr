@@ -833,7 +833,7 @@
   "ICalShowAsAllDayEventsHelpText": "Events will appear as all-day events in your calendar",
   "ICalTagsSeriesHelpText": "Feed will only contain series with at least one matching tag",
   "IRC": "IRC",
-  "IRCLinkText": "#sonarr on Libera",
+  "IRCLinkText": "#streamarr on Libera",
   "IconForCutoffUnmet": "Icon for Cutoff Unmet",
   "IconForCutoffUnmetHelpText": "Show icon for files when the cutoff hasn't been met",
   "IconForFinales": "Icon for Finales",

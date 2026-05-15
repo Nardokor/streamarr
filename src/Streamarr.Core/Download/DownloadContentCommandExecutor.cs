@@ -94,9 +94,10 @@ namespace Streamarr.Core.Download
                 // Skip cookies for live streams unless the content requires membership.
                 var cookiesFilePath = isLive && !content.IsMembers ? null : source.CookiesFilePath;
 
-                // For direct CDN URLs (e.g. Mux) yt-dlp derives %(id)s from the URL,
-                // producing filenames that exceed OS limits. Supply a pre-built name.
-                var outputFilename = url.Contains("stream.mux.com", StringComparison.OrdinalIgnoreCase)
+                // For direct CDN URLs (Mux HLS streams, Patreon audio/video CDN) yt-dlp
+                // derives %(id)s from the URL path, producing meaningless or over-long
+                // filenames. Supply a pre-built name from the content's own metadata.
+                var outputFilename = IsDirectCdnUrl(url)
                     ? BuildDirectDownloadFilename(content.Title, content.PlatformContentId)
                     : null;
 
@@ -288,9 +289,10 @@ namespace Streamarr.Core.Download
                 ?? throw new InvalidOperationException($"No enabled source configured for platform '{platform}'");
         }
 
-        // For direct CDN URLs (e.g. Mux streams) yt-dlp uses the full URL as %(id)s,
-        // producing filenames that exceed the OS limit. Build a safe name from the
-        // content's own title and platform ID instead.
+        private static bool IsDirectCdnUrl(string url) =>
+            url.Contains("stream.mux.com", StringComparison.OrdinalIgnoreCase) ||
+            url.Contains("patreonusercontent.com", StringComparison.OrdinalIgnoreCase);
+
         private static readonly Regex IllegalFilenameChars = new Regex(
             @"[\\/:*?""<>|]", RegexOptions.Compiled);
 

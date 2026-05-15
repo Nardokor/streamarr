@@ -655,9 +655,10 @@ namespace Streamarr.Core.Download.YtDlp
                 args.Add(Quote(cookiesFilePath));
             }
 
-            // Mux HLS streams (used by Patreon for native video) require Referer to match
-            // the embedding site. Without it the token validation returns 403 Forbidden.
-            if (url.Contains("stream.mux.com", StringComparison.OrdinalIgnoreCase))
+            // Patreon CDN URLs (Mux streams and patreonusercontent.com) require a Patreon
+            // Referer for token validation. Without it the request returns 403 Forbidden.
+            if (url.Contains("stream.mux.com", StringComparison.OrdinalIgnoreCase) ||
+                url.Contains("patreonusercontent.com", StringComparison.OrdinalIgnoreCase))
             {
                 args.Add("--add-header");
                 args.Add(Quote("Referer:https://www.patreon.com"));

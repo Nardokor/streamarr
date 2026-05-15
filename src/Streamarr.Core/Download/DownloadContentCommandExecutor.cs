@@ -3,6 +3,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NLog;
+using Streamarr.Common.EnvironmentInfo;
+using Streamarr.Common.Extensions;
 using Streamarr.Common.Instrumentation.Extensions;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
@@ -32,6 +34,8 @@ namespace Streamarr.Core.Download
         private readonly INfoWriterService _nfoWriter;
         private readonly IDownloadHistoryService _historyService;
         private readonly ILivestreamStatusService _livestreamStatusService;
+        private readonly IAudioVideoMuxService _audioVideoMuxService;
+        private readonly IAppFolderInfo _appFolderInfo;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
@@ -44,6 +48,8 @@ namespace Streamarr.Core.Download
                                               INfoWriterService nfoWriter,
                                               IDownloadHistoryService historyService,
                                               ILivestreamStatusService livestreamStatusService,
+                                              IAudioVideoMuxService audioVideoMuxService,
+                                              IAppFolderInfo appFolderInfo,
                                               IEventAggregator eventAggregator,
                                               Logger logger)
         {
@@ -56,6 +62,8 @@ namespace Streamarr.Core.Download
             _nfoWriter = nfoWriter;
             _historyService = historyService;
             _livestreamStatusService = livestreamStatusService;
+            _audioVideoMuxService = audioVideoMuxService;
+            _appFolderInfo = appFolderInfo;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -156,6 +164,17 @@ namespace Streamarr.Core.Download
 
                 if (result.Success)
                 {
+                    // Audio-only Patreon files don't play in Plex. Wrap them with the
+                    // creator avatar as a static video track so Plex indexes them normally.
+                    var avatarPath = Path.Combine(
+                        _appFolderInfo.GetMediaCoverPath(), "Creator", creator.Id.ToString(), "avatar.jpg");
+                    var muxedPath = _audioVideoMuxService.WrapAudioWithImage(result.FilePath, avatarPath);
+                    if (muxedPath != null)
+                    {
+                        result.FilePath = muxedPath;
+                        result.FileSize = new System.IO.FileInfo(muxedPath).Length;
+                    }
+
                     var relativePath = Path.GetRelativePath(creator.Path, result.FilePath);
 
                     var contentFile = new ContentFile

@@ -95,11 +95,13 @@ namespace Streamarr.Core.Download
                 var cookiesFilePath = isLive && !content.IsMembers ? null : source.CookiesFilePath;
 
                 // For direct CDN URLs (Mux HLS streams, Patreon audio/video CDN) yt-dlp
-                // derives %(id)s from the URL path, producing meaningless or over-long
-                // filenames. Supply a pre-built name from the content's own metadata.
-                var outputFilename = IsDirectCdnUrl(url)
+                // derives %(id)s and %(title)s from the URL path, producing meaningless
+                // filenames and wrong embedded metadata. Supply pre-built values instead.
+                var isCdn = IsDirectCdnUrl(url);
+                var outputFilename = isCdn
                     ? BuildDirectDownloadFilename(content.Title, content.PlatformContentId)
                     : null;
+                var metadataTitle = isCdn ? content.Title : null;
 
                 var result = _ytDlpClient.Download(
                     content.Id,
@@ -149,7 +151,8 @@ namespace Streamarr.Core.Download
                             }
                         }
                     },
-                    outputFilename: outputFilename);
+                    outputFilename: outputFilename,
+                    metadataTitle: metadataTitle);
 
                 if (result.Success)
                 {

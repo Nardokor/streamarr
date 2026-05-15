@@ -17,7 +17,7 @@ namespace Streamarr.Core.Download.YtDlp
 {
     public interface IYtDlpClient
     {
-        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null);
+        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null);
         void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null);
@@ -390,7 +390,7 @@ namespace Streamarr.Core.Download.YtDlp
             return videos;
         }
 
-        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null)
+        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null)
         {
             _logger.Debug("Waiting for concurrent download slot ({0} available)", _concurrentDownloadSemaphore.CurrentCount);
             _concurrentDownloadSemaphore.Wait();
@@ -398,7 +398,7 @@ namespace Streamarr.Core.Download.YtDlp
             try
             {
                 onStarted?.Invoke();
-                return DownloadInternal(contentId, url, outputPath, isLive, cookiesFilePath, onProgress, outputFilename);
+                return DownloadInternal(contentId, url, outputPath, isLive, cookiesFilePath, onProgress, outputFilename, metadataTitle);
             }
             finally
             {
@@ -406,11 +406,11 @@ namespace Streamarr.Core.Download.YtDlp
             }
         }
 
-        private YtDlpDownloadResult DownloadInternal(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, string outputFilename = null)
+        private YtDlpDownloadResult DownloadInternal(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, string outputFilename = null, string metadataTitle = null)
         {
             _diskProvider.EnsureFolder(outputPath);
 
-            var args = BuildDownloadArgs(url, outputPath, isLive, cookiesFilePath, outputFilename);
+            var args = BuildDownloadArgs(url, outputPath, isLive, cookiesFilePath, outputFilename, metadataTitle);
             var mergedFile = string.Empty;
             var fragmentFiles = new List<string>();
             var alreadyDownloadedFile = string.Empty;
@@ -614,7 +614,7 @@ namespace Streamarr.Core.Download.YtDlp
             return $"--dump-json --skip-download --socket-timeout 15 {Quote(url)}";
         }
 
-        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, string cookiesFilePath = null, string outputFilename = null)
+        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, string cookiesFilePath = null, string outputFilename = null, string metadataTitle = null)
         {
             var outputTemplate = outputFilename != null
                 ? Path.Combine(outputPath, outputFilename + ".%(ext)s")
@@ -627,6 +627,15 @@ namespace Streamarr.Core.Download.YtDlp
                 "-f", Quote(Settings.PreferredFormat),
                 "-o", Quote(outputTemplate)
             };
+
+            // Override the title yt-dlp would derive from a direct CDN URL with the
+            // actual content title so --embed-metadata uses the correct value.
+            if (!string.IsNullOrWhiteSpace(metadataTitle))
+            {
+                var escapedTitle = metadataTitle.Replace("\"", "\\\"");
+                args.Add("--parse-metadata");
+                args.Add(Quote($"{escapedTitle}:(?P<title>.+)"));
+            }
 
             if (isLive)
             {

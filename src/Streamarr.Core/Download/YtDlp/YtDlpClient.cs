@@ -17,7 +17,7 @@ namespace Streamarr.Core.Download.YtDlp
 {
     public interface IYtDlpClient
     {
-        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null);
+        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null);
         void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null);
@@ -390,7 +390,7 @@ namespace Streamarr.Core.Download.YtDlp
             return videos;
         }
 
-        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null)
+        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null)
         {
             _logger.Debug("Waiting for concurrent download slot ({0} available)", _concurrentDownloadSemaphore.CurrentCount);
             _concurrentDownloadSemaphore.Wait();
@@ -398,7 +398,7 @@ namespace Streamarr.Core.Download.YtDlp
             try
             {
                 onStarted?.Invoke();
-                return DownloadInternal(contentId, url, outputPath, isLive, cookiesFilePath, onProgress);
+                return DownloadInternal(contentId, url, outputPath, isLive, cookiesFilePath, onProgress, outputFilename);
             }
             finally
             {
@@ -406,11 +406,11 @@ namespace Streamarr.Core.Download.YtDlp
             }
         }
 
-        private YtDlpDownloadResult DownloadInternal(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null)
+        private YtDlpDownloadResult DownloadInternal(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, string outputFilename = null)
         {
             _diskProvider.EnsureFolder(outputPath);
 
-            var args = BuildDownloadArgs(url, outputPath, isLive, cookiesFilePath);
+            var args = BuildDownloadArgs(url, outputPath, isLive, cookiesFilePath, outputFilename);
             var mergedFile = string.Empty;
             var fragmentFiles = new List<string>();
             var alreadyDownloadedFile = string.Empty;
@@ -614,14 +614,18 @@ namespace Streamarr.Core.Download.YtDlp
             return $"--dump-json --skip-download --socket-timeout 15 {Quote(url)}";
         }
 
-        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, string cookiesFilePath = null)
+        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, string cookiesFilePath = null, string outputFilename = null)
         {
+            var outputTemplate = outputFilename != null
+                ? Path.Combine(outputPath, outputFilename + ".%(ext)s")
+                : Path.Combine(outputPath, "%(title)s [%(id)s].%(ext)s");
+
             var args = new List<string>
             {
                 "--newline",
                 "--no-playlist",
                 "-f", Quote(Settings.PreferredFormat),
-                "-o", Quote(Path.Combine(outputPath, "%(title)s [%(id)s].%(ext)s"))
+                "-o", Quote(outputTemplate)
             };
 
             if (isLive)

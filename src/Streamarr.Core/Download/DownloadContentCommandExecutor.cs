@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NLog;
 using Streamarr.Common.Instrumentation.Extensions;
@@ -93,6 +94,12 @@ namespace Streamarr.Core.Download
                 // Skip cookies for live streams unless the content requires membership.
                 var cookiesFilePath = isLive && !content.IsMembers ? null : source.CookiesFilePath;
 
+                // For direct CDN URLs (e.g. Mux) yt-dlp derives %(id)s from the URL,
+                // producing filenames that exceed OS limits. Supply a pre-built name.
+                var outputFilename = url.Contains("stream.mux.com", StringComparison.OrdinalIgnoreCase)
+                    ? BuildDirectDownloadFilename(content.Title, content.PlatformContentId)
+                    : null;
+
                 var result = _ytDlpClient.Download(
                     content.Id,
                     url,
@@ -140,7 +147,8 @@ namespace Streamarr.Core.Download
                                 });
                             }
                         }
-                    });
+                    },
+                    outputFilename: outputFilename);
 
                 if (result.Success)
                 {
@@ -278,6 +286,23 @@ namespace Streamarr.Core.Download
         {
             return _metadataSourceFactory.GetByPlatform(platform)
                 ?? throw new InvalidOperationException($"No enabled source configured for platform '{platform}'");
+        }
+
+        // For direct CDN URLs (e.g. Mux streams) yt-dlp uses the full URL as %(id)s,
+        // producing filenames that exceed the OS limit. Build a safe name from the
+        // content's own title and platform ID instead.
+        private static readonly Regex IllegalFilenameChars = new Regex(
+            @"[\\/:*?""<>|]", RegexOptions.Compiled);
+
+        private static string BuildDirectDownloadFilename(string title, string platformContentId)
+        {
+            var safeName = IllegalFilenameChars.Replace(title ?? string.Empty, string.Empty).Trim();
+            if (safeName.Length > 180)
+            {
+                safeName = safeName.Substring(0, 180).TrimEnd();
+            }
+
+            return $"{safeName} [{platformContentId}]";
         }
     }
 }

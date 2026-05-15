@@ -59,7 +59,8 @@ RUN existing_group=$(getent group 1000 | cut -d: -f1); \
 # Install yt-dlp into a directory owned by the app user so the running
 # process can self-update (yt-dlp --update-to nightly) without root.
 RUN mkdir -p /opt/yt-dlp && \
-    curl -fsSL https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux \
+    curl -fsSL --retry 5 --retry-delay 10 --retry-all-errors \
+        https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux \
         -o /opt/yt-dlp/yt-dlp && \
     chmod +x /opt/yt-dlp/yt-dlp && \
     chown -R streamarr:streamarr /opt/yt-dlp

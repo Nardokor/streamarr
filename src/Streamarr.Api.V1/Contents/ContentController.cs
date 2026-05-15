@@ -99,6 +99,15 @@ public class ContentController : RestControllerWithSignalR<ContentResource, Cont
         }
 
         var contentFile = _contentFileService.GetContentFile(content.ContentFileId);
+        if (contentFile == null)
+        {
+            // Orphaned reference — clear it without touching the disk
+            content.ContentFileId = 0;
+            content.Status = ContentStatus.Available;
+            _contentService.UpdateContent(content);
+            return NoContent();
+        }
+
         var channel = _channelService.GetChannel(content.ChannelId);
         var creator = _creatorService.GetCreator(channel.CreatorId);
         var fullPath = IO.Path.Combine(creator.Path, contentFile.RelativePath);

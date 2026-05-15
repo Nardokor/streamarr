@@ -123,9 +123,29 @@ namespace Streamarr.Core.Creators.Commands
                 {
                     if (content.ContentFileId > 0)
                     {
-                        // Already linked — mark as matched so the file is not added to unmatched
-                        matchedIds.Add(content.PlatformContentId);
-                        continue;
+                        var existingFile = _contentFileService.GetContentFile(content.ContentFileId);
+                        if (existingFile != null)
+                        {
+                            var fullPath = Path.Combine(creator.Path, existingFile.RelativePath);
+                            if (File.Exists(fullPath))
+                            {
+                                // File still present on disk — mark as matched and move on
+                                matchedIds.Add(content.PlatformContentId);
+                                continue;
+                            }
+
+                            // File gone from disk — clean up the orphaned ContentFile record
+                            _contentFileService.DeleteContentFile(existingFile.Id);
+                            _logger.Info(
+                                "File '{0}' is missing from disk; unlinking from '{1}'",
+                                existingFile.RelativePath,
+                                content.Title);
+                        }
+
+                        // Orphaned reference or missing file — reset so it can be re-downloaded
+                        content.ContentFileId = 0;
+                        content.Status = ContentStatus.Available;
+                        _contentService.UpdateContent(content);
                     }
 
                     if (!idToFile.TryGetValue(content.PlatformContentId, out var filePath))

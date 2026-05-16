@@ -103,13 +103,10 @@ namespace Streamarr.Core.Creators.Commands
                 });
             }
 
-            if (idToFile.Count == 0)
+            if (idToFile.Count > 0)
             {
-                _logger.Info("No video files with IDs found for creator '{0}'", creator.Title);
-                return;
+                _logger.Info("Found {0} video file(s) with IDs for '{1}'", idToFile.Count, creator.Title);
             }
-
-            _logger.Info("Found {0} video file(s) with IDs for '{1}'", idToFile.Count, creator.Title);
 
             // Track which IDs were matched so the rest can be recorded as unmatched
             var matchedIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

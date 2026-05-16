@@ -3,8 +3,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NLog;
-using Streamarr.Common.EnvironmentInfo;
-using Streamarr.Common.Extensions;
 using Streamarr.Common.Instrumentation.Extensions;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
@@ -35,7 +33,7 @@ namespace Streamarr.Core.Download
         private readonly IDownloadHistoryService _historyService;
         private readonly ILivestreamStatusService _livestreamStatusService;
         private readonly IAudioVideoMuxService _audioVideoMuxService;
-        private readonly IAppFolderInfo _appFolderInfo;
+        private readonly IChannelAvatarService _channelAvatarService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
@@ -49,7 +47,7 @@ namespace Streamarr.Core.Download
                                               IDownloadHistoryService historyService,
                                               ILivestreamStatusService livestreamStatusService,
                                               IAudioVideoMuxService audioVideoMuxService,
-                                              IAppFolderInfo appFolderInfo,
+                                              IChannelAvatarService channelAvatarService,
                                               IEventAggregator eventAggregator,
                                               Logger logger)
         {
@@ -63,7 +61,7 @@ namespace Streamarr.Core.Download
             _historyService = historyService;
             _livestreamStatusService = livestreamStatusService;
             _audioVideoMuxService = audioVideoMuxService;
-            _appFolderInfo = appFolderInfo;
+            _channelAvatarService = channelAvatarService;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -165,14 +163,15 @@ namespace Streamarr.Core.Download
                 if (result.Success)
                 {
                     // Audio-only Patreon files don't play in Plex. Wrap them with the
-                    // creator avatar as a static video track so Plex indexes them normally.
-                    var avatarPath = Path.Combine(
-                        _appFolderInfo.GetMediaCoverPath(), "Creator", creator.Id.ToString(), "avatar.jpg");
-                    var muxedPath = _audioVideoMuxService.WrapAudioWithImage(result.FilePath, avatarPath);
+                    // channel avatar as a static video track so Plex indexes them normally.
+                    var avatarPath = _channelAvatarService.GetLocalAvatarPath(channel);
+                    var muxedPath = avatarPath != null
+                        ? _audioVideoMuxService.WrapAudioWithImage(result.FilePath, avatarPath)
+                        : null;
                     if (muxedPath != null)
                     {
                         result.FilePath = muxedPath;
-                        result.FileSize = new System.IO.FileInfo(muxedPath).Length;
+                        result.FileSize = new FileInfo(muxedPath).Length;
                     }
 
                     var relativePath = Path.GetRelativePath(creator.Path, result.FilePath);

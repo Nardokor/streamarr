@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 using Streamarr.Common.Disk;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
@@ -22,6 +23,7 @@ public class ContentController : RestControllerWithSignalR<ContentResource, Cont
     private readonly ICreatorService _creatorService;
     private readonly IRootFolderService _rootFolderService;
     private readonly IDiskProvider _diskProvider;
+    private readonly Logger _logger;
 
     public ContentController(IContentService contentService,
                              IChannelService channelService,
@@ -38,6 +40,7 @@ public class ContentController : RestControllerWithSignalR<ContentResource, Cont
         _creatorService = creatorService;
         _rootFolderService = rootFolderService;
         _diskProvider = diskProvider;
+        _logger = LogManager.GetCurrentClassLogger();
     }
 
     protected override ContentResource GetResourceById(int id)
@@ -116,7 +119,14 @@ public class ContentController : RestControllerWithSignalR<ContentResource, Cont
 
         if (_diskProvider.FileExists(fullPath))
         {
-            _diskProvider.MoveToRecycleBin(fullPath, recycleBinPath);
+            try
+            {
+                _diskProvider.MoveToRecycleBin(fullPath, recycleBinPath);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Could not move '{0}' to recycle bin; proceeding with library cleanup", fullPath);
+            }
         }
 
         _contentFileService.DeleteContentFile(contentFile.Id);

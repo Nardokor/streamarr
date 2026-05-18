@@ -304,6 +304,144 @@ namespace Streamarr.Core.Test.MetadataSource
             result[0].ContentType.Should().Be(ContentType.Upcoming);
         }
 
+        // ── FetchMembershipContent (via GetNewContent checkMembership=true) ──────
+
+        [Test]
+        public void membership_content_should_be_detected_when_api_does_not_return_video()
+        {
+            // yt-dlp returns a video with NO availability field (flat-playlist may omit it).
+            // The YouTube API does not return it → should be treated as members-only.
+            Subject.Definition = new MetadataSourceDefinition
+            {
+                Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = "/fake/cookies.txt" }
+            };
+
+            var platformUrl = "https://www.youtube.com/channel/" + TestChannelId;
+            var since = DateTime.UtcNow.AddDays(-1);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
+                  .Returns(new List<(string, DateTime)>());
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.GetChannelVideos(It.IsAny<string>(), null, It.IsAny<string>(), "/fake/cookies.txt"))
+                  .Returns(new List<YtDlpVideoInfo>
+                  {
+                      new YtDlpVideoInfo { Id = "members_vid1", Title = "Members Only Video", Availability = string.Empty }
+                  });
+
+            // GetVideoDetails returns empty — API does not know this video (members-only)
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetVideoDetails(TestApiKey, It.IsAny<IEnumerable<string>>()))
+                  .Returns(new List<YoutubeVideo>());
+
+            var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+
+            result.Should().HaveCount(1);
+            result[0].PlatformContentId.Should().Be("members_vid1");
+            result[0].IsMembers.Should().BeTrue();
+        }
+
+        [Test]
+        public void membership_content_should_not_include_video_that_api_returns_as_public()
+        {
+            // yt-dlp returns a video; the YouTube API also returns it → it is public,
+            // not members-only. Should not appear in members content.
+            Subject.Definition = new MetadataSourceDefinition
+            {
+                Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = "/fake/cookies.txt" }
+            };
+
+            var platformUrl = "https://www.youtube.com/channel/" + TestChannelId;
+            var since = DateTime.UtcNow.AddDays(-1);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
+                  .Returns(new List<(string, DateTime)>());
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.GetChannelVideos(It.IsAny<string>(), null, It.IsAny<string>(), "/fake/cookies.txt"))
+                  .Returns(new List<YtDlpVideoInfo>
+                  {
+                      new YtDlpVideoInfo { Id = "public_vid1", Title = "Public Video", Availability = string.Empty }
+                  });
+
+            // API returns this video → it is public
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetVideoDetails(TestApiKey, It.IsAny<IEnumerable<string>>()))
+                  .Returns(new List<YoutubeVideo>
+                  {
+                      new YoutubeVideo
+                      {
+                          Id = "public_vid1",
+                          Snippet = new YoutubeVideoSnippet { Title = "Public Video", ChannelId = TestChannelId },
+                          ContentDetails = new YoutubeVideoContentDetails { Duration = "PT10M" }
+                      }
+                  });
+
+            var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+
+            result.Should().NotContain(r => r.IsMembers);
+        }
+
+        [Test]
+        public void membership_content_should_be_detected_via_explicit_availability_field_when_set()
+        {
+            // yt-dlp explicitly marks availability = "subscriber_only".
+            // Even if the API returned no results (typical for members-only), the explicit
+            // marker should also trigger detection.
+            Subject.Definition = new MetadataSourceDefinition
+            {
+                Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = "/fake/cookies.txt" }
+            };
+
+            var platformUrl = "https://www.youtube.com/channel/" + TestChannelId;
+            var since = DateTime.UtcNow.AddDays(-1);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
+                  .Returns(new List<(string, DateTime)>());
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.GetChannelVideos(It.IsAny<string>(), null, It.IsAny<string>(), "/fake/cookies.txt"))
+                  .Returns(new List<YtDlpVideoInfo>
+                  {
+                      new YtDlpVideoInfo { Id = "members_vid2", Title = "Subscriber Only", Availability = "subscriber_only" }
+                  });
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetVideoDetails(TestApiKey, It.IsAny<IEnumerable<string>>()))
+                  .Returns(new List<YoutubeVideo>());
+
+            var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+
+            result.Should().HaveCount(1);
+            result[0].PlatformContentId.Should().Be("members_vid2");
+            result[0].IsMembers.Should().BeTrue();
+        }
+
+        [Test]
+        public void membership_content_should_not_be_fetched_when_cookies_not_configured()
+        {
+            Subject.Definition = new MetadataSourceDefinition
+            {
+                Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = string.Empty }
+            };
+
+            var platformUrl = "https://www.youtube.com/channel/" + TestChannelId;
+            var since = DateTime.UtcNow.AddDays(-1);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
+                  .Returns(new List<(string, DateTime)>());
+
+            // GetChannelVideos should NOT be called when cookies are not configured
+            var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Verify(c => c.GetChannelVideos(It.IsAny<string>(), null, It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
         // ── GetLivestreamStatusUpdates ────────────────────────────────────────
 
         [Test]

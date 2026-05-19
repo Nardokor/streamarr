@@ -10,6 +10,7 @@ using Streamarr.Core.Download.YtDlp;
 using Streamarr.Core.MetadataSource;
 using Streamarr.Core.MetadataSource.YouTube;
 using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
 namespace Streamarr.Core.Test.MetadataSource
 {
@@ -47,6 +48,10 @@ namespace Streamarr.Core.Test.MetadataSource
             Mocker.GetMock<IYouTubeApiClient>()
                   .Setup(c => c.GetChannelRecentVideoIds(It.IsAny<string>()))
                   .Returns(new List<string>());
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.GetChannelVideosFull(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string>()))
+                  .Returns(new List<YtDlpVideoInfo>());
         }
 
         // ── SearchCreator URL routing ─────────────────────────────────────────
@@ -305,12 +310,15 @@ namespace Streamarr.Core.Test.MetadataSource
         }
 
         // ── FetchMembershipContent (via GetNewContent checkMembership=true) ──────
+        // FetchMembershipContent uses GetChannelVideosFull (non-flat mode) so yt-dlp
+        // visits each video page and correctly populates the availability field.
+        // Detection is based solely on availability = "subscriber_only" or "members_only".
 
         [Test]
-        public void membership_content_should_be_detected_when_api_does_not_return_video()
+        public void membership_content_should_be_detected_when_availability_is_subscriber_only()
         {
-            // yt-dlp returns a video with NO availability field (flat-playlist may omit it).
-            // The YouTube API does not return it → should be treated as members-only.
+            // GetChannelVideosFull (full metadata, non-flat) returns a video with
+            // availability = "subscriber_only" — the primary detection mechanism.
             Subject.Definition = new MetadataSourceDefinition
             {
                 Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = "/fake/cookies.txt" }
@@ -324,18 +332,14 @@ namespace Streamarr.Core.Test.MetadataSource
                   .Returns(new List<(string, DateTime)>());
 
             Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.GetChannelVideos(It.IsAny<string>(), null, It.IsAny<string>(), "/fake/cookies.txt"))
+                  .Setup(c => c.GetChannelVideosFull(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), "/fake/cookies.txt"))
                   .Returns(new List<YtDlpVideoInfo>
                   {
-                      new YtDlpVideoInfo { Id = "members_vid1", Title = "Members Only Video", Availability = string.Empty }
+                      new YtDlpVideoInfo { Id = "members_vid1", Title = "Members Only Video", Availability = "subscriber_only" }
                   });
 
-            // GetVideoDetails returns empty — API does not know this video (members-only)
-            Mocker.GetMock<IYouTubeApiClient>()
-                  .Setup(c => c.GetVideoDetails(TestApiKey, It.IsAny<IEnumerable<string>>()))
-                  .Returns(new List<YoutubeVideo>());
-
             var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+            ExceptionVerification.ExpectedWarns(1); // RSS returned no IDs — expected fallback
 
             result.Should().HaveCount(1);
             result[0].PlatformContentId.Should().Be("members_vid1");
@@ -343,10 +347,9 @@ namespace Streamarr.Core.Test.MetadataSource
         }
 
         [Test]
-        public void membership_content_should_not_include_video_that_api_returns_as_public()
+        public void membership_content_should_be_detected_when_availability_is_members_only()
         {
-            // yt-dlp returns a video; the YouTube API also returns it → it is public,
-            // not members-only. Should not appear in members content.
+            // GetChannelVideosFull returns a video with availability = "members_only".
             Subject.Definition = new MetadataSourceDefinition
             {
                 Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = "/fake/cookies.txt" }
@@ -360,64 +363,49 @@ namespace Streamarr.Core.Test.MetadataSource
                   .Returns(new List<(string, DateTime)>());
 
             Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.GetChannelVideos(It.IsAny<string>(), null, It.IsAny<string>(), "/fake/cookies.txt"))
+                  .Setup(c => c.GetChannelVideosFull(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), "/fake/cookies.txt"))
                   .Returns(new List<YtDlpVideoInfo>
                   {
-                      new YtDlpVideoInfo { Id = "public_vid1", Title = "Public Video", Availability = string.Empty }
-                  });
-
-            // API returns this video → it is public
-            Mocker.GetMock<IYouTubeApiClient>()
-                  .Setup(c => c.GetVideoDetails(TestApiKey, It.IsAny<IEnumerable<string>>()))
-                  .Returns(new List<YoutubeVideo>
-                  {
-                      new YoutubeVideo
-                      {
-                          Id = "public_vid1",
-                          Snippet = new YoutubeVideoSnippet { Title = "Public Video", ChannelId = TestChannelId },
-                          ContentDetails = new YoutubeVideoContentDetails { Duration = "PT10M" }
-                      }
+                      new YtDlpVideoInfo { Id = "members_vid2", Title = "Members Only", Availability = "members_only" }
                   });
 
             var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
-
-            result.Should().NotContain(r => r.IsMembers);
-        }
-
-        [Test]
-        public void membership_content_should_be_detected_via_explicit_availability_field_when_set()
-        {
-            // yt-dlp explicitly marks availability = "subscriber_only".
-            // Even if the API returned no results (typical for members-only), the explicit
-            // marker should also trigger detection.
-            Subject.Definition = new MetadataSourceDefinition
-            {
-                Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = "/fake/cookies.txt" }
-            };
-
-            var platformUrl = "https://www.youtube.com/channel/" + TestChannelId;
-            var since = DateTime.UtcNow.AddDays(-1);
-
-            Mocker.GetMock<IYouTubeApiClient>()
-                  .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
-                  .Returns(new List<(string, DateTime)>());
-
-            Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.GetChannelVideos(It.IsAny<string>(), null, It.IsAny<string>(), "/fake/cookies.txt"))
-                  .Returns(new List<YtDlpVideoInfo>
-                  {
-                      new YtDlpVideoInfo { Id = "members_vid2", Title = "Subscriber Only", Availability = "subscriber_only" }
-                  });
-
-            Mocker.GetMock<IYouTubeApiClient>()
-                  .Setup(c => c.GetVideoDetails(TestApiKey, It.IsAny<IEnumerable<string>>()))
-                  .Returns(new List<YoutubeVideo>());
-
-            var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+            ExceptionVerification.ExpectedWarns(1); // RSS returned no IDs — expected fallback
 
             result.Should().HaveCount(1);
             result[0].PlatformContentId.Should().Be("members_vid2");
             result[0].IsMembers.Should().BeTrue();
+        }
+
+        [Test]
+        public void membership_content_should_not_include_video_without_members_availability()
+        {
+            // GetChannelVideosFull returns a video with no availability field set (public video).
+            // Without availability = "subscriber_only" or "members_only" it must not be
+            // treated as members-only content.
+            Subject.Definition = new MetadataSourceDefinition
+            {
+                Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = "/fake/cookies.txt" }
+            };
+
+            var platformUrl = "https://www.youtube.com/channel/" + TestChannelId;
+            var since = DateTime.UtcNow.AddDays(-1);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
+                  .Returns(new List<(string, DateTime)>());
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.GetChannelVideosFull(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), "/fake/cookies.txt"))
+                  .Returns(new List<YtDlpVideoInfo>
+                  {
+                      new YtDlpVideoInfo { Id = "public_vid1", Title = "Public Video", Availability = "public" }
+                  });
+
+            var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+            ExceptionVerification.ExpectedWarns(1); // RSS returned no IDs — expected fallback
+
+            result.Should().NotContain(r => r.IsMembers);
         }
 
         [Test]
@@ -435,11 +423,12 @@ namespace Streamarr.Core.Test.MetadataSource
                   .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
                   .Returns(new List<(string, DateTime)>());
 
-            // GetChannelVideos should NOT be called when cookies are not configured
             var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+            ExceptionVerification.ExpectedWarns(1); // RSS returned no IDs — expected fallback
 
+            // GetChannelVideosFull should NOT be called when cookies are not configured
             Mocker.GetMock<IYtDlpClient>()
-                  .Verify(c => c.GetChannelVideos(It.IsAny<string>(), null, It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+                  .Verify(c => c.GetChannelVideosFull(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         // ── GetLivestreamStatusUpdates ────────────────────────────────────────

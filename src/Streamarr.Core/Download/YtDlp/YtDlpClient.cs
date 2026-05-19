@@ -21,6 +21,14 @@ namespace Streamarr.Core.Download.YtDlp
         void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null);
+
+        /// <summary>
+        /// Fetches full video metadata (not flat) from a channel's videos tab.
+        /// Without --flat-playlist yt-dlp visits each video page individually, which populates
+        /// the availability field correctly — essential for detecting members-only videos.
+        /// Use only for membership detection; it is slower than flat-playlist.
+        /// </summary>
+        List<YtDlpVideoInfo> GetChannelVideosFull(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null);
         YtDlpVideoInfo GetVideoInfo(string videoUrl);
 
         /// <summary>
@@ -321,6 +329,82 @@ namespace Streamarr.Core.Download.YtDlp
             _logger.Debug("Found {0} total content items for channel {1}", allVideos.Count, channelUrl);
 
             return allVideos;
+        }
+
+        public List<YtDlpVideoInfo> GetChannelVideosFull(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null)
+        {
+            _logger.Debug("Getting channel content (full metadata): {0} (limit={1}, dateAfter={2})", channelUrl, limit, dateAfter);
+
+            var baseUrl = channelUrl.TrimEnd('/');
+            foreach (var knownTab in new[] { "/videos", "/shorts", "/streams", "/live" })
+            {
+                if (baseUrl.EndsWith(knownTab, StringComparison.OrdinalIgnoreCase))
+                {
+                    baseUrl = baseUrl[..^knownTab.Length];
+                    break;
+                }
+            }
+
+            var tabUrl = $"{baseUrl}/videos";
+            var argParts = new List<string>
+            {
+                "--dump-json",
+                "--skip-download",
+                "--socket-timeout 30"
+            };
+
+            if (limit.HasValue)
+            {
+                argParts.Add($"--playlist-end {limit.Value}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(dateAfter))
+            {
+                argParts.Add($"--dateafter {dateAfter}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(cookiesFilePath))
+            {
+                argParts.Add($"--cookies {Quote(cookiesFilePath)}");
+            }
+
+            argParts.Add(Quote(tabUrl));
+
+            var args = string.Join(" ", argParts);
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
+
+            if (output.ExitCode != 0)
+            {
+                var error = string.Join(Environment.NewLine, output.Error.Select(l => l.Content));
+                _logger.Warn("yt-dlp returned exit {0} for full-metadata fetch of {1}: {2}", output.ExitCode, tabUrl, error);
+                return new List<YtDlpVideoInfo>();
+            }
+
+            var videos = new List<YtDlpVideoInfo>();
+            foreach (var line in output.Standard)
+            {
+                var trimmed = line.Content?.Trim();
+                if (string.IsNullOrWhiteSpace(trimmed))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    var video = JsonSerializer.Deserialize<YtDlpVideoInfo>(trimmed, JsonOptions);
+                    if (video != null)
+                    {
+                        videos.Add(video);
+                    }
+                }
+                catch (JsonException ex)
+                {
+                    _logger.Warn(ex, "Failed to parse video JSON from full-metadata fetch of {0}", tabUrl);
+                }
+            }
+
+            _logger.Debug("Found {0} item(s) from full-metadata fetch of {1}", videos.Count, tabUrl);
+            return videos;
         }
 
         private List<YtDlpVideoInfo> FetchFromTab(string url, int? limit, string dateAfter, string cookiesFilePath = null)

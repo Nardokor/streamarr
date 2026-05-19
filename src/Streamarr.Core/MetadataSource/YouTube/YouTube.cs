@@ -390,28 +390,57 @@ namespace Streamarr.Core.MetadataSource.YouTube
         }
 
         // Fetches members-only content by doing a flat yt-dlp listing of the regular channel tabs
-        // (videos + shorts + streams) with the cookie file, then filtering by availability.
-        // Members-only videos appear in the flat listing as locked entries (availability =
-        // "subscriber_only" / "members_only") that are invisible to the YouTube API.
+        // (videos + shorts + streams) with the cookie file, then cross-referencing with the
+        // YouTube Data API. The API silently omits members-only videos, so any video that
+        // appears in the yt-dlp listing but is absent from the API response is members-only.
+        // This is more reliable than filtering by the flat-playlist `availability` field, which
+        // yt-dlp does not consistently populate across all versions and channel configurations.
         // `since` is forwarded as --dateafter to keep incremental syncs fast.
         private List<ContentMetadataResult> FetchMembershipContent(string platformUrl, HashSet<string> alreadySeen, DateTime? since)
         {
             var dateAfter = since?.ToString("yyyyMMdd");
             var allVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter, cookiesFilePath: Settings.CookiesFilePath);
 
-            var newMembersVideos = allVideos
-                .Where(v => !string.IsNullOrWhiteSpace(v.Id) && IsMembersOnlyAvailability(v.Availability) && !alreadySeen.Contains(v.Id))
+            // Candidates: any video returned by yt-dlp (with member cookies) that was not
+            // already found by the public API/RSS sync. Members-only videos are never in
+            // the public sync results, so they will be absent from the API cross-check below.
+            var candidates = allVideos
+                .Where(v => !string.IsNullOrWhiteSpace(v.Id) && !alreadySeen.Contains(v.Id))
                 .ToList();
 
-            var totalFound = allVideos.Count(v => IsMembersOnlyAvailability(v.Availability));
-
-            if (totalFound > 0)
+            if (!candidates.Any())
             {
-                _logger.Info("{0} members-only video(s) found in channel listing ({1} new) for {2}", totalFound, newMembersVideos.Count, platformUrl);
+                _logger.Info("No new video candidates for membership check for {0}", platformUrl);
+                return new List<ContentMetadataResult>();
+            }
+
+            _logger.Debug("{0} candidate(s) not in public sync for {1} — cross-checking with API", candidates.Count, platformUrl);
+
+            // Cross-check with the YouTube Data API. The API returns public videos and
+            // silently omits members-only ones, so candidates absent from the API are
+            // members-only. Also accept videos explicitly marked by the availability field
+            // for yt-dlp versions that do populate it (belt and suspenders).
+            var apiById = new Dictionary<string, YoutubeVideo>(StringComparer.OrdinalIgnoreCase);
+            if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
+            {
+                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, candidates.Select(v => v.Id));
+                foreach (var v in apiVideos)
+                {
+                    apiById[v.Id] = v;
+                }
+            }
+
+            var newMembersVideos = candidates
+                .Where(v => IsMembersOnlyAvailability(v.Availability) || !apiById.ContainsKey(v.Id))
+                .ToList();
+
+            if (newMembersVideos.Any())
+            {
+                _logger.Info("{0} members-only video(s) found for {1} ({2} candidate(s) were public)", newMembersVideos.Count, platformUrl, candidates.Count - newMembersVideos.Count);
             }
             else
             {
-                _logger.Info("No members-only videos found in channel listing for {0}", platformUrl);
+                _logger.Info("No members-only videos found for {0} ({1} candidate(s) were public)", platformUrl, candidates.Count);
             }
 
             if (!newMembersVideos.Any())
@@ -419,16 +448,9 @@ namespace Streamarr.Core.MetadataSource.YouTube
                 return new List<ContentMetadataResult>();
             }
 
-            var apiById = new Dictionary<string, YoutubeVideo>();
-            if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
-            {
-                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, newMembersVideos.Select(v => v.Id));
-                foreach (var v in apiVideos)
-                {
-                    apiById[v.Id] = v;
-                }
-            }
-
+            // Members-only videos are not returned by the public API, so apiById will not
+            // contain them. Use yt-dlp metadata as primary source; the apiById fallback
+            // handles any edge case where the API does return restricted content.
             return newMembersVideos
                 .Select(v => apiById.TryGetValue(v.Id, out var apiVideo)
                     ? MapToContentMetadata(apiVideo, publishedAt: null, isMembers: true)
@@ -440,14 +462,14 @@ namespace Streamarr.Core.MetadataSource.YouTube
             string.Equals(availability, "subscriber_only", StringComparison.OrdinalIgnoreCase) ||
             string.Equals(availability, "members_only", StringComparison.OrdinalIgnoreCase);
 
-        // No-API-key fallback: full yt-dlp listing with optional membership tab.
         // No-API-key fallback: full yt-dlp listing with members-only detection via availability field.
         // Used only when Settings.ApiKey is not configured.
         // Rich metadata (liveStreamingDetails, precise timestamps) is unavailable without an API key.
         private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, string platformId, DateTime? since, bool checkMembership)
         {
             var dateAfter = since?.ToString("yyyyMMdd");
-            var allVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter);
+            var cookiesFilePath = checkMembership ? Settings.CookiesFilePath : null;
+            var allVideos = _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter, cookiesFilePath: cookiesFilePath);
 
             if (!allVideos.Any())
             {

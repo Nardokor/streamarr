@@ -68,6 +68,30 @@
     <SelfContained>false</SelfContained>
   </PropertyGroup>
 
+  <!-- Generate testhost.runtimeconfig.json so C# Dev Kit vstest can spawn the testhost process
+       as a framework-dependent app. Without this file vstest treats testhost.dll as self-contained
+       and fails with "libhostpolicy.so not found". Only the first test project to build writes it. -->
+  <Target Name="GenerateTestHostRuntimeConfig"
+          AfterTargets="Build"
+          Condition="'$(StreamarrOutputType)'=='Test'">
+    <PropertyGroup>
+      <_TestHostRuntimeConfigPath>$(OutputPath)testhost.runtimeconfig.json</_TestHostRuntimeConfigPath>
+      <_TestHostRuntimeConfigContent>{
+  "runtimeOptions": {
+    "tfm": "$(TargetFramework)",
+    "framework": {
+      "name": "Microsoft.NETCore.App",
+      "version": "$(BundledNETCoreAppPackageVersion)"
+    }
+  }
+}</_TestHostRuntimeConfigContent>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(_TestHostRuntimeConfigPath)"
+                      Lines="$(_TestHostRuntimeConfigContent)"
+                      Overwrite="true"
+                      Encoding="UTF-8" />
+  </Target>
+
   <!-- Set the Product and Version info for our own projects -->
   <PropertyGroup Condition="'$(StreamarrProject)'=='true'">
     <Product>Streamarr</Product>
@@ -114,16 +138,17 @@
     <EmbedAllSources>true</EmbedAllSources>
   </PropertyGroup>
 
-  <!-- Suppress MimeKit vulnerability advisory: no patched version available yet (transitive via MailKit) -->
+  <!-- Suppress vulnerability advisories: no patched versions available yet (transitive via MailKit) -->
   <ItemGroup>
     <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-g7hc-96xr-gvvx" />
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-9j88-vvj5-vhgr" />
   </ItemGroup>
 
   <!-- Standard testing packages -->
   <ItemGroup Condition="'$(TestProject)'=='true'">
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="GitHubActionsTestLogger" Version="2.4.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="NUnit" Version="3.14.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="5.2.0" />
     <PackageReference Include="NunitXml.TestLogger" Version="3.1.20" />

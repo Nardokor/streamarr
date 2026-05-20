@@ -277,7 +277,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
-                result.AddRange(FetchMembershipContent(platformUrl, seen, since: null));
+                result.AddRange(FetchMembershipContent(platformUrl, seen));
             }
             else if (checkMembership)
             {
@@ -318,7 +318,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
-                result.AddRange(FetchMembershipContent(platformUrl, seen, since));
+                result.AddRange(FetchMembershipContent(platformUrl, seen));
             }
             else if (checkMembership)
             {
@@ -363,7 +363,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
-                result.AddRange(FetchMembershipContent(platformUrl, seen, since));
+                result.AddRange(FetchMembershipContent(platformUrl, seen));
             }
             else if (checkMembership)
             {
@@ -399,17 +399,20 @@ namespace Streamarr.Core.MetadataSource.YouTube
         // to visit each video page individually, which correctly populates the availability field
         // to "subscriber_only" for members-only videos. Flat-playlist mode does NOT include
         // members-only video entries in YouTube's browse API response, even when authenticated.
-        // `since` is forwarded as --dateafter to keep incremental syncs fast.
-        private List<ContentMetadataResult> FetchMembershipContent(string platformUrl, HashSet<string> alreadySeen, DateTime? since)
+        // No --dateafter is passed: the MembersScanLimit cap is sufficient, and a date filter
+        // anchored to the last sync would miss videos posted before that timestamp.
+        private List<ContentMetadataResult> FetchMembershipContent(string platformUrl, HashSet<string> alreadySeen)
         {
-            var dateAfter = since?.ToString("yyyyMMdd");
-
             // Full metadata fetch (no --flat-playlist) so yt-dlp visits each video page and
             // correctly reports availability: "subscriber_only" for members-only uploads.
+            // Do NOT pass --dateafter: the limit (MembersScanLimit) already caps the scan to
+            // the N most recent videos. A date filter anchored to the last sync time would miss
+            // any members video posted before that time but not yet in the database (e.g. if
+            // membership was only recently activated, or a prior sync missed it).
             var allVideos = _ytDlpClient.GetChannelVideosFull(
                 platformUrl,
                 limit: MembersScanLimit,
-                dateAfter: dateAfter,
+                dateAfter: null,
                 cookiesFilePath: Settings.CookiesFilePath);
 
             var newMembersVideos = allVideos

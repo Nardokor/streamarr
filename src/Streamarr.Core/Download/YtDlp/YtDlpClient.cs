@@ -345,7 +345,28 @@ namespace Streamarr.Core.Download.YtDlp
                 }
             }
 
-            var tabUrl = $"{baseUrl}/videos";
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var allVideos = new List<YtDlpVideoInfo>();
+
+            foreach (var tab in new[] { "videos", "shorts", "streams" })
+            {
+                var tabUrl = $"{baseUrl}/{tab}";
+                var items = FetchFromTabFull(tabUrl, limit, dateAfter, cookiesFilePath);
+                foreach (var item in items)
+                {
+                    if (!string.IsNullOrWhiteSpace(item.Id) && seen.Add(item.Id))
+                    {
+                        allVideos.Add(item);
+                    }
+                }
+            }
+
+            _logger.Debug("Found {0} total item(s) from full-metadata fetch of {1}", allVideos.Count, channelUrl);
+            return allVideos;
+        }
+
+        private List<YtDlpVideoInfo> FetchFromTabFull(string url, int? limit, string dateAfter, string cookiesFilePath)
+        {
             var argParts = new List<string>
             {
                 "--dump-json",
@@ -368,7 +389,7 @@ namespace Streamarr.Core.Download.YtDlp
                 argParts.Add($"--cookies {Quote(cookiesFilePath)}");
             }
 
-            argParts.Add(Quote(tabUrl));
+            argParts.Add(Quote(url));
 
             var args = string.Join(" ", argParts);
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
@@ -376,7 +397,7 @@ namespace Streamarr.Core.Download.YtDlp
             if (output.ExitCode != 0)
             {
                 var error = string.Join(Environment.NewLine, output.Error.Select(l => l.Content));
-                _logger.Warn("yt-dlp returned exit {0} for full-metadata fetch of {1}: {2}", output.ExitCode, tabUrl, error);
+                _logger.Warn("yt-dlp returned exit {0} for full-metadata fetch of {1}: {2}", output.ExitCode, url, error);
                 return new List<YtDlpVideoInfo>();
             }
 
@@ -399,11 +420,11 @@ namespace Streamarr.Core.Download.YtDlp
                 }
                 catch (JsonException ex)
                 {
-                    _logger.Warn(ex, "Failed to parse video JSON from full-metadata fetch of {0}", tabUrl);
+                    _logger.Warn(ex, "Failed to parse video JSON from full-metadata fetch of {0}", url);
                 }
             }
 
-            _logger.Debug("Found {0} item(s) from full-metadata fetch of {1}", videos.Count, tabUrl);
+            _logger.Debug("Found {0} item(s) from full-metadata fetch of {1}", videos.Count, url);
             return videos;
         }
 

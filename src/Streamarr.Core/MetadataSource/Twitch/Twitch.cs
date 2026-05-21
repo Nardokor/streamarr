@@ -202,7 +202,8 @@ namespace Streamarr.Core.MetadataSource.Twitch
             string platformUrl,
             string platformId,
             DateTime? since,
-            bool checkMembership = false)
+            bool checkMembership = false,
+            DateTime? membersSince = null)
         {
             if (string.IsNullOrWhiteSpace(platformId))
             {

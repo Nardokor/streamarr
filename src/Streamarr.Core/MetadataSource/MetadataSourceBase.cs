@@ -28,7 +28,7 @@ namespace Streamarr.Core.MetadataSource
 
         public abstract CreatorMetadataResult SearchCreator(string query);
         public abstract ChannelMetadataResult GetChannelMetadata(string platformUrl);
-        public abstract IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since, bool checkMembership = false);
+        public abstract IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since, bool checkMembership = false, DateTime? membersSince = null);
         public abstract ContentMetadataResult? GetContentMetadata(string platformContentId);
         public abstract IEnumerable<ContentMetadataResult> GetContentMetadataBatch(IEnumerable<string> platformContentIds);
         public abstract IEnumerable<ContentStatusUpdate> GetLivestreamStatusUpdates(IEnumerable<string> platformContentIds);

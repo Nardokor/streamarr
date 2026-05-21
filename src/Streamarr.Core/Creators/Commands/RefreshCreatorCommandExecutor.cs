@@ -384,6 +384,27 @@ namespace Streamarr.Core.Creators.Commands
                         }
                     }
 
+                    // Auto-enable DownloadMembers when accessible membership content is found
+                    // and the channel still has the default-off value. Covers channels added
+                    // before DefaultDownloadMembers=true was introduced, and any channel where
+                    // the user gained membership after the initial add.
+                    if (membershipConfirmedNew && !channel.DownloadMembers)
+                    {
+                        _logger.Info(
+                            "Auto-enabling DownloadMembers for '{0}' — accessible members content confirmed",
+                            channel.Title);
+                        channel.DownloadMembers = true;
+
+                        foreach (var content in newMembersContent.Where(c => c.IsAccessible && c.Status == ContentStatus.Unwanted))
+                        {
+                            var passes = _contentFilterService.PassesFilter(content.Title, content.ContentType, channel, isMembers: true, isAccessible: true);
+                            if (passes)
+                            {
+                                content.Status = ContentStatus.Missing;
+                            }
+                        }
+                    }
+
                     _logger.Info(
                         "New members probe for '{0}': {1} tier(s), {2}",
                         channel.Title,

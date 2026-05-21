@@ -27,6 +27,9 @@ namespace Streamarr.Core.MetadataSource
         public int RefreshIntervalHours { get; set; } = 1;
 
         // Default channel filter settings applied when a new channel is added from this source
+        [FieldDefinition(99, Label = "Download Members Content", Type = FieldType.Checkbox, HelpText = "Download members-only content by default for new channels (requires a cookie file).")]
+        public virtual bool DefaultDownloadMembers { get; set; } = true;
+
         [FieldDefinition(100, Label = "Download Videos", Type = FieldType.Checkbox, HelpText = "Download regular videos by default for new channels.")]
         public virtual bool DefaultDownloadVideos { get; set; } = true;
 
@@ -69,6 +72,7 @@ namespace Streamarr.Core.MetadataSource
 
         public void ApplyDefaultsTo(Channel channel)
         {
+            channel.DownloadMembers = DefaultDownloadMembers;
             channel.DownloadVideos = DefaultDownloadVideos;
             channel.DownloadShorts = DefaultDownloadShorts;
             channel.DownloadVods = DefaultDownloadVods;

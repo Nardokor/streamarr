@@ -371,6 +371,7 @@ namespace Streamarr.Core.Download.YtDlp
             {
                 "--dump-json",
                 "--skip-download",
+                "--ignore-errors",
                 "--socket-timeout 30"
             };
 
@@ -394,13 +395,9 @@ namespace Streamarr.Core.Download.YtDlp
             var args = string.Join(" ", argParts);
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
-            if (output.ExitCode != 0)
-            {
-                var error = string.Join(Environment.NewLine, output.Error.Select(l => l.Content));
-                _logger.Warn("yt-dlp returned exit {0} for full-metadata fetch of {1}: {2}", output.ExitCode, url, error);
-                return new List<YtDlpVideoInfo>();
-            }
-
+            // Parse stdout first regardless of exit code — yt-dlp outputs JSON for each video
+            // as it processes them; a non-zero exit means one or more videos errored, but the
+            // videos output before the error are still valid and must not be discarded.
             var videos = new List<YtDlpVideoInfo>();
             foreach (var line in output.Standard)
             {
@@ -422,6 +419,12 @@ namespace Streamarr.Core.Download.YtDlp
                 {
                     _logger.Warn(ex, "Failed to parse video JSON from full-metadata fetch of {0}", url);
                 }
+            }
+
+            if (output.ExitCode != 0)
+            {
+                var error = string.Join(" | ", output.Error.Select(l => l.Content).Where(l => !string.IsNullOrWhiteSpace(l)).Take(3));
+                _logger.Warn("yt-dlp exited {0} for full-metadata fetch of {1} ({2} video(s) collected before error): {3}", output.ExitCode, url, videos.Count, error);
             }
 
             _logger.Debug("Found {0} item(s) from full-metadata fetch of {1}", videos.Count, url);

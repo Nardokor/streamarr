@@ -183,7 +183,8 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
             string platformUrl,
             string platformId,
             DateTime? since,
-            bool checkMembership = false)
+            bool checkMembership = false,
+            DateTime? membersSince = null)
         {
             var baseUrl = platformUrl.TrimEnd('/');
             var listingUrl = $"{baseUrl}/supporters/videos/all";

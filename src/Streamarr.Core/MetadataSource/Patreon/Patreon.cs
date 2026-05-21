@@ -132,7 +132,8 @@ namespace Streamarr.Core.MetadataSource.Patreon
             string platformUrl,
             string platformId,
             DateTime? since,
-            bool checkMembership = false)
+            bool checkMembership = false,
+            DateTime? membersSince = null)
         {
             _logger.Info("Fetching Patreon posts for campaign {0} (since: {1})", platformId, since?.ToString("u") ?? "all");
 

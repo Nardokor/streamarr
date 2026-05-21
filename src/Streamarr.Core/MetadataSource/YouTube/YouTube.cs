@@ -214,37 +214,37 @@ namespace Streamarr.Core.MetadataSource.YouTube
 
         // ── Content sync ───────────────────────────────────────────────────────
 
-        public override IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since, bool checkMembership = false)
+        public override IEnumerable<ContentMetadataResult> GetNewContent(string platformUrl, string platformId, DateTime? since, bool checkMembership = false, DateTime? membersSince = null)
         {
             if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
             {
                 if (since == null)
                 {
                     _logger.Info("Initial sync — fetching full playlist via API for {0}", platformUrl);
-                    return GetInitialSyncViaApi(platformId, platformUrl, checkMembership);
+                    return GetInitialSyncViaApi(platformId, platformUrl, checkMembership, membersSince);
                 }
 
                 if (!string.IsNullOrWhiteSpace(Settings.WebhookBaseUrl))
                 {
                     _logger.Info("Incremental sync — WebSub configured, skipping RSS; using playlist API for {0}", platformUrl);
-                    return GetIncrementalSyncViaApi(platformId, platformUrl, since.Value, checkMembership);
+                    return GetIncrementalSyncViaApi(platformId, platformUrl, since.Value, checkMembership, membersSince);
                 }
 
                 _logger.Info("Incremental sync — using RSS for {0}", platformUrl);
-                return GetIncrementalSyncViaRss(platformId, platformUrl, since.Value, checkMembership);
+                return GetIncrementalSyncViaRss(platformId, platformUrl, since.Value, checkMembership, membersSince);
             }
 
             // No API key: fall back to yt-dlp for public content.
             // Membership content requires cookies; without either, only public yt-dlp metadata is returned.
             _logger.Info("No API key — using yt-dlp listing (checkMembership={0})", checkMembership);
-            return GetNewContentHybrid(platformUrl, platformId, since, checkMembership);
+            return GetNewContentHybrid(platformUrl, platformId, since, checkMembership, membersSince);
         }
 
         // Initial sync: fetch the full uploads playlist via API so we have all historical content.
         // RSS is added as a supplement to catch any active live stream not yet in the playlist.
         // Cookies are used only for membership discovery when checkMembership is true.
         private IEnumerable<ContentMetadataResult> GetInitialSyncViaApi(
-            string platformId, string platformUrl, bool checkMembership)
+            string platformId, string platformUrl, bool checkMembership, DateTime? membersSince = null)
         {
             var uploadsPlaylistId = DeriveUploadsPlaylistId(platformId);
 
@@ -277,7 +277,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
-                result.AddRange(FetchMembershipContent(platformUrl, seen));
+                result.AddRange(FetchMembershipContent(platformUrl, seen, membersSince));
             }
             else if (checkMembership)
             {
@@ -291,7 +291,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
         // One GetVideoDetails call confirms types and catches live streams.
         // Falls back to the playlist API if RSS is unavailable.
         private IEnumerable<ContentMetadataResult> GetIncrementalSyncViaRss(
-            string platformId, string platformUrl, DateTime since, bool checkMembership)
+            string platformId, string platformUrl, DateTime since, bool checkMembership, DateTime? membersSince = null)
         {
             List<string> rssIds;
             try
@@ -318,7 +318,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
-                result.AddRange(FetchMembershipContent(platformUrl, seen));
+                result.AddRange(FetchMembershipContent(platformUrl, seen, membersSince));
             }
             else if (checkMembership)
             {
@@ -334,7 +334,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
         // when it starts (which is what triggers the WebSub notification), but may take several
         // minutes to appear in the uploads playlist.
         private IEnumerable<ContentMetadataResult> GetIncrementalSyncViaApi(
-            string platformId, string platformUrl, DateTime since, bool checkMembership)
+            string platformId, string platformUrl, DateTime since, bool checkMembership, DateTime? membersSince = null)
         {
             var uploadsPlaylistId = DeriveUploadsPlaylistId(platformId);
             _logger.Info("Fetching playlist {0} since {1}", uploadsPlaylistId, since.ToString("u"));
@@ -363,7 +363,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
             if (checkMembership && !string.IsNullOrWhiteSpace(Settings.CookiesFilePath))
             {
                 var seen = new HashSet<string>(result.Select(r => r.PlatformContentId), StringComparer.OrdinalIgnoreCase);
-                result.AddRange(FetchMembershipContent(platformUrl, seen));
+                result.AddRange(FetchMembershipContent(platformUrl, seen, membersSince));
             }
             else if (checkMembership)
             {
@@ -401,18 +401,22 @@ namespace Streamarr.Core.MetadataSource.YouTube
         // members-only video entries in YouTube's browse API response, even when authenticated.
         // No --dateafter is passed: the MembersScanLimit cap is sufficient, and a date filter
         // anchored to the last sync would miss videos posted before that timestamp.
-        private List<ContentMetadataResult> FetchMembershipContent(string platformUrl, HashSet<string> alreadySeen)
+        private List<ContentMetadataResult> FetchMembershipContent(string platformUrl, HashSet<string> alreadySeen, DateTime? membersSince = null)
         {
-            // Full metadata fetch (no --flat-playlist) so yt-dlp visits each video page and
-            // correctly reports availability: "subscriber_only" for members-only uploads.
-            // Do NOT pass --dateafter: the limit (MembersScanLimit) already caps the scan to
-            // the N most recent videos. A date filter anchored to the last sync time would miss
-            // any members video posted before that time but not yet in the database (e.g. if
-            // membership was only recently activated, or a prior sync missed it).
+            // Full metadata (no --flat-playlist) so yt-dlp visits each video page and correctly
+            // reports availability: "subscriber_only". Flat-playlist never includes members content.
+            // membersSince is (last known members video date - 2 days); null on first scan so we
+            // get all historical members content regardless of upload date.
+            var dateAfter = membersSince.HasValue
+                ? membersSince.Value.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture)
+                : null;
+
+            _logger.Info("Members scan for {0} (dateAfter={1})", platformUrl, dateAfter ?? "none");
+
             var allVideos = _ytDlpClient.GetChannelVideosFull(
                 platformUrl,
                 limit: MembersScanLimit,
-                dateAfter: null,
+                dateAfter: dateAfter,
                 cookiesFilePath: Settings.CookiesFilePath);
 
             var newMembersVideos = allVideos
@@ -433,28 +437,8 @@ namespace Streamarr.Core.MetadataSource.YouTube
                     allVideos.Count(v => !string.IsNullOrWhiteSpace(v.Availability)));
             }
 
-            if (!newMembersVideos.Any())
-            {
-                return new List<ContentMetadataResult>();
-            }
-
-            // Attempt to enrich members videos via the public API. The API silently omits
-            // members-only videos so this will usually return nothing, but it handles any edge
-            // case where a video is both availability-flagged and accidentally returned by the API.
-            var apiById = new Dictionary<string, YoutubeVideo>(StringComparer.OrdinalIgnoreCase);
-            if (!string.IsNullOrWhiteSpace(Settings.ApiKey))
-            {
-                var apiVideos = _youTubeApiClient.GetVideoDetails(Settings.ApiKey, newMembersVideos.Select(v => v.Id));
-                foreach (var v in apiVideos)
-                {
-                    apiById[v.Id] = v;
-                }
-            }
-
             return newMembersVideos
-                .Select(v => apiById.TryGetValue(v.Id, out var apiVideo)
-                    ? MapToContentMetadata(apiVideo, publishedAt: null, isMembers: true)
-                    : MapYtDlpToContentMetadata(v, isMembers: true))
+                .Select(v => MapYtDlpToContentMetadata(v, isMembers: true))
                 .ToList();
         }
 
@@ -465,7 +449,7 @@ namespace Streamarr.Core.MetadataSource.YouTube
         // No-API-key fallback: full yt-dlp listing with members-only detection via availability field.
         // Used only when Settings.ApiKey is not configured.
         // Rich metadata (liveStreamingDetails, precise timestamps) is unavailable without an API key.
-        private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, string platformId, DateTime? since, bool checkMembership)
+        private IEnumerable<ContentMetadataResult> GetNewContentHybrid(string platformUrl, string platformId, DateTime? since, bool checkMembership, DateTime? membersSince = null)
         {
             var dateAfter = since?.ToString("yyyyMMdd");
             var cookiesFilePath = checkMembership ? Settings.CookiesFilePath : null;
@@ -473,8 +457,12 @@ namespace Streamarr.Core.MetadataSource.YouTube
             // Use full metadata (no --flat-playlist) when membership detection is needed so
             // yt-dlp visits each video page and populates availability correctly. For public-only
             // syncs, flat-playlist is faster and sufficient.
+            // membersSince scopes the full-metadata scan to recent content on incremental runs.
+            var membersDateAfter = membersSince.HasValue
+                ? membersSince.Value.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture)
+                : dateAfter;
             var allVideos = checkMembership && !string.IsNullOrWhiteSpace(cookiesFilePath)
-                ? _ytDlpClient.GetChannelVideosFull(platformUrl, limit: MembersScanLimit, dateAfter: dateAfter, cookiesFilePath: cookiesFilePath)
+                ? _ytDlpClient.GetChannelVideosFull(platformUrl, limit: MembersScanLimit, dateAfter: membersDateAfter, cookiesFilePath: cookiesFilePath)
                 : _ytDlpClient.GetChannelVideos(platformUrl, limit: null, dateAfter: dateAfter, cookiesFilePath: cookiesFilePath);
 
             if (!allVideos.Any())

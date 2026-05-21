@@ -99,7 +99,8 @@ namespace Streamarr.Core.MetadataSource.Fansly
             string platformUrl,
             string platformId,
             DateTime? since,
-            bool checkMembership = false)
+            bool checkMembership = false,
+            DateTime? membersSince = null)
         {
             _logger.Info("Fetching Fansly posts for account {0} (since: {1})", platformId, since?.ToString("u") ?? "all");
 

@@ -210,9 +210,27 @@ namespace Streamarr.Core.Creators.Commands
                 // Pass null as since when the channel has no content yet so sources
                 // do a full backfill rather than applying an incremental cutoff from
                 // a previous sync that may have returned 0 items (e.g. due to a bug).
-                var hasExistingContent = _contentService.GetByChannelId(channel.Id).Any();
+                var allChannelContentForSync = _contentService.GetByChannelId(channel.Id);
+                var hasExistingContent = allChannelContentForSync.Any();
                 var sinceCutoff = hasExistingContent ? channel.LastInfoSync : null;
-                var newItems = source.GetNewContent(channel.PlatformUrl, channel.PlatformId, sinceCutoff, shouldCheckMembership).ToList();
+
+                // Scope the members-only scan to recent content: find the most recent members
+                // video already in the DB and subtract 2 days as a buffer. On a first scan
+                // (no prior members content) membersSince is null so all history is scanned.
+                DateTime? membersSince = null;
+                if (shouldCheckMembership)
+                {
+                    var lastMembersVideo = allChannelContentForSync
+                        .Where(c => c.IsMembers && c.AirDateUtc.HasValue)
+                        .OrderByDescending(c => c.AirDateUtc)
+                        .FirstOrDefault();
+                    if (lastMembersVideo?.AirDateUtc != null)
+                    {
+                        membersSince = lastMembersVideo.AirDateUtc.Value.AddDays(-2);
+                    }
+                }
+
+                var newItems = source.GetNewContent(channel.PlatformUrl, channel.PlatformId, sinceCutoff, shouldCheckMembership, membersSince).ToList();
 
                 _logger.Info(
                     "GetNewContent returned {0} item(s) for '{1}' ({2} members item(s))",
@@ -543,7 +561,9 @@ namespace Streamarr.Core.Creators.Commands
                     // items and previously-existing accessible members content. Using only
                     // `added` misses the case where all members content was already in the
                     // DB from a prior sync (added would be empty → status wrongly set to None).
-                    var allChannelContent = _contentService.GetByChannelId(channel.Id);
+                    var allChannelContent = added.Any()
+                        ? _contentService.GetByChannelId(channel.Id)
+                        : allChannelContentForSync;
                     var hasAccessibleMembersContent = allChannelContent.Any(c => c.IsMembers && c.IsAccessible);
                     var newMembershipStatus = hasAccessibleMembersContent
                         ? MembershipStatus.Active

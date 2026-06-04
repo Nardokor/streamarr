@@ -28,6 +28,7 @@ namespace Streamarr.Core.Download
         private readonly ICreatorService _creatorService;
         private readonly IContentFileService _contentFileService;
         private readonly IYtDlpClient _ytDlpClient;
+        private readonly ILiveRecordingSupervisor _supervisor;
         private readonly IMetadataSourceFactory _metadataSourceFactory;
         private readonly INfoWriterService _nfoWriter;
         private readonly IDownloadHistoryService _historyService;
@@ -40,6 +41,7 @@ namespace Streamarr.Core.Download
                                               ICreatorService creatorService,
                                               IContentFileService contentFileService,
                                               IYtDlpClient ytDlpClient,
+                                              ILiveRecordingSupervisor supervisor,
                                               IMetadataSourceFactory metadataSourceFactory,
                                               INfoWriterService nfoWriter,
                                               IDownloadHistoryService historyService,
@@ -52,6 +54,7 @@ namespace Streamarr.Core.Download
             _creatorService = creatorService;
             _contentFileService = contentFileService;
             _ytDlpClient = ytDlpClient;
+            _supervisor = supervisor;
             _metadataSourceFactory = metadataSourceFactory;
             _nfoWriter = nfoWriter;
             _historyService = historyService;
@@ -75,7 +78,14 @@ namespace Streamarr.Core.Download
 
             // Preserve the pre-download status for error recovery. DownloadQueueStatusHandler
             // may not have run yet if a thread picked this up before the event fired.
-            if (content.PreviousStatus == null)
+            //
+            // Never capture a transient/active status (Recording/Downloading/Queued/Processing)
+            // as the restore baseline. A live recording is queued with Status=Recording, so
+            // without this guard a failed recording (yt-dlp commonly exits non-zero when a
+            // stream ends) would revert to Recording and appear stuck "recording" forever even
+            // though nothing is being captured. Falling back to null makes the failure paths
+            // resolve to Missing, so the livestream status service / next refresh can re-evaluate.
+            if (content.PreviousStatus == null && !IsTransientStatus(content.Status))
             {
                 content.PreviousStatus = content.Status;
             }
@@ -103,56 +113,84 @@ namespace Streamarr.Core.Download
                     : null;
                 var metadataTitle = isCdn ? content.Title : null;
 
-                var result = _ytDlpClient.Download(
-                    content.Id,
-                    url,
-                    creator.Path,
-                    isLive,
-                    cookiesFilePath,
-                    progress =>
+                Action<YtDlpProgress> onProgress = progress =>
+                {
+                    if (progress.PercentComplete.HasValue)
                     {
-                        if (progress.PercentComplete.HasValue)
-                        {
-                            _logger.ProgressInfo("Downloading '{0}': {1:F1}%", content.Title, progress.PercentComplete.Value);
-                        }
-                    },
-                    onStarted: () =>
-                    {
-                        // Slot acquired — transition to the active download state and fire notifications.
-                        content.Status = isLive ? ContentStatus.Recording : ContentStatus.Downloading;
-                        _contentService.UpdateContent(content);
+                        _logger.ProgressInfo("Downloading '{0}': {1:F1}%", content.Title, progress.PercentComplete.Value);
+                    }
+                };
 
-                        if (!message.IsResume)
+                // Fired once when the download actually starts (slot acquired). For live content the
+                // supervisor invokes this only on the first attempt, not on relaunches.
+                Action onStarted = () =>
+                {
+                    content.Status = isLive ? ContentStatus.Recording : ContentStatus.Downloading;
+                    _contentService.UpdateContent(content);
+
+                    if (!message.IsResume)
+                    {
+                        if (isLive)
                         {
-                            if (isLive)
+                            _eventAggregator.PublishEvent(new LiveStreamStartedEvent
                             {
-                                _eventAggregator.PublishEvent(new LiveStreamStartedEvent
+                                Message = new LiveStreamStartedMessage
                                 {
-                                    Message = new LiveStreamStartedMessage
-                                    {
-                                        ContentTitle = content.Title,
-                                        CreatorName = creator.Title,
-                                        ChannelName = channel.Title,
-                                    }
-                                });
-                            }
-                            else
-                            {
-                                _eventAggregator.PublishEvent(new ContentGrabbedEvent
-                                {
-                                    Message = new ContentGrabbedMessage
-                                    {
-                                        ContentTitle = content.Title,
-                                        CreatorName = creator.Title,
-                                        ChannelName = channel.Title,
-                                        ContentType = content.ContentType,
-                                    }
-                                });
-                            }
+                                    ContentTitle = content.Title,
+                                    CreatorName = creator.Title,
+                                    ChannelName = channel.Title,
+                                }
+                            });
                         }
-                    },
-                    outputFilename: outputFilename,
-                    metadataTitle: metadataTitle);
+                        else
+                        {
+                            _eventAggregator.PublishEvent(new ContentGrabbedEvent
+                            {
+                                Message = new ContentGrabbedMessage
+                                {
+                                    ContentTitle = content.Title,
+                                    CreatorName = creator.Title,
+                                    ChannelName = channel.Title,
+                                    ContentType = content.ContentType,
+                                }
+                            });
+                        }
+                    }
+                };
+
+                YtDlpDownloadResult result;
+
+                if (isLive)
+                {
+                    // App-side supervisor owns retry/resume for live recordings: it relaunches yt-dlp
+                    // on a blip (resuming from kept fragments) and decides when to give up.
+                    result = _supervisor.Supervise(new LiveRecordingRequest
+                    {
+                        ContentId = content.Id,
+                        PlatformContentId = content.PlatformContentId,
+                        Platform = channel.Platform,
+                        Url = url,
+                        OutputPath = creator.Path,
+                        CookiesFilePath = cookiesFilePath,
+                        OutputFilename = outputFilename,
+                        MetadataTitle = metadataTitle,
+                        OnProgress = onProgress,
+                        OnStarted = onStarted,
+                    });
+                }
+                else
+                {
+                    result = _ytDlpClient.Download(
+                        content.Id,
+                        url,
+                        creator.Path,
+                        isLive,
+                        cookiesFilePath,
+                        onProgress,
+                        onStarted: onStarted,
+                        outputFilename: outputFilename,
+                        metadataTitle: metadataTitle);
+                }
 
                 if (result.Success)
                 {
@@ -285,6 +323,14 @@ namespace Streamarr.Core.Download
                 }
             });
         }
+
+        // Active/in-flight states that describe an operation already underway — they must
+        // never be used as the status to restore to when a download fails.
+        private static bool IsTransientStatus(ContentStatus status) =>
+            status == ContentStatus.Queued ||
+            status == ContentStatus.Downloading ||
+            status == ContentStatus.Recording ||
+            status == ContentStatus.Processing;
 
         private IMetadataSource GetSource(PlatformType platform)
         {

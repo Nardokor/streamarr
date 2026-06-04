@@ -48,6 +48,12 @@ namespace Streamarr.Core.Configuration
         int YtDlpMaxConcurrentDownloads { get; set; }
         string YtDlpDenoBinaryPath { get; set; }
 
+        // Live recording supervisor (app-side retry/resume)
+        int YtDlpLiveRetryBackoffSeconds { get; set; }
+        int YtDlpLiveMaxConsecutiveFailures { get; set; }
+        int YtDlpLiveMaxRetryWindowMinutes { get; set; }
+        int YtDlpLiveSocketTimeoutSeconds { get; set; }
+
         // Internal
         bool CleanupMetadataImages { get; set; }
         string PlexClientIdentifier { get; }

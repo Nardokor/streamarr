@@ -18,5 +18,11 @@ namespace Streamarr.Core.Download.YtDlp
         public long FileSize { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
         public int ExitCode { get; set; }
+
+        // True when the output file came from a yt-dlp merge step (a complete, finalized file)
+        // rather than a bare last fragment. The live-recording supervisor uses this to tell a
+        // cleanly-ended stream (merged) apart from an interrupted attempt that only produced
+        // partial fragments — the latter must be relaunched, not treated as finished.
+        public bool IsMergedOutput { get; set; }
     }
 }

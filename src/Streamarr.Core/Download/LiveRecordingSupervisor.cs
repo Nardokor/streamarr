@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using NLog;
+using Streamarr.Common.Disk;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Configuration;
 using Streamarr.Core.Content;
@@ -53,13 +54,10 @@ namespace Streamarr.Core.Download
         // failures (a genuinely dead/broken stream) exhaust the budget.
         private static readonly TimeSpan HealthyRunThreshold = TimeSpan.FromSeconds(60);
 
-        // Re-probing the live status on every relaunch would burn an API call per blip; cache the
-        // last probe briefly so a rapid fail/relaunch storm reuses it.
-        private static readonly TimeSpan ProbeCacheTtl = TimeSpan.FromSeconds(30);
-
         private readonly IYtDlpClient _ytDlpClient;
         private readonly IMetadataSourceFactory _metadataSourceFactory;
         private readonly IConfigService _configService;
+        private readonly IDiskProvider _diskProvider;
         private readonly ILiveRetryClock _clock;
         private readonly Logger _logger;
 
@@ -68,12 +66,14 @@ namespace Streamarr.Core.Download
         public LiveRecordingSupervisor(IYtDlpClient ytDlpClient,
                                        IMetadataSourceFactory metadataSourceFactory,
                                        IConfigService configService,
+                                       IDiskProvider diskProvider,
                                        ILiveRetryClock clock,
                                        Logger logger)
         {
             _ytDlpClient = ytDlpClient;
             _metadataSourceFactory = metadataSourceFactory;
             _configService = configService;
+            _diskProvider = diskProvider;
             _clock = clock;
             _logger = logger;
         }
@@ -136,9 +136,6 @@ namespace Streamarr.Core.Download
             var firstAttempt = true;
             YtDlpDownloadResult last = null;
 
-            var probeAt = DateTime.MinValue;
-            var cachedProbe = LiveProbe.Unknown;
-
             while (true)
             {
                 if (token.IsCancellationRequested)
@@ -156,26 +153,8 @@ namespace Streamarr.Core.Download
 
                 var startedAt = _clock.UtcNow;
 
-                last = _ytDlpClient.DownloadHeld(
-                    request.ContentId,
-                    request.Url,
-                    request.OutputPath,
-                    isLive: true,
-                    cookiesFilePath: string.IsNullOrEmpty(request.CookiesFilePath) ? null : request.CookiesFilePath,
-                    onProgress: progress,
-                    onStarted: firstAttempt ? request.OnStarted : null,
-                    outputFilename: string.IsNullOrEmpty(request.OutputFilename) ? null : request.OutputFilename,
-                    metadataTitle: string.IsNullOrEmpty(request.MetadataTitle) ? null : request.MetadataTitle,
-                    keepPartialsOnFailure: true);
-
+                last = RunAttempt(request, progress, onStarted: firstAttempt ? request.OnStarted : null, keepPartialsOnFailure: true);
                 firstAttempt = false;
-
-                // A merged final file means yt-dlp ran to completion — the stream ended cleanly.
-                if (last.Success && last.IsMergedOutput)
-                {
-                    _logger.Info("Live recording '{0}' completed cleanly", request.PlatformContentId);
-                    return last;
-                }
 
                 if (token.IsCancellationRequested)
                 {
@@ -183,30 +162,52 @@ namespace Streamarr.Core.Download
                     return FinalizeOnStop(last);
                 }
 
-                var madeProgress = sawProgress || (_clock.UtcNow - startedAt) >= HealthyRunThreshold;
+                // The platform — not yt-dlp's exit code — is the source of truth for whether the
+                // stream has ended. yt-dlp can exit 0 with a *truncated* merged file when a live
+                // connection drops, so a "successful" attempt is never accepted as complete until
+                // the API confirms the stream is over.
+                var probe = ProbeLiveStatus(request);
+
+                if (probe == LiveProbe.Ended || probe == LiveProbe.GoneFromApi)
+                {
+                    // Stream is over. Accept the file only if this attempt was a clean, complete
+                    // capture; if it was interrupted (or never merged), the stream likely ended
+                    // during an outage and the file is short — recapture the full archive.
+                    if (last.Success && last.IsMergedOutput && !last.WasInterrupted)
+                    {
+                        _logger.Info("Live recording '{0}' completed cleanly", request.PlatformContentId);
+                        return last;
+                    }
+
+                    _logger.Info(
+                        "Stream '{0}' ended but the capture looks incomplete (success={1}, merged={2}, interrupted={3}); recapturing full archive",
+                        request.PlatformContentId,
+                        last.Success,
+                        last.IsMergedOutput,
+                        last.WasInterrupted);
+
+                    return RecaptureComplete(request, last);
+                }
+
+                // Stream still live, or the API could not be reached. If it is unreachable but we
+                // have a clean merged file, accept it as a best effort rather than looping forever.
+                if (probe == LiveProbe.Unknown && last.Success && last.IsMergedOutput && !last.WasInterrupted)
+                {
+                    _logger.Warn(
+                        "Could not confirm live status for '{0}'; accepting the clean merged capture",
+                        request.PlatformContentId);
+                    return last;
+                }
+
+                // We must resume. Count this toward the give-up budget unless the attempt made
+                // progress (a long run, download progress, or a — truncated — successful capture).
+                var madeProgress = last.Success || sawProgress || (_clock.UtcNow - startedAt) >= HealthyRunThreshold;
                 if (madeProgress)
                 {
                     consecutiveFailures = 0;
                     failureWindowStart = null;
                 }
 
-                // Decide whether the stream is still going before retrying.
-                if (_clock.UtcNow - probeAt >= ProbeCacheTtl)
-                {
-                    cachedProbe = ProbeLiveStatus(request);
-                    probeAt = _clock.UtcNow;
-                }
-
-                if (cachedProbe == LiveProbe.Ended || cachedProbe == LiveProbe.GoneFromApi)
-                {
-                    _logger.Info(
-                        "Stream '{0}' is no longer live ({1}); finalizing recording",
-                        request.PlatformContentId,
-                        cachedProbe);
-                    return Finalize(request, last);
-                }
-
-                // Blip or Unknown — relaunch if the failure budget allows.
                 failureWindowStart ??= _clock.UtcNow;
                 consecutiveFailures++;
 
@@ -221,9 +222,15 @@ namespace Streamarr.Core.Download
                     return last ?? Failed();
                 }
 
+                // A "successful" interrupted attempt left a truncated merged file at the output
+                // path; remove it so the relaunch re-captures instead of short-circuiting on
+                // "[download] has already been downloaded".
+                DeleteIfExists(last);
+
                 _logger.Info(
-                    "Live recording '{0}' interrupted (still live); relaunching in {1:n0}s (failure {2}/{3})",
+                    "Live recording '{0}' interrupted (probe={1}); relaunching in {2:n0}s (failure {3}/{4})",
                     request.PlatformContentId,
+                    probe,
                     backoff.TotalSeconds,
                     consecutiveFailures,
                     maxConsecutiveFailures);
@@ -232,37 +239,57 @@ namespace Streamarr.Core.Download
             }
         }
 
-        // The stream ended while we were between/inside attempts. If we already have a complete
-        // merged file, use it; otherwise do one final clean invocation to merge the kept fragments
-        // (or grab the freshly-archived VOD), this time allowing normal partial cleanup.
-        private YtDlpDownloadResult Finalize(LiveRecordingRequest request, YtDlpDownloadResult last)
+        // The stream has ended but the most recent capture is incomplete. Discard the truncated
+        // output and do one clean pass to fetch the full archive (now available as a VOD).
+        private YtDlpDownloadResult RecaptureComplete(LiveRecordingRequest request, YtDlpDownloadResult last)
         {
-            if (last != null && last.Success && last.IsMergedOutput)
-            {
-                return last;
-            }
+            DeleteIfExists(last);
 
-            _logger.Debug("Running final merge attempt for '{0}'", request.PlatformContentId);
-
-            var result = _ytDlpClient.DownloadHeld(
-                request.ContentId,
-                request.Url,
-                request.OutputPath,
-                isLive: true,
-                cookiesFilePath: string.IsNullOrEmpty(request.CookiesFilePath) ? null : request.CookiesFilePath,
-                onProgress: request.OnProgress,
-                onStarted: null,
-                outputFilename: string.IsNullOrEmpty(request.OutputFilename) ? null : request.OutputFilename,
-                metadataTitle: string.IsNullOrEmpty(request.MetadataTitle) ? null : request.MetadataTitle,
-                keepPartialsOnFailure: false);
+            var result = RunAttempt(request, request.OnProgress, onStarted: null, keepPartialsOnFailure: false);
 
             if (result.Success)
             {
                 return result;
             }
 
-            // Fall back to whatever the last attempt produced, if anything usable.
+            // Couldn't recapture (archive not yet available, etc.) — fall back to whatever we had.
             return last != null && last.Success ? last : result;
+        }
+
+        private YtDlpDownloadResult RunAttempt(LiveRecordingRequest request, Action<YtDlpProgress> onProgress, Action onStarted, bool keepPartialsOnFailure)
+        {
+            return _ytDlpClient.DownloadHeld(
+                request.ContentId,
+                request.Url,
+                request.OutputPath,
+                isLive: true,
+                cookiesFilePath: string.IsNullOrEmpty(request.CookiesFilePath) ? null : request.CookiesFilePath,
+                onProgress: onProgress,
+                onStarted: onStarted,
+                outputFilename: string.IsNullOrEmpty(request.OutputFilename) ? null : request.OutputFilename,
+                metadataTitle: string.IsNullOrEmpty(request.MetadataTitle) ? null : request.MetadataTitle,
+                keepPartialsOnFailure: keepPartialsOnFailure);
+        }
+
+        private void DeleteIfExists(YtDlpDownloadResult result)
+        {
+            if (result == null || string.IsNullOrEmpty(result.FilePath))
+            {
+                return;
+            }
+
+            try
+            {
+                if (_diskProvider.FileExists(result.FilePath))
+                {
+                    _diskProvider.DeleteFile(result.FilePath);
+                    _logger.Debug("Removed truncated capture before relaunch: {0}", result.FilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Failed to remove truncated capture {0}", result.FilePath);
+            }
         }
 
         // On user-requested cancellation, keep a finished file if we somehow have one, else fail

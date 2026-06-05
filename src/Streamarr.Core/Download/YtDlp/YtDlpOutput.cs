@@ -24,5 +24,12 @@ namespace Streamarr.Core.Download.YtDlp
         // cleanly-ended stream (merged) apart from an interrupted attempt that only produced
         // partial fragments — the latter must be relaunched, not treated as finished.
         public bool IsMergedOutput { get; set; }
+
+        // True when a live attempt exited but its stderr showed network/fragment errors. yt-dlp
+        // can exit 0 and merge a *truncated* file when a live connection drops — from its point of
+        // view the stream "ended". This flag lets the supervisor distinguish a clean capture from
+        // an interrupted one even when the exit code is 0, so it never accepts a truncated file as
+        // a finished recording.
+        public bool WasInterrupted { get; set; }
     }
 }

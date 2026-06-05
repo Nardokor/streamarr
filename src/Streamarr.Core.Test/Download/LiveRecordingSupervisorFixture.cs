@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Moq;
 using NUnit.Framework;
+using Streamarr.Common.Disk;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Configuration;
 using Streamarr.Core.Content;
@@ -106,8 +107,14 @@ namespace Streamarr.Core.Test.Download
                   });
         }
 
+        // A clean, complete capture: yt-dlp merged a final file with no network errors.
         private static YtDlpDownloadResult Merged() =>
             new YtDlpDownloadResult { Success = true, IsMergedOutput = true, FilePath = "/media/test/live.mp4", FileSize = 5000 };
+
+        // yt-dlp exited 0 and merged a file, but its stderr showed a dropped connection — the file
+        // is almost certainly truncated.
+        private static YtDlpDownloadResult Interrupted() =>
+            new YtDlpDownloadResult { Success = true, IsMergedOutput = true, WasInterrupted = true, FilePath = "/media/test/live.mp4", FileSize = 1000 };
 
         private static YtDlpDownloadResult Failed() =>
             new YtDlpDownloadResult { Success = false, ErrorMessage = "interrupted" };
@@ -115,12 +122,17 @@ namespace Streamarr.Core.Test.Download
         private int DownloadCallCount() => Mocker.GetMock<IYtDlpClient>().Invocations
             .Count(i => i.Method.Name == nameof(IYtDlpClient.DownloadHeld));
 
+        // Make the truncated output file appear to exist so DeleteIfExists actually deletes it.
+        private void OutputFileExists() =>
+            Mocker.GetMock<IDiskProvider>().Setup(d => d.FileExists("/media/test/live.mp4")).Returns(true);
+
         // ── tests ─────────────────────────────────────────────────────────────
 
         [Test]
-        public void should_return_success_immediately_on_clean_merged_first_attempt()
+        public void should_accept_clean_capture_when_stream_has_ended()
         {
             ScriptDownloads(Merged());
+            SetupProbe(ContentType.Vod);
 
             var result = Subject.Supervise(_request);
 
@@ -130,11 +142,46 @@ namespace Streamarr.Core.Test.Download
         }
 
         [Test]
-        public void should_relaunch_on_blip_until_clean_merge()
+        public void should_resume_when_yt_dlp_succeeds_but_stream_is_still_live()
         {
-            // Two interrupted attempts (stream still live) then a clean merge.
+            // The core bug: yt-dlp exits 0 with a merged (truncated) file on an interruption, but
+            // the platform says the stream is still live. The supervisor must NOT accept it as
+            // complete — it must delete the truncated file and relaunch.
+            ScriptDownloads(Merged(), Merged());
+            SetupProbe(ContentType.Live, ContentType.Vod);
+            OutputFileExists();
+
+            var result = Subject.Supervise(_request);
+
+            Assert.That(result.Success, Is.True);
+            Assert.That(DownloadCallCount(), Is.EqualTo(2), "a still-live 'success' must trigger a relaunch");
+            Mocker.GetMock<IDiskProvider>()
+                  .Verify(d => d.DeleteFile("/media/test/live.mp4"), Times.AtLeastOnce, "the truncated capture must be removed before relaunch");
+        }
+
+        [Test]
+        public void should_recapture_when_stream_ends_during_an_interruption()
+        {
+            // Nasty edge: yt-dlp finalizes a truncated file AND the stream ends during the outage,
+            // so the probe reports Ended. WasInterrupted tells us the capture is short, so the
+            // supervisor recaptures the full archive instead of accepting the truncated file.
+            ScriptDownloads(Interrupted(), Merged());
+            SetupProbe(ContentType.Vod);
+            OutputFileExists();
+
+            var result = Subject.Supervise(_request);
+
+            Assert.That(result.Success, Is.True);
+            Assert.That(result.WasInterrupted, Is.False, "final result should be the clean recapture");
+            Assert.That(DownloadCallCount(), Is.EqualTo(2), "interrupted capture at stream-end must be recaptured");
+        }
+
+        [Test]
+        public void should_relaunch_on_failure_until_clean_merge()
+        {
+            // Two failed attempts while still live, then a clean merge once the stream ends.
             ScriptDownloads(Failed(), Failed(), Merged());
-            SetupProbe(ContentType.Live);
+            SetupProbe(ContentType.Live, ContentType.Live, ContentType.Vod);
 
             var result = Subject.Supervise(_request);
 
@@ -144,10 +191,10 @@ namespace Streamarr.Core.Test.Download
         }
 
         [Test]
-        public void should_finalize_when_probe_reports_stream_ended()
+        public void should_recapture_when_first_attempt_fails_and_stream_ended()
         {
-            // Attempt fails without a merge; probe says the stream is now a VOD → one final merge
-            // invocation (which succeeds) and no further relaunch.
+            // Attempt fails without a merge; probe says the stream is now a VOD → one recapture
+            // pass (which succeeds) and no relaunch loop.
             ScriptDownloads(Failed(), Merged());
             SetupProbe(ContentType.Vod);
 
@@ -155,7 +202,7 @@ namespace Streamarr.Core.Test.Download
 
             Assert.That(result.Success, Is.True);
 
-            // 1 failed attempt + 1 finalize attempt.
+            // 1 failed attempt + 1 recapture attempt.
             Assert.That(DownloadCallCount(), Is.EqualTo(2));
             Assert.That(_clock.WaitCount, Is.EqualTo(0), "ended stream must not back off/relaunch");
         }
@@ -195,6 +242,7 @@ namespace Streamarr.Core.Test.Download
         public void should_report_supervising_state_during_run_and_clear_after()
         {
             ScriptDownloads(Merged());
+            SetupProbe(ContentType.Vod);
 
             Assert.That(Subject.IsSupervising(_request.ContentId), Is.False);
             Subject.Supervise(_request);

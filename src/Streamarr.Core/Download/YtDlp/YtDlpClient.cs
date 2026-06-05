@@ -682,6 +682,7 @@ namespace Streamarr.Core.Download.YtDlp
                 FileSize = fileSize,
                 ExitCode = exitCode,
                 IsMergedOutput = !string.IsNullOrEmpty(mergedFile),
+                WasInterrupted = isLive && errors.Any(LooksLikeNetworkError),
                 ErrorMessage = success ? string.Empty : string.Join(Environment.NewLine, errors)
             };
         }
@@ -865,6 +866,48 @@ namespace Streamarr.Core.Download.YtDlp
         private static string Quote(string value)
         {
             return $"\"{value}\"";
+        }
+
+        // yt-dlp stderr markers that indicate the connection — not the stream — went away mid-download.
+        // Used to flag a "successful" live exit that is really a truncated capture.
+        private static readonly string[] NetworkErrorMarkers =
+        {
+            "fragment",
+            "unable to download",
+            "timed out",
+            "timeout",
+            "connection reset",
+            "connection aborted",
+            "connection refused",
+            "connection error",
+            "network is unreachable",
+            "temporary failure in name resolution",
+            "incompleteread",
+            "incomplete read",
+            "urlopen error",
+            "[errno",
+            "http error 5",
+            "http error 4",
+            "read error"
+        };
+
+        private static bool LooksLikeNetworkError(string line)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                return false;
+            }
+
+            var lower = line.ToLowerInvariant();
+            foreach (var marker in NetworkErrorMarkers)
+            {
+                if (lower.Contains(marker))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Streamarr.Core.Creators
         private readonly IContentFilterService _contentFilterService;
         private readonly MetadataSourceFactory _metadataSourceFactory;
         private readonly IManageCommandQueue _commandQueueManager;
+        private readonly ILiveRecordingSupervisor _supervisor;
         private readonly Logger _logger;
 
         public LivestreamStatusService(
@@ -26,12 +27,14 @@ namespace Streamarr.Core.Creators
             IContentFilterService contentFilterService,
             MetadataSourceFactory metadataSourceFactory,
             IManageCommandQueue commandQueueManager,
+            ILiveRecordingSupervisor supervisor,
             Logger logger)
         {
             _contentService = contentService;
             _contentFilterService = contentFilterService;
             _metadataSourceFactory = metadataSourceFactory;
             _commandQueueManager = commandQueueManager;
+            _supervisor = supervisor;
             _logger = logger;
         }
 
@@ -135,7 +138,12 @@ namespace Streamarr.Core.Creators
                         {
                             newStatus = ContentStatus.Recording;
 
-                            if (content.Status != ContentStatus.Recording)
+                            // Skip queuing when a supervisor already owns this recording. During the
+                            // backoff gap between relaunch attempts no yt-dlp process is active and the
+                            // status is still Recording, so the status check alone would re-queue a
+                            // duplicate; IsSupervising closes that window.
+                            if (content.Status != ContentStatus.Recording &&
+                                !_supervisor.IsSupervising(content.Id))
                             {
                                 _logger.Debug(
                                     "Queuing live recording for '{0}' (DownloadLive)",

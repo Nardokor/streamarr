@@ -249,6 +249,30 @@ namespace Streamarr.Core.Configuration
             set { SetValue("YtDlpDenoBinaryPath", value); }
         }
 
+        public int YtDlpLiveRetryBackoffSeconds
+        {
+            get { return GetValueInt("YtDlpLiveRetryBackoffSeconds", 15); }
+            set { SetValue("YtDlpLiveRetryBackoffSeconds", value); }
+        }
+
+        public int YtDlpLiveMaxConsecutiveFailures
+        {
+            get { return GetValueInt("YtDlpLiveMaxConsecutiveFailures", 10); }
+            set { SetValue("YtDlpLiveMaxConsecutiveFailures", value); }
+        }
+
+        public int YtDlpLiveMaxRetryWindowMinutes
+        {
+            get { return GetValueInt("YtDlpLiveMaxRetryWindowMinutes", 30); }
+            set { SetValue("YtDlpLiveMaxRetryWindowMinutes", value); }
+        }
+
+        public int YtDlpLiveSocketTimeoutSeconds
+        {
+            get { return GetValueInt("YtDlpLiveSocketTimeoutSeconds", 30); }
+            set { SetValue("YtDlpLiveSocketTimeoutSeconds", value); }
+        }
+
         public bool CleanupMetadataImages
         {
             get { return GetValueBoolean("CleanupMetadataImages", true); }

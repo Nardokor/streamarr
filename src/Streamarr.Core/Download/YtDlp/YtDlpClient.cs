@@ -18,6 +18,26 @@ namespace Streamarr.Core.Download.YtDlp
     public interface IYtDlpClient
     {
         YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null);
+
+        /// <summary>
+        /// Acquires one of the bounded concurrent-download slots, blocking until one is free.
+        /// Dispose the returned token to release the slot. Use this when a caller (e.g. the live
+        /// recording supervisor) needs to hold a single slot across multiple <see cref="DownloadHeld"/>
+        /// attempts instead of acquiring/releasing per attempt.
+        /// </summary>
+        IDisposable AcquireDownloadSlot();
+
+        /// <summary>
+        /// Runs a single yt-dlp attempt WITHOUT acquiring a concurrency slot — the caller must
+        /// already hold one via <see cref="AcquireDownloadSlot"/>. When <paramref name="keepPartialsOnFailure"/>
+        /// is true, partial fragment files are NOT deleted on failure, so a subsequent attempt with
+        /// the same output path can resume from them (-k --live-from-start).
+        /// </summary>
+        YtDlpDownloadResult DownloadHeld(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null, bool keepPartialsOnFailure = false, bool keepFragments = true);
+
+        /// <summary>Returns true while a yt-dlp process for the given content id is running.</summary>
+        bool IsDownloadActive(int contentId);
+
         void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null);
@@ -90,6 +110,7 @@ namespace Streamarr.Core.Download.YtDlp
             PreferredFormat = _configService.YtDlpPreferredFormat,
             MaxConcurrentDownloads = _configService.YtDlpMaxConcurrentDownloads,
             DenoBinaryPath = _configService.YtDlpDenoBinaryPath,
+            LiveSocketTimeoutSeconds = _configService.YtDlpLiveSocketTimeoutSeconds,
         };
 
         /// <summary>
@@ -500,25 +521,55 @@ namespace Streamarr.Core.Download.YtDlp
 
         public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null)
         {
-            _logger.Debug("Waiting for concurrent download slot ({0} available)", _concurrentDownloadSemaphore.CurrentCount);
-            _concurrentDownloadSemaphore.Wait();
-
-            try
+            using (AcquireDownloadSlot())
             {
-                onStarted?.Invoke();
-                return DownloadInternal(contentId, url, outputPath, isLive, cookiesFilePath, onProgress, outputFilename, metadataTitle);
-            }
-            finally
-            {
-                _concurrentDownloadSemaphore.Release();
+                return DownloadHeld(contentId, url, outputPath, isLive, cookiesFilePath, onProgress, onStarted, outputFilename, metadataTitle);
             }
         }
 
-        private YtDlpDownloadResult DownloadInternal(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, string outputFilename = null, string metadataTitle = null)
+        public IDisposable AcquireDownloadSlot()
+        {
+            _logger.Debug("Waiting for concurrent download slot ({0} available)", _concurrentDownloadSemaphore.CurrentCount);
+            _concurrentDownloadSemaphore.Wait();
+            return new SemaphoreReleaser(_concurrentDownloadSemaphore);
+        }
+
+        public YtDlpDownloadResult DownloadHeld(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null, bool keepPartialsOnFailure = false, bool keepFragments = true)
+        {
+            onStarted?.Invoke();
+            return DownloadInternal(contentId, url, outputPath, isLive, cookiesFilePath, onProgress, outputFilename, metadataTitle, keepPartialsOnFailure, keepFragments);
+        }
+
+        public bool IsDownloadActive(int contentId)
+        {
+            return _activeDownloads.ContainsKey(contentId);
+        }
+
+        private sealed class SemaphoreReleaser : IDisposable
+        {
+            private readonly SemaphoreSlim _semaphore;
+            private bool _released;
+
+            public SemaphoreReleaser(SemaphoreSlim semaphore)
+            {
+                _semaphore = semaphore;
+            }
+
+            public void Dispose()
+            {
+                if (!_released)
+                {
+                    _released = true;
+                    _semaphore.Release();
+                }
+            }
+        }
+
+        private YtDlpDownloadResult DownloadInternal(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, string outputFilename = null, string metadataTitle = null, bool keepPartialsOnFailure = false, bool keepFragments = true)
         {
             _diskProvider.EnsureFolder(outputPath);
 
-            var args = BuildDownloadArgs(url, outputPath, isLive, cookiesFilePath, outputFilename, metadataTitle);
+            var args = BuildDownloadArgs(url, outputPath, isLive, cookiesFilePath, outputFilename, metadataTitle, keepFragments);
             var mergedFile = string.Empty;
             var fragmentFiles = new List<string>();
             var alreadyDownloadedFile = string.Empty;
@@ -604,8 +655,10 @@ namespace Streamarr.Core.Download.YtDlp
                 fileSize = _diskProvider.GetFileSize(outputFile);
                 _logger.Info("Download complete: {0} ({1} bytes)", outputFile, fileSize);
 
-                // For live recordings with -k, validate the merge and clean up fragments
-                if (isLive && !string.IsNullOrEmpty(mergedFile) && fragmentFiles.Count > 0)
+                // Only clean up fragments on the final pass (keepFragments=false). While the
+                // supervisor is still relaunching it keeps the fragments so an interrupted live
+                // recording can resume from them instead of re-downloading from scratch.
+                if (isLive && !keepFragments && !string.IsNullOrEmpty(mergedFile) && fragmentFiles.Count > 0)
                 {
                     CleanUpLiveFragments(mergedFile, fragmentFiles, fileSize);
                 }
@@ -616,7 +669,10 @@ namespace Streamarr.Core.Download.YtDlp
                 success = false;
             }
 
-            if (!success)
+            // On failure the supervised live path keeps partial fragments so the next attempt can
+            // resume from them (-k --live-from-start). Only delete partials when the caller is not
+            // going to retry (VOD downloads, or the supervisor's terminal cleanup).
+            if (!success && !keepPartialsOnFailure)
             {
                 CleanUpPartialFiles(fragmentFiles);
             }
@@ -627,6 +683,8 @@ namespace Streamarr.Core.Download.YtDlp
                 FilePath = outputFile,
                 FileSize = fileSize,
                 ExitCode = exitCode,
+                IsMergedOutput = !string.IsNullOrEmpty(mergedFile),
+                WasInterrupted = isLive && errors.Any(LooksLikeNetworkError),
                 ErrorMessage = success ? string.Empty : string.Join(Environment.NewLine, errors)
             };
         }
@@ -722,7 +780,7 @@ namespace Streamarr.Core.Download.YtDlp
             return $"--dump-json --skip-download --socket-timeout 15 {Quote(url)}";
         }
 
-        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, string cookiesFilePath = null, string outputFilename = null, string metadataTitle = null)
+        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, string cookiesFilePath = null, string outputFilename = null, string metadataTitle = null, bool keepFragments = true)
         {
             var outputTemplate = outputFilename != null
                 ? Path.Combine(outputPath, outputFilename + ".%(ext)s")
@@ -747,13 +805,23 @@ namespace Streamarr.Core.Download.YtDlp
 
             if (isLive)
             {
-                args.Add("-k");
+                // Resume primitives only: --live-from-start re-enumerates from segment 0 (skipping
+                // fragments already on disk), --hls-use-mpegts keeps fragments concatenatable.
+                // Retry/skip behaviour is deliberately NOT delegated to yt-dlp here — the
+                // LiveRecordingSupervisor relaunches this attempt on a blip and resumes from the
+                // kept fragments, giving us control over backoff and when to give up.
+                //
+                // -k (keep fragments) is on for relaunchable attempts so an interrupted recording
+                // can resume from the fragments. The supervisor's final pass omits it so yt-dlp
+                // merges and then removes the fragments itself once the stream has truly ended.
+                if (keepFragments)
+                {
+                    args.Add("-k");
+                }
+
                 args.Add("--live-from-start");
                 args.Add("--hls-use-mpegts");
-                args.Add("--fragment-retries 15");
-                args.Add("--skip-unavailable-fragments");
-                args.Add("--retry-sleep fragment:5");
-                args.Add("--socket-timeout 30");
+                args.Add($"--socket-timeout {Settings.LiveSocketTimeoutSeconds}");
             }
 
             if (Settings.EmbedMetadata)
@@ -808,6 +876,47 @@ namespace Streamarr.Core.Download.YtDlp
         private static string Quote(string value)
         {
             return $"\"{value}\"";
+        }
+
+        // yt-dlp stderr markers that indicate the CONNECTION — not the stream — went away mid-download.
+        // Used to flag a "successful" live exit that is really a truncated capture. Kept deliberately
+        // narrow: broad markers like "fragment" or "unable to download" also fire when a recording is
+        // started late (early fragments unavailable), which is not a truncation, and "giving up after
+        // N retries" is yt-dlp's normal signal that a live stream has ended.
+        private static readonly string[] NetworkErrorMarkers =
+        {
+            "timed out",
+            "timeout",
+            "connection reset",
+            "connection aborted",
+            "connection refused",
+            "network is unreachable",
+            "temporary failure in name resolution",
+            "incompleteread",
+            "incomplete read",
+            "urlopen error",
+            "[errno",
+            "http error 5",
+            "read error"
+        };
+
+        private static bool LooksLikeNetworkError(string line)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                return false;
+            }
+
+            var lower = line.ToLowerInvariant();
+            foreach (var marker in NetworkErrorMarkers)
+            {
+                if (lower.Contains(marker))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

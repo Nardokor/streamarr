@@ -56,9 +56,12 @@ namespace Streamarr.Core.Test.Download
                   .Setup(s => s.GetCreator(_creator.Id))
                   .Returns(_creator);
 
-            Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<Action<YtDlpProgress>>()))
-                  .Returns(new YtDlpDownloadResult { Success = true, FilePath = "/media/test/video.mp4", FileSize = 1024 });
+            SetupDownloadResult(new YtDlpDownloadResult { Success = true, FilePath = "/media/test/video.mp4", FileSize = 1024 });
+
+            // Live content is routed through the supervisor instead of IYtDlpClient.Download.
+            Mocker.GetMock<ILiveRecordingSupervisor>()
+                  .Setup(s => s.Supervise(It.IsAny<LiveRecordingRequest>()))
+                  .Returns(new YtDlpDownloadResult { Success = true, FilePath = "/media/test/video.mp4", FileSize = 1024, IsMergedOutput = true });
 
             Mocker.GetMock<IContentFileService>()
                   .Setup(s => s.AddContentFile(It.IsAny<ContentFile>()))
@@ -78,6 +81,30 @@ namespace Streamarr.Core.Test.Download
         private void Execute()
         {
             Subject.Execute(new DownloadContentCommand { ContentId = _content.Id });
+        }
+
+        // Sets up IYtDlpClient.Download across its full signature (including the optional
+        // onStarted/outputFilename/metadataTitle args the executor passes by name) and invokes
+        // the onStarted callback so the executor's active-state transition runs as it would in
+        // production. A 6-arg setup silently fails to match the 9-arg call and returns null.
+        private void SetupDownloadResult(YtDlpDownloadResult result)
+        {
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.Download(
+                      It.IsAny<int>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>(),
+                      It.IsAny<bool>(),
+                      It.IsAny<string>(),
+                      It.IsAny<Action<YtDlpProgress>>(),
+                      It.IsAny<Action>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>()))
+                  .Returns((int _, string _, string _, bool _, string _, Action<YtDlpProgress> _, Action onStarted, string _, string _) =>
+                  {
+                      onStarted?.Invoke();
+                      return result;
+                  });
         }
 
         // ── Download URL building ─────────────────────────────────────────────
@@ -101,7 +128,10 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
                       It.IsAny<string>(),
-                      It.IsAny<Action<YtDlpProgress>>()),
+                      It.IsAny<Action<YtDlpProgress>>(),
+                      It.IsAny<Action>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>()),
                   Times.Once);
         }
 
@@ -119,21 +149,31 @@ namespace Streamarr.Core.Test.Download
         // ── isLive flag ───────────────────────────────────────────────────────
 
         [Test]
-        public void should_pass_is_live_true_for_live_content_type()
+        public void should_route_live_content_through_supervisor_not_download()
         {
             _content.ContentType = ContentType.Live;
 
             Execute();
+
+            Mocker.GetMock<ILiveRecordingSupervisor>()
+                  .Verify(s => s.Supervise(It.Is<LiveRecordingRequest>(r =>
+                      r.ContentId == _content.Id &&
+                      r.PlatformContentId == _content.PlatformContentId &&
+                      r.Platform == _channel.Platform)),
+                  Times.Once);
 
             Mocker.GetMock<IYtDlpClient>()
                   .Verify(c => c.Download(
                       It.IsAny<int>(),
                       It.IsAny<string>(),
                       It.IsAny<string>(),
-                      true,
+                      It.IsAny<bool>(),
                       It.IsAny<string>(),
-                      It.IsAny<Action<YtDlpProgress>>()),
-                  Times.Once);
+                      It.IsAny<Action<YtDlpProgress>>(),
+                      It.IsAny<Action>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>()),
+                  Times.Never);
         }
 
         [Test]
@@ -150,7 +190,10 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       false,
                       It.IsAny<string>(),
-                      It.IsAny<Action<YtDlpProgress>>()),
+                      It.IsAny<Action<YtDlpProgress>>(),
+                      It.IsAny<Action>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>()),
                   Times.Once);
         }
 
@@ -172,7 +215,10 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
                       "/config/patreon-cookies.txt",
-                      It.IsAny<Action<YtDlpProgress>>()),
+                      It.IsAny<Action<YtDlpProgress>>(),
+                      It.IsAny<Action>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>()),
                   Times.Once);
         }
 
@@ -192,7 +238,10 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<string>(),
                       It.IsAny<bool>(),
                       null,
-                      It.IsAny<Action<YtDlpProgress>>()),
+                      It.IsAny<Action<YtDlpProgress>>(),
+                      It.IsAny<Action>(),
+                      It.IsAny<string>(),
+                      It.IsAny<string>()),
                   Times.Once);
         }
 
@@ -212,9 +261,7 @@ namespace Streamarr.Core.Test.Download
         [Test]
         public void should_set_status_to_missing_on_failure()
         {
-            Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.Download(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<Action<YtDlpProgress>>()))
-                  .Returns(new YtDlpDownloadResult { Success = false, ErrorMessage = "yt-dlp failed" });
+            SetupDownloadResult(new YtDlpDownloadResult { Success = false, ErrorMessage = "yt-dlp failed" });
 
             Execute();
 
@@ -224,6 +271,39 @@ namespace Streamarr.Core.Test.Download
                   .Verify(s => s.UpdateContent(It.Is<ContentEntity>(c =>
                       c.Id == _content.Id && c.Status == ContentStatus.Missing)),
                   Times.AtLeastOnce);
+        }
+
+        [Test]
+        public void should_not_revert_to_recording_when_live_recording_fails()
+        {
+            // The livestream status service queues a recording with Status already set to
+            // Recording. A failed recording (yt-dlp commonly exits non-zero when the stream
+            // ends) must NOT restore that transient state, or the content appears stuck
+            // recording forever. It should fall back to Missing so it can be re-evaluated.
+            _content.ContentType = ContentType.Live;
+            _content.Status = ContentStatus.Recording;
+
+            // Record the status at each UpdateContent call. Content is a single mutated
+            // reference, so the final status must be captured by value at call time.
+            var statusHistory = new System.Collections.Generic.List<ContentStatus>();
+            Mocker.GetMock<IContentService>()
+                  .Setup(s => s.UpdateContent(It.IsAny<ContentEntity>()))
+                  .Callback<ContentEntity>(c => statusHistory.Add(c.Status));
+
+            // The supervisor exhausts its retry budget and returns failure.
+            Mocker.GetMock<ILiveRecordingSupervisor>()
+                  .Setup(s => s.Supervise(It.IsAny<LiveRecordingRequest>()))
+                  .Returns(new YtDlpDownloadResult { Success = false, ErrorMessage = "stream ended" });
+
+            Execute();
+
+            ExceptionVerification.IgnoreErrors();
+
+            Assert.That(statusHistory, Is.Not.Empty);
+            Assert.That(
+                statusHistory[statusHistory.Count - 1],
+                Is.EqualTo(ContentStatus.Missing),
+                "A failed live recording must settle on Missing, not the transient Recording state");
         }
     }
 }

@@ -878,18 +878,18 @@ namespace Streamarr.Core.Download.YtDlp
             return $"\"{value}\"";
         }
 
-        // yt-dlp stderr markers that indicate the connection — not the stream — went away mid-download.
-        // Used to flag a "successful" live exit that is really a truncated capture.
+        // yt-dlp stderr markers that indicate the CONNECTION — not the stream — went away mid-download.
+        // Used to flag a "successful" live exit that is really a truncated capture. Kept deliberately
+        // narrow: broad markers like "fragment" or "unable to download" also fire when a recording is
+        // started late (early fragments unavailable), which is not a truncation, and "giving up after
+        // N retries" is yt-dlp's normal signal that a live stream has ended.
         private static readonly string[] NetworkErrorMarkers =
         {
-            "fragment",
-            "unable to download",
             "timed out",
             "timeout",
             "connection reset",
             "connection aborted",
             "connection refused",
-            "connection error",
             "network is unreachable",
             "temporary failure in name resolution",
             "incompleteread",
@@ -897,7 +897,6 @@ namespace Streamarr.Core.Download.YtDlp
             "urlopen error",
             "[errno",
             "http error 5",
-            "http error 4",
             "read error"
         };
 

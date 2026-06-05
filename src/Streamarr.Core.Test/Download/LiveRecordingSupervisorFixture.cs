@@ -174,11 +174,11 @@ namespace Streamarr.Core.Test.Download
         }
 
         [Test]
-        public void should_recapture_when_stream_ends_during_an_interruption()
+        public void should_accept_single_capture_at_stream_end_without_a_redundant_pass()
         {
-            // Nasty edge: yt-dlp finalizes a truncated file AND the stream ends during the outage,
-            // so the probe reports Ended. WasInterrupted tells us the capture is short, so the
-            // supervisor preserves it and runs a final merge pass instead of accepting it as-is.
+            // A single capture that ran to the stream's end is accepted as-is — even if yt-dlp logged
+            // transient fragment warnings (e.g. recording started late). The supervisor must NOT run a
+            // redundant final merge pass when it never had to resume.
             ScriptDownloads(Interrupted(), Merged());
             SetupProbe(ContentType.Vod);
             ExistingOutput();
@@ -186,15 +186,12 @@ namespace Streamarr.Core.Test.Download
             var result = Subject.Supervise(_request);
 
             Assert.That(result.Success, Is.True);
-            Assert.That(result.WasInterrupted, Is.False, "final result should be the reconciled capture");
-
-            // attempt 1 (interrupted) + final merge pass.
-            Assert.That(DownloadCallCount(), Is.EqualTo(2), "interrupted capture at stream-end must be reconciled");
+            Assert.That(DownloadCallCount(), Is.EqualTo(1), "no resume happened, so no second yt-dlp pass");
             Mocker.GetMock<IDiskProvider>()
                   .Verify(
                       d => d.MoveFile(OutputPath, SidecarPath, It.IsAny<bool>()),
-                      Times.AtLeastOnce,
-                      "the interrupted capture must be preserved, not discarded");
+                      Times.Never,
+                      "a single completed capture must not be moved aside");
         }
 
         [Test]

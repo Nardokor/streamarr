@@ -235,17 +235,21 @@ namespace Streamarr.Core.Download
         // losing anything we already captured.
         private YtDlpDownloadResult FinalizeEnded(LiveRecordingRequest request, YtDlpDownloadResult last, PreservationState state)
         {
-            // Ran straight through to a clean end with nothing held aside — accept it, just sweep
-            // the kept (-k) fragments.
-            if (IsCleanCapture(last) && !state.HasPreserved)
+            // Captured in a single pass that ran to the stream's end — we never had to resume, so
+            // there is nothing to reconcile. Accept it as-is and just sweep the kept (-k) fragments.
+            // (yt-dlp's own retries cover brief in-stream hiccups, and starting the recording late —
+            // which leaves early fragments unavailable — is not a truncation.) Only when we actually
+            // resumed (HasPreserved) is a final merge pass needed to stitch things back together.
+            if (!state.HasPreserved && last != null && last.Success && last.IsMergedOutput)
             {
-                _logger.Info("Live recording '{0}' completed cleanly", request.PlatformContentId);
+                _logger.Info("Live recording '{0}' completed in a single capture", request.PlatformContentId);
                 CleanUpResidualFiles(last.FilePath);
                 return last;
             }
 
-            // Fold the last attempt into the preserved set (frees the output path), then do one final
-            // pass that resumes from the kept fragments and — without -k — lets yt-dlp clean them up.
+            // We resumed at least once (or never got a merged file). Fold the last attempt into the
+            // preserved set (frees the output path), then do one final pass that resumes from the kept
+            // fragments and — without -k — lets yt-dlp clean them up.
             Preserve(last, state);
 
             _logger.Info("Stream '{0}' ended; running final merge pass to complete the recording", request.PlatformContentId);

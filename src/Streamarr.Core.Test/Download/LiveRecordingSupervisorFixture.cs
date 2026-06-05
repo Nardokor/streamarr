@@ -18,6 +18,9 @@ namespace Streamarr.Core.Test.Download
     [TestFixture]
     public class LiveRecordingSupervisorFixture : CoreTest<LiveRecordingSupervisor>
     {
+        private const string OutputPath = "/media/test/live.mp4";
+        private const string SidecarPath = "/media/test/live.recovering.tmp";
+
         private TestClock _clock;
         private LiveRecordingRequest _request;
 
@@ -71,6 +74,7 @@ namespace Streamarr.Core.Test.Download
                       It.IsAny<Action>(),
                       It.IsAny<string>(),
                       It.IsAny<string>(),
+                      It.IsAny<bool>(),
                       It.IsAny<bool>()))
                   .Returns(
                       (int id,
@@ -82,7 +86,8 @@ namespace Streamarr.Core.Test.Download
                        Action onStarted,
                        string outFile,
                        string metaTitle,
-                       bool keepPartials) =>
+                       bool keepPartials,
+                       bool keepFragments) =>
                   {
                       onStarted?.Invoke();
                       var result = results[Math.Min(index, results.Length - 1)];
@@ -122,9 +127,12 @@ namespace Streamarr.Core.Test.Download
         private int DownloadCallCount() => Mocker.GetMock<IYtDlpClient>().Invocations
             .Count(i => i.Method.Name == nameof(IYtDlpClient.DownloadHeld));
 
-        // Make the truncated output file appear to exist so DeleteIfExists actually deletes it.
-        private void OutputFileExists() =>
-            Mocker.GetMock<IDiskProvider>().Setup(d => d.FileExists("/media/test/live.mp4")).Returns(true);
+        // Make the merged output file appear to exist with a given size so Preserve/Reconcile run.
+        private void ExistingOutput(long size = 1000)
+        {
+            Mocker.GetMock<IDiskProvider>().Setup(d => d.FileExists(OutputPath)).Returns(true);
+            Mocker.GetMock<IDiskProvider>().Setup(d => d.GetFileSize(OutputPath)).Returns(size);
+        }
 
         // ── tests ─────────────────────────────────────────────────────────────
 
@@ -142,21 +150,27 @@ namespace Streamarr.Core.Test.Download
         }
 
         [Test]
-        public void should_resume_when_yt_dlp_succeeds_but_stream_is_still_live()
+        public void should_preserve_and_resume_when_yt_dlp_succeeds_but_stream_is_still_live()
         {
             // The core bug: yt-dlp exits 0 with a merged (truncated) file on an interruption, but
             // the platform says the stream is still live. The supervisor must NOT accept it as
-            // complete — it must delete the truncated file and relaunch.
+            // complete — it preserves the truncated file (moves it aside, never deletes the data)
+            // and relaunches to resume.
             ScriptDownloads(Merged(), Merged());
             SetupProbe(ContentType.Live, ContentType.Vod);
-            OutputFileExists();
+            ExistingOutput();
 
             var result = Subject.Supervise(_request);
 
             Assert.That(result.Success, Is.True);
-            Assert.That(DownloadCallCount(), Is.EqualTo(2), "a still-live 'success' must trigger a relaunch");
+
+            // attempt 1 (interrupted) + attempt 2 (resume) + final merge pass.
+            Assert.That(DownloadCallCount(), Is.EqualTo(3), "a still-live 'success' must trigger a resume");
             Mocker.GetMock<IDiskProvider>()
-                  .Verify(d => d.DeleteFile("/media/test/live.mp4"), Times.AtLeastOnce, "the truncated capture must be removed before relaunch");
+                  .Verify(
+                      d => d.MoveFile(OutputPath, SidecarPath, It.IsAny<bool>()),
+                      Times.AtLeastOnce,
+                      "the truncated capture must be preserved aside, not deleted");
         }
 
         [Test]
@@ -164,16 +178,47 @@ namespace Streamarr.Core.Test.Download
         {
             // Nasty edge: yt-dlp finalizes a truncated file AND the stream ends during the outage,
             // so the probe reports Ended. WasInterrupted tells us the capture is short, so the
-            // supervisor recaptures the full archive instead of accepting the truncated file.
+            // supervisor preserves it and runs a final merge pass instead of accepting it as-is.
             ScriptDownloads(Interrupted(), Merged());
             SetupProbe(ContentType.Vod);
-            OutputFileExists();
+            ExistingOutput();
 
             var result = Subject.Supervise(_request);
 
             Assert.That(result.Success, Is.True);
-            Assert.That(result.WasInterrupted, Is.False, "final result should be the clean recapture");
-            Assert.That(DownloadCallCount(), Is.EqualTo(2), "interrupted capture at stream-end must be recaptured");
+            Assert.That(result.WasInterrupted, Is.False, "final result should be the reconciled capture");
+
+            // attempt 1 (interrupted) + final merge pass.
+            Assert.That(DownloadCallCount(), Is.EqualTo(2), "interrupted capture at stream-end must be reconciled");
+            Mocker.GetMock<IDiskProvider>()
+                  .Verify(
+                      d => d.MoveFile(OutputPath, SidecarPath, It.IsAny<bool>()),
+                      Times.AtLeastOnce,
+                      "the interrupted capture must be preserved, not discarded");
+        }
+
+        [Test]
+        public void should_keep_near_complete_capture_when_resume_cannot_recover_the_tail()
+        {
+            // Stream interrupts near the end (a near-complete merged file), then ends before the
+            // resume can reconnect, and the final pass also fails (archive not yet available). The
+            // preserved near-complete capture must be restored to the output path, never lost.
+            ScriptDownloads(Merged(), Failed());
+            SetupProbe(ContentType.Live, ContentType.Vod);
+            ExistingOutput(5000);
+            Mocker.GetMock<IDiskProvider>().Setup(d => d.FileExists(SidecarPath)).Returns(true);
+            Mocker.GetMock<IDiskProvider>().Setup(d => d.GetFileSize(SidecarPath)).Returns(5000);
+
+            var result = Subject.Supervise(_request);
+
+            Assert.That(result.Success, Is.True, "the near-complete capture must be kept, not lost");
+            Assert.That(result.FilePath, Is.EqualTo(OutputPath));
+            Assert.That(result.FileSize, Is.EqualTo(5000));
+            Mocker.GetMock<IDiskProvider>()
+                  .Verify(
+                      d => d.MoveFile(SidecarPath, OutputPath, It.IsAny<bool>()),
+                      Times.AtLeastOnce,
+                      "the preserved capture must be restored to the output path");
         }
 
         [Test]

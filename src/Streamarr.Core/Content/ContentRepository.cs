@@ -12,6 +12,7 @@ namespace Streamarr.Core.Content
         List<Content> GetWithoutFiles(int channelId);
         List<Content> GetAllMissing();
         List<Content> GetAllDownloaded();
+        List<Content> GetAllDownloadedOrMirrored();
         List<Content> GetAllDownloading();
         List<Content> GetAllLiveNow();
         List<Content> GetAllRecording();
@@ -57,6 +58,11 @@ namespace Streamarr.Core.Content
         public List<Content> GetAllDownloaded()
         {
             return Query(c => c.Status == ContentStatus.Downloaded);
+        }
+
+        public List<Content> GetAllDownloadedOrMirrored()
+        {
+            return Query(c => c.Status == ContentStatus.Downloaded || c.Status == ContentStatus.Mirrored);
         }
 
         public List<Content> GetAllDownloading()

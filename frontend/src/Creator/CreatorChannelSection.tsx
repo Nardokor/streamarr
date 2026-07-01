@@ -64,6 +64,7 @@ const columns: Column[] = [
 // TYPE_LABELS is now platform-aware — generated per channel via getTypeLabels()
 const STATUS_FILTERS: { kind: string; label: string }[] = [
   { kind: 'downloaded', label: 'Downloaded' },
+  { kind: 'mirrored', label: 'Mirrored' },
   { kind: 'missing', label: 'Missing' },
   { kind: 'unwanted', label: 'Unwanted' },
   { kind: 'recording', label: 'Recording' },
@@ -80,6 +81,7 @@ function statusClass(kind: string): string {
   if (kind === 'expired') return styles.statusExpired;
   if (kind === 'modified') return styles.statusModified;
   if (kind === 'unwanted') return styles.statusUnmonitored;
+  if (kind === 'mirrored') return styles.statusMirrored;
   if (kind === 'available') return styles.statusAvailable;
   if (kind === 'unavailable') return styles.statusUnmonitored;
   return styles.statusUnmonitored;
@@ -123,6 +125,7 @@ function DownloadCell({ contentId, statusKind, monitored, onDownload }: Download
   const canDownload =
     monitored &&
     statusKind !== 'downloaded' &&
+    statusKind !== 'mirrored' &&
     statusKind !== 'notAired' &&
     statusKind !== 'unavailable';
 

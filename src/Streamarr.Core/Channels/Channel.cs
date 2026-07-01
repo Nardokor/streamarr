@@ -60,6 +60,10 @@ namespace Streamarr.Core.Channels
         public bool KeepMembers { get; set; }
         public string RetentionKeepWords { get; set; } = string.Empty;
 
+        // Mirror availability check
+        public DateTime? LastMirrorCheck { get; set; }
+        public int MirrorCheckIntervalDays { get; set; } = 1;
+
         // WebSub
         public string WebSubSecret { get; set; }
 

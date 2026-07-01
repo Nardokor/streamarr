@@ -114,6 +114,12 @@ namespace Streamarr.Core.Jobs
 
                     new ScheduledTask
                     {
+                        Interval = 6 * 60,
+                        TypeName = typeof(CheckMirroredContentCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
                         Interval = 24 * 60,
                         TypeName = typeof(RecycleBinCleanupCommand).FullName
                     },

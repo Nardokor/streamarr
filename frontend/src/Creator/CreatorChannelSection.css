@@ -408,7 +408,7 @@
 .fixedTable th:nth-child(5) { width: 95px; }   /* airDate */
 .fixedTable th:nth-child(6) { width: 80px; }   /* duration */
 .fixedTable th:nth-child(7) { width: 130px; }  /* status */
-.fixedTable th:nth-child(8) { width: 54px; }   /* download + mirror actions */
+.fixedTable th:nth-child(8) { width: 36px; }   /* download */
 
 .titleCell {
   overflow: hidden;

@@ -176,44 +176,6 @@ function DeleteFileCell({ contentId, creatorId, hasFile }: DeleteFileCellProps) 
   );
 }
 
-interface MirrorToggleCellProps {
-  content: Content;
-  creatorId: number;
-}
-
-function MirrorToggleCell({ content, creatorId }: MirrorToggleCellProps) {
-  const queryClient = useQueryClient();
-  const { mutate: updateContent, isPending } = useApiMutation<void, Content>({
-    path: `/content/${content.id}`,
-    method: 'PUT',
-    mutationOptions: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [`/content/creator/${creatorId}`] });
-      },
-    },
-  });
-
-  if (content.contentFileId === 0) {
-    return null;
-  }
-
-  if (content.status !== 'downloaded' && content.status !== 'mirrored') {
-    return null;
-  }
-
-  const isMirrored = content.status === 'mirrored';
-
-  return (
-    <IconButton
-      name={icons.CLONE}
-      size={12}
-      title={isMirrored ? 'Unmark as mirrored' : 'Mark as mirrored — still available on source'}
-      isDisabled={isPending}
-      onPress={() => updateContent({ ...content, status: isMirrored ? 'downloaded' : 'mirrored' })}
-    />
-  );
-}
-
 function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps) {
   const { data: sources } = useMetadataSources();
   const sourceFields = getSourceFields(sources, channel.platform);
@@ -889,11 +851,6 @@ function CreatorChannelSection({ channel, content }: CreatorChannelSectionProps)
                         </TableRowCell>
 
                         <TableRowCell className={styles.downloadCell} onClick={(e) => e.stopPropagation()}>
-                          <MirrorToggleCell
-                            content={item}
-                            creatorId={channel.creatorId}
-                          />
-
                           <DeleteFileCell
                             contentId={item.id}
                             creatorId={channel.creatorId}

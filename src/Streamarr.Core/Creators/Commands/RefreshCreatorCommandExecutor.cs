@@ -554,9 +554,6 @@ namespace Streamarr.Core.Creators.Commands
                 // Re-evaluate filter for existing Missing/Unwanted items in case channel settings changed
                 _contentFilterService.ReapplyFilterForChannel(channel);
 
-                // Probe the platform for each locally-held item to keep Mirrored status accurate.
-                UpdateMirroredStatus(channel, allChannelContentForSync, source);
-
                 // Update membership status if we probed this sync and were not interrupted by rate-limiting.
                 if (shouldCheckMembership && !rateLimitedThisChannel)
                 {
@@ -615,69 +612,6 @@ namespace Streamarr.Core.Creators.Commands
             catch (Exception ex)
             {
                 _logger.Warn(ex, "Failed to check livestream status for channel '{0}'", channel.Title);
-            }
-        }
-
-        private void UpdateMirroredStatus(
-            Channel channel,
-            List<Content.Content> existingContent,
-            IMetadataSource source)
-        {
-            var candidates = existingContent
-                .Where(c => c.ContentFileId > 0 &&
-                            (c.Status == ContentStatus.Downloaded || c.Status == ContentStatus.Mirrored))
-                .ToList();
-
-            if (candidates.Count == 0)
-            {
-                return;
-            }
-
-            var ids = candidates.Select(c => c.PlatformContentId).ToList();
-            HashSet<string> onPlatform;
-
-            try
-            {
-                onPlatform = new HashSet<string>(
-                    source.GetContentMetadataBatch(ids).Select(m => m.PlatformContentId),
-                    StringComparer.OrdinalIgnoreCase);
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn(ex, "Failed to probe platform availability for Mirrored status check on '{0}' — skipping", channel.Title);
-                return;
-            }
-
-            var toUpdate = new List<Content.Content>();
-
-            foreach (var content in candidates)
-            {
-                var stillOnPlatform = onPlatform.Contains(content.PlatformContentId);
-
-                if (stillOnPlatform && content.Status == ContentStatus.Downloaded)
-                {
-                    content.Status = ContentStatus.Mirrored;
-                    toUpdate.Add(content);
-                }
-                else if (!stillOnPlatform && content.Status == ContentStatus.Mirrored)
-                {
-                    content.Status = ContentStatus.Downloaded;
-                    toUpdate.Add(content);
-                }
-            }
-
-            foreach (var item in toUpdate)
-            {
-                _contentService.UpdateContent(item);
-            }
-
-            if (toUpdate.Count > 0)
-            {
-                _logger.Debug(
-                    "Updated Mirrored status for {0}/{1} item(s) in channel '{2}'",
-                    toUpdate.Count,
-                    candidates.Count,
-                    channel.Title);
             }
         }
 

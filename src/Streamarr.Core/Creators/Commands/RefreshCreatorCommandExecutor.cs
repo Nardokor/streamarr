@@ -554,6 +554,10 @@ namespace Streamarr.Core.Creators.Commands
                 // Re-evaluate filter for existing Missing/Unwanted items in case channel settings changed
                 _contentFilterService.ReapplyFilterForChannel(channel);
 
+                // Mark locally-held items as Mirrored when the platform confirms they still exist.
+                // On a full scan (no cutoff) also revert Mirrored→Downloaded for items absent from the full list.
+                UpdateMirroredStatus(channel, allChannelContentForSync, newItems, isFullScan: sinceCutoff == null);
+
                 // Update membership status if we probed this sync and were not interrupted by rate-limiting.
                 if (shouldCheckMembership && !rateLimitedThisChannel)
                 {
@@ -612,6 +616,53 @@ namespace Streamarr.Core.Creators.Commands
             catch (Exception ex)
             {
                 _logger.Warn(ex, "Failed to check livestream status for channel '{0}'", channel.Title);
+            }
+        }
+
+        private void UpdateMirroredStatus(
+            Channel channel,
+            List<Content.Content> existingContent,
+            List<ContentMetadataResult> platformItems,
+            bool isFullScan)
+        {
+            var platformIds = new HashSet<string>(
+                platformItems.Select(i => i.PlatformContentId),
+                StringComparer.OrdinalIgnoreCase);
+
+            var toUpdate = new List<Content.Content>();
+
+            foreach (var content in existingContent)
+            {
+                if (content.ContentFileId == 0)
+                {
+                    continue;
+                }
+
+                var onPlatform = platformIds.Contains(content.PlatformContentId);
+
+                if (onPlatform && content.Status == ContentStatus.Downloaded)
+                {
+                    content.Status = ContentStatus.Mirrored;
+                    toUpdate.Add(content);
+                }
+                else if (!onPlatform && content.Status == ContentStatus.Mirrored && isFullScan)
+                {
+                    content.Status = ContentStatus.Downloaded;
+                    toUpdate.Add(content);
+                }
+            }
+
+            foreach (var item in toUpdate)
+            {
+                _contentService.UpdateContent(item);
+            }
+
+            if (toUpdate.Count > 0)
+            {
+                _logger.Debug(
+                    "Updated Mirrored status for {0} item(s) in channel '{1}'",
+                    toUpdate.Count,
+                    channel.Title);
             }
         }
 

@@ -554,9 +554,8 @@ namespace Streamarr.Core.Creators.Commands
                 // Re-evaluate filter for existing Missing/Unwanted items in case channel settings changed
                 _contentFilterService.ReapplyFilterForChannel(channel);
 
-                // Mark locally-held items as Mirrored when the platform confirms they still exist.
-                // On a full scan (no cutoff) also revert Mirrored→Downloaded for items absent from the full list.
-                UpdateMirroredStatus(channel, allChannelContentForSync, newItems, isFullScan: sinceCutoff == null);
+                // Probe the platform for each locally-held item to keep Mirrored status accurate.
+                UpdateMirroredStatus(channel, allChannelContentForSync, source);
 
                 // Update membership status if we probed this sync and were not interrupted by rate-limiting.
                 if (shouldCheckMembership && !rateLimitedThisChannel)
@@ -622,30 +621,45 @@ namespace Streamarr.Core.Creators.Commands
         private void UpdateMirroredStatus(
             Channel channel,
             List<Content.Content> existingContent,
-            List<ContentMetadataResult> platformItems,
-            bool isFullScan)
+            IMetadataSource source)
         {
-            var platformIds = new HashSet<string>(
-                platformItems.Select(i => i.PlatformContentId),
-                StringComparer.OrdinalIgnoreCase);
+            var candidates = existingContent
+                .Where(c => c.ContentFileId > 0 &&
+                            (c.Status == ContentStatus.Downloaded || c.Status == ContentStatus.Mirrored))
+                .ToList();
+
+            if (candidates.Count == 0)
+            {
+                return;
+            }
+
+            var ids = candidates.Select(c => c.PlatformContentId).ToList();
+            HashSet<string> onPlatform;
+
+            try
+            {
+                onPlatform = new HashSet<string>(
+                    source.GetContentMetadataBatch(ids).Select(m => m.PlatformContentId),
+                    StringComparer.OrdinalIgnoreCase);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Failed to probe platform availability for Mirrored status check on '{0}' — skipping", channel.Title);
+                return;
+            }
 
             var toUpdate = new List<Content.Content>();
 
-            foreach (var content in existingContent)
+            foreach (var content in candidates)
             {
-                if (content.ContentFileId == 0)
-                {
-                    continue;
-                }
+                var stillOnPlatform = onPlatform.Contains(content.PlatformContentId);
 
-                var onPlatform = platformIds.Contains(content.PlatformContentId);
-
-                if (onPlatform && content.Status == ContentStatus.Downloaded)
+                if (stillOnPlatform && content.Status == ContentStatus.Downloaded)
                 {
                     content.Status = ContentStatus.Mirrored;
                     toUpdate.Add(content);
                 }
-                else if (!onPlatform && content.Status == ContentStatus.Mirrored && isFullScan)
+                else if (!stillOnPlatform && content.Status == ContentStatus.Mirrored)
                 {
                     content.Status = ContentStatus.Downloaded;
                     toUpdate.Add(content);
@@ -660,8 +674,9 @@ namespace Streamarr.Core.Creators.Commands
             if (toUpdate.Count > 0)
             {
                 _logger.Debug(
-                    "Updated Mirrored status for {0} item(s) in channel '{1}'",
+                    "Updated Mirrored status for {0}/{1} item(s) in channel '{2}'",
                     toUpdate.Count,
+                    candidates.Count,
                     channel.Title);
             }
         }

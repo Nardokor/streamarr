@@ -369,6 +369,11 @@
   color: white;
 }
 
+.statusMirrored {
+  background: #0e6b6b;
+  color: white;
+}
+
 .settingsSection {
   margin-bottom: 4px;
   padding-bottom: 4px;
@@ -403,7 +408,7 @@
 .fixedTable th:nth-child(5) { width: 95px; }   /* airDate */
 .fixedTable th:nth-child(6) { width: 80px; }   /* duration */
 .fixedTable th:nth-child(7) { width: 130px; }  /* status */
-.fixedTable th:nth-child(8) { width: 36px; }   /* download */
+.fixedTable th:nth-child(8) { width: 54px; }   /* download + mirror actions */
 
 .titleCell {
   overflow: hidden;

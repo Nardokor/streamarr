@@ -58,7 +58,7 @@ export function formatDate(dateStr: string | null | undefined): string {
 
 export interface StatusLabel {
   text: string;
-  kind: 'downloaded' | 'downloading' | 'queued' | 'recording' | 'missing' | 'unmonitored' | 'notAired' | 'expired' | 'modified' | 'unwanted' | 'processing' | 'available' | 'unavailable';
+  kind: 'downloaded' | 'downloading' | 'queued' | 'recording' | 'missing' | 'unmonitored' | 'notAired' | 'expired' | 'modified' | 'unwanted' | 'processing' | 'available' | 'unavailable' | 'mirrored';
 }
 
 export function getStatusLabel(content: Content): StatusLabel {
@@ -94,6 +94,10 @@ export function getStatusLabel(content: Content): StatusLabel {
 
   if (content.status === 'modified') {
     return { text: 'Modified', kind: 'modified' };
+  }
+
+  if (content.status === 'mirrored') {
+    return { text: 'Mirrored', kind: 'mirrored' };
   }
 
   if (content.status === 'downloaded' || content.contentFileId > 0) {

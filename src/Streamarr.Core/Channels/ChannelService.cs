@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using Streamarr.Core.Content;
 using Streamarr.Core.Messaging.Events;
 using Streamarr.Core.Notifications;
 
@@ -21,14 +22,17 @@ namespace Streamarr.Core.Channels
     public class ChannelService : IChannelService
     {
         private readonly IChannelRepository _repo;
+        private readonly IContentService _contentService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
         public ChannelService(IChannelRepository repo,
+                              IContentService contentService,
                               IEventAggregator eventAggregator,
                               Logger logger)
         {
             _repo = repo;
+            _contentService = contentService;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -79,6 +83,7 @@ namespace Streamarr.Core.Channels
 
         public void DeleteChannel(int channelId)
         {
+            _contentService.DeleteByChannelId(channelId);
             _repo.Delete(channelId);
         }
 

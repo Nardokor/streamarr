@@ -62,8 +62,15 @@ export interface StatusLabel {
 }
 
 export function getStatusLabel(content: Content): StatusLabel {
-  // Members content the current cookies cannot unlock
-  if (content.isMembers && !content.isAccessible) {
+  // Members content the current cookies cannot unlock — but if it's already
+  // downloaded/mirrored to disk, that trumps the current platform accessibility
+  if (
+    content.isMembers &&
+    !content.isAccessible &&
+    content.status !== 'mirrored' &&
+    content.status !== 'downloaded' &&
+    content.contentFileId <= 0
+  ) {
     return { text: 'Unavailable', kind: 'unavailable' };
   }
 

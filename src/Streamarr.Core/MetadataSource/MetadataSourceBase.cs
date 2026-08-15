@@ -32,6 +32,7 @@ namespace Streamarr.Core.MetadataSource
         public abstract ContentMetadataResult? GetContentMetadata(string platformContentId);
         public abstract IEnumerable<ContentMetadataResult> GetContentMetadataBatch(IEnumerable<string> platformContentIds);
         public abstract IEnumerable<ContentStatusUpdate> GetLivestreamStatusUpdates(IEnumerable<string> platformContentIds);
+        public abstract string GetDownloadUrl(string platformContentId);
 
         public virtual ContentAccessibilityResult ProbeContentAccessibility(string platformContentId, bool withCookies = true)
         {

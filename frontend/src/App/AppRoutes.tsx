@@ -1,27 +1,27 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
+import History from 'Activity/History/History';
+import Queue from 'Activity/Queue/Queue';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
 import CreatorAdd from 'Creator/CreatorAdd';
 import CreatorDetail from 'Creator/CreatorDetail';
+import CreatorIndex from 'Creator/CreatorIndex';
 import CreatorImport from 'Creator/Import/CreatorImport';
 import CreatorImportTable from 'Creator/Import/CreatorImportTable';
-import CreatorIndex from 'Creator/CreatorIndex';
+import ImportUrl from 'Creator/ImportUrl/ImportUrl';
+import ArchivalSettings from 'Settings/Archival/ArchivalSettings';
+import ChannelBulkSettings from 'Settings/Channels/ChannelBulkSettings';
+import ConnectPage from 'Settings/Connect/ConnectPage';
+import DownloadClientSettings from 'Settings/DownloadClient/DownloadClientSettings';
 import GeneralSettings from 'Settings/General/GeneralSettings';
 import MediaManagement from 'Settings/MediaManagement/MediaManagement';
 import Profiles from 'Settings/Profiles/Profiles';
 import Quality from 'Settings/Quality/Quality';
 import Settings from 'Settings/Settings';
-import TagSettings from 'Settings/Tags/TagSettings';
 import SourcesPage from 'Settings/Sources/SourcesPage';
+import TagSettings from 'Settings/Tags/TagSettings';
 import UISettings from 'Settings/UI/UISettings';
-import ArchivalSettings from 'Settings/Archival/ArchivalSettings';
-import DownloadClientSettings from 'Settings/DownloadClient/DownloadClientSettings';
-import ConnectPage from 'Settings/Connect/ConnectPage';
-import ChannelBulkSettings from 'Settings/Channels/ChannelBulkSettings';
-import History from 'Activity/History/History';
-import Queue from 'Activity/Queue/Queue';
-import WantedMissing from 'Wanted/WantedMissing';
 import Backups from 'System/Backup/Backups';
 import LogsTable from 'System/Events/LogsTable';
 import Logs from 'System/Logs/Logs';
@@ -29,6 +29,7 @@ import Status from 'System/Status/Status';
 import Tasks from 'System/Tasks/Tasks';
 import Updates from 'System/Updates/Updates';
 import getPathWithUrlBase from 'Utilities/getPathWithUrlBase';
+import WantedMissing from 'Wanted/WantedMissing';
 
 function RedirectWithUrlBase() {
   return <Redirect to={getPathWithUrlBase('/')} />;
@@ -58,7 +59,13 @@ function AppRoutes() {
 
       <Route exact={true} path="/creator/import" component={CreatorImport} />
 
-      <Route exact={true} path="/creator/import/:rootFolderId" component={CreatorImportTable} />
+      <Route
+        exact={true}
+        path="/creator/import/:rootFolderId"
+        component={CreatorImportTable}
+      />
+
+      <Route exact={true} path="/creator/import-url" component={ImportUrl} />
 
       <Route exact={true} path="/creator/:slug" component={CreatorDetail} />
 
@@ -86,7 +93,10 @@ function AppRoutes() {
 
       <Route path="/settings/archival" component={ArchivalSettings} />
 
-      <Route path="/settings/downloadclient" component={DownloadClientSettings} />
+      <Route
+        path="/settings/downloadclient"
+        component={DownloadClientSettings}
+      />
 
       <Route path="/settings/connect" component={ConnectPage} />
 

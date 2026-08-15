@@ -1,0 +1,44 @@
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.helpText {
+  margin-bottom: 20px;
+  color: var(--textSecondary);
+}
+
+.inputRow {
+  display: flex;
+  gap: 10px;
+}
+
+.input {
+  composes: input from '~Components/Form/TextInput.css';
+
+  flex: 1 1 auto;
+  height: 46px;
+  font-size: 16px;
+}
+
+.resultAlert {
+  margin-top: 20px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.targetPicker {
+  margin-top: 10px;
+}
+
+.resolvedTitle {
+  margin-bottom: 10px;
+}
+
+.channelSelect {
+  composes: input from '~Components/Form/TextInput.css';
+
+  width: 100%;
+  height: 40px;
+  margin-bottom: 15px;
+}

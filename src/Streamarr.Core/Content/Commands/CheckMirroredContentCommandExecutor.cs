@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using Streamarr.Core.Channels;
+using Streamarr.Core.Datastore;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.MetadataSource;
 
@@ -43,7 +44,16 @@ namespace Streamarr.Core.Content.Commands
 
             foreach (var channelId in allWithFiles.Keys)
             {
-                var channel = _channelService.GetChannel(channelId);
+                Channel channel;
+                try
+                {
+                    channel = _channelService.GetChannel(channelId);
+                }
+                catch (ModelNotFoundException)
+                {
+                    _logger.Warn("Skipping mirror check for channel ID {0} — channel no longer exists", channelId);
+                    continue;
+                }
 
                 if (!IsDue(channel))
                 {

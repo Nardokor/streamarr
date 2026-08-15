@@ -36,7 +36,7 @@ namespace Streamarr.Api.V1.Provider
                 Tags = definition.Tags,
                 Fields = SchemaBuilder.ToSchema(definition.Settings),
 
-                InfoLink = $"https://wiki.servarr.com/sonarr/supported#{definition.Implementation.ToLower()}"
+                InfoLink = $"https://wiki.servarr.com/streamarr/supported#{definition.Implementation.ToLower()}"
             };
         }
 

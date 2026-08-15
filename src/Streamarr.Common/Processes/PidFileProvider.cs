@@ -29,7 +29,7 @@ namespace Streamarr.Common.Processes
                 return;
             }
 
-            var filename = Path.Combine(_appFolderInfo.AppDataFolder, "sonarr.pid");
+            var filename = Path.Combine(_appFolderInfo.AppDataFolder, "streamarr.pid");
             try
             {
                 File.WriteAllText(filename, ProcessProvider.GetCurrentProcessId().ToString());

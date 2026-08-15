@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using NLog;
 using Streamarr.Core.Channels;
@@ -6,7 +5,6 @@ using Streamarr.Core.Content;
 using Streamarr.Core.Download;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.MetadataSource;
-using ContentEntity = Streamarr.Core.Content.Content;
 
 namespace Streamarr.Core.Creators
 {
@@ -21,6 +19,7 @@ namespace Streamarr.Core.Creators
         private readonly IContentFilterService _contentFilterService;
         private readonly MetadataSourceFactory _metadataSourceFactory;
         private readonly IManageCommandQueue _commandQueueManager;
+        private readonly ILiveRecordingSupervisor _supervisor;
         private readonly Logger _logger;
 
         public LivestreamStatusService(
@@ -28,12 +27,14 @@ namespace Streamarr.Core.Creators
             IContentFilterService contentFilterService,
             MetadataSourceFactory metadataSourceFactory,
             IManageCommandQueue commandQueueManager,
+            ILiveRecordingSupervisor supervisor,
             Logger logger)
         {
             _contentService = contentService;
             _contentFilterService = contentFilterService;
             _metadataSourceFactory = metadataSourceFactory;
             _commandQueueManager = commandQueueManager;
+            _supervisor = supervisor;
             _logger = logger;
         }
 
@@ -52,6 +53,11 @@ namespace Streamarr.Core.Creators
                 ? (_metadataSourceFactory.GetByPlatform(delegatePlatform) ?? channelSource)
                 : channelSource;
 
+            UpdateTrackedStatuses(channel, source);
+        }
+
+        private void UpdateTrackedStatuses(Channel channel, IMetadataSource source)
+        {
             var existing = _contentService.GetByChannelId(channel.Id);
 
             // Only probe Live and Upcoming items — VODs have already transitioned and
@@ -66,14 +72,6 @@ namespace Streamarr.Core.Creators
 
             if (!livestreamContent.Any())
             {
-                // No known live/upcoming content — if the channel wants live streams,
-                // probe the channel directly so a new stream is discovered and can
-                // start recording without waiting for the next full sync.
-                if (channel.DownloadLive)
-                {
-                    TryDiscoverActiveLivestream(channel, source);
-                }
-
                 return;
             }
 
@@ -85,6 +83,12 @@ namespace Streamarr.Core.Creators
             var updates = source
                 .GetLivestreamStatusUpdates(livestreamContent.Select(c => c.PlatformContentId))
                 .ToDictionary(u => u.PlatformContentId);
+
+            _logger.Debug(
+                "Got {0} update(s) from API for {1} tracked item(s) in '{2}'",
+                updates.Count,
+                livestreamContent.Count,
+                channel.Title);
 
             foreach (var content in livestreamContent)
             {
@@ -103,11 +107,26 @@ namespace Streamarr.Core.Creators
                     continue;
                 }
 
+                _logger.Debug(
+                    "'{0}' ({1}): DB={2}/{3} → API={4}",
+                    content.Title,
+                    content.PlatformContentId,
+                    content.ContentType,
+                    content.Status,
+                    update.NewContentType);
+
                 ContentStatus? newStatus = null;
+                var shouldQueueRecording = false;
 
                 if (update.NewContentType == ContentType.Live)
                 {
-                    if (channel.DownloadLive)
+                    if (!channel.DownloadLive)
+                    {
+                        _logger.Debug(
+                            "Stream '{0}' is live but DownloadLive=false; tracking only",
+                            content.Title);
+                    }
+                    else
                     {
                         if (content.Status == ContentStatus.Unwanted)
                         {
@@ -119,13 +138,18 @@ namespace Streamarr.Core.Creators
                         {
                             newStatus = ContentStatus.Recording;
 
-                            if (content.Status != ContentStatus.Recording)
+                            // Skip queuing when a supervisor already owns this recording. During the
+                            // backoff gap between relaunch attempts no yt-dlp process is active and the
+                            // status is still Recording, so the status check alone would re-queue a
+                            // duplicate; IsSupervising closes that window.
+                            if (content.Status != ContentStatus.Recording &&
+                                !_supervisor.IsSupervising(content.Id))
                             {
                                 _logger.Debug(
                                     "Queuing live recording for '{0}' (DownloadLive)",
                                     content.Title);
 
-                                _commandQueueManager.Push(new DownloadContentCommand { ContentId = content.Id });
+                                shouldQueueRecording = true;
                             }
                         }
                         else
@@ -198,52 +222,11 @@ namespace Streamarr.Core.Creators
                         content.AirDateUtc,
                         content.Status);
                 }
-            }
-        }
 
-        private void TryDiscoverActiveLivestream(Channel channel, IMetadataSource source)
-        {
-            var live = source.GetActiveLivestream(channel.PlatformUrl, channel.PlatformId);
-            if (live == null)
-            {
-                return;
-            }
-
-            // Skip if the content already exists — a recent full sync may have added it.
-            var existing = _contentService.FindByPlatformContentId(channel.Id, live.PlatformContentId);
-            if (existing != null)
-            {
-                return;
-            }
-
-            _logger.Info(
-                "Discovered active livestream '{0}' ({1}) for '{2}' via live check",
-                live.Title,
-                live.PlatformContentId,
-                channel.Title);
-
-            var passes = _contentFilterService.PassesFilter(live.Title, ContentType.Live, channel);
-            var content = new ContentEntity
-            {
-                ChannelId = channel.Id,
-                PlatformContentId = live.PlatformContentId,
-                ContentType = ContentType.Live,
-                Title = live.Title,
-                ThumbnailUrl = live.ThumbnailUrl,
-                AirDateUtc = live.AirDateUtc,
-                DateAdded = DateTime.UtcNow,
-                Monitored = true,
-                Status = passes ? ContentStatus.Missing : ContentStatus.Unwanted,
-            };
-
-            var added = _contentService.AddContent(content);
-
-            if (passes && channel.AutoDownload)
-            {
-                added.Status = ContentStatus.Recording;
-                _contentService.UpdateContent(added);
-                _commandQueueManager.Push(new DownloadContentCommand { ContentId = added.Id });
-                _logger.Info("Queued live recording for '{0}' (auto-discovered via live check)", live.Title);
+                if (shouldQueueRecording)
+                {
+                    _commandQueueManager.Push(new DownloadContentCommand { ContentId = content.Id });
+                }
             }
         }
     }

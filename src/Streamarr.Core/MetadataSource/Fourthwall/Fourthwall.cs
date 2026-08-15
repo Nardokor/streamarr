@@ -9,6 +9,7 @@ using FluentValidation.Results;
 using NLog;
 using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
+using Streamarr.Core.Validation;
 
 namespace Streamarr.Core.MetadataSource.Fourthwall
 {
@@ -90,7 +91,10 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
             {
                 return new ValidationResult(new[]
                 {
-                    new ValidationFailure("CookiesFilePath", "Cookies file path is required.")
+                    new StreamarrValidationFailure("CookiesFilePath", "Upload a cookies file to enable access to Fourthwall content.")
+                    {
+                        IsWarning = true
+                    }
                 });
             }
 
@@ -98,7 +102,7 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
             {
                 return new ValidationResult(new[]
                 {
-                    new ValidationFailure("CookiesFilePath", $"Cookies file not found: {Settings.CookiesFilePath}")
+                    new ValidationFailure("CookiesFilePath", "Cookies file is missing — please upload a new one.")
                 });
             }
 
@@ -179,7 +183,8 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
             string platformUrl,
             string platformId,
             DateTime? since,
-            bool checkMembership = false)
+            bool checkMembership = false,
+            DateTime? membersSince = null)
         {
             var baseUrl = platformUrl.TrimEnd('/');
             var listingUrl = $"{baseUrl}/supporters/videos/all";
@@ -438,5 +443,8 @@ namespace Streamarr.Core.MetadataSource.Fourthwall
 
             return domain;
         }
+
+        public override string GetDownloadUrl(string platformContentId) =>
+            $"https://www.youtube.com/watch?v={platformContentId}";
     }
 }

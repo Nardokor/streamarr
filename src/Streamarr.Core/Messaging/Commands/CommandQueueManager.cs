@@ -267,9 +267,15 @@ namespace Streamarr.Core.Messaging.Commands
         {
             commandName = commandName.Split('.').Last();
             var commands = _knownTypes.GetImplementations(typeof(Command));
-            var commandType = commands.Single(c => c.Name.Equals(commandName, StringComparison.InvariantCultureIgnoreCase));
+            var commandType = commands.SingleOrDefault(c => c.Name.Equals(commandName, StringComparison.InvariantCultureIgnoreCase));
 
-            return Json.Deserialize("{}", commandType) as Command;
+            if (commandType == null)
+            {
+                throw new StreamarrClientException(HttpStatusCode.BadRequest, "Unknown command: {0}", commandName);
+            }
+
+            return Json.Deserialize("{}", commandType) as Command
+                ?? throw new StreamarrClientException(HttpStatusCode.BadRequest, "Failed to deserialize command: {0}", commandName);
         }
 
         private void Update(CommandModel command, CommandStatus status, string message)

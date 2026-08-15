@@ -3,7 +3,6 @@ using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Download;
-using Streamarr.Core.Download.YtDlp;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Http;
 
@@ -16,19 +15,19 @@ public class QueueController : Controller
     private readonly IContentService _contentService;
     private readonly IChannelService _channelService;
     private readonly ICreatorService _creatorService;
-    private readonly IYtDlpClient _ytDlpClient;
+    private readonly ILiveRecordingSupervisor _supervisor;
 
     public QueueController(IManageCommandQueue commandQueueManager,
                            IContentService contentService,
                            IChannelService channelService,
                            ICreatorService creatorService,
-                           IYtDlpClient ytDlpClient)
+                           ILiveRecordingSupervisor supervisor)
     {
         _commandQueueManager = commandQueueManager;
         _contentService = contentService;
         _channelService = channelService;
         _creatorService = creatorService;
-        _ytDlpClient = ytDlpClient;
+        _supervisor = supervisor;
     }
 
     [HttpGet]
@@ -79,7 +78,9 @@ public class QueueController : Controller
     [HttpDelete("{contentId:int}")]
     public IActionResult CancelDownload(int contentId)
     {
-        _ytDlpClient.CancelDownload(contentId);
+        // Routes through the supervisor so a live recording stops relaunching; for plain VOD
+        // downloads (not supervised) it still kills the running yt-dlp process.
+        _supervisor.Cancel(contentId);
         return Ok();
     }
 }

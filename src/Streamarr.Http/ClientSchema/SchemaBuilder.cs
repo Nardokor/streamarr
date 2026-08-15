@@ -73,6 +73,18 @@ namespace Streamarr.Http.ClientSchema
 
                         mapping.SetterFunc(target, existingValue);
                     }
+                    else if (mapping.Field.Hidden == "hidden" &&
+                             string.IsNullOrEmpty(field.Value?.ToString()) &&
+                             model != null)
+                    {
+                        // Hidden fields are app-managed and never edited by the user.
+                        // When the client sends an empty value (stale cache or first-load
+                        // race with an upload), fall back to the stored value so that
+                        // app-managed paths like CookiesFilePath survive round-trips.
+                        var existingValue = mapping.GetterFunc(model);
+
+                        mapping.SetterFunc(target, existingValue);
+                    }
                     else
                     {
                         mapping.SetterFunc(target, field.Value);

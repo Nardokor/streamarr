@@ -8,7 +8,6 @@ import { useCallback } from 'react';
 export interface YouTubeSettingsModel {
   youTubeApiKey: string;
   youTubeFullRefreshIntervalHours: number;
-  youTubeLiveCheckIntervalMinutes: number;
 
   // Default channel filter settings
   youTubeDefaultDownloadVideos: boolean;

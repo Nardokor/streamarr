@@ -10,6 +10,7 @@ using Streamarr.Core.Download.YtDlp;
 using Streamarr.Core.MetadataSource;
 using Streamarr.Core.MetadataSource.YouTube;
 using Streamarr.Core.Test.Framework;
+using Streamarr.Test.Common;
 
 namespace Streamarr.Core.Test.MetadataSource
 {
@@ -39,6 +40,18 @@ namespace Streamarr.Core.Test.MetadataSource
             Mocker.GetMock<IYouTubeApiClient>()
                   .Setup(c => c.GetChannelThumbnailUrl(It.IsAny<string>(), It.IsAny<string>()))
                   .Returns(string.Empty);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetVideoDetails(It.IsAny<string>(), It.IsAny<IEnumerable<string>>()))
+                  .Returns(new List<YoutubeVideo>());
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetChannelRecentVideoIds(It.IsAny<string>()))
+                  .Returns(new List<string>());
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.GetChannelVideosFull(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string>()))
+                  .Returns(new List<YtDlpVideoInfo>());
         }
 
         // ── SearchCreator URL routing ─────────────────────────────────────────
@@ -296,6 +309,128 @@ namespace Streamarr.Core.Test.MetadataSource
             result[0].ContentType.Should().Be(ContentType.Upcoming);
         }
 
+        // ── FetchMembershipContent (via GetNewContent checkMembership=true) ──────
+        // FetchMembershipContent uses GetChannelVideosFull (non-flat mode) so yt-dlp
+        // visits each video page and correctly populates the availability field.
+        // Detection is based solely on availability = "subscriber_only" or "members_only".
+
+        [Test]
+        public void membership_content_should_be_detected_when_availability_is_subscriber_only()
+        {
+            // GetChannelVideosFull (full metadata, non-flat) returns a video with
+            // availability = "subscriber_only" — the primary detection mechanism.
+            Subject.Definition = new MetadataSourceDefinition
+            {
+                Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = "/fake/cookies.txt" }
+            };
+
+            var platformUrl = "https://www.youtube.com/channel/" + TestChannelId;
+            var since = DateTime.UtcNow.AddDays(-1);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
+                  .Returns(new List<(string, DateTime)>());
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.GetChannelVideosFull(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), "/fake/cookies.txt"))
+                  .Returns(new List<YtDlpVideoInfo>
+                  {
+                      new YtDlpVideoInfo { Id = "members_vid1", Title = "Members Only Video", Availability = "subscriber_only" }
+                  });
+
+            var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+            ExceptionVerification.ExpectedWarns(1); // RSS returned no IDs — expected fallback
+
+            result.Should().HaveCount(1);
+            result[0].PlatformContentId.Should().Be("members_vid1");
+            result[0].IsMembers.Should().BeTrue();
+        }
+
+        [Test]
+        public void membership_content_should_be_detected_when_availability_is_members_only()
+        {
+            // GetChannelVideosFull returns a video with availability = "members_only".
+            Subject.Definition = new MetadataSourceDefinition
+            {
+                Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = "/fake/cookies.txt" }
+            };
+
+            var platformUrl = "https://www.youtube.com/channel/" + TestChannelId;
+            var since = DateTime.UtcNow.AddDays(-1);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
+                  .Returns(new List<(string, DateTime)>());
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.GetChannelVideosFull(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), "/fake/cookies.txt"))
+                  .Returns(new List<YtDlpVideoInfo>
+                  {
+                      new YtDlpVideoInfo { Id = "members_vid2", Title = "Members Only", Availability = "members_only" }
+                  });
+
+            var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+            ExceptionVerification.ExpectedWarns(1); // RSS returned no IDs — expected fallback
+
+            result.Should().HaveCount(1);
+            result[0].PlatformContentId.Should().Be("members_vid2");
+            result[0].IsMembers.Should().BeTrue();
+        }
+
+        [Test]
+        public void membership_content_should_not_include_video_without_members_availability()
+        {
+            // GetChannelVideosFull returns a video with no availability field set (public video).
+            // Without availability = "subscriber_only" or "members_only" it must not be
+            // treated as members-only content.
+            Subject.Definition = new MetadataSourceDefinition
+            {
+                Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = "/fake/cookies.txt" }
+            };
+
+            var platformUrl = "https://www.youtube.com/channel/" + TestChannelId;
+            var since = DateTime.UtcNow.AddDays(-1);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
+                  .Returns(new List<(string, DateTime)>());
+
+            Mocker.GetMock<IYtDlpClient>()
+                  .Setup(c => c.GetChannelVideosFull(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), "/fake/cookies.txt"))
+                  .Returns(new List<YtDlpVideoInfo>
+                  {
+                      new YtDlpVideoInfo { Id = "public_vid1", Title = "Public Video", Availability = "public" }
+                  });
+
+            var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+            ExceptionVerification.ExpectedWarns(1); // RSS returned no IDs — expected fallback
+
+            result.Should().NotContain(r => r.IsMembers);
+        }
+
+        [Test]
+        public void membership_content_should_not_be_fetched_when_cookies_not_configured()
+        {
+            Subject.Definition = new MetadataSourceDefinition
+            {
+                Settings = new YouTubeSettings { ApiKey = TestApiKey, CookiesFilePath = string.Empty }
+            };
+
+            var platformUrl = "https://www.youtube.com/channel/" + TestChannelId;
+            var since = DateTime.UtcNow.AddDays(-1);
+
+            Mocker.GetMock<IYouTubeApiClient>()
+                  .Setup(c => c.GetPlaylistItems(TestApiKey, It.IsAny<string>(), It.IsAny<DateTime?>()))
+                  .Returns(new List<(string, DateTime)>());
+
+            var result = Subject.GetNewContent(platformUrl, TestChannelId, since, checkMembership: true).ToList();
+            ExceptionVerification.ExpectedWarns(1); // RSS returned no IDs — expected fallback
+
+            // GetChannelVideosFull should NOT be called when cookies are not configured
+            Mocker.GetMock<IYtDlpClient>()
+                  .Verify(c => c.GetChannelVideosFull(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
         // ── GetLivestreamStatusUpdates ────────────────────────────────────────
 
         [Test]
@@ -317,6 +452,15 @@ namespace Streamarr.Core.Test.MetadataSource
             var result = Subject.GetLivestreamStatusUpdates(new[] { "vid1" });
 
             result.Should().BeEmpty();
+        }
+
+        // ── GetDownloadUrl ────────────────────────────────────────────────────
+
+        [Test]
+        public void get_download_url_should_build_youtube_watch_url()
+        {
+            Subject.GetDownloadUrl("dQw4w9WgXcQ")
+                   .Should().Be("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
         }
     }
 }

@@ -126,19 +126,6 @@ function DownloadClientSettings() {
                 />
               </FormGroup>
 
-              <FormGroup size={sizes.MEDIUM}>
-                <FormLabel>Cookie File</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.PATH}
-                  name="ytDlpCookieFilePath"
-                  helpText="Path to a Netscape-format cookies file for authenticated downloads."
-                  includeFiles={true}
-                  onChange={handleInputChange}
-                  {...settings.ytDlpCookieFilePath}
-                />
-              </FormGroup>
-
               <FormGroup size={sizes.LARGE}>
                 <FormLabel>Preferred Format</FormLabel>
 
@@ -158,8 +145,8 @@ function DownloadClientSettings() {
                   type={inputTypes.NUMBER}
                   name="ytDlpMaxConcurrentDownloads"
                   min={1}
-                  max={10}
-                  helpText="Maximum number of simultaneous yt-dlp download processes."
+                  max={20}
+                  helpText="Maximum number of simultaneous yt-dlp download processes. Requires a restart to take effect."
                   onChange={handleInputChange}
                   {...settings.ytDlpMaxConcurrentDownloads}
                 />

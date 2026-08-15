@@ -48,6 +48,7 @@ interface CssExports {
   'statusDownloaded': string;
   'statusDownloading': string;
   'statusExpired': string;
+  'statusMirrored': string;
   'statusMissing': string;
   'statusModified': string;
   'statusNotAired': string;

@@ -59,12 +59,19 @@ RUN existing_group=$(getent group 1000 | cut -d: -f1); \
 # Install yt-dlp into a directory owned by the app user so the running
 # process can self-update (yt-dlp --update-to nightly) without root.
 RUN mkdir -p /opt/yt-dlp && \
-    curl -fsSL https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux \
+    curl -fsSL --retry 5 --retry-delay 10 --retry-all-errors \
+        https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux \
         -o /opt/yt-dlp/yt-dlp && \
     chmod +x /opt/yt-dlp/yt-dlp && \
     chown -R streamarr:streamarr /opt/yt-dlp
 
 ENV PATH="/opt/yt-dlp:${PATH}"
+
+# Install custom yt-dlp plugins (e.g. Fansly — not yet upstream).
+# Placed in /etc/yt-dlp/plugins/ so yt-dlp --update-to nightly never touches them.
+# Remove once the extractor is merged upstream.
+RUN mkdir -p /etc/yt-dlp/plugins/local/yt_dlp_plugins/extractor
+COPY docker/yt-dlp-plugins/extractor/ /etc/yt-dlp/plugins/local/yt_dlp_plugins/extractor/
 
 # Install Deno for yt-dlp JavaScript challenge solving (n-parameter solver).
 # yt-dlp auto-discovers Deno on PATH — no extra configuration needed.

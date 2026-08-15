@@ -18,7 +18,7 @@ namespace Streamarr.Integration.Test
 
             var resultGet = Series.All();
 
-            var logFile = "sonarr.trace.txt";
+            var logFile = "streamarr.trace.txt";
             var logLines = Logs.GetLogFileLines(logFile);
 
             var resultPost = Series.InvalidPost(new SeriesResource());

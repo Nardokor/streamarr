@@ -66,6 +66,12 @@ public class ChannelController : RestControllerWithSignalR<ChannelResource, Chan
     public ActionResult<ChannelResource> Update([FromBody] ChannelResource resource)
     {
         var channel = resource.ToModel();
+
+        // Preserve fields that are managed internally and not exposed via the API resource,
+        // so that a PUT round-trip doesn't silently clear them.
+        var existing = _channelService.GetChannel(channel.Id);
+        channel.WebSubSecret = existing?.WebSubSecret;
+
         _channelService.UpdateChannel(channel);
         _contentFilterService.ReapplyFilterForChannel(channel);
         return Accepted(resource.Id);

@@ -1,11 +1,11 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "Sonarr",
-    "description": "Sonarr API docs - The v5 API docs apply to Sonarr v5 only.",
+    "title": "Streamarr",
+    "description": "Streamarr API docs",
     "license": {
       "name": "GPL-3.0",
-      "url": "https://github.com/Sonarr/Sonarr/blob/develop/LICENSE"
+      "url": "https://github.com/Nardokor/streamarr/blob/main/LICENSE"
     },
     "version": "5.0.0"
   },

@@ -45,7 +45,7 @@ namespace Streamarr.Common.Instrumentation
                 RegisterDebugger();
             }
 
-            RegisterSentry(updateApp, appFolderInfo);
+            RegisterSentry(appFolderInfo);
 
             if (updateApp)
             {
@@ -66,22 +66,10 @@ namespace Streamarr.Common.Instrumentation
             LogManager.ReconfigExistingLoggers();
         }
 
-        private static void RegisterSentry(bool updateClient, IAppFolderInfo appFolderInfo)
+        private static void RegisterSentry(IAppFolderInfo appFolderInfo)
         {
-            string dsn;
-
-            if (updateClient)
-            {
-                dsn = RuntimeInfo.IsProduction
-                    ? "https://80777986b95f44a1a90d1eb2f3af1e36@sentry.sonarr.tv/11"
-                    : "https://6168f0946aba4e60ac23e469ac08eac5@sentry.sonarr.tv/9";
-            }
-            else
-            {
-                dsn = RuntimeInfo.IsProduction
-                    ? "https://e2adcbe52caf46aeaebb6b1dcdfe10a1@sentry.sonarr.tv/8"
-                    : "https://4ee3580e01d8407c96a7430fbc953512@sentry.sonarr.tv/10";
-            }
+            // Sentry DSN not configured for Streamarr
+            var dsn = string.Empty;
 
             Target target;
             try
@@ -101,7 +89,7 @@ namespace Streamarr.Common.Instrumentation
                 target = new NullTarget();
             }
 
-            var loggingRule = new LoggingRule("*", updateClient ? LogLevel.Trace : LogLevel.Warn, target);
+            var loggingRule = new LoggingRule("*", LogLevel.Warn, target);
             LogManager.Configuration.AddTarget("sentryTarget", target);
             LogManager.Configuration.LoggingRules.Add(loggingRule);
 
@@ -129,7 +117,7 @@ namespace Streamarr.Common.Instrumentation
 
             coloredConsoleTarget.Name = "consoleLogger";
 
-            var logFormat = Enum.TryParse<ConsoleLogFormat>(Environment.GetEnvironmentVariable("SONARR__LOG__CONSOLEFORMAT"), out var formatEnumValue)
+            var logFormat = Enum.TryParse<ConsoleLogFormat>(Environment.GetEnvironmentVariable("STREAMARR__LOG__CONSOLEFORMAT"), out var formatEnumValue)
                 ? formatEnumValue
                 : ConsoleLogFormat.Standard;
 
@@ -143,9 +131,9 @@ namespace Streamarr.Common.Instrumentation
 
         private static void RegisterAppFile(IAppFolderInfo appFolderInfo)
         {
-            RegisterAppFile(appFolderInfo, "appFileInfo", "sonarr.txt", 5, LogLevel.Info);
-            RegisterAppFile(appFolderInfo, "appFileDebug", "sonarr.debug.txt", 50, LogLevel.Off);
-            RegisterAppFile(appFolderInfo, "appFileTrace", "sonarr.trace.txt", 50, LogLevel.Off);
+            RegisterAppFile(appFolderInfo, "appFileInfo", "streamarr.txt", 5, LogLevel.Info);
+            RegisterAppFile(appFolderInfo, "appFileDebug", "streamarr.debug.txt", 50, LogLevel.Off);
+            RegisterAppFile(appFolderInfo, "appFileTrace", "streamarr.trace.txt", 50, LogLevel.Off);
         }
 
         private static void RegisterAppFile(IAppFolderInfo appFolderInfo, string name, string fileName, int maxArchiveFiles, LogLevel minLogLevel)

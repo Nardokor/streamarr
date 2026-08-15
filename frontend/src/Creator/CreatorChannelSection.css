@@ -369,6 +369,11 @@
   color: white;
 }
 
+.statusMirrored {
+  background: #0e6b6b;
+  color: white;
+}
+
 .settingsSection {
   margin-bottom: 4px;
   padding-bottom: 4px;

@@ -42,12 +42,17 @@ namespace Streamarr.Core.Configuration
         // Download Client (yt-dlp)
         string YtDlpBinaryPath { get; set; }
         string YtDlpTempDownloadFolder { get; set; }
-        string YtDlpCookieFilePath { get; set; }
         bool YtDlpEmbedMetadata { get; set; }
         bool YtDlpEmbedThumbnail { get; set; }
         string YtDlpPreferredFormat { get; set; }
         int YtDlpMaxConcurrentDownloads { get; set; }
         string YtDlpDenoBinaryPath { get; set; }
+
+        // Live recording supervisor (app-side retry/resume)
+        int YtDlpLiveRetryBackoffSeconds { get; set; }
+        int YtDlpLiveMaxConsecutiveFailures { get; set; }
+        int YtDlpLiveMaxRetryWindowMinutes { get; set; }
+        int YtDlpLiveSocketTimeoutSeconds { get; set; }
 
         // Internal
         bool CleanupMetadataImages { get; set; }

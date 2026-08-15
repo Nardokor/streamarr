@@ -23,7 +23,7 @@ namespace Streamarr.Test.Common
             {
                 LogManager.Configuration = new LoggingConfiguration();
 
-                Enum.TryParse<TestLogOutput>(Environment.GetEnvironmentVariable("SONARR_TESTS_LOG_OUTPUT"), out var logOutput);
+                Enum.TryParse<TestLogOutput>(Environment.GetEnvironmentVariable("STREAMARR_TESTS_LOG_OUTPUT"), out var logOutput);
 
                 RegisterSentryLogger();
 

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using NLog;
 using Streamarr.Common.Disk;
 using Streamarr.Common.Processes;
@@ -16,26 +17,55 @@ namespace Streamarr.Core.Download.YtDlp
 {
     public interface IYtDlpClient
     {
-        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, bool needsCookies = false, Action<YtDlpProgress> onProgress = null);
+        YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null);
+
+        /// <summary>
+        /// Acquires one of the bounded concurrent-download slots, blocking until one is free.
+        /// Dispose the returned token to release the slot. Use this when a caller (e.g. the live
+        /// recording supervisor) needs to hold a single slot across multiple <see cref="DownloadHeld"/>
+        /// attempts instead of acquiring/releasing per attempt.
+        /// </summary>
+        IDisposable AcquireDownloadSlot();
+
+        /// <summary>
+        /// Runs a single yt-dlp attempt WITHOUT acquiring a concurrency slot — the caller must
+        /// already hold one via <see cref="AcquireDownloadSlot"/>. When <paramref name="keepPartialsOnFailure"/>
+        /// is true, partial fragment files are NOT deleted on failure, so a subsequent attempt with
+        /// the same output path can resume from them (-k --live-from-start).
+        /// </summary>
+        YtDlpDownloadResult DownloadHeld(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null, bool keepPartialsOnFailure = false, bool keepFragments = true);
+
+        /// <summary>Returns true while a yt-dlp process for the given content id is running.</summary>
+        bool IsDownloadActive(int contentId);
+
         void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
-        List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null);
-        List<YtDlpVideoInfo> GetMembershipTabVideos(string channelUrl);
+        List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null);
+
+        /// <summary>
+        /// Fetches full video metadata (not flat) from a channel's videos tab.
+        /// Without --flat-playlist yt-dlp visits each video page individually, which populates
+        /// the availability field correctly — essential for detecting members-only videos.
+        /// Use only for membership detection; it is slower than flat-playlist.
+        /// </summary>
+        List<YtDlpVideoInfo> GetChannelVideosFull(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null);
         YtDlpVideoInfo GetVideoInfo(string videoUrl);
 
         /// <summary>
         /// Lightweight accessibility check using --print (no format resolution, no deno).
-        /// Returns true if the video is accessible with current cookies; false if it requires
-        /// a membership level the cookies don't satisfy.
+        /// Returns a ContentAccessibilityResult that distinguishes:
+        ///   Accessible   — video plays with current cookies
+        ///   NotMember    — "Join this channel" error (no membership at all)
+        ///   TierRequired — member but wrong tier ("available on level: X")
+        ///   Inaccessible — deleted / private / unrecognised error
         /// </summary>
-        bool IsVideoAccessible(string videoId);
+        Streamarr.Core.MetadataSource.ContentAccessibilityResult ProbeVideoAccessibility(string videoId, bool withCookies = true, string cookiesFilePath = null);
 
         bool IsDenoAvailable();
 
         string GetVersion();
         bool IsAvailable();
         string SelfUpdate();
-        bool HasCookies { get; }
     }
 
     public class YtDlpClient : IYtDlpClient
@@ -64,28 +94,23 @@ namespace Streamarr.Core.Download.YtDlp
         };
 
         private readonly ConcurrentDictionary<int, Process> _activeDownloads = new();
+        private readonly SemaphoreSlim _concurrentDownloadSemaphore;
 
         private readonly IProcessProvider _processProvider;
         private readonly IDiskProvider _diskProvider;
         private readonly IConfigService _configService;
         private readonly Logger _logger;
 
-        public bool HasCookies => !string.IsNullOrWhiteSpace(Settings.CookieFilePath);
-
-        private string CookieArg => !string.IsNullOrWhiteSpace(Settings.CookieFilePath)
-            ? $" --cookies {Quote(Settings.CookieFilePath)}"
-            : string.Empty;
-
         private YtDlpSettings Settings => new YtDlpSettings
         {
             BinaryPath = _configService.YtDlpBinaryPath,
             TempDownloadFolder = _configService.YtDlpTempDownloadFolder,
-            CookieFilePath = _configService.YtDlpCookieFilePath,
             EmbedMetadata = _configService.YtDlpEmbedMetadata,
             EmbedThumbnail = _configService.YtDlpEmbedThumbnail,
             PreferredFormat = _configService.YtDlpPreferredFormat,
             MaxConcurrentDownloads = _configService.YtDlpMaxConcurrentDownloads,
             DenoBinaryPath = _configService.YtDlpDenoBinaryPath,
+            LiveSocketTimeoutSeconds = _configService.YtDlpLiveSocketTimeoutSeconds,
         };
 
         /// <summary>
@@ -122,6 +147,9 @@ namespace Streamarr.Core.Download.YtDlp
             _diskProvider = diskProvider;
             _configService = configService;
             _logger = logger;
+
+            var maxConcurrent = Math.Max(1, configService.YtDlpMaxConcurrentDownloads);
+            _concurrentDownloadSemaphore = new SemaphoreSlim(maxConcurrent, maxConcurrent);
         }
 
         public bool IsAvailable()
@@ -199,14 +227,18 @@ namespace Streamarr.Core.Download.YtDlp
             return JsonSerializer.Deserialize<YtDlpVideoInfo>(json, JsonOptions);
         }
 
-        public bool IsVideoAccessible(string videoId)
+        public Streamarr.Core.MetadataSource.ContentAccessibilityResult ProbeVideoAccessibility(string videoId, bool withCookies = true, string cookiesFilePath = null)
         {
             var url = $"https://www.youtube.com/watch?v={videoId}";
 
             // --print availability reads from video metadata — does not require format
-            // resolution or trigger the n-challenge. We parse the printed value to
-            // distinguish "members_only"/"subscriber_only" from genuinely public content.
-            var args = $"--print availability --no-playlist --socket-timeout 15{CookieArg} {Quote(url)}";
+            // resolution or trigger the n-challenge.
+            // withCookies=false is used for tier discovery: without auth, YouTube always
+            // returns the tier error so we learn the required level without needing access.
+            var cookieArg = withCookies && !string.IsNullOrWhiteSpace(cookiesFilePath)
+                ? $" --cookies {Quote(cookiesFilePath)}"
+                : string.Empty;
+            var args = $"--print availability --no-playlist --socket-timeout 15{cookieArg} {Quote(url)}";
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
             if (output.ExitCode != 0)
@@ -214,41 +246,63 @@ namespace Streamarr.Core.Download.YtDlp
                 var error = string.Join(" ", output.Error.Select(l => l.Content));
                 var lower = error.ToLowerInvariant();
 
+                // "This video is available to this channel's members on level: X (or any higher level)."
+                // — user has a membership but not the required tier. The tier name ends at the
+                // optional "(or any higher level)" clause or a period; more text may follow.
+                var tierMatch = Regex.Match(error, @"on level[:\s]+([^.(]+?)(?:\s*\(or any higher level\))?(?=[.\s]|$)", RegexOptions.IgnoreCase);
+                if (tierMatch.Success)
+                {
+                    var tier = tierMatch.Groups[1].Value.Trim();
+                    _logger.Debug("ProbeVideoAccessibility({0}) → tier required: {1}", videoId, tier);
+                    return Streamarr.Core.MetadataSource.ContentAccessibilityResult.TierRequired(tier);
+                }
+
+                // "Join this channel to get access to members-only content…"
+                // — user has no membership at all; all other videos on this channel are also inaccessible.
+                if (lower.Contains("join this channel") || lower.Contains("requires subscription"))
+                {
+                    _logger.Debug("ProbeVideoAccessibility({0}) → not a member", videoId);
+                    return Streamarr.Core.MetadataSource.ContentAccessibilityResult.NotMember();
+                }
+
+                // YouTube rate-limits the account — transient, do not treat as inaccessible.
+                if (lower.Contains("rate-limited") || lower.Contains("rate_limited"))
+                {
+                    _logger.Warn("ProbeVideoAccessibility({0}) — rate-limited by YouTube, skipping", videoId);
+                    return Streamarr.Core.MetadataSource.ContentAccessibilityResult.RateLimited();
+                }
+
                 var isAccessDenial = lower.Contains("members only") ||
                                      lower.Contains("members-only") ||
-                                     lower.Contains("join this channel") ||
-                                     lower.Contains("requires subscription") ||
                                      lower.Contains("private video") ||
                                      lower.Contains("video unavailable");
 
                 if (isAccessDenial)
                 {
-                    _logger.Debug("IsVideoAccessible({0}) → inaccessible (exit {1}): {2}", videoId, output.ExitCode, error.Split('\n')[0].Trim());
-                    return false;
+                    _logger.Debug("ProbeVideoAccessibility({0}) → inaccessible (exit {1}): {2}", videoId, output.ExitCode, error.Split('\n')[0].Trim());
+                    return Streamarr.Core.MetadataSource.ContentAccessibilityResult.Inaccessible();
                 }
 
                 // Unrecognised non-zero exit — treat as inaccessible so a transient yt-dlp
                 // error or an unknown membership error string doesn't produce a false positive.
-                _logger.Warn("IsVideoAccessible({0}) — unrecognised error (treating as inaccessible): {1}", videoId, error.Split('\n')[0].Trim());
-                return false;
+                _logger.Warn("ProbeVideoAccessibility({0}) — unrecognised error (treating as inaccessible): {1}", videoId, error.Split('\n')[0].Trim());
+                return Streamarr.Core.MetadataSource.ContentAccessibilityResult.Inaccessible();
             }
 
-            // Parse the printed availability value. Only "public" and "unlisted" are
-            // considered accessible — any other value (including empty, members_only,
-            // subscriber_only, premium_only, needs_auth, private, or an unknown future
-            // value) is treated as inaccessible to avoid false positives.
-            var availability = output.Standard.FirstOrDefault()?.Content?.Trim().ToLowerInvariant() ?? string.Empty;
-            var accessible = availability is "public" or "unlisted";
-
-            _logger.Debug("IsVideoAccessible({0}) → availability={1}, accessible={2}", videoId, availability, accessible);
-            return accessible;
+            // Exit 0 means yt-dlp successfully fetched the video metadata — the video is accessible.
+            // The availability string describes the video type ("public", "members_only", etc.)
+            // not whether the caller can access it; with valid cookies a "members_only" video
+            // exits 0 and is fully accessible.
+            var availability = output.Standard.FirstOrDefault()?.Content?.Trim() ?? string.Empty;
+            _logger.Debug("ProbeVideoAccessibility({0}) → exit 0, availability={1}, accessible=True", videoId, availability);
+            return Streamarr.Core.MetadataSource.ContentAccessibilityResult.Accessible();
         }
 
         public YtDlpChannelInfo GetChannelInfo(string channelUrl)
         {
             _logger.Debug("Getting channel info: {0}", channelUrl);
 
-            var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1 --socket-timeout 30 --extractor-args \"youtubetab:skip=authcheck\"{CookieArg} {Quote(channelUrl)}";
+            var args = $"--dump-single-json --flat-playlist --skip-download --playlist-end 1 --socket-timeout 30 --extractor-args \"youtubetab:skip=authcheck\" {Quote(channelUrl)}";
             var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
 
             if (output.ExitCode != 0)
@@ -262,7 +316,7 @@ namespace Streamarr.Core.Download.YtDlp
             return JsonSerializer.Deserialize<YtDlpChannelInfo>(json, JsonOptions);
         }
 
-        public List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null)
+        public List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null)
         {
             _logger.Debug("Getting channel content: {0} (limit={1}, dateAfter={2})", channelUrl, limit, dateAfter);
 
@@ -283,7 +337,7 @@ namespace Streamarr.Core.Download.YtDlp
             foreach (var tab in new[] { "videos", "shorts", "streams" })
             {
                 var tabUrl = $"{baseUrl}/{tab}";
-                var items = FetchFromTab(tabUrl, limit, dateAfter);
+                var items = FetchFromTab(tabUrl, limit, dateAfter, cookiesFilePath);
                 foreach (var item in items)
                 {
                     if (!string.IsNullOrWhiteSpace(item.Id) && seen.Add(item.Id))
@@ -298,10 +352,12 @@ namespace Streamarr.Core.Download.YtDlp
             return allVideos;
         }
 
-        public List<YtDlpVideoInfo> GetMembershipTabVideos(string channelUrl)
+        public List<YtDlpVideoInfo> GetChannelVideosFull(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null)
         {
+            _logger.Debug("Getting channel content (full metadata): {0} (limit={1}, dateAfter={2})", channelUrl, limit, dateAfter);
+
             var baseUrl = channelUrl.TrimEnd('/');
-            foreach (var knownTab in new[] { "/videos", "/shorts", "/streams", "/live", "/membership" })
+            foreach (var knownTab in new[] { "/videos", "/shorts", "/streams", "/live" })
             {
                 if (baseUrl.EndsWith(knownTab, StringComparison.OrdinalIgnoreCase))
                 {
@@ -310,19 +366,34 @@ namespace Streamarr.Core.Download.YtDlp
                 }
             }
 
-            // Fetch all (no dateAfter) so historical members content can be backfilled
-            return FetchFromTab($"{baseUrl}/membership", limit: null, dateAfter: null);
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var allVideos = new List<YtDlpVideoInfo>();
+
+            foreach (var tab in new[] { "videos", "shorts", "streams" })
+            {
+                var tabUrl = $"{baseUrl}/{tab}";
+                var items = FetchFromTabFull(tabUrl, limit, dateAfter, cookiesFilePath);
+                foreach (var item in items)
+                {
+                    if (!string.IsNullOrWhiteSpace(item.Id) && seen.Add(item.Id))
+                    {
+                        allVideos.Add(item);
+                    }
+                }
+            }
+
+            _logger.Debug("Found {0} total item(s) from full-metadata fetch of {1}", allVideos.Count, channelUrl);
+            return allVideos;
         }
 
-        private List<YtDlpVideoInfo> FetchFromTab(string url, int? limit, string dateAfter)
+        private List<YtDlpVideoInfo> FetchFromTabFull(string url, int? limit, string dateAfter, string cookiesFilePath)
         {
-            _logger.Debug("Fetching tab: {0}", url);
-
             var argParts = new List<string>
             {
-                "--flat-playlist",
                 "--dump-json",
-                "--skip-download"
+                "--skip-download",
+                "--ignore-errors",
+                "--socket-timeout 30"
             };
 
             if (limit.HasValue)
@@ -335,9 +406,77 @@ namespace Streamarr.Core.Download.YtDlp
                 argParts.Add($"--dateafter {dateAfter}");
             }
 
-            if (!string.IsNullOrWhiteSpace(Settings.CookieFilePath))
+            if (!string.IsNullOrWhiteSpace(cookiesFilePath))
             {
-                argParts.Add($"--cookies {Quote(Settings.CookieFilePath)}");
+                argParts.Add($"--cookies {Quote(cookiesFilePath)}");
+            }
+
+            argParts.Add(Quote(url));
+
+            var args = string.Join(" ", argParts);
+            var output = _processProvider.StartAndCapture(Settings.BinaryPath, args, BuildDenoEnvironment());
+
+            // Parse stdout first regardless of exit code — yt-dlp outputs JSON for each video
+            // as it processes them; a non-zero exit means one or more videos errored, but the
+            // videos output before the error are still valid and must not be discarded.
+            var videos = new List<YtDlpVideoInfo>();
+            foreach (var line in output.Standard)
+            {
+                var trimmed = line.Content?.Trim();
+                if (string.IsNullOrWhiteSpace(trimmed))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    var video = JsonSerializer.Deserialize<YtDlpVideoInfo>(trimmed, JsonOptions);
+                    if (video != null)
+                    {
+                        videos.Add(video);
+                    }
+                }
+                catch (JsonException ex)
+                {
+                    _logger.Warn(ex, "Failed to parse video JSON from full-metadata fetch of {0}", url);
+                }
+            }
+
+            if (output.ExitCode != 0)
+            {
+                var error = string.Join(" | ", output.Error.Select(l => l.Content).Where(l => !string.IsNullOrWhiteSpace(l)).Take(3));
+                _logger.Warn("yt-dlp exited {0} for full-metadata fetch of {1} ({2} video(s) collected before error): {3}", output.ExitCode, url, videos.Count, error);
+            }
+
+            _logger.Debug("Found {0} item(s) from full-metadata fetch of {1}", videos.Count, url);
+            return videos;
+        }
+
+        private List<YtDlpVideoInfo> FetchFromTab(string url, int? limit, string dateAfter, string cookiesFilePath = null)
+        {
+            _logger.Debug("Fetching tab: {0}", url);
+
+            var argParts = new List<string>
+            {
+                "--flat-playlist",
+                "--dump-json",
+                "--skip-download",
+                "--socket-timeout 30"
+            };
+
+            if (limit.HasValue)
+            {
+                argParts.Add($"--playlist-end {limit.Value}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(dateAfter))
+            {
+                argParts.Add($"--dateafter {dateAfter}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(cookiesFilePath))
+            {
+                argParts.Add($"--cookies {Quote(cookiesFilePath)}");
             }
 
             argParts.Add(Quote(url));
@@ -348,7 +487,7 @@ namespace Streamarr.Core.Download.YtDlp
             if (output.ExitCode != 0)
             {
                 var error = string.Join(Environment.NewLine, output.Error.Select(l => l.Content));
-                _logger.Debug("yt-dlp returned non-zero for {0} (tab may be empty): {1}", url, error);
+                _logger.Warn("yt-dlp returned exit {0} for {1}: {2}", output.ExitCode, url, error);
                 return new List<YtDlpVideoInfo>();
             }
 
@@ -380,11 +519,57 @@ namespace Streamarr.Core.Download.YtDlp
             return videos;
         }
 
-        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, bool needsCookies = false, Action<YtDlpProgress> onProgress = null)
+        public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null)
+        {
+            using (AcquireDownloadSlot())
+            {
+                return DownloadHeld(contentId, url, outputPath, isLive, cookiesFilePath, onProgress, onStarted, outputFilename, metadataTitle);
+            }
+        }
+
+        public IDisposable AcquireDownloadSlot()
+        {
+            _logger.Debug("Waiting for concurrent download slot ({0} available)", _concurrentDownloadSemaphore.CurrentCount);
+            _concurrentDownloadSemaphore.Wait();
+            return new SemaphoreReleaser(_concurrentDownloadSemaphore);
+        }
+
+        public YtDlpDownloadResult DownloadHeld(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null, bool keepPartialsOnFailure = false, bool keepFragments = true)
+        {
+            onStarted?.Invoke();
+            return DownloadInternal(contentId, url, outputPath, isLive, cookiesFilePath, onProgress, outputFilename, metadataTitle, keepPartialsOnFailure, keepFragments);
+        }
+
+        public bool IsDownloadActive(int contentId)
+        {
+            return _activeDownloads.ContainsKey(contentId);
+        }
+
+        private sealed class SemaphoreReleaser : IDisposable
+        {
+            private readonly SemaphoreSlim _semaphore;
+            private bool _released;
+
+            public SemaphoreReleaser(SemaphoreSlim semaphore)
+            {
+                _semaphore = semaphore;
+            }
+
+            public void Dispose()
+            {
+                if (!_released)
+                {
+                    _released = true;
+                    _semaphore.Release();
+                }
+            }
+        }
+
+        private YtDlpDownloadResult DownloadInternal(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, string outputFilename = null, string metadataTitle = null, bool keepPartialsOnFailure = false, bool keepFragments = true)
         {
             _diskProvider.EnsureFolder(outputPath);
 
-            var args = BuildDownloadArgs(url, outputPath, isLive, needsCookies);
+            var args = BuildDownloadArgs(url, outputPath, isLive, cookiesFilePath, outputFilename, metadataTitle, keepFragments);
             var mergedFile = string.Empty;
             var fragmentFiles = new List<string>();
             var alreadyDownloadedFile = string.Empty;
@@ -470,8 +655,10 @@ namespace Streamarr.Core.Download.YtDlp
                 fileSize = _diskProvider.GetFileSize(outputFile);
                 _logger.Info("Download complete: {0} ({1} bytes)", outputFile, fileSize);
 
-                // For live recordings with -k, validate the merge and clean up fragments
-                if (isLive && !string.IsNullOrEmpty(mergedFile) && fragmentFiles.Count > 0)
+                // Only clean up fragments on the final pass (keepFragments=false). While the
+                // supervisor is still relaunching it keeps the fragments so an interrupted live
+                // recording can resume from them instead of re-downloading from scratch.
+                if (isLive && !keepFragments && !string.IsNullOrEmpty(mergedFile) && fragmentFiles.Count > 0)
                 {
                     CleanUpLiveFragments(mergedFile, fragmentFiles, fileSize);
                 }
@@ -482,7 +669,10 @@ namespace Streamarr.Core.Download.YtDlp
                 success = false;
             }
 
-            if (!success)
+            // On failure the supervised live path keeps partial fragments so the next attempt can
+            // resume from them (-k --live-from-start). Only delete partials when the caller is not
+            // going to retry (VOD downloads, or the supervisor's terminal cleanup).
+            if (!success && !keepPartialsOnFailure)
             {
                 CleanUpPartialFiles(fragmentFiles);
             }
@@ -493,6 +683,8 @@ namespace Streamarr.Core.Download.YtDlp
                 FilePath = outputFile,
                 FileSize = fileSize,
                 ExitCode = exitCode,
+                IsMergedOutput = !string.IsNullOrEmpty(mergedFile),
+                WasInterrupted = isLive && errors.Any(LooksLikeNetworkError),
                 ErrorMessage = success ? string.Empty : string.Join(Environment.NewLine, errors)
             };
         }
@@ -585,28 +777,51 @@ namespace Streamarr.Core.Download.YtDlp
 
         private string BuildMetadataArgs(string url)
         {
-            return $"--dump-json --skip-download --socket-timeout 15{CookieArg} {Quote(url)}";
+            return $"--dump-json --skip-download --socket-timeout 15 {Quote(url)}";
         }
 
-        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, bool needsCookies = false)
+        private string BuildDownloadArgs(string url, string outputPath, bool isLive = false, string cookiesFilePath = null, string outputFilename = null, string metadataTitle = null, bool keepFragments = true)
         {
+            var outputTemplate = outputFilename != null
+                ? Path.Combine(outputPath, outputFilename + ".%(ext)s")
+                : Path.Combine(outputPath, "%(title)s [%(id)s].%(ext)s");
+
             var args = new List<string>
             {
                 "--newline",
                 "--no-playlist",
                 "-f", Quote(Settings.PreferredFormat),
-                "-o", Quote(Path.Combine(outputPath, "%(title)s [%(id)s].%(ext)s"))
+                "-o", Quote(outputTemplate)
             };
+
+            // Override the title yt-dlp would derive from a direct CDN URL with the
+            // actual content title so --embed-metadata uses the correct value.
+            if (!string.IsNullOrWhiteSpace(metadataTitle))
+            {
+                var escapedTitle = metadataTitle.Replace("\"", "\\\"");
+                args.Add("--parse-metadata");
+                args.Add(Quote($"{escapedTitle}:(?P<title>.+)"));
+            }
 
             if (isLive)
             {
-                args.Add("-k");
+                // Resume primitives only: --live-from-start re-enumerates from segment 0 (skipping
+                // fragments already on disk), --hls-use-mpegts keeps fragments concatenatable.
+                // Retry/skip behaviour is deliberately NOT delegated to yt-dlp here — the
+                // LiveRecordingSupervisor relaunches this attempt on a blip and resumes from the
+                // kept fragments, giving us control over backoff and when to give up.
+                //
+                // -k (keep fragments) is on for relaunchable attempts so an interrupted recording
+                // can resume from the fragments. The supervisor's final pass omits it so yt-dlp
+                // merges and then removes the fragments itself once the stream has truly ended.
+                if (keepFragments)
+                {
+                    args.Add("-k");
+                }
+
                 args.Add("--live-from-start");
                 args.Add("--hls-use-mpegts");
-                args.Add("--fragment-retries 15");
-                args.Add("--skip-unavailable-fragments");
-                args.Add("--retry-sleep fragment:5");
-                args.Add("--socket-timeout 30");
+                args.Add($"--socket-timeout {Settings.LiveSocketTimeoutSeconds}");
             }
 
             if (Settings.EmbedMetadata)
@@ -619,10 +834,19 @@ namespace Streamarr.Core.Download.YtDlp
                 args.Add("--embed-thumbnail");
             }
 
-            if (needsCookies && !string.IsNullOrWhiteSpace(Settings.CookieFilePath))
+            if (!string.IsNullOrWhiteSpace(cookiesFilePath))
             {
                 args.Add("--cookies");
-                args.Add(Quote(Settings.CookieFilePath));
+                args.Add(Quote(cookiesFilePath));
+            }
+
+            // Patreon CDN URLs (Mux streams and patreonusercontent.com) require a Patreon
+            // Referer for token validation. Without it the request returns 403 Forbidden.
+            if (url.Contains("stream.mux.com", StringComparison.OrdinalIgnoreCase) ||
+                url.Contains("patreonusercontent.com", StringComparison.OrdinalIgnoreCase))
+            {
+                args.Add("--add-header");
+                args.Add(Quote("Referer:https://www.patreon.com"));
             }
 
             args.Add(Quote(url));
@@ -652,6 +876,47 @@ namespace Streamarr.Core.Download.YtDlp
         private static string Quote(string value)
         {
             return $"\"{value}\"";
+        }
+
+        // yt-dlp stderr markers that indicate the CONNECTION — not the stream — went away mid-download.
+        // Used to flag a "successful" live exit that is really a truncated capture. Kept deliberately
+        // narrow: broad markers like "fragment" or "unable to download" also fire when a recording is
+        // started late (early fragments unavailable), which is not a truncation, and "giving up after
+        // N retries" is yt-dlp's normal signal that a live stream has ended.
+        private static readonly string[] NetworkErrorMarkers =
+        {
+            "timed out",
+            "timeout",
+            "connection reset",
+            "connection aborted",
+            "connection refused",
+            "network is unreachable",
+            "temporary failure in name resolution",
+            "incompleteread",
+            "incomplete read",
+            "urlopen error",
+            "[errno",
+            "http error 5",
+            "read error"
+        };
+
+        private static bool LooksLikeNetworkError(string line)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                return false;
+            }
+
+            var lower = line.ToLowerInvariant();
+            foreach (var marker in NetworkErrorMarkers)
+            {
+                if (lower.Contains(marker))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using Streamarr.Common.Composition;
+using Streamarr.Core.Exceptions;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Core.Test.Framework;
 
@@ -35,6 +38,29 @@ namespace Streamarr.Core.Test.Messaging.Commands
                   {
                       return commands.SingleOrDefault(e => e.Id == c);
                   });
+        }
+
+        [Test]
+        public void should_throw_bad_request_when_command_name_is_unknown()
+        {
+            Mocker.SetConstant(new KnownTypes(new List<Type> { typeof(MessagingCleanupCommand) }));
+
+            var ex = Assert.Throws<StreamarrClientException>(() =>
+                Subject.Push("NotARealCommand", null, null));
+
+            ex.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            ex.Message.Should().Contain("NotARealCommand");
+        }
+
+        [Test]
+        public void should_push_command_by_name_when_known()
+        {
+            Mocker.SetConstant(new KnownTypes(new List<Type> { typeof(MessagingCleanupCommand) }));
+
+            var result = Subject.Push("MessagingCleanupCommand", null, null);
+
+            result.Should().NotBeNull();
+            result.Name.Should().Be("MessagingCleanup");
         }
 
         [Test]

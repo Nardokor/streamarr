@@ -129,7 +129,9 @@ namespace Streamarr.Core.Messaging.Commands
         {
             _cancellationTokenSource = new CancellationTokenSource();
 
-            var threadCount = Math.Max(3, _configService.YtDlpMaxConcurrentDownloads + 2);
+            // Thread pool must be large enough to never be the bottleneck for downloads.
+            // Actual concurrent download limiting is enforced by the semaphore in YtDlpClient.
+            var threadCount = Math.Max(20, _configService.YtDlpMaxConcurrentDownloads + 4);
             _logger.Debug("Starting {0} command execution threads", threadCount);
 
             for (var i = 0; i < threadCount; i++)

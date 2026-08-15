@@ -20,7 +20,7 @@ namespace Streamarr.Core.Jobs
 
         public ScheduledTask GetDefinition(Type type)
         {
-            return Query(c => c.TypeName == type.FullName).Single();
+            return Query(c => c.TypeName == type.FullName).SingleOrDefault();
         }
 
         public void SetLastExecutionTime(int id, DateTime executionTime, DateTime startTime)

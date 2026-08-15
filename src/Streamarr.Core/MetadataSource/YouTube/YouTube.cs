@@ -322,6 +322,20 @@ namespace Streamarr.Core.MetadataSource.YouTube
             return GetVideoDetails(platformContentIds);
         }
 
+        public override ContentMetadataResult? ResolveFromUrl(string url)
+        {
+            try
+            {
+                var info = _ytDlpClient.GetVideoInfo(url);
+                return info == null ? null : MapYtDlpToContentMetadata(info);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Failed to resolve YouTube URL: {0}", url);
+                return null;
+            }
+        }
+
         private IEnumerable<ContentMetadataResult> GetVideoDetails(IEnumerable<string> platformContentIds)
         {
             var ids = platformContentIds.ToList();

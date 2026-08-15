@@ -41,6 +41,11 @@ namespace Streamarr.Core.MetadataSource
             return null;
         }
 
+        public virtual ContentMetadataResult? ResolveFromUrl(string url)
+        {
+            return null;
+        }
+
         public virtual ValidationResult Test()
         {
             return new ValidationResult();

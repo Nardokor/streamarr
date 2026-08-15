@@ -36,6 +36,10 @@ namespace Streamarr.Core.MetadataSource
         // always returns tier info when no cookies are present.
         ContentAccessibilityResult ProbeContentAccessibility(string platformContentId, bool withCookies = true);
 
+        // Resolve metadata for a raw content URL (e.g. a manually pasted video link).
+        // Returns null if the platform doesn't support URL resolution or the URL can't be resolved.
+        ContentMetadataResult? ResolveFromUrl(string url);
+
         // Check whether the channel is currently hosting an active live stream.
         // Returns metadata for the live content if found, or null if not live.
         ContentMetadataResult? GetActiveLivestream(string platformUrl, string platformId);

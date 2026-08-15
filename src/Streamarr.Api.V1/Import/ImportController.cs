@@ -8,10 +8,12 @@ namespace Streamarr.Api.V1.Import;
 public class ImportController : Controller
 {
     private readonly IImportLibraryService _importService;
+    private readonly IUrlImportService _urlImportService;
 
-    public ImportController(IImportLibraryService importService)
+    public ImportController(IImportLibraryService importService, IUrlImportService urlImportService)
     {
         _importService = importService;
+        _urlImportService = urlImportService;
     }
 
     [HttpPost("folders")]
@@ -27,6 +29,13 @@ public class ImportController : Controller
     {
         return _importService.Import(request.RootPath, request.FolderNames);
     }
+
+    [HttpPost("url")]
+    [Produces("application/json")]
+    public UrlImportResult ImportUrl([FromBody] UrlImportRequest request)
+    {
+        return _urlImportService.Import(request.Url, request.ChannelId);
+    }
 }
 
 public class ImportFoldersRequest
@@ -38,4 +47,10 @@ public class ImportLibraryRequest
 {
     public string RootPath { get; set; } = string.Empty;
     public List<string> FolderNames { get; set; } = new();
+}
+
+public class UrlImportRequest
+{
+    public string Url { get; set; } = string.Empty;
+    public int? ChannelId { get; set; }
 }

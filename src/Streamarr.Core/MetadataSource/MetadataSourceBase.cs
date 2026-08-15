@@ -43,7 +43,10 @@ namespace Streamarr.Core.MetadataSource
             return null;
         }
 
-        public abstract string GetDownloadUrl(string platformContentId);
+        public virtual ContentMetadataResult? ResolveFromUrl(string url)
+        {
+            return null;
+        }
 
         public virtual ValidationResult Test()
         {

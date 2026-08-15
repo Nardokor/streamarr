@@ -60,6 +60,10 @@ const LINKS: SidebarItem[] = [
         title: 'Import',
         to: '/creator/import',
       },
+      {
+        title: 'Import URL',
+        to: '/creator/import-url',
+      },
     ],
   },
 

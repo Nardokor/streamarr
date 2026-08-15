@@ -35,9 +35,14 @@ namespace Streamarr.Common.EnvironmentInfo
             else
             {
                 AppDataFolder = Path.Combine(Environment.GetFolderPath(_dataSpecialFolder, Environment.SpecialFolderOption.DoNotVerify), "Streamarr");
+
+                // Only macOS has a legacy folder to migrate from (differing default locations
+                // pre/post-rebrand). On other platforms the default location hasn't moved, so
+                // there's nothing to migrate — leave this null (MigrateAppDataFolder no-ops on
+                // a blank LegacyAppDataFolder).
                 LegacyAppDataFolder = OsInfo.IsOsx
                     ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.DoNotVerify), ".config", "Streamarr")
-                    : Path.Combine(Environment.GetFolderPath(_dataSpecialFolder, Environment.SpecialFolderOption.DoNotVerify), "Streamarr");
+                    : null;
             }
 
             StartUpFolder = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName;

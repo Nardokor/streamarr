@@ -396,7 +396,7 @@ namespace Streamarr.Core.Creators.Commands
                         {
                             membershipConfirmedNew = true;
                         }
-                        else
+                        else if (content.ContentFileId <= 0)
                         {
                             content.Status = ContentStatus.Unwanted;
                         }
@@ -527,8 +527,11 @@ namespace Streamarr.Core.Creators.Commands
                                     var passes = _contentFilterService.PassesFilter(content.Title, content.ContentType, channel, isMembers: true, isAccessible: true);
                                     content.Status = passes ? ContentStatus.Missing : ContentStatus.Unwanted;
                                 }
-                                else
+                                else if (content.ContentFileId <= 0)
                                 {
+                                    // Only mark Unwanted when there's no local file to fall back on —
+                                    // losing platform access shouldn't erase Downloaded/Mirrored status
+                                    // for content already saved to disk.
                                     content.Status = ContentStatus.Unwanted;
                                 }
 

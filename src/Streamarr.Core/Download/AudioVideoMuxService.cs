@@ -47,8 +47,10 @@ namespace Streamarr.Core.Download
 
             var outputPath = Path.ChangeExtension(audioFilePath, ".mp4");
 
-            _logger.Debug("Wrapping audio '{0}' with static image into '{1}'",
-                Path.GetFileName(audioFilePath), Path.GetFileName(outputPath));
+            _logger.Debug(
+                "Wrapping audio '{0}' with static image into '{1}'",
+                Path.GetFileName(audioFilePath),
+                Path.GetFileName(outputPath));
 
             // Scale image to 1280x720 with letterboxing, encode to H.264 at 1fps.
             // ultrafast + stillimage produces a near-zero-size video track quickly.

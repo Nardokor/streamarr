@@ -117,6 +117,10 @@
   <!-- Suppress MimeKit vulnerability advisory: no patched version available yet (transitive via MailKit) -->
   <ItemGroup>
     <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-g7hc-96xr-gvvx" />
+    <!-- MailKit 4.15.0: no patched version available yet -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-9j88-vvj5-vhgr" />
+    <!-- Microsoft.OpenApi 2.3.0 (transitive, Swagger/API stack): no patched version available yet -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-v5pm-xwqc-g5wc" />
   </ItemGroup>
 
   <!-- Standard testing packages -->
@@ -141,7 +145,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <AdditionalFiles Include="$(SolutionDir)stylecop.json" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
   </ItemGroup>
 
   <!--

@@ -38,6 +38,14 @@ namespace Streamarr.Core.Download.YtDlp
         /// <summary>Returns true while a yt-dlp process for the given content id is running.</summary>
         bool IsDownloadActive(int contentId);
 
+        /// <summary>
+        /// Returns the current state of the bounded concurrent-download slot pool: configured vs
+        /// effective max (the semaphore is sized once at startup, so these can drift if the setting
+        /// changes without a restart), available slots, and the content ids with an active yt-dlp
+        /// process right now.
+        /// </summary>
+        DownloadSlotStatus GetSlotStatus();
+
         void CancelDownload(int contentId);
         YtDlpChannelInfo GetChannelInfo(string channelUrl);
         List<YtDlpVideoInfo> GetChannelVideos(string channelUrl, int? limit = null, string dateAfter = null, string cookiesFilePath = null);
@@ -68,6 +76,20 @@ namespace Streamarr.Core.Download.YtDlp
         string SelfUpdate();
     }
 
+    public class DownloadSlotStatus
+    {
+        public int ConfiguredMax { get; set; }
+        public int EffectiveMax { get; set; }
+        public int AvailableSlots { get; set; }
+        public List<ActiveDownloadInfo> ActiveDownloads { get; set; } = new();
+    }
+
+    public class ActiveDownloadInfo
+    {
+        public int ContentId { get; set; }
+        public DateTime? StartedAt { get; set; }
+    }
+
     public class YtDlpClient : IYtDlpClient
     {
         private static readonly Regex ProgressRegex = new Regex(
@@ -95,6 +117,7 @@ namespace Streamarr.Core.Download.YtDlp
 
         private readonly ConcurrentDictionary<int, Process> _activeDownloads = new();
         private readonly SemaphoreSlim _concurrentDownloadSemaphore;
+        private readonly int _effectiveMaxConcurrentDownloads;
 
         private readonly IProcessProvider _processProvider;
         private readonly IDiskProvider _diskProvider;
@@ -148,8 +171,8 @@ namespace Streamarr.Core.Download.YtDlp
             _configService = configService;
             _logger = logger;
 
-            var maxConcurrent = Math.Max(1, configService.YtDlpMaxConcurrentDownloads);
-            _concurrentDownloadSemaphore = new SemaphoreSlim(maxConcurrent, maxConcurrent);
+            _effectiveMaxConcurrentDownloads = Math.Max(1, configService.YtDlpMaxConcurrentDownloads);
+            _concurrentDownloadSemaphore = new SemaphoreSlim(_effectiveMaxConcurrentDownloads, _effectiveMaxConcurrentDownloads);
         }
 
         public bool IsAvailable()
@@ -543,6 +566,34 @@ namespace Streamarr.Core.Download.YtDlp
         public bool IsDownloadActive(int contentId)
         {
             return _activeDownloads.ContainsKey(contentId);
+        }
+
+        public DownloadSlotStatus GetSlotStatus()
+        {
+            var active = new List<ActiveDownloadInfo>();
+
+            foreach (var pair in _activeDownloads)
+            {
+                DateTime? startedAt = null;
+                try
+                {
+                    startedAt = pair.Value.StartTime;
+                }
+                catch
+                {
+                    // Process may have already exited; StartTime throws in that case.
+                }
+
+                active.Add(new ActiveDownloadInfo { ContentId = pair.Key, StartedAt = startedAt });
+            }
+
+            return new DownloadSlotStatus
+            {
+                ConfiguredMax = Math.Max(1, _configService.YtDlpMaxConcurrentDownloads),
+                EffectiveMax = _effectiveMaxConcurrentDownloads,
+                AvailableSlots = _concurrentDownloadSemaphore.CurrentCount,
+                ActiveDownloads = active
+            };
         }
 
         private sealed class SemaphoreReleaser : IDisposable

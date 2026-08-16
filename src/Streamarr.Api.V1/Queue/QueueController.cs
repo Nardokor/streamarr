@@ -3,6 +3,7 @@ using Streamarr.Core.Channels;
 using Streamarr.Core.Content;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Download;
+using Streamarr.Core.Download.YtDlp;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Http;
 
@@ -16,18 +17,21 @@ public class QueueController : Controller
     private readonly IChannelService _channelService;
     private readonly ICreatorService _creatorService;
     private readonly ILiveRecordingSupervisor _supervisor;
+    private readonly IYtDlpClient _ytDlpClient;
 
     public QueueController(IManageCommandQueue commandQueueManager,
                            IContentService contentService,
                            IChannelService channelService,
                            ICreatorService creatorService,
-                           ILiveRecordingSupervisor supervisor)
+                           ILiveRecordingSupervisor supervisor,
+                           IYtDlpClient ytDlpClient)
     {
         _commandQueueManager = commandQueueManager;
         _contentService = contentService;
         _channelService = channelService;
         _creatorService = creatorService;
         _supervisor = supervisor;
+        _ytDlpClient = ytDlpClient;
     }
 
     [HttpGet]
@@ -63,7 +67,10 @@ public class QueueController : Controller
                     CreatorName = creator.Title,
                     ChannelName = channel.Title,
                     Status = command.Status.ToString().ToLowerInvariant(),
-                    Message = command.Message ?? string.Empty
+                    Message = command.Message ?? string.Empty,
+                    QueuedAt = command.QueuedAt,
+                    StartedAt = command.StartedAt,
+                    State = ResolveState(command, content.Id)
                 });
             }
             catch
@@ -75,6 +82,24 @@ public class QueueController : Controller
         return resources;
     }
 
+    [HttpGet("slots")]
+    [Produces("application/json")]
+    public QueueSlotsResource GetSlots()
+    {
+        var status = _ytDlpClient.GetSlotStatus();
+
+        return new QueueSlotsResource
+        {
+            ConfiguredMax = status.ConfiguredMax,
+            EffectiveMax = status.EffectiveMax,
+            AvailableSlots = status.AvailableSlots,
+            ActiveDownloadContentIds = status.ActiveDownloads.Select(d => d.ContentId).ToList(),
+            LiveWaitingContentIds = _supervisor.GetSupervisedContentIds()
+                .Where(id => !_ytDlpClient.IsDownloadActive(id))
+                .ToList()
+        };
+    }
+
     [HttpDelete("{contentId:int}")]
     public IActionResult CancelDownload(int contentId)
     {
@@ -82,5 +107,28 @@ public class QueueController : Controller
         // downloads (not supervised) it still kills the running yt-dlp process.
         _supervisor.Cancel(contentId);
         return Ok();
+    }
+
+    // Distinguishes what a "Started" command is actually doing, since CommandQueue flips status
+    // to Started at dispatch — before any download slot is acquired. A command can be Started
+    // yet still be blocked waiting for a free slot.
+    private string ResolveState(CommandModel command, int contentId)
+    {
+        if (command.Status == CommandStatus.Queued)
+        {
+            return "queued";
+        }
+
+        if (_ytDlpClient.IsDownloadActive(contentId))
+        {
+            return "downloading";
+        }
+
+        if (_supervisor.IsSupervising(contentId))
+        {
+            return "liveWaiting";
+        }
+
+        return "waitingForSlot";
     }
 }

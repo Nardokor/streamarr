@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using NLog;
 using Streamarr.Common.Disk;
@@ -46,6 +46,11 @@ namespace Streamarr.Core.Download
         // True while a supervised live recording for this content id is running (including the
         // backoff gap between relaunch attempts, when no yt-dlp process is active).
         bool IsSupervising(int contentId);
+
+        // Content ids currently under live supervision — includes recordings idle in their
+        // backoff/retry gap between relaunch attempts, when no yt-dlp process is active but a
+        // download slot is still held.
+        IEnumerable<int> GetSupervisedContentIds();
     }
 
     public class LiveRecordingSupervisor : ILiveRecordingSupervisor
@@ -89,6 +94,8 @@ namespace Streamarr.Core.Download
         }
 
         public bool IsSupervising(int contentId) => _supervised.ContainsKey(contentId);
+
+        public IEnumerable<int> GetSupervisedContentIds() => _supervised.Keys.ToList();
 
         public void Cancel(int contentId)
         {
@@ -438,15 +445,7 @@ namespace Streamarr.Core.Download
             }
         }
 
-        private static readonly Regex FormatFragmentRegex = new Regex(@"\.f\d+\.", RegexOptions.Compiled);
-
-        private static bool IsIntermediate(string fileName) =>
-            fileName.Contains(".part", StringComparison.OrdinalIgnoreCase) ||
-            fileName.Contains("-Frag", StringComparison.OrdinalIgnoreCase) ||
-            fileName.EndsWith(".ytdl", StringComparison.OrdinalIgnoreCase) ||
-            fileName.EndsWith(".tmp", StringComparison.OrdinalIgnoreCase) ||
-            fileName.EndsWith(".temp", StringComparison.OrdinalIgnoreCase) ||
-            FormatFragmentRegex.IsMatch(fileName);
+        private static bool IsIntermediate(string fileName) => YtDlpFileClassifier.IsIntermediate(fileName);
 
         private static string SidecarPath(string outputFile)
         {

@@ -1,0 +1,41 @@
+.helpText {
+  margin-bottom: 16px;
+  color: var(--textSecondary);
+}
+
+.fileName {
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.stale {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--colorWarning, #f39c12);
+}
+
+.empty {
+  padding: 24px 0;
+  color: var(--textSecondary);
+  text-align: center;
+}
+
+.deleteCell {
+  width: 36px;
+  text-align: center;
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--textSecondary);
+  padding: 4px;
+  border-radius: 3px;
+  line-height: 1;
+}
+
+.deleteBtn:hover {
+  color: var(--colorDanger, #e74c3c);
+}

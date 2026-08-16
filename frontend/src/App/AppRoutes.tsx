@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import History from 'Activity/History/History';
+import OrphanedFiles from 'Activity/OrphanedFiles/OrphanedFiles';
 import Queue from 'Activity/Queue/Queue';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
@@ -115,6 +116,8 @@ function AppRoutes() {
       <Route path="/activity/queue" component={Queue} />
 
       <Route path="/activity/history" component={History} />
+
+      <Route path="/activity/orphanedfiles" component={OrphanedFiles} />
 
       {/*
         System

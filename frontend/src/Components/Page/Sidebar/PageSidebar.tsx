@@ -98,6 +98,10 @@ const LINKS: SidebarItem[] = [
         title: 'History',
         to: '/activity/history',
       },
+      {
+        title: 'Orphaned Files',
+        to: '/activity/orphanedfiles',
+      },
     ],
   },
 

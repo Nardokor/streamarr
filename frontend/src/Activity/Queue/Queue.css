@@ -15,13 +15,49 @@
 }
 
 .status {
-  width: 110px;
+  width: 160px;
   white-space: nowrap;
+}
+
+.stateLabel {
+  font-weight: 600;
 }
 
 .message {
   color: var(--textSecondary);
   font-size: 0.85em;
+}
+
+.waitTime {
+  width: 90px;
+  white-space: nowrap;
+  color: var(--textSecondary);
+}
+
+.slotsBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--borderColor);
+  border-radius: 4px;
+  background-color: var(--tableBackgroundColor);
+}
+
+.slotsSummary {
+  font-weight: 600;
+}
+
+.slotsBreakdown {
+  color: var(--textSecondary);
+  font-size: 0.9em;
+}
+
+.slotsWarning {
+  color: var(--colorWarning, #f39c12);
+  font-size: 0.9em;
 }
 
 .empty {

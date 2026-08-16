@@ -5,10 +5,16 @@ interface CssExports {
   'cancelCell': string;
   'empty': string;
   'message': string;
+  'slotsBar': string;
+  'slotsBreakdown': string;
+  'slotsSummary': string;
+  'slotsWarning': string;
+  'stateLabel': string;
   'status': string;
   'thumbnail': string;
   'thumbnailCell': string;
   'title': string;
+  'waitTime': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

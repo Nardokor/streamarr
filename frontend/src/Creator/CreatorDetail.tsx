@@ -40,27 +40,34 @@ function CreatorDetail({ match }: Props) {
   const creatorId = creator?.id ?? 0;
   const { data: channels, isLoading: channelsLoading, refetch: refetchChannels } =
     useCreatorChannels(creatorId);
-  const { data: content, isLoading: contentLoading } =
-    useCreatorContent(creatorId);
+  const {
+    data: content,
+    isLoading: contentLoading,
+    refetch: refetchContent,
+  } = useCreatorContent(creatorId);
 
   const { deleteCreator, isDeleting } = useDeleteCreator(creatorId);
   const { updateCreator } = useUpdateCreator(creatorId);
   const reorderChannels = useReorderChannels(creatorId);
   const executeCommand = useExecuteCommand();
-  const isRefreshing = useCommandExecuting(CommandNames.RefreshCreator);
+  const isRefreshing = useCommandExecuting(CommandNames.RefreshCreator, {
+    creatorId,
+  });
   const isDownloading = useCommandExecuting(CommandNames.DownloadMissingContent);
   const isRescanning = useCommandExecuting(CommandNames.RescanCreator);
   const isCheckingLive = useCommandExecuting(CommandNames.CheckLiveStreams);
 
-  // When any refresh command finishes, re-fetch channel data so server-side
-  // changes (e.g. membershipStatus) are reflected without relying on SignalR.
+  // When a refresh command finishes, re-fetch channel and content data so
+  // server-side changes (e.g. membershipStatus, new content) are reflected
+  // without relying on SignalR.
   const prevRefreshingRef = useRef(false);
   useEffect(() => {
     if (prevRefreshingRef.current && !isRefreshing) {
       refetchChannels();
+      refetchContent();
     }
     prevRefreshingRef.current = isRefreshing;
-  }, [isRefreshing, refetchChannels]);
+  }, [isRefreshing, refetchChannels, refetchContent]);
 
   // Channel ordering — local ordered list derived from server data
   const orderedChannels = useMemo(

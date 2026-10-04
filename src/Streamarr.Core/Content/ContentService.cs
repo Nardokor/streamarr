@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NLog;
+using Streamarr.Core.Datastore.Events;
 using Streamarr.Core.Messaging.Events;
 
 namespace Streamarr.Core.Content
@@ -103,6 +104,14 @@ namespace Streamarr.Core.Content
         public void AddContents(List<Content> contents)
         {
             _repo.InsertMany(contents);
+
+            // InsertMany doesn't publish model events, so the UI never hears about
+            // content added during a sync. One event is enough: clients respond by
+            // re-fetching the creator's content list.
+            if (contents.Count > 0)
+            {
+                _eventAggregator.PublishEvent(new ModelEvent<Content>(contents[0], ModelAction.Created));
+            }
         }
 
         public Content UpdateContent(Content content)

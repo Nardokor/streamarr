@@ -48,6 +48,11 @@ export const useExecuteCommand = () => {
         queryClient.setQueryData<Command[]>(
           ['/command'],
           (oldCommands = []) => {
+            // The SignalR update can arrive before this response does.
+            if (oldCommands.some((c) => c.id === newCommand.id)) {
+              return oldCommands;
+            }
+
             return [...oldCommands, newCommand];
           }
         );
@@ -121,6 +126,34 @@ export const useCancelCommand = (id: number) => {
   };
 };
 
+const isExecuting = (command: Command) =>
+  command.status === 'queued' || command.status === 'started';
+
+const matchesCommand = (
+  command: Command,
+  commandName: string,
+  constraints: Partial<CommandBody>
+) => {
+  if (command.name !== commandName) {
+    return false;
+  }
+
+  return (Object.keys(constraints) as Array<keyof CommandBody>).every((key) => {
+    const constraintValue = constraints[key];
+    const commandValue = command.body?.[key];
+
+    if (constraintValue === undefined) {
+      return true;
+    }
+
+    if (Array.isArray(constraintValue) && Array.isArray(commandValue)) {
+      return constraintValue.every((value) => commandValue.includes(value));
+    }
+
+    return constraintValue === commandValue;
+  });
+};
+
 export const useCommand = (
   commandName: string,
   constraints: Partial<CommandBody> = {}
@@ -128,30 +161,9 @@ export const useCommand = (
   const { data: commands } = useCommands();
 
   return useMemo(() => {
-    return commands.findLast((command) => {
-      if (command.name !== commandName) {
-        return false;
-      }
-
-      return (Object.keys(constraints) as Array<keyof CommandBody>).every(
-        (key) => {
-          const constraintValue = constraints[key];
-          const commandValue = command.body?.[key];
-
-          if (constraintValue === undefined) {
-            return true;
-          }
-
-          if (Array.isArray(constraintValue) && Array.isArray(commandValue)) {
-            return constraintValue.every((value) =>
-              commandValue.includes(value)
-            );
-          }
-
-          return constraintValue === commandValue;
-        }
-      );
-    });
+    return commands.findLast((command) =>
+      matchesCommand(command, commandName, constraints)
+    );
   }, [commands, commandName, constraints]);
 };
 
@@ -159,19 +171,20 @@ export const useCommandExecuting = (
   commandName: string,
   constraints: Partial<CommandBody> = {}
 ) => {
-  const command = useCommand(commandName, constraints);
+  const { data: commands } = useCommands();
 
-  return command
-    ? command.status === 'queued' || command.status === 'started'
-    : false;
+  // The list is not ordered by recency (the API sorts finished commands last),
+  // so check every matching command rather than only the last one.
+  return commands.some(
+    (command) =>
+      isExecuting(command) && matchesCommand(command, commandName, constraints)
+  );
 };
 
 export const useExecutingCommands = () => {
   const { data: commands } = useCommands();
 
-  return commands.filter(
-    (command) => command.status === 'queued' || command.status === 'started'
-  );
+  return commands.filter(isExecuting);
 };
 
 export const useUpdateCommand = () => {
@@ -179,6 +192,12 @@ export const useUpdateCommand = () => {
 
   return (command: Command) => {
     queryClient.setQueryData<Command[]>(['/command'], (oldCommands = []) => {
+      // Commands started elsewhere (scheduler, webhooks, another tab) are not
+      // in the list yet, so add them rather than dropping the update.
+      if (!oldCommands.some((existing) => existing.id === command.id)) {
+        return [...oldCommands, command];
+      }
+
       return oldCommands.map((existingCommand) =>
         existingCommand.id === command.id ? command : existingCommand
       );

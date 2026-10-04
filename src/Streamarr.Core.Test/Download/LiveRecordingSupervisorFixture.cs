@@ -39,11 +39,6 @@ namespace Streamarr.Core.Test.Download
                 OutputPath = "/media/test",
             };
 
-            // The supervisor acquires a concurrency slot for the whole recording.
-            Mocker.GetMock<IYtDlpClient>()
-                  .Setup(c => c.AcquireDownloadSlot())
-                  .Returns(Mock.Of<IDisposable>());
-
             // Config defaults: 15s backoff, 10 consecutive failures, 30 min window.
             Mocker.GetMock<IConfigService>().Setup(c => c.YtDlpLiveRetryBackoffSeconds).Returns(15);
             Mocker.GetMock<IConfigService>().Setup(c => c.YtDlpLiveMaxConsecutiveFailures).Returns(10);

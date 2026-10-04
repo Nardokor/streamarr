@@ -20,16 +20,8 @@ namespace Streamarr.Core.Download.YtDlp
         YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null);
 
         /// <summary>
-        /// Acquires one of the bounded concurrent-download slots, blocking until one is free.
-        /// Dispose the returned token to release the slot. Use this when a caller (e.g. the live
-        /// recording supervisor) needs to hold a single slot across multiple <see cref="DownloadHeld"/>
-        /// attempts instead of acquiring/releasing per attempt.
-        /// </summary>
-        IDisposable AcquireDownloadSlot();
-
-        /// <summary>
         /// Runs a single yt-dlp attempt WITHOUT acquiring a concurrency slot — the caller must
-        /// already hold one via <see cref="AcquireDownloadSlot"/>. When <paramref name="keepPartialsOnFailure"/>
+        /// is responsible for any concurrency limiting (live recordings are not slot-limited). When <paramref name="keepPartialsOnFailure"/>
         /// is true, partial fragment files are NOT deleted on failure, so a subsequent attempt with
         /// the same output path can resume from them (-k --live-from-start).
         /// </summary>
@@ -116,8 +108,8 @@ namespace Streamarr.Core.Download.YtDlp
         };
 
         private readonly ConcurrentDictionary<int, Process> _activeDownloads = new();
-        private readonly SemaphoreSlim _concurrentDownloadSemaphore;
-        private readonly int _effectiveMaxConcurrentDownloads;
+        private readonly ConcurrentDictionary<int, CancellationTokenSource> _slotWaiters = new();
+        private readonly DownloadSlotPool _slotPool;
 
         private readonly IProcessProvider _processProvider;
         private readonly IDiskProvider _diskProvider;
@@ -171,8 +163,7 @@ namespace Streamarr.Core.Download.YtDlp
             _configService = configService;
             _logger = logger;
 
-            _effectiveMaxConcurrentDownloads = Math.Max(1, configService.YtDlpMaxConcurrentDownloads);
-            _concurrentDownloadSemaphore = new SemaphoreSlim(_effectiveMaxConcurrentDownloads, _effectiveMaxConcurrentDownloads);
+            _slotPool = new DownloadSlotPool(() => configService.YtDlpMaxConcurrentDownloads);
         }
 
         public bool IsAvailable()
@@ -544,17 +535,29 @@ namespace Streamarr.Core.Download.YtDlp
 
         public YtDlpDownloadResult Download(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null)
         {
-            using (AcquireDownloadSlot())
+            using (AcquireDownloadSlot(contentId))
             {
                 return DownloadHeld(contentId, url, outputPath, isLive, cookiesFilePath, onProgress, onStarted, outputFilename, metadataTitle);
             }
         }
 
-        public IDisposable AcquireDownloadSlot()
+        // Waits for a free slot. CancelDownload(contentId) aborts the wait with an
+        // OperationCanceledException so a download that hasn't started yet can be cancelled.
+        private IDisposable AcquireDownloadSlot(int contentId)
         {
-            _logger.Debug("Waiting for concurrent download slot ({0} available)", _concurrentDownloadSemaphore.CurrentCount);
-            _concurrentDownloadSemaphore.Wait();
-            return new SemaphoreReleaser(_concurrentDownloadSemaphore);
+            _logger.Debug("Waiting for concurrent download slot ({0} of {1} in use)", _slotPool.InUse, _slotPool.MaxSlots);
+
+            using var cts = new CancellationTokenSource();
+            _slotWaiters[contentId] = cts;
+
+            try
+            {
+                return _slotPool.Acquire(cts.Token);
+            }
+            finally
+            {
+                _slotWaiters.TryRemove(contentId, out _);
+            }
         }
 
         public YtDlpDownloadResult DownloadHeld(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, Action onStarted = null, string outputFilename = null, string metadataTitle = null, bool keepPartialsOnFailure = false, bool keepFragments = true)
@@ -587,33 +590,16 @@ namespace Streamarr.Core.Download.YtDlp
                 active.Add(new ActiveDownloadInfo { ContentId = pair.Key, StartedAt = startedAt });
             }
 
+            // The pool re-reads the setting, so the effective limit always matches the configured one.
+            var maxSlots = _slotPool.MaxSlots;
+
             return new DownloadSlotStatus
             {
-                ConfiguredMax = Math.Max(1, _configService.YtDlpMaxConcurrentDownloads),
-                EffectiveMax = _effectiveMaxConcurrentDownloads,
-                AvailableSlots = _concurrentDownloadSemaphore.CurrentCount,
+                ConfiguredMax = maxSlots,
+                EffectiveMax = maxSlots,
+                AvailableSlots = Math.Max(0, maxSlots - _slotPool.InUse),
                 ActiveDownloads = active
             };
-        }
-
-        private sealed class SemaphoreReleaser : IDisposable
-        {
-            private readonly SemaphoreSlim _semaphore;
-            private bool _released;
-
-            public SemaphoreReleaser(SemaphoreSlim semaphore)
-            {
-                _semaphore = semaphore;
-            }
-
-            public void Dispose()
-            {
-                if (!_released)
-                {
-                    _released = true;
-                    _semaphore.Release();
-                }
-            }
         }
 
         private YtDlpDownloadResult DownloadInternal(int contentId, string url, string outputPath, bool isLive = false, string cookiesFilePath = null, Action<YtDlpProgress> onProgress = null, string outputFilename = null, string metadataTitle = null, bool keepPartialsOnFailure = false, bool keepFragments = true)
@@ -742,6 +728,20 @@ namespace Streamarr.Core.Download.YtDlp
 
         public void CancelDownload(int contentId)
         {
+            if (_slotWaiters.TryGetValue(contentId, out var waiter))
+            {
+                _logger.Info("Cancelling download for content {0} while it waits for a slot", contentId);
+
+                try
+                {
+                    waiter.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // The wait finished and disposed the token; the process check below covers it.
+                }
+            }
+
             if (_activeDownloads.TryGetValue(contentId, out var process))
             {
                 _logger.Info("Cancelling download for content {0} (PID {1})", contentId, process.Id);

@@ -295,6 +295,16 @@ namespace Streamarr.Core.Download
                     _logger.Error("Failed to download '{0}': {1} (exit code {2})", content.Title, result.ErrorMessage, result.ExitCode);
                 }
             }
+            catch (OperationCanceledException)
+            {
+                // Cancelled while waiting for a download slot — nothing was downloaded.
+                content.Status = content.PreviousStatus ?? ContentStatus.Missing;
+                content.PreviousStatus = null;
+                _contentService.UpdateContent(content);
+
+                _logger.Info("Download of '{0}' cancelled before it started", content.Title);
+                return;
+            }
             catch (Exception ex)
             {
                 content.Status = content.PreviousStatus ?? ContentStatus.Missing;

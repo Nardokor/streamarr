@@ -57,7 +57,6 @@ function SlotsBar() {
   const busy = slots.effectiveMax - slots.availableSlots;
   const liveCount = slots.liveWaitingContentIds.length;
   const activeCount = slots.activeDownloadContentIds.length;
-  const staleMismatch = slots.configuredMax !== slots.effectiveMax;
 
   return (
     <div className={styles.slotsBar}>
@@ -65,15 +64,10 @@ function SlotsBar() {
         {busy} / {slots.effectiveMax} slots busy
       </span>
       <span className={styles.slotsBreakdown}>
-        {activeCount} downloading, {liveCount} live recording
-        {liveCount === 1 ? '' : 's'} holding a slot
+        {activeCount} yt-dlp process{activeCount === 1 ? '' : 'es'} running,{' '}
+        {liveCount} live recording{liveCount === 1 ? '' : 's'} reconnecting
+        (live recordings don't use a slot)
       </span>
-      {staleMismatch ? (
-        <span className={styles.slotsWarning}>
-          Configured max is {slots.configuredMax}, but {slots.effectiveMax} is
-          in effect — restart to apply the new setting
-        </span>
-      ) : null}
     </div>
   );
 }

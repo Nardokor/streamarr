@@ -123,10 +123,9 @@ namespace Streamarr.Core.Download
 
             try
             {
-                using (_ytDlpClient.AcquireDownloadSlot())
-                {
-                    return RunLoop(request, cts.Token);
-                }
+                // Live recordings deliberately take no download slot: they run for hours and must
+                // start immediately, so counting them against the limit starves queued downloads.
+                return RunLoop(request, cts.Token);
             }
             finally
             {

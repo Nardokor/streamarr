@@ -36,9 +36,12 @@ function getStateDisplay(state: QueueItemState) {
     case 'liveWaiting':
       return {
         icon: (
-          <Icon name={icons.NETWORK} title="Live recording (holding a slot)" />
+          <Icon
+            name={icons.NETWORK}
+            title="Live recording, between capture attempts"
+          />
         ),
-        label: 'Live (holding slot)',
+        label: 'Live (reconnecting)',
       };
     case 'waitingForSlot':
       return {

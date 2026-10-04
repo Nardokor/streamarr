@@ -4,6 +4,7 @@ using Streamarr.Core.Content;
 using Streamarr.Core.Creators;
 using Streamarr.Core.Download;
 using Streamarr.Core.Download.YtDlp;
+using Streamarr.Core.Exceptions;
 using Streamarr.Core.Messaging.Commands;
 using Streamarr.Http;
 
@@ -103,10 +104,52 @@ public class QueueController : Controller
     [HttpDelete("{contentId:int}")]
     public IActionResult CancelDownload(int contentId)
     {
+        // A command no worker has picked up yet has nothing running to stop — remove it from
+        // the command queue and put the content back the way it was.
+        var removedQueued = false;
+
+        var queuedCommands = _commandQueueManager.All()
+            .Where(c => c.Status == CommandStatus.Queued &&
+                        c.Body is DownloadContentCommand download &&
+                        download.ContentId == contentId)
+            .ToList();
+
+        foreach (var command in queuedCommands)
+        {
+            try
+            {
+                _commandQueueManager.Cancel(command.Id);
+                removedQueued = true;
+            }
+            catch (StreamarrClientException)
+            {
+                // A worker picked it up in the meantime; the supervisor cancel below handles it.
+            }
+        }
+
+        if (removedQueued)
+        {
+            RestoreQueuedContent(contentId);
+        }
+
         // Routes through the supervisor so a live recording stops relaunching; for plain VOD
-        // downloads (not supervised) it still kills the running yt-dlp process.
+        // downloads (not supervised) it aborts the wait for a slot or kills the running yt-dlp process.
         _supervisor.Cancel(contentId);
         return Ok();
+    }
+
+    private void RestoreQueuedContent(int contentId)
+    {
+        var content = _contentService.GetContent(contentId);
+
+        if (content.Status != ContentStatus.Queued)
+        {
+            return;
+        }
+
+        content.Status = content.PreviousStatus ?? ContentStatus.Missing;
+        content.PreviousStatus = null;
+        _contentService.UpdateContent(content);
     }
 
     // Distinguishes what a "Started" command is actually doing, since CommandQueue flips status
